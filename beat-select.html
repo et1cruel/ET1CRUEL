@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEAT SELECT — เลือกบีททำเพลง</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background:#0b0b12; color:#eee; }
+  header { padding:32px 20px 16px; text-align:center; background: linear-gradient(135deg,#1a1033,#0b0b12 60%), radial-gradient(circle at 50% 0%, #7c3aed33, transparent); }
+  header h1 { margin:0; font-size:32px; letter-spacing:2px; }
+  header h1 span { color:#a78bfa; }
+  header p { color:#aaa; margin:8px 0 0; }
+  .backbar { display:flex; justify-content:center; gap:10px; padding:12px 16px; background:#0b0b12; border-bottom:1px solid #222; flex-wrap:wrap; }
+  .backbar a { color:#a78bfa; text-decoration:none; font-size:14px; font-weight:700; border:1px solid #333; border-radius:10px; padding:8px 14px; background:#16161f; }
+  .backbar a:hover { border-color:#7c3aed; }
+  .backbar small { color:#666; font-size:12px; align-self:center; }
+  .toolbar { position:sticky; top:0; z-index:10; background:#0b0b12ee; backdrop-filter:blur(8px); padding:12px 16px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; border-bottom:1px solid #222; }
+  .toolbar input, .toolbar select, .toolbar button { padding:10px 14px; border-radius:10px; border:1px solid #333; background:#16161f; color:#eee; font-size:14px; }
+  .toolbar input { min-width:240px; flex:1; max-width:360px; }
+  .toolbar button { cursor:pointer; background:#7c3aed; border-color:#7c3aed; font-weight:600; }
+  .toolbar button.ghost { background:#16161f; border-color:#333; }
+  .count { text-align:center; color:#888; padding:12px; font-size:14px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:16px; padding:16px; max-width:1200px; margin:0 auto 120px; }
+  .card { background:#14141d; border:1px solid #262633; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px; transition:.2s; }
+  .card:hover { border-color:#7c3aed; transform:translateY(-2px); }
+  .card.selected { border-color:#22c55e; background:#10231a; box-shadow:0 0 0 1px #22c55e; }
+  .card-top { display:flex; align-items:center; gap:10px; }
+  .num { background:#7c3aed; font-weight:800; width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .card.selected .num { background:#22c55e; }
+  .title { font-weight:700; font-size:15px; line-height:1.3; word-break:break-word; }
+  .meta { display:flex; gap:8px; align-items:center; font-size:12px; color:#999; }
+  .badge { font-size:11px; padding:3px 8px; border-radius:20px; background:#222; border:1px solid #333; }
+  .badge.wav { background:#0ea5e933; border-color:#0ea5e9; color:#7dd3fc; }
+  .badge.mp3 { background:#f59e0b33; border-color:#f59e0b; color:#fcd34d; }
+  audio { width:100%; height:36px; }
+  .select-btn { padding:10px; border-radius:10px; border:1px solid #333; background:#1f1f2b; color:#fff; font-weight:700; cursor:pointer; font-size:14px; }
+  .card.selected .select-btn { background:#22c55e; border-color:#22c55e; color:#04120a; }
+  .bottombar { position:fixed; bottom:0; left:0; right:0; background:#101018f5; border-top:1px solid #2a2a3a; padding:12px 16px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .bottombar strong { color:#22c55e; }
+  .bottombar button { padding:10px 16px; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
+  #copyBtn { background:#22c55e; color:#04120a; }
+  #clearBtn { background:#222; color:#eee; border:1px solid #444; }
+  #selectedList { font-size:13px; color:#aaa; max-width:100%; }
+  .hidden { display:none !important; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎧 BEAT <span>SELECT</span></h1>
+  <p>กดฟัง → กดเลือกบีทที่ชอบ จะเอาไปทำเพลง (21 บีท)</p>
+</header>
+
+<div class="backbar">
+  <a href="./index.html">← กลับหน้าแรก</a>
+  <a href="https://github.com/et1cruel/BEAT-SELECT" target="_blank" rel="noopener">ต้นฉบับเสียง: BEAT-SELECT repo</a>
+  <small>สตรีมเสียงจาก repo เดิม — เว็บหลักไม่บวม</small>
+</div>
+
+<div class="toolbar">
+  <input id="search" type="text" placeholder="🔍 ค้นหาชื่อบีท... เช่น wavelove, ambient">
+  <select id="filterType">
+    <option value="all">ทั้งหมด (MP3 + WAV)</option>
+    <option value="mp3">MP3 only</option>
+    <option value="wav">WAV only</option>
+    <option value="selected">✅ ที่เลือกไว้</option>
+  </select>
+  <button class="ghost" id="stopAll">⏹ หยุดทั้งหมด</button>
+</div>
+<div class="count" id="count"></div>
+
+<div class="grid" id="grid"></div>
+
+<div class="bottombar">
+  <div>เลือกแล้ว <strong id="selCount">0</strong> บีท</div>
+  <div id="selectedList"></div>
+  <button id="copyBtn">📋 คัดลอกรายชื่อ</button>
+  <button id="clearBtn">🗑 ล้าง</button>
+</div>
+
+<script>
+const BEAT_BASE = 'https://raw.githubusercontent.com/et1cruel/BEAT-SELECT/main/beats/';
+const beats = [
+  "A 18 Maoricore ✅.mp3",
+  "A 23 Regalia Himoriya ✅.mp3",
+  "A 34 something ✅.mp3",
+  "A 42 🌌wavelove ✅.mp3",
+  "A 43 🌌ambientworld ✅.mp3",
+  "A 47 🌌hizoe ✅.mp3",
+  "A 48 🌌Ethan ✅.wav",
+  "A 50 🌌spiritual ✅.mp3",
+  "A 52 Turntfxx ✅.mp3",
+  "A 53 electronic giude ✅.mp3",
+  "A 62 🌌hizoka ✅.mp3",
+  "A 63 stairway to heart ✅.mp3",
+  "A 77 🌌swag lack ✅.mp3",
+  "A 80 🌌swamp ✅.mp3",
+  "A 91 🌌havenheart ✅.mp3",
+  "A 109 🌌firstlove 🌌✅.wav",
+  "A 112 🌌Stuck 🌌✅.wav",
+  "A 113 🌌ambient feelings🌌✅.wav",
+  "A 117 ambient shit✅.wav",
+  "A 119 oversoul✅.wav",
+  "A 123 waver.wav"
+];
+
+let selected = new Set(JSON.parse(localStorage.getItem('beat-select') || '[]'));
+const grid = document.getElementById('grid');
+const searchEl = document.getElementById('search');
+const filterEl = document.getElementById('filterType');
+const countEl = document.getElementById('count');
+
+function shortName(f){
+  return f.replace(/\.(mp3|wav)$/i,'');
+}
+function fileType(f){
+  return f.toLowerCase().endsWith('.wav') ? 'wav' : 'mp3';
+}
+function fileUrl(f){
+  return BEAT_BASE + encodeURIComponent(f);
+}
+
+function render(){
+  const q = searchEl.value.trim().toLowerCase();
+  const ft = filterEl.value;
+  grid.innerHTML = '';
+  let shown = 0;
+  beats.forEach((f, i) => {
+    const type = fileType(f);
+    if (ft === 'mp3' && type !== 'mp3') return;
+    if (ft === 'wav' && type !== 'wav') return;
+    if (ft === 'selected' && !selected.has(f)) return;
+    if (q && !f.toLowerCase().includes(q)) return;
+    shown++;
+    const isSel = selected.has(f);
+    const card = document.createElement('div');
+    card.className = 'card' + (isSel ? ' selected' : '');
+    card.innerHTML =
+      '<div class="card-top"><div class="num">' + (i+1) + '</div>' +
+      '<div class="title">' + shortName(f) + '</div></div>' +
+      '<div class="meta"><span class="badge ' + type + '">' + type.toUpperCase() + '</span><span>' + f + '</span></div>' +
+      '<audio controls preload="none" src="' + fileUrl(f) + '"></audio>' +
+      '<button class="select-btn">' + (isSel ? '✅ เลือกแล้ว — กดเพื่อเอาออก' : '＋ เลือกบีทนี้') + '</button>';
+    const audio = card.querySelector('audio');
+    audio.addEventListener('play', () => {
+      document.querySelectorAll('audio').forEach(a => { if (a !== audio) a.pause(); });
+    });
+    card.querySelector('.select-btn').onclick = () => {
+      if (selected.has(f)) selected.delete(f); else selected.add(f);
+      localStorage.setItem('beat-select', JSON.stringify([...selected]));
+      render();
+    };
+    grid.appendChild(card);
+  });
+  countEl.textContent = 'แสดง ' + shown + ' / ' + beats.length + ' บีท';
+  document.getElementById('selCount').textContent = selected.size;
+  document.getElementById('selectedList').textContent = [...selected].map(shortName).join('  •  ');
+}
+
+searchEl.oninput = render;
+filterEl.onchange = render;
+document.getElementById('stopAll').onclick = () => {
+  document.querySelectorAll('audio').forEach(a => a.pause());
+};
+document.getElementById('clearBtn').onclick = () => {
+  selected.clear();
+  localStorage.removeItem('beat-select');
+  render();
+};
+document.getElementById('copyBtn').onclick = async () => {
+  const text = [...selected].join('\n');
+  if (!text) { alert('ยังไม่ได้เลือกบีทเลย'); return; }
+  try { await navigator.clipboard.writeText(text); alert('คัดลอกแล้ว ' + selected.size + ' บีท'); }
+  catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+    alert('คัดลอกแล้ว');
+  }
+};
+
+render();
+</script>
+</body>
+</html>
