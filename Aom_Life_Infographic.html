@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阿夢心物語 — AOM AURORA · ชีวประวัติ อมสิน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Zen+Old+Mincho:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070f; --ink:#e8eefc; --ink-soft:#aab6d4; --faint:#5f6b8f;
+    --cy:#22d3ee; --vi:#a78bfa; --pk:#f472b6; --gd:#fbbf24; --gr:#34d399;
+    --glass:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans Thai',sans-serif;
+    font-size:15px; line-height:1.7;
+    min-height:100vh; overflow-x:hidden;
+  }
+  /* ===== AURORA BG ===== */
+  .aurora{position:fixed;inset:0;z-index:0;overflow:hidden;filter:blur(70px);opacity:.8;}
+  .aurora b{position:absolute;display:block;border-radius:50%;opacity:.5;animation:drift 22s ease-in-out infinite alternate;}
+  .aurora b:nth-child(1){width:60vw;height:60vh;left:-15vw;top:-20vh;background:radial-gradient(circle,#0ea5b7,transparent 70%);animation-duration:26s;}
+  .aurora b:nth-child(2){width:55vw;height:55vh;right:-15vw;top:10vh;background:radial-gradient(circle,#7c3aed,transparent 70%);animation-duration:31s;animation-delay:-8s;}
+  .aurora b:nth-child(3){width:50vw;height:50vh;left:10vw;bottom:-25vh;background:radial-gradient(circle,#db2777,transparent 70%);animation-duration:24s;animation-delay:-14s;}
+  .aurora b:nth-child(4){width:35vw;height:35vh;right:20vw;bottom:-10vh;background:radial-gradient(circle,#1d4ed8,transparent 70%);animation-duration:35s;animation-delay:-5s;}
+  @keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(8vw,6vh) scale(1.25);}}
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+  .st{position:absolute;width:2px;height:2px;border-radius:50%;background:#cfe6ff;opacity:.35;animation:tw 4s ease-in-out infinite alternate;}
+  @keyframes tw{from{opacity:.1;}to{opacity:.8;}}
+
+  .wrap{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:26px 16px 70px;}
+  .glass{
+    background:var(--glass);
+    border:1px solid var(--line);
+    border-radius:20px;
+    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+    box-shadow:0 20px 50px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .gtext{background:linear-gradient(92deg,var(--cy),var(--vi) 45%,var(--pk));-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+  /* ===== HERO ===== */
+  .hero{padding:34px 30px;display:flex;gap:26px;align-items:center;margin-bottom:20px;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;top:-120px;left:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.25),transparent 65%);filter:blur(30px);}
+  .hero::after{content:'';position:absolute;bottom:-140px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(244,114,182,.22),transparent 65%);filter:blur(30px);}
+  .hero .ava{flex:0 0 128px;width:128px;height:128px;border-radius:50%;padding:4px;
+    background:conic-gradient(from 0deg,var(--cy),var(--vi),var(--pk),var(--gd),var(--cy));
+    box-shadow:0 0 35px rgba(124,58,237,.5),0 0 12px rgba(34,211,238,.4);
+    animation:spin 9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .hero .ava>div{width:100%;height:100%;border-radius:50%;background:#0b1020 center/cover no-repeat;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Zen Old Mincho',serif;font-weight:900;font-size:26px;color:var(--cy);
+    text-shadow:0 0 14px rgba(34,211,238,.8);animation:spin 9s linear infinite reverse;}
+  .hero h1{font-size:42px;font-weight:700;letter-spacing:.01em;}
+  .hero .jp{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:14px;letter-spacing:.3em;margin-top:4px;color:var(--cy);text-shadow:0 0 12px rgba(34,211,238,.6);}
+  .hero .jp span{font-family:'IBM Plex Sans Thai',sans-serif;font-weight:500;font-size:11.5px;color:var(--faint);letter-spacing:.08em;}
+  .hero .desc{font-size:15.5px;color:var(--ink-soft);margin-top:10px;}
+  .hero .desc b{color:#fff;font-weight:600;}
+  .heroTags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+  .tg{font-size:12.5px;border:1px solid var(--line);padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.05);color:var(--ink-soft);}
+  .tg b{color:#fff;font-weight:600;}
+
+  /* ===== SECTIONS ===== */
+  section{padding:26px 30px;margin-bottom:20px;position:relative;overflow:hidden;}
+  .sechead{display:flex;align-items:center;gap:13px;margin-bottom:20px;}
+  .sechead .kanji{flex:0 0 40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    font-family:'Zen Old Mincho',serif;font-weight:900;font-size:18px;color:#fff;
+    background:linear-gradient(135deg,rgba(34,211,238,.25),rgba(167,139,250,.25),rgba(244,114,182,.25));
+    border:1px solid rgba(255,255,255,.15);box-shadow:0 0 18px rgba(124,58,237,.35);}
+  .sechead .t{font-weight:700;font-size:21px;line-height:1.3;}
+  .sechead .t small{display:block;font-size:9.5px;color:var(--faint);letter-spacing:.26em;font-weight:500;font-family:'IBM Plex Sans Thai',sans-serif;}
+  .sechead .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(167,139,250,.6),transparent);}
+  .sechead .t .gtext{filter:brightness(1.15);}
+
+  /* ===== TIMELINE ===== */
+  .tl{position:relative;padding-left:34px;}
+  .tl::before{content:'';position:absolute;left:10px;top:4px;bottom:4px;width:2px;
+    background:linear-gradient(180deg,var(--cy),var(--vi) 55%,var(--pk));box-shadow:0 0 10px rgba(167,139,250,.6);}
+  .ev{position:relative;margin-bottom:18px;opacity:0;transform:translateX(16px);transition:all .6s cubic-bezier(.2,.7,.3,1);}
+  .ev.show{opacity:1;transform:translateX(0);}
+  .ev:last-child{margin-bottom:0;}
+  .ev .dot{position:absolute;left:-29px;top:6px;width:14px;height:14px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#9df3ff,#0891b2);
+    box-shadow:0 0 10px rgba(34,211,238,.9);}
+  .ev.major .dot{width:18px;height:18px;left:-31px;background:radial-gradient(circle at 35% 30%,#f0abfc,#c026d3);box-shadow:0 0 14px rgba(217,70,239,.9);}
+  .ev .yr{font-weight:700;font-size:14px;color:var(--cy);letter-spacing:.06em;text-shadow:0 0 10px rgba(34,211,238,.5);}
+  .ev .yr small{font-weight:500;font-size:11px;color:var(--faint);margin-left:8px;}
+  .ev .tt{font-weight:700;font-size:17px;color:#fff;}
+  .ev .dd{font-size:13.5px;color:var(--ink-soft);}
+  .ev .dd b{color:var(--vi);font-weight:600;}
+  .ev.major{border:1px solid rgba(217,70,239,.35);background:rgba(217,70,239,.06);padding:12px 14px;border-radius:14px;}
+
+  /* ===== CHART ===== */
+  .chart{display:flex;align-items:flex-end;gap:24px;height:200px;margin-bottom:6px;}
+  .cbar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .cbar .val{font-weight:700;font-size:14px;color:#fff;margin-bottom:6px;white-space:nowrap;}
+  .cbar .col{width:100%;max-width:80px;height:0;border-radius:10px 10px 4px 4px;
+    background:linear-gradient(180deg,var(--cy),#0891b2);
+    box-shadow:0 0 18px rgba(34,211,238,.55);
+    transition:height 1.2s cubic-bezier(.2,.7,.3,1);}
+  .cbar.hero .col{background:linear-gradient(180deg,var(--pk),#a21caf);box-shadow:0 0 24px rgba(236,72,153,.6);}
+  .cbar .lbl{margin-top:8px;font-size:11px;color:var(--faint);text-align:center;border-top:1px solid var(--line);padding-top:6px;width:100%;}
+  .cbar .lbl b{color:var(--ink-soft);display:block;font-size:12px;font-weight:600;}
+  .chartnote{font-size:11px;color:var(--faint);text-align:center;margin-bottom:16px;}
+
+  /* ===== GRID CARDS ===== */
+  .wallets{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .w{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:11px 13px;border-radius:14px;}
+  .w .wn{font-size:11px;color:var(--faint);}
+  .w .wv{font-weight:700;font-size:16px;color:var(--cy);margin-top:3px;text-shadow:0 0 12px rgba(34,211,238,.5);}
+  .w.hero{border-color:rgba(244,114,182,.5);background:rgba(244,114,182,.07);}
+  .w.hero .wv{color:var(--pk);text-shadow:0 0 12px rgba(244,114,182,.6);font-size:17px;}
+  .w.gold .wv{color:var(--gd);text-shadow:0 0 12px rgba(251,191,36,.5);}
+
+  .income{margin-top:16px;border:1px dashed rgba(255,255,255,.15);padding:13px 15px;border-radius:16px;background:rgba(255,255,255,.025);}
+  .income .ih{font-weight:700;font-size:15px;color:#fff;margin-bottom:9px;}
+  .income .ih.gtext{display:inline-block;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:12px;border:1px solid var(--line);padding:3px 12px;border-radius:99px;background:rgba(255,255,255,.05);color:var(--ink-soft);
+    opacity:0;transform:scale(.85);transition:all .4s ease;}
+  .chip.show{opacity:1;transform:scale(1);}
+  .chip b{color:#fff;font-weight:600;}
+  .chip.done{border-color:rgba(52,211,153,.45);color:#a7f3d0;background:rgba(52,211,153,.08);}
+  .chip.done b{color:var(--gr);}
+  .chip.todo{border-color:rgba(251,191,36,.45);color:#fde68a;background:rgba(251,191,36,.07);}
+  .chip.todo b{color:var(--gd);}
+  .chip.hot{border-color:rgba(244,114,182,.5);color:#fbcfe8;background:rgba(244,114,182,.09);}
+
+  /* ===== MUSIC / TECH / PROJ ===== */
+  .music-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;}
+  .album{border:1px solid rgba(34,211,238,.3);background:rgba(34,211,238,.05);padding:15px 16px;border-radius:16px;}
+  .album.v{border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.05);}
+  .album .ah{font-weight:700;font-size:19px;color:#fff;}
+  .album .ag{font-size:12px;color:var(--cy);margin-top:2px;font-weight:600;}
+  .album.v .ag{color:var(--vi);}
+  .album .ad{font-size:13px;color:var(--ink-soft);margin-top:7px;}
+  .freq{display:inline-block;margin-top:9px;font-size:11px;color:var(--cy);border:1px solid rgba(34,211,238,.4);padding:2px 10px;border-radius:99px;}
+  .mstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .ms{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px;border-radius:14px;text-align:center;}
+  .ms .mv{font-weight:700;font-size:22px;}
+  .ms .ml{font-size:10.5px;color:var(--faint);margin-top:3px;}
+  .mtags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+  .mt{font-size:11px;border:1px solid var(--line);padding:3px 10px;border-radius:99px;color:var(--ink-soft);background:rgba(255,255,255,.04);}
+  .mt b{color:#fff;font-weight:600;}
+
+  .tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .tbox{border:1px solid var(--line);background:rgba(255,255,255,.035);padding:15px;border-radius:16px;}
+  .tbox .th{font-weight:700;font-size:16px;color:#fff;margin-bottom:9px;}
+  .tbox .th small{font-size:9px;color:var(--faint);letter-spacing:.2em;margin-left:7px;font-weight:500;}
+  .stack{display:flex;flex-wrap:wrap;gap:6px;}
+  .sk{font-size:11.5px;border:1px solid var(--line);padding:2.5px 10px;border-radius:8px;background:rgba(255,255,255,.04);color:var(--ink-soft);
+    opacity:0;transform:translateY(8px);transition:all .4s ease;}
+  .sk.show{opacity:1;transform:translateY(0);}
+  .sk.hot{border-color:rgba(34,211,238,.5);color:var(--cy);background:rgba(34,211,238,.08);font-weight:600;}
+  .rig{border-top:1px dashed rgba(255,255,255,.12);margin-top:11px;padding-top:10px;font-size:12.5px;color:var(--ink-soft);}
+  .rig b{color:#fff;font-weight:600;}
+
+  /* ===== PROJECTS / LIFE / GOALS ===== */
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+  .proj{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:15px;border-radius:16px;position:relative;
+    opacity:0;transform:translateY(16px);transition:all .55s ease;}
+  .proj.show{opacity:1;transform:translateY(0);}
+  .proj:hover{border-color:rgba(167,139,250,.5);box-shadow:0 0 24px rgba(167,139,250,.15);}
+  .proj .st{position:absolute;top:12px;right:12px;font-size:9px;padding:2.5px 10px;border-radius:99px;letter-spacing:.12em;font-weight:700;}
+  .st.live{background:rgba(52,211,153,.15);color:var(--gr);border:1px solid rgba(52,211,153,.4);box-shadow:0 0 10px rgba(52,211,153,.3);}
+  .st.wip{background:rgba(167,139,250,.12);color:var(--vi);border:1px solid rgba(167,139,250,.4);}
+  .st.plan{background:transparent;border:1px solid var(--line);color:var(--faint);}
+  .proj .pn{font-weight:700;font-size:17px;color:#fff;padding-right:60px;}
+  .proj .pc{font-size:12px;color:var(--cy);margin-top:2px;font-weight:600;}
+  .proj .pd{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  .proj .pt{margin-top:9px;font-size:11px;color:var(--faint);}
+  .proj .pt b{color:var(--gd);font-weight:600;}
+
+  .life-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+  .lf{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:15px;border-radius:16px;opacity:0;transform:translateY(16px);transition:all .55s ease;}
+  .lf.show{opacity:1;transform:translateY(0);}
+  .lf .lh{font-weight:700;font-size:15.5px;color:#fff;margin-top:6px;}
+  .lf .ld{font-size:12.5px;color:var(--ink-soft);margin-top:4px;}
+  .lf .ld b{color:var(--cy);font-weight:600;}
+  .lf .ico{font-size:23px;display:block;}
+
+  .goal{display:flex;gap:13px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:12px 15px;border-radius:16px;margin-bottom:10px;}
+  .goal.main{border-color:rgba(251,191,36,.45);background:rgba(251,191,36,.06);box-shadow:0 0 26px rgba(251,191,36,.12);}
+  .goal .gico{font-size:20px;flex:0 0 auto;}
+  .goal .gb{flex:1;min-width:0;}
+  .goal .gt{font-weight:700;font-size:16px;color:#fff;}
+  .goal .gt .tag{font-size:9px;color:#0b1020;background:linear-gradient(90deg,var(--gd),#f59e0b);padding:2px 9px;margin-left:8px;border-radius:99px;letter-spacing:.18em;vertical-align:3px;display:inline-block;}
+  .goal .gd{font-size:11.5px;color:var(--faint);margin-top:2px;}
+  .goal .gp{flex:0 0 110px;}
+  .goal .gp .pb{height:10px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;}
+  .goal .gp .pb i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--cy),var(--vi));box-shadow:0 0 10px rgba(167,139,250,.7);transition:width 1.3s cubic-bezier(.2,.7,.3,1);}
+  .goal.main .gp .pb i{background:linear-gradient(90deg,#f59e0b,var(--pk));box-shadow:0 0 10px rgba(251,191,36,.7);}
+  .goal .gp span{display:block;font-size:10px;color:var(--faint);text-align:right;margin-top:4px;font-weight:600;}
+
+  /* ===== HOUSE ZONES ===== */
+  .zones{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;}
+  .zone{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:15px;border-radius:16px;opacity:0;transform:translateY(16px);transition:all .55s ease;}
+  .zone.show{opacity:1;transform:translateY(0);}
+  .zone .zh{font-weight:700;font-size:15.5px;color:#fff;}
+  .zone .zh i{font-style:normal;margin-right:6px;}
+  .zone .zc{font-size:11.5px;color:var(--cy);font-weight:600;margin-top:2px;}
+  .zone .zd{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  .zone .zd b{color:var(--vi);font-weight:600;}
+  .zone.wide{grid-column:1/-1;border-color:rgba(251,191,36,.35);background:rgba(251,191,36,.05);}
+
+  .divider{text-align:center;color:var(--faint);font-size:13px;letter-spacing:1em;padding:4px 0 0;opacity:.7;}
+
+  /* ===== FOOTER ===== */
+  .seal-row{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:20px 28px;}
+  .seal-row .l{font-size:12px;color:var(--faint);}
+  .sealbig{width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:19px;color:#0b1020;
+    background:linear-gradient(135deg,var(--cy),var(--vi));
+    box-shadow:0 0 26px rgba(124,58,237,.6);transform:scale(.3);opacity:0;transition:all .7s cubic-bezier(.2,.7,.3,1.4);}
+  .sealbig.stamped{transform:scale(1);opacity:1;}
+  .seal-row .r{text-align:right;font-size:10px;color:var(--faint);letter-spacing:.22em;line-height:1.85;}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:all .7s cubic-bezier(.2,.7,.3,1);}
+  .reveal.show{opacity:1;transform:translateY(0);}
+  section,.hero,.seal-row{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.75,.25,1);}
+  section.show,.hero.show,.seal-row.show{opacity:1;transform:translateY(0);}
+  .val.flash{animation:vflash .5s ease;}
+  @keyframes vflash{0%{transform:scale(1.2);filter:brightness(1.6);}100%{transform:scale(1);filter:brightness(1);}}
+
+  @media (prefers-reduced-motion:reduce){.hero .ava{animation:none;}}
+  @media (max-width:680px){
+    .hero{flex-direction:column;text-align:center;}
+    .heroTags{justify-content:center;}
+    .chart{gap:10px;height:160px;}
+    .wallets{grid-template-columns:1fr 1fr;}
+    .music-grid,.tech-grid,.proj-grid,.zones{grid-template-columns:1fr;}
+    .life-grid{grid-template-columns:1fr;}
+    .goal{flex-wrap:wrap;}
+    .goal .gp{flex:1 1 100%;}
+    .seal-row{flex-wrap:wrap;justify-content:center;text-align:center;}
+    .seal-row .r{text-align:center;}
+  }
+</style>
+</head>
+<body>
+<div class="aurora"><b></b><b></b><b></b><b></b></div>
+<div id="stars"></div>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero glass">
+    <div class="ava"><div>阿夢心</div></div>
+    <div class="ht">
+      <h1 class="gtext">อมสิน</h1>
+      <div class="jp">阿夢心物語 <span>— เรื่องราว 21 ปีของผู้เดินทาง</span></div>
+      <div class="desc">จากเด็กศรีราชาสู่ <b>et1cruel</b> โปรดิวเซอร์สายเมฆ — ผู้แต่งเพลง 90+ บท ผู้ก่อตั้ง <b>ThaiBeat Academy</b> และนักเวทฝึกหัดแห่ง AI ที่เชื่อว่า <b>808 กับโค้ด</b> เปลี่ยนโลกได้</div>
+      <div class="heroTags">
+        <span class="tg">เกิด <b>17 ธ.ค. 2004</b></span>
+        <span class="tg">กำเนิด <b>ศรีราชา</b></span>
+        <span class="tg">ปัจุบัน <b>บางใหญ่ นนทบุรี</b></span>
+        <span class="tg">สัญลักษณ์ <b>♪ 432Hz</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">道</div><div class="t"><span class="gtext">เส้นทางแห่งการเดินทาง</span><small>THE JOURNEY · 2547–2569</small></div><div class="line"></div></div>
+    <div class="tl">
+      <div class="ev"><div class="dot"></div><div class="yr">2547 <small>17 ธันวาคม</small></div><div class="tt">กำเนิดที่ศรีราชา ชลบุรี</div><div class="dd">จุดเริ่มต้นของผู้เดินทาง — ก่อนย้ายฐานสู่บางใหญ่ นนทบุรี</div></div>
+      <div class="ev"><div class="dot"></div><div class="yr">การศึกษา</div><div class="tt">มนุษยศาสตร์ → ไบโอเทค → มิวสิคเทค → 42</div><div class="dd">เรียนสายมนุษย์-ภาษาอังกฤษ เปลี่ยนไป Biotechnology ลอง Music Technology 1 เดือนก็ออก — ก่อนผ่านค่ายโค้ดดิ่ง <b>42 Bangkok Piscine</b></div></div>
+      <div class="ev major"><div class="dot"></div><div class="yr">2566 <small>จุดเปลี่ยน</small></div><div class="tt">ปีที่ยากที่สุด — และวันแรกของเส้นทางใหม่</div><div class="dd">เริ่มฝึก <b>beat making, content, tattoo design</b> — เปลี่ยนความเจ็บเป็นทักษะ</div></div>
+      <div class="ev"><div class="dot"></div><div class="yr">2566–2567</div><div class="tt">ยุคบ่มเพาะฝีมือ</div><div class="dd">FL Studio, กล้อง, งานออกแบบ จนเริ่มมีผลงานสะสม</div></div>
+      <div class="ev"><div class="dot"></div><div class="yr">2568</div><div class="tt">ชีวิตเริ่มนิ่ง — รายได้แรกๆ</div><div class="dd">ขายนมเปรี้ยว งานหมูกระทะ busking ถ่ายวิดีโอ ออกแบบสัก สู่การขายบีทชุดแรก</div></div>
+      <div class="ev major"><div class="dot"></div><div class="yr">2569 <small>ปัจุบัน</small></div><div class="tt">ปีแห่งโค้ดและปัญญาประดิษฐ์</div><div class="dd">โฟกัส <b>coding, AI automation, สร้างรายได้</b> — ThaiBeat Academy, Aom Universe, Python/C++, รัน LLM ในเครื่องตัวเอง</div></div>
+    </div>
+  </section>
+
+  <!-- MONEY -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">富</div><div class="t"><span class="gtext">เส้นทางการสั่งสม</span><small>WEALTH JOURNEY · หน่วย: บาท</small></div><div class="line"></div></div>
+    <div class="chart">
+      <div class="cbar" data-h="5.2" data-v="33000"><div class="val">0</div><div class="col"></div><div class="lbl"><b>จุดแรก</b>ที่บันทึกไว้</div></div>
+      <div class="cbar" data-h="10" data-v="63300"><div class="val">0</div><div class="col"></div><div class="lbl"><b>ก้าวที่สอง</b>เกือบเท่าตัว</div></div>
+      <div class="cbar" data-h="11.3" data-v="72000"><div class="val">0</div><div class="col"></div><div class="lbl"><b>ก้าวที่สาม</b>ความมั่นคง</div></div>
+      <div class="cbar hero" data-h="88" data-v="638700"><div class="val">0</div><div class="col"></div><div class="lbl"><b>ปัจุบัน 2569</b>กว่าครึ่งทางมหาสมบัติ</div></div>
+    </div>
+    <div class="chartnote">* เติบโต ~19 เท่าจากจุดแรก</div>
+    <div class="wallets">
+      <div class="w hero"><div class="wn">รวมทั้งสิ้น</div><div class="wv" data-count="638700">0</div></div>
+      <div class="w"><div class="wn">กสิกร — อมทรัพย์</div><div class="wv" data-count="585000">0</div></div>
+      <div class="w"><div class="wn">ใช้จ่าย 40,000+10,700+3,000</div><div class="wv" data-count="53700">0</div></div>
+      <div class="w gold"><div class="wn">เป้าหมาย 1,000,000 ฿</div><div class="wv" data-count="1000000">0</div></div>
+    </div>
+    <div class="income">
+      <div class="ih">แหล่งรายได้ที่เคยสร้างมาตลอดทาง</div>
+      <div class="chips">
+        <span class="chip">ขายบีท <b>26 สลิป · 8,970฿</b></span><span class="chip">งาน <b>Videographer</b></span><span class="chip">ออกแบบ <b>Tattoo</b></span><span class="chip"><b>Busking</b> จตุจักร · สยาม</span><span class="chip">งาน <b>หมูกระทะ · KFC · Tops O2O</b></span><span class="chip">ขาย <b>นมเปรี้ยว</b></span><span class="chip">สอนทำบีท <b>1-1</b></span><span class="chip"><b>Affiliate</b> Shopee · TikTok</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUEST LOG -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">討</div><div class="t"><span class="gtext">บันทึกภารกิจ</span><small>QUEST LOG · 2568–2569</small></div><div class="line"></div></div>
+    <div class="income">
+      <div class="ih gtext">✅ ภารกิจสำเร็จ</div>
+      <div class="chips">
+        <span class="chip done">ซื้อเครื่องสักชิ้นแรก ฝึกเป็นอาชีพ <b>2,200฿</b></span>
+        <span class="chip done">ซ่อมรูกีตาร์ SG + เปลี่ยนสาย <b>150฿</b></span>
+        <span class="chip done">เปลี่ยนสายเบส + แอมป์ <b>1,900฿</b></span>
+        <span class="chip done">กล้อง Insta360 Ace Pro 2 8K <b>15,000฿</b></span>
+        <span class="chip done">งานออกแบบรอยสัก 100% <b>1,500฿</b></span>
+        <span class="chip done">วิดีโออวยพร/ลัคกี้ <b>+100 × 20+ งาน</b> (มิ.ย.–ส.ค.)</span>
+        <span class="chip done">วิดีโอติดมหาลัย · 3 คลิป +300 · พี่วิว · รีวิวแมวมะตอย · ให้กำลังใจ +150 · ฝากบอกศิลปิน</span>
+        <span class="chip done">คอลแล็บหมาเล็ก <b>+1,000฿</b></span>
+        <span class="chip done">บีท ambient <b>+800 / +900 / 700฿</b></span>
+        <span class="chip done">บีท Regalia <b>700฿</b> · บีทจารจู <b>450/900฿</b></span>
+        <span class="chip done">ทำบีทลอยๆ เบสหนัก <b>+800฿</b></span>
+        <span class="chip done">รับนักศึกษา 5 คน ม.วิทยาการทำบีท <b>+1,500฿</b></span>
+        <span class="chip done">สอนทำเพลง <b>+1,270฿</b></span>
+        <span class="chip done">Discord ม.วิทยาการทำบีท · ลงข้อมูลความรู้</span>
+        <span class="chip done">Affiliate ลัคกี้ / Poster / อวยพร / รีวิวของ</span>
+        <span class="chip done">Collection Set เสื้อผ้า · คลิปบีทแบบดีๆ · ฝึกสักหนังเทียม 1 ลาย</span>
+        <span class="chip done">อาบน้ำลัคกี้ กับ น้าหมา 🐕 · ไปเอาแว่นวันจันทร์</span>
+        <span class="chip done">คลิป promote pain lipsync <b>29 พ.ค. 2026</b></span>
+      </div>
+    </div>
+    <div class="income">
+      <div class="ih gtext">⏳ ภารกิจรอลุย</div>
+      <div class="chips">
+        <span class="chip todo">สอนทำบีท พฤ. 10 ก.ย. 20:00–22:00 <b>+1,000฿</b> (จ่ายแล้ว)</span>
+        <span class="chip todo">สอนทำบีท จ. 14 ก.ย. 20:00–22:00 <b>+2,500฿</b> (จ่ายแล้ว)</span>
+        <span class="chip todo">ซื้อรถไฟฟ้าสักคัน ไว้ขับทำงาน ⚡</span>
+        <span class="chip todo">อัลบั้ม Folk-ambient ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ <b>10 เพลง</b></span>
+        <span class="chip todo">คลิป promote ม.วิทยาการทำบีท + poster อัพเดตฟีเจอร์</span>
+        <span class="chip todo">คลิป promote หาลูกค้าเพิ่มบีท</span>
+      </div>
+    </div>
+    <div class="income">
+      <div class="ih gtext">💰 แผนเครื่องดนตรี/อุปกรณ์ 2026</div>
+      <div class="chips">
+        <span class="chip done">แอมป์เปิดหมวก <b>6,200฿</b> · กีตาร์โปร่ง <b>5,700฿</b> · ไฟฟ้า <b>4,700฿</b></span>
+        <span class="chip done">คอมพิวเตอร์ <b>15,200฿</b> · Notebook <b>4,500฿</b></span>
+        <span class="chip done">Focusrite 2i2 <b>2,300฿</b> · ไมค์ AT2020 · Avantone CK-6 · Behringer B2 · ขาตั้ง+ป็อปฟิลเตอร์ <b>500฿</b></span>
+        <span class="chip done">หูฟัง Artesia AMH-11 · ลำโพง Shreman/มอนิเตอร์ <b>2,500฿</b> · Sound Absorption <b>500฿</b></span>
+        <span class="chip done">Nikon D5200 <b>4,700฿</b> · iPhone <b>5,000฿</b> · เปียโนคีบอร์ด <b>1,200฿</b> · เอฟเฟค Boss OD / Mooer A7</span>
+        <span class="chip hot">รวมทั้งหมด <b>96,500 / 100,000 ฿</b> — เแผน 2026 (96.5%)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHANNELS -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">衆</div><div class="t"><span class="gtext">อาณาจักรผู้ติดตาม</span><small>FOLLOWER KINGDOMS</small></div><div class="line"></div></div>
+    <div class="wallets">
+      <div class="w hero"><div class="wn">🎵 ลัคกี้ — Content</div><div class="wv" data-count="18700">0</div></div>
+      <div class="w"><div class="wn">💻 prod.et1cruel — บีท</div><div class="wv" data-count="5158">0</div></div>
+      <div class="w"><div class="wn">🎬 dir.et1cruel — ตัดต่อ/MV</div><div class="wv" data-count="255">0</div></div>
+      <div class="w"><div class="wn">🎨 et1cruel — ศิลปะ/เพลง</div><div class="wv" data-count="612">0</div></div>
+      <div class="w"><div class="wn">🖋 art.et1cruel — สัก</div><div class="wv" data-count="248">0</div></div>
+      <div class="w"><div class="wn">👕 เสื้อผ้า</div><div class="wv" data-count="90">0</div></div>
+      <div class="w"><div class="wn">🌙 himoriyacore — ชีวิต</div><div class="wv" data-count="80">0</div></div>
+      <div class="w gold"><div class="wn">รวมทั้งหมด</div><div class="wv" data-count="25143">0</div></div>
+    </div>
+    <div class="income">
+      <div class="ih">สูตร: เพลง = แบรนด์หลัก · บีท = เงินรายวัน · สัก = เงินก้อน · เสื้อ/MV = เสริม vibe</div>
+      <div class="chips">
+        <span class="chip">Passive: <b>Streaming · Stock ภาพ · เกม · หนังสือ · Adsense · ห้องซ้อม · ปลูกต้นไม้ · Affiliate · App</b></span>
+        <span class="chip">ตัวเร่ง: <b>Beatstore · TikTok/Reels loop · type beat ขายได้</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MUSIC -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">音</div><div class="t"><span class="gtext">มิติแห่งบทเพลง</span><small>MUSIC IDENTITY · et1cruel</small></div><div class="line"></div></div>
+    <div class="music-grid">
+      <div>
+        <div class="album reveal"><div class="ah">himoriyacore</div><div class="ag">อัลบั้มเต็ม · Ambient Cloud Rap</div><div class="ad">10 บทเพลงบน Spotify และ YouTube — ร้อยเรียงความฝันกับม่านเมฆ</div><span class="freq">♪ 432Hz</span></div>
+        <div style="height:10px"></div>
+        <div class="album v reveal"><div class="ah">perryblonde a dozen</div><div class="ag">โปรเจกต์วง · Shoegaze</div><div class="ad">กีตาร์ร้องห่มหมอกแบ shoegaze ตรงข้ามสุดกับโลก cloud rap</div></div>
+      </div>
+      <div>
+        <div class="mstats">
+          <div class="ms reveal"><div class="mv gtext" data-count="90" data-suffix="+">0</div><div class="ml">บทเพลงที่ปล่อยแล้ว</div></div>
+          <div class="ms reveal"><div class="mv gtext" data-count="10">0</div><div class="ml">เพลงในอัลบั้มแรก</div></div>
+          <div class="ms reveal"><div class="mv gtext" data-count="60">0</div><div class="ml">เพลงบน YouTube</div></div>
+          <div class="ms reveal"><div class="mv gtext">S++</div><div class="ml">ระดับวิชาขับร้อง</div></div>
+        </div>
+        <div class="mtags">
+          <span class="mt">FL Studio · Reason</span><span class="mt">สอน beat <b>1,000฿</b></span><span class="mt">สอน mix <b>500฿</b></span><span class="mt">บีท <b>500–7,900฿</b></span><span class="mt">Preset pack <b>200–300฿</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILL -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">技</div><div class="t"><span class="gtext">ตารางวิชา</span><small>SKILL CHART · LANGUAGE · DOCUMENT</small></div><div class="line"></div></div>
+    <div class="tech-grid">
+      <div class="tbox">
+        <div class="th">สกิลหลัก<small>SKILLS</small></div>
+        <div class="stack">
+          <span class="sk hot">S++ Singing</span><span class="sk hot">S+ Guitar</span><span class="sk hot">S Beatmaker</span><span class="sk hot">S Mixing & Mastering</span><span class="sk hot">S Rapping</span><span class="sk hot">S Song writer</span><span class="sk hot">S Recording</span><span class="sk hot">S Typing · English · Computer</span><span class="sk hot">S Writing · Gaming</span><span class="sk">A Editor · Photographer · Drum · Bass · Football · Running · Poker</span><span class="sk">B Piano · Drawing · Boxing · Tattoo painting · Programming</span><span class="sk">C Cooking · Game maker · Movie director</span>
+        </div>
+      </div>
+      <div class="tbox">
+        <div class="th">ภาษา & เอกสาร<small>LANG · DOC</small></div>
+        <div class="stack">
+          <span class="sk hot">ไทย ✓</span><span class="sk hot">อังกฤษ ✓</span><span class="sk">จีน</span><span class="sk">ญี่ปุ่น</span><span class="sk">เกาหลี</span><span class="sk">ฝรั่งเศส</span><span class="sk">เยอรมัน</span><span class="sk">สเปน</span>
+          <span class="sk hot">บัตรประชาชน ✓</span><span class="sk">ใบขับขี่มอไซต์</span><span class="sk">ใบขับขี่รถยนต์</span><span class="sk">Visa · Passport</span>
+        </div>
+        <div class="rig"><b>อาชีพ Max Rate:</b> เปิดหมวก 2,000฿ · เล่นดนตรีสด 400฿ · นายท่ารถตู้ 400฿ · KFC 350฿ · Tops O2O 400฿ · หมูกระทะ 230฿ · นมเปรี้ยว 200฿</div>
+      </div>
+    </div>
+    <div class="tech-grid" style="margin-top:16px;">
+      <div class="tbox">
+        <div class="th">อาวุธหลัก<small>CODING</small></div>
+        <div class="stack">
+          <span class="sk hot">Python</span><span class="sk hot">C++</span><span class="sk">React + Vite</span><span class="sk">Node/Express</span><span class="sk">Supabase</span><span class="sk">PostgreSQL</span><span class="sk">Vercel</span><span class="sk">Git</span><span class="sk">C · Rust · Arduino · RPi</span>
+        </div>
+        <div class="rig"><b>เครื่อง:</b> i5-12400F · RTX 4060 · RAM 32GB · SSD 1TB · <b>โปรแกรม:</b> FL Studio, Figma, Blender, TouchDesigner, AE</div>
+      </div>
+      <div class="tbox">
+        <div class="th">สำนักเวท AI ส่วนตัว<small>LOCAL AI</small></div>
+        <div class="stack">
+          <span class="sk hot">LM Studio</span><span class="sk hot">Llama 3 8B</span><span class="sk">Gemma 4B</span><span class="sk">RAG</span><span class="sk">Vector DB</span><span class="sk">LoRA / QLoRA</span><span class="sk">GGUF</span>
+        </div>
+        <div class="rig">ปณิธาน: <b>AI ที่เป็นของตัวเอง ทำงาน offline</b> — สูตร: <b>dataset → JSONL → RAG → LoRA</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">業</div><div class="t"><span class="gtext">อาณาจักรแห่งาน</span><small>PROJECTS</small></div><div class="line"></div></div>
+    <div class="proj-grid">
+      <div class="proj"><span class="st live">LIVE</span><div class="pn">ThaiBeat Academy</div><div class="pc">เว็บสอนทำบีท + ร้านขายบีท</div><div class="pd">ฟรีแล็บ 8 บท, คอร์ส 990–2,990฿, Showcase, XP/Level, ส่งสลิปในเว็บ</div><div class="pt">Bundle คิท <b>599฿</b> · Wall of Credit <b>26 สลิป</b></div></div>
+      <div class="proj"><span class="st wip">กำลังสร้าง</span><div class="pn">Aom Universe</div><div class="pc">ระบ AI หลายตัวในเครื่องตัวเอง</div><div class="pd">สหายสี่องค์ — Core · Dev · Robot · Creative พร้อมความจำ RAG</div><div class="pt">ความคืบหน้า <b>25%</b></div></div>
+      <div class="proj"><span class="st wip">แนวคิด</span><div class="pn">พักใจ (Pakjai)</div><div class="pc">โซเชียลคัดกรองพลังานลบด้วย AI</div><div class="pd">ปุ่มพักใจเปลี่ยนฟีดตามใจ รีเซ็ตทุกเที่ยงคืน สไตล์ solarpunk</div><div class="pt">Stack <b>React · Express · Supabase</b></div></div>
+      <div class="proj"><span class="st plan">ทดลอง</span><div class="pn">Photo Organizer AI</div><div class="pc">AI จัดรูปอัตโนมัติในเครื่อง</div><div class="pd">LM Studio วิเคราะห์ภาพ → JSON → Python จัดโฟลเดอร์</div><div class="pt"><b>API · structured output · automation</b></div></div>
+      <div class="proj"><span class="st plan">จักรวาล</span><div class="pn">et1cruelverse</div><div class="pc">ศิลปินเต็มระบ 5 ร่าง</div><div class="pd"><b>Art</b> (et1cruel) + <b>Sound</b> (prod.) + <b>Vision</b> (visualizational) + <b>Play</b> (Cruelmanblack) + <b>Soul</b> (himoriyacore) — มังะ เกม เสื้อผ้า MV ที่ต่อกันเป็นเรื่องเดียว เพลง/เสื้อในมังะฟังได้ใส่ได้จริง</div><div class="pt">เกม <b>SIN</b> · เนื้อเรื่องปรัชญา · setting บางใหญ่</div></div>
+      <div class="proj"><span class="st plan">คอนเทนต์</span><div class="pn">Content Systems</div><div class="pc">YouTube · TikTok · IG · Facebook</div><div class="pd">Cinematic Food (Wong Kar-wai x ข้าวมันไก่บางใหญ่) · Lifestyle beatmaker · Travel introspective “บางใหญ่ตอนตีห้า” · สัมภาษณ์ศิลปิน · สอนทำบีท/มิกซ์ · MV ต่อเรื่องเป็นหนัง · TouchDesigner reactive audio</div><div class="pt">Content layer = <b>ตัวดึงคน</b></div></div>
+    </div>
+  </section>
+
+  <!-- LIFE -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">命</div><div class="t"><span class="gtext">ชีวิตนอกหน้าจอ</span><small>DAILY LIFE</small></div><div class="line"></div></div>
+    <div class="life-grid">
+      <div class="lf"><span class="ico">🐭</span><div class="lh">คู่หูวิญาณ</div><div class="ld"><b>หนูน้อยลัคกี้</b> — สหายที่ไปหาหมอด้วยกันเสมอ บัฟ +10 กำลังใจทุกครั้งที่กลับบ้าน</div></div>
+      <div class="lf"><span class="ico">🏋️</span><div class="lh">การบำเพ็ญร่างกาย</div><div class="ld">สูง <b>185–187 ซม.</b> น้ำหนัก <b>74 ก.</b> — เวทเทรนิ่ง วิ่ง ปั่นจักรยาน <b>จันทร์–ศุกร์ 18:00</b> · อกำลังกายทุกวัน</div></div>
+      <div class="lf"><span class="ico">🧘</span><div class="lh">การบำเพ็ญจิต</div><div class="ld">สาย <b>432Hz / 528Hz</b> · อานาปานสติ · วิปัสนา · ศาสนาพุทธเป็นรากฐาน</div></div>
+      <div class="lf"><span class="ico">😄</span><div class="lh">ความสุขง่ายๆ</div><div class="ld">กินของอร่อย · น้ำหวาน · เล่นเกม · ทำเพลง · ดูหนัง · เล่นกีตาร์</div></div>
+      <div class="lf"><span class="ico">📚</span><div class="lh">การศึกษาต่อเนื่อง</div><div class="ld">Python AI ระบนิเวศ · คณิต/ฟิสิกส์ฐานรากของโค้ด · ชีวิทยา/ไบโอเทค · เกษตรพอเพียง · เพลงความหมายดี</div></div>
+      <div class="lf"><span class="ico">🎨</span><div class="lh">ฝึกทุกวัน</div><div class="ld">ทำบีทุกวัน · วาดรูปทุกวันฝึกเส้นส่งต่อความคิด</div></div>
+    </div>
+  </section>
+
+  <!-- HOUSE -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">家</div><div class="t"><span class="gtext">Base GEN.1</span><small>STUDIO · LAB · SOUL SPACE</small></div><div class="line"></div></div>
+    <div class="zones">
+      <div class="zone"><div class="zh"><i>🖋</i>TATTOO STATION</div><div class="zc">โซนสัก — ผิวหนังคือแคนวาส</div><div class="zd">โต๊ะสัก + เก้าอี้ Recline · ชุดเครื่องสัก · ไฟส่อง + กล้อง · iPad + Procreate<br><b>ปลายทาง:</b> รับงานสัก · ขายลาย NFT/Digital · คอนเทนต์เบื้องหลัง</div></div>
+      <div class="zone"><div class="zh"><i>🎬</i>MV STUDIO</div><div class="zc">โซน MV / ถ่าย Content</div><div class="zd">กล้อง DSLR/iPhone + Gimbal · ไฟ 3 จุด + ฉากหลัง · คอมตัดต่อ RAM 32GB+<br><b>ปลายทาง:</b> MV เพลงตัวเอง · รับถ่าย Vlog/Content · ยอดวิว</div></div>
+      <div class="zone"><div class="zh"><i>👕</i>FASHION ZONE</div><div class="zc">โซนเสื้อผ้า — แบรนด์ Amata</div><div class="zd">จักรเย็บผ้า + โต๊ะแพทเทิร์น · Heat press / Silk screen · หุ่นลองเสื้อ + ฉากถ่าย<br><b>ปลายทาง:</b> ขายอนไลน์ · Pre-Order แบรนด์ · เสื้อวงใน MV ตัวเอง</div></div>
+      <div class="zone"><div class="zh"><i>🎵</i>MUSIC STUDIO</div><div class="zc">โซนทำเพลง / อัดเสียง</div><div class="zd">Audio Interface · ไมค์ Condenser + Pop Filter · Studio Monitor · DAW<br><b>ปลายทาง:</b> ผลิตเพลง · รับ Mix/Master · Spotify/TikTok Music passive</div></div>
+      <div class="zone wide"><div class="zh"><i>🌌</i>COMMAND CENTER — ศูนย์บัญชาการ Creator</div><div class="zd">จอใหญ่ + WiFi แรง · Vision board · โต๊ะควบคุมไฟ/กล้อง/คอนเทนต์ · SSD สำรอง + Cloud — ที่วางกลยุทธ์สร้างโลกใหม่</div></div>
+    </div>
+  </section>
+
+  <!-- GOALS -->
+  <section class="glass">
+    <div class="sechead"><div class="kanji">志</div><div class="t"><span class="gtext">ภารกิจแห่งอนาคต</span><small>THE ROAD AHEAD</small></div><div class="line"></div></div>
+    <div class="goal main"><span class="gico">⭐</span><div class="gb"><div class="gt">มหาสมบัติ 1,000,000 ฿<span class="tag">大任</span></div><div class="gd">เป้าหมายหลัก — เหลืออีก 361,300 ฿</div></div><div class="gp"><div class="pb"><i data-w="63.9"></i></div><span>64%</span></div></div>
+    <div class="goal"><span class="gico">🌾</span><div class="gb"><div class="gt">ผืนดินของตัวเอง</div><div class="gd">ที่ดิน 1–3 ไร่ งบ 300,000 ฿ ใกล้บางใหญ่ + บ้านที่สร้างเองทุกอย่าง</div></div><div class="gp"><div class="pb"><i data-w="0"></i></div><span>0%</span></div></div>
+    <div class="goal"><span class="gico">⚡</span><div class="gb"><div class="gt">ม้าเหล็กแห่งอิสรภาพ</div><div class="gd">รถไฟ้า — ส่งอาหาร ส่งคน ไม่ต้องรอใครไปส่งอีกต่อไป</div></div><div class="gp"><div class="pb"><i data-w="10"></i></div><span>กำลังปั้น</span></div></div>
+    <div class="goal"><span class="gico">🤖</span><div class="gb"><div class="gt">Aom Universe สมบูรณ์</div><div class="gd">AI สหายสี่องค์ พร้อมความจำ RAG + LoRA ทำงาน offline 100%</div></div><div class="gp"><div class="pb"><i data-w="25"></i></div><span>25%</span></div></div>
+    <div class="goal"><span class="gico">📖</span><div class="gb"><div class="gt">ผลงานสู่โลกภายนอก</div><div class="gd">หนังสือ “กูไม่ได้บ้าที่คิดว่ากูคือจักรวาล” · Affirmation Card · สื่อุปมาอุปไมยธรมะ เป็นเกม/หนัง/หนังสือ</div></div><div class="gp"><div class="pb"><i data-w="5"></i></div><span>5%</span></div></div>
+  </section>
+
+  <div class="divider">✦ ❁ ✦</div>
+
+  <!-- FOOTER -->
+  <div class="seal-row glass">
+    <span class="l">เวลาเดินทาง: 21 ปี 9 เดือน<br>บที่ ๑ — ยังเดินต่อ</span>
+    <div class="sealbig">อม</div>
+    <span class="r">AOM AURORA<br>ชีวประวัติฉบับสมบูรณ์</span>
+  </div>
+
+</div>
+
+<script>
+/* stars */
+(function(){const s=document.getElementById('stars');for(let i=0;i<90;i++){const d=document.createElement('div');d.className='st';d.style.left=Math.random()*100+'vw';d.style.top=Math.random()*100+'vh';d.style.animationDelay=(Math.random()*4)+'s';const sz=Math.random()<.15?3:2;d.style.width=d.style.height=sz+'px';s.appendChild(d);}})();
+
+/* section reveal */
+const secIO=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');secIO.unobserve(e.target);}});},{threshold:.06});
+document.querySelectorAll('section, .hero, .seal-row').forEach(s=>secIO.observe(s));
+
+/* counters */
+function countUp(el,target,dur,suffix){const t0=performance.now();function tick(now){const p=Math.min((now-t0)/dur,1);const e=1-Math.pow(1-p,3);el.textContent=Math.round(target*e).toLocaleString('th-TH')+(suffix||'');if(p<1)requestAnimationFrame(tick);else el.classList.add('flash');}requestAnimationFrame(tick);}
+
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('show');
+  if(el.classList.contains('cbar')){el.querySelector('.col').style.height=el.dataset.h+'%';setTimeout(()=>countUp(el.querySelector('.val'),parseInt(el.dataset.v),1300),200);}
+  if(el.dataset&&el.dataset.count&&el.classList.contains('wv')){countUp(el,parseInt(el.dataset.count),1300);}
+  if(el.classList.contains('mv')&&el.dataset.count){countUp(el,parseInt(el.dataset.count),1100,el.dataset.suffix||'');}
+  el.querySelectorAll?.('.pb i').forEach(b=>{b.style.width=(b.dataset.w||0)+'%';});
+  io.unobserve(el);});},{threshold:.25});
+document.querySelectorAll('.ev, .cbar, .wv, .mv, .proj, .lf, .reveal, .goal, .chip, .sk, .zone').forEach(el=>io.observe(el));
+
+/* stagger */
+document.querySelectorAll('.income, .tbox').forEach(box=>{box.querySelectorAll('.chip, .sk').forEach((it,i)=>{it.style.transitionDelay=(i*60)+'ms';});});
+/* seal */
+const seal=document.querySelector('.sealbig');
+const sealIO=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){setTimeout(()=>seal.classList.add('stamped'),350);sealIO.unobserve(seal);}});},{threshold:.6});
+if(seal)sealIO.observe(seal);
+</script>
+</body>
+</html>
