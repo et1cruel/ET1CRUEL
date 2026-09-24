@@ -6,6 +6,8 @@
 <title>ET1CRUEL · QUEST LOG RPG — ระบบชีวิตสายเกม</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700;800&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
   --bg:#08090E; --card:#12141D; --card2:#1A1E2B; --ink:#F4F6FB; --muted:#9AA3BD; --line:#2B3248;
@@ -192,9 +194,24 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;fon
 .vault .vbar{height:9px;background:#1e2436;border:1px solid #343c58;border-radius:6px;overflow:hidden;margin-top:9px}
 .vault .vbar i{display:block;height:100%}
 @media(max-width:900px){.hero{grid-template-columns:1fr}.hero-right{border-left:none;border-top:1px dashed #3d4666}.board{grid-template-columns:1fr}.treas-grid{grid-template-columns:1fr!important}.nav{position:static;display:flex;overflow:auto}.nav::before{display:none}.nav a{white-space:nowrap}.grid2,.grid3{grid-template-columns:1fr}h1{font-size:30px}.search input{width:130px}.hudbars{display:none}}
+/* ===== 3D ANIMATED LAYER ===== */
+#bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
+.wrap{perspective:1600px}
+.topbar,.hero,.treasury,section.card{transform-style:preserve-3d;will-change:transform}
+html.js .hero,html.js .treasury,html.js section.card{opacity:0;transform:translateY(55px) rotateX(7deg);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.7,.25,1)}
+html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transform:translateY(0) rotateX(0)}
+.item,.persona,.zone,.vault,.kpi{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.item:hover,.persona:hover,.zone:hover{transform:translateZ(26px) scale(1.015)}
+.shead .icon{transform:translateZ(42px)}
+.count,.treas-total strong{transform:translateZ(30px)}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero-left h1{animation:floaty 7s ease-in-out infinite}
+.float-coin{position:fixed;bottom:-70px;z-index:1;pointer-events:none;animation:rise linear infinite;opacity:0;text-shadow:0 0 12px rgba(255,215,94,.8)}
+@keyframes rise{0%{transform:translateY(0) rotateY(0deg);opacity:0}8%{opacity:.9}88%{opacity:.65}100%{transform:translateY(-115vh) rotateY(720deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}</style>
 </head>
 <body>
+<canvas id="bg3d"></canvas>
 <div class="wrap">
 
 <div class="topbar">
@@ -599,6 +616,106 @@ function apply(){
     el.classList.toggle('hide',!ok);
   });
 }
+</script>
+<script>
+/* ===== 3D FX: particles + tilt + reveal + coins (graceful if CDN fails) ===== */
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer = window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+
+  /* --- 3D scroll reveal --- */
+  var revealEls = document.querySelectorAll('.hero,.treasury,section.card');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.06});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* --- 3D mouse tilt (desktop only) --- */
+  if (finePointer && !reduce) {
+    document.querySelectorAll('.hero,.treasury,section.card,.topbar').forEach(function(card){
+      var raf = null;
+      card.addEventListener('mousemove', function(ev){
+        if (raf) return;
+        raf = requestAnimationFrame(function(){
+          var r = card.getBoundingClientRect();
+          var px = (ev.clientX - r.left) / r.width - .5;
+          var py = (ev.clientY - r.top) / r.height - .5;
+          card.style.transform = 'rotateY(' + (px*5).toFixed(2) + 'deg) rotateX(' + (-py*5).toFixed(2) + 'deg)';
+          raf = null;
+        });
+      });
+      card.addEventListener('mouseleave', function(){ card.style.transform = ''; });
+    });
+  }
+
+  /* --- floating gold coins --- */
+  if (!reduce) {
+    var glyphs = ['◉','✦','★','◆'];
+    for (var i = 0; i < 10; i++) {
+      var c = document.createElement('div');
+      c.className = 'float-coin';
+      c.textContent = glyphs[i % glyphs.length];
+      c.style.left = (Math.random()*100) + 'vw';
+      c.style.fontSize = (16 + Math.random()*22) + 'px';
+      c.style.color = i % 3 ? '#FFD75E' : '#67E8F9';
+      c.style.animationDuration = (9 + Math.random()*10) + 's';
+      c.style.animationDelay = (Math.random()*12) + 's';
+      document.body.appendChild(c);
+    }
+  }
+
+  /* --- Three.js particle galaxy --- */
+  try {
+    if (reduce || !window.THREE) return;
+    var canvas = document.getElementById('bg3d');
+    var renderer = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:false});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, .1, 100);
+    camera.position.z = 9;
+    var N = 650, pos = new Float32Array(N*3), col = new Float32Array(N*3);
+    var palette = [[1,.84,.37],[.4,.91,.98],[.77,.71,.99],[1,.45,.7]];
+    for (var j = 0; j < N; j++) {
+      pos[j*3] = (Math.random()-.5)*26;
+      pos[j*3+1] = (Math.random()-.5)*16;
+      pos[j*3+2] = (Math.random()-.5)*12;
+      var p = palette[j % palette.length];
+      col[j*3] = p[0]; col[j*3+1] = p[1]; col[j*3+2] = p[2];
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col,3));
+    var mat = new THREE.PointsMaterial({size:.09, vertexColors:true, transparent:true, opacity:.85, sizeAttenuation:true});
+    var stars = new THREE.Points(geo, mat);
+    scene.add(stars);
+    var mx = 0, my = 0;
+    window.addEventListener('mousemove', function(e){
+      mx = (e.clientX/window.innerWidth - .5);
+      my = (e.clientY/window.innerHeight - .5);
+    }, {passive:true});
+    window.addEventListener('resize', function(){
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    var t = 0;
+    (function anim(){
+      requestAnimationFrame(anim);
+      t += .0016;
+      stars.rotation.y = t + mx*.35;
+      stars.rotation.x = my*.25;
+      camera.position.x += ((mx*1.4) - camera.position.x)*.04;
+      camera.position.y += ((-my*1.0) - camera.position.y)*.04;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    })();
+  } catch (err) { /* 2D fallback stays — page still fully readable */ }
+})();
 </script>
 </body>
 </html>
