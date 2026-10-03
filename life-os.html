@@ -10,6 +10,7 @@
 <meta property="og:image" content="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/life-os-os.css">
 <script>document.documentElement.classList.add('js');</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
@@ -236,6 +237,89 @@ html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transfor
   </div>
 </div>
 
+<!-- ================= LIFE OS — INTERACTIVE LAYER (additive, original content preserved below) ================= -->
+<div id="os-dash">
+  <div class="os-grid gTODAY" id="os-charhead"></div>
+
+  <div class="os-grid g2">
+    <div class="os-card" id="os-dailies">
+      <h3>⚔️ DAILY QUESTS <span class="rm" id="os-daily-label">0 / 7</span></h3>
+      <div class="progress" style="margin:0 0 12px"><i id="os-daily-bar" style="width:0%"></i></div>
+      <div id="os-dailies-list"></div>
+      <div class="os-row"><input class="os-input" id="os-dq-text" placeholder="+ custom quest (เช่น อ่าน 10 หน้า)" style="flex:1;margin:0"><button class="os-btn small" data-act="dq-add">ADD</button><button class="os-btn small ghost" data-act="reset-day">RESET ↺</button></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div class="os-card">
+        <h3>🔥 STREAK <span class="rm" id="os-streak-meta"></span></h3>
+        <div class="streak-dots" id="os-streak-dots"></div>
+        <div class="note" style="margin-top:12px">No punishment — แค่ motivation. ขาดวันนึง streak รีเซ็ต แต่ XP/Stats ไม่หาย</div>
+      </div>
+      <div class="os-card">
+        <h3>🤖 QUEST MASTER <span class="backend-tag">HEURISTIC · READY FOR BACKEND</span></h3>
+        <div id="os-qm-list"></div>
+        <div class="note">AI จริงยังไม่ต่อ — ตอนนี้ใช้กฎจาก LV/stats/quests แทน (Supabase + LLM ready)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="os-card">
+    <h3>📊 CHARACTER STATS <span class="rm">quest แต่ละประเภทดัน stat ที่เกี่ยวข้อง</span></h3>
+    <div class="os-grid gStats" id="os-stats-grid"></div>
+  </div>
+
+  <div class="os-grid g2">
+    <div class="os-card">
+      <h3>🎯 MAIN QUEST — PROJECT 1M</h3>
+      <div id="os-money-body"></div>
+    </div>
+    <div class="os-card">
+      <h3>📦 PROJECTS <span class="rm">campaigns</span></h3>
+      <div id="os-projects-list"></div>
+    </div>
+  </div>
+
+  <div class="os-card">
+    <h3>🎬 CONTENT MACHINE — KANBAN <span class="rm">IDEA +10 · SHOOT +30 · EDIT +50 · READY +80 · POST +100</span></h3>
+    <div class="kanban" id="os-kanban"></div>
+  </div>
+
+  <div class="os-grid g2">
+    <div class="os-card">
+      <h3>🏆 ACHIEVEMENTS</h3>
+      <div id="os-ach-list"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div class="os-card">
+        <h3>📓 JOURNAL</h3>
+        <div class="os-row" style="margin-bottom:8px"><select class="os-sel" id="os-j-mood" style="max-width:130px;margin:0"><option>😔</option><option>😐</option><option selected>🙂</option><option>😆</option><option>🔥</option></select><input class="os-input" id="os-j-tags" placeholder="tags (เช่น beat, money)" style="flex:1;margin:0"></div>
+        <textarea class="os-text" id="os-j-text" placeholder="วันนี้ทำอะไร? รู้สึกอย่างไร? เรียนรู้อะไร?"></textarea>
+        <button class="os-btn small" data-act="j-add">SAVE LOG +30 XP</button>
+        <div id="os-journal-list" style="margin-top:12px"></div>
+      </div>
+      <div class="os-card">
+        <h3>🧠 MEMORY + LIFE TIMELINE</h3>
+        <div id="os-memory-list"></div>
+        <div class="os-row" style="margin-top:10px"><input class="os-input" id="os-mem-text" placeholder="+ memory (เช่น วันที่…)" style="flex:1;margin:0"><button class="os-btn small" data-act="mem-add">ADD</button></div>
+        <div class="os-row" style="margin-top:6px"><input class="os-input" id="os-future-text" placeholder="+ future goal (เช่น 2028…)" style="flex:1;margin:0"><button class="os-btn small ghost" data-act="future-add">FUTURE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="os-grid g2">
+    <div class="os-card">
+      <h3>🧠 AI WEEKLY REVIEW <span class="backend-tag">LOCAL COMPUTE · READY FOR BACKEND</span></h3>
+      <div id="os-weekly"></div>
+    </div>
+    <div class="os-card">
+      <h3>⚙️ SETTINGS + DATA</h3>
+      <div class="os-row"><button class="os-btn small" data-act="export">EXPORT life-os-backup.json</button><label class="os-btn small ghost" style="cursor:pointer">IMPORT <input type="file" id="os-import-file" accept=".json" style="display:none"></label><button class="os-btn small danger" data-act="reset-all">RESET OS</button></div>
+      <div class="note">State เก็บใน <b>localStorage (et1cruel_lifeos_v1)</b> — schema ออกแบบให้ migrate ไป <b>Supabase</b> ได้ทันที (tables: quests/stats/money/projects/content/achievements/journal/memories/xp_log). ไฟล์นี้คือ backup/restore</div>
+      <div class="group-title"><span class="gnum">✓</span> LIFE OS SYSTEM STATUS</div>
+      <div id="os-sysstatus" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+  </div>
+</div>
+
 <div class="hero">
   <div class="hero-left">
     <div class="eyebrow"><i></i>RPG EDITION · QUEST LOG SYSTEM</div>
@@ -299,6 +383,9 @@ html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transfor
 
 <div class="board">
 <nav class="nav" id="nav">
+  <div class="nav-group">⚔️ LIFE OS</div>
+  <a href="#os-dash">🏠 Dashboard <span class="n">TODAY</span></a>
+  <a href="#os-dailies">⚔️ Daily Quest <span class="n">LIVE</span></a>
   <div class="nav-group">💰 เงิน + งาน</div>
   <a href="#treasury">💰 คลังทอง <span class="n">651K</span></a>
   <a href="#wishlist">🛒 Wishlist <span class="n">5</span></a>
@@ -726,5 +813,15 @@ function apply(){
   } catch (err) { /* 2D fallback stays — page still fully readable */ }
 })();
 </script>
+<script src="js/life-os-os.js"></script>
+<div id="os-toasts"></div>
+<div id="os-modal-bg"><div id="os-modal"></div></div>
+<nav id="os-bottomnav">
+  <a href="#os-dash" class="on">🏠<small>HOME</small></a>
+  <a href="#os-dailies">⚔️<small>QUEST</small></a>
+  <a href="#treasury">💰<small>GOLD</small></a>
+  <a href="#quests">📊<small>LOG</small></a>
+  <a href="#vision">👤<small>SELF</small></a>
+</nav>
 </body>
 </html>
