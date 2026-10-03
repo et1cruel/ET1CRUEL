@@ -122,3 +122,67 @@
   .os-charname{font-size:17px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important}.os-bar i{transition:none}}
+
+/* ============================================================
+   DENSITY PASS — compact overview, less scrolling.
+   Selectors prefixed with `body` to beat the inline <style>
+   in life-os.html on equal rules without touching originals.
+   ============================================================ */
+html body{font-size:17px;line-height:1.8}
+body .wrap{padding:14px 20px 60px}
+body .hero{margin:12px 0}
+body .hero-left{padding:24px 22px 20px}
+body .hero-right{padding:20px 18px}
+body h1{font-size:33px}
+body .lead{font-size:16px;line-height:1.8}
+body .kpis{gap:9px;margin-top:14px}
+body .kpi{padding:12px}
+body .kpi strong{font-size:20px}
+body .treasury{padding:18px;margin-bottom:12px}
+body .treas-total strong{font-size:24px}
+body .vault{padding:11px 12px}
+body .vault .vamt{font-size:19px}
+body .vault.boss .vamt{font-size:21px}
+body .vault .vrow{font-size:14px;padding:5px 0}
+body .board{gap:14px}
+body .nav{padding:8px;top:76px;max-height:calc(100vh - 92px);overflow:auto}
+body .nav::before{font-size:9.5px;padding:2px 8px 4px}
+body .nav-group{padding:8px 8px 2px;font-size:10px}
+body .nav a{font-size:13.5px;padding:7px 10px}
+body .nav a span.n{font-size:11px;padding:1px 7px}
+body .sections{gap:14px}
+body section.card{padding:22px}
+body .shead{margin-bottom:10px;padding-bottom:10px}
+body .icon{flex-basis:40px;width:40px;height:40px;font-size:19px}
+body .shead h2{font-size:22px}
+body .shead p{font-size:13.5px}
+body .count{font-size:12px;padding:6px 11px}
+body .grid2,body .grid3{gap:10px}
+body .item{padding:13px 14px 13px 16px;font-size:15px;line-height:1.8;gap:10px}
+body .item .txt small{font-size:13.5px;line-height:1.7}
+body .dot{flex-basis:28px;width:28px;height:28px;font-size:15px}
+body .badge{font-size:12.5px;padding:4px 10px;margin-top:6px}
+body .group-title{font-size:12.5px;margin:14px 0 10px;padding:8px 12px}
+body .persona,body .zone{padding:16px}
+body .persona h4{font-size:17px}
+body .persona p{font-size:14.5px;line-height:1.8}
+body .tags span{font-size:12px;padding:4px 10px}
+body .skill{font-size:13px;padding:6px 11px;margin-bottom:6px}
+body .note{padding:13px;font-size:14.5px;line-height:1.8;margin-top:10px}
+body .progress{margin:8px 0 4px}
+body .formula{padding:15px}
+body .formula p{font-size:15px;line-height:1.8}
+/* OS layer compact */
+body .os-card{padding:16px}
+body #os-dash{gap:12px;margin:12px 0 16px}
+body .os-grid{gap:12px}
+body .os-next{padding:18px}
+body .os-next .qtitle{font-size:22px}
+body .dq{padding:10px;margin-bottom:8px}
+body .ach{padding:10px;margin-bottom:8px}
+body .kcol{min-height:90px}
+@media(max-width:900px){
+  body h1{font-size:27px}
+  body .nav{max-height:none}
+  body section.card{padding:18px}
+}
