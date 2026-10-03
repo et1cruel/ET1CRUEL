@@ -1,22 +1,4 @@
 ﻿
-/* ===== 3D tilt on cards ===== */
-(function(){
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  document.querySelectorAll('.proj, .album, .lf, .goal, .tbox, .w').forEach(card=>{
-    card.classList.add('tilt3d');
-    const shine=document.createElement('div');
-    shine.className='shine';
-    card.appendChild(shine);
-    card.addEventListener('pointermove', e=>{
-      const r=card.getBoundingClientRect();
-      const px=(e.clientX-r.left)/r.width - .5;
-      const py=(e.clientY-r.top)/r.height - .5;
-      card.style.transform=`perspective(700px) rotateY(${px*10}deg) rotateX(${-py*8}deg) translateZ(6px)`;
-    });
-    card.addEventListener('pointerleave', ()=>{ card.style.transform=''; });
-  });
-})();
-
 /* ===== section 3D flip-in on scroll ===== */
 const secIO = new IntersectionObserver((es)=>{
   es.forEach(e=>{

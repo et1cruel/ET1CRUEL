@@ -128,61 +128,129 @@
    Selectors prefixed with `body` to beat the inline <style>
    in life-os.html on equal rules without touching originals.
    ============================================================ */
-html body{font-size:17px;line-height:1.8}
-body .wrap{padding:14px 20px 60px}
-body .hero{margin:12px 0}
-body .hero-left{padding:24px 22px 20px}
-body .hero-right{padding:20px 18px}
-body h1{font-size:33px}
-body .lead{font-size:16px;line-height:1.8}
-body .kpis{gap:9px;margin-top:14px}
-body .kpi{padding:12px}
-body .kpi strong{font-size:20px}
-body .treasury{padding:18px;margin-bottom:12px}
-body .treas-total strong{font-size:24px}
-body .vault{padding:11px 12px}
-body .vault .vamt{font-size:19px}
-body .vault.boss .vamt{font-size:21px}
-body .vault .vrow{font-size:14px;padding:5px 0}
-body .board{gap:14px}
-body .nav{padding:8px;top:76px;max-height:calc(100vh - 92px);overflow:auto}
-body .nav::before{font-size:9.5px;padding:2px 8px 4px}
-body .nav-group{padding:8px 8px 2px;font-size:10px}
-body .nav a{font-size:13.5px;padding:7px 10px}
-body .nav a span.n{font-size:11px;padding:1px 7px}
-body .sections{gap:14px}
-body section.card{padding:22px}
-body .shead{margin-bottom:10px;padding-bottom:10px}
-body .icon{flex-basis:40px;width:40px;height:40px;font-size:19px}
-body .shead h2{font-size:22px}
-body .shead p{font-size:13.5px}
-body .count{font-size:12px;padding:6px 11px}
-body .grid2,body .grid3{gap:10px}
-body .item{padding:13px 14px 13px 16px;font-size:15px;line-height:1.8;gap:10px}
-body .item .txt small{font-size:13.5px;line-height:1.7}
-body .dot{flex-basis:28px;width:28px;height:28px;font-size:15px}
-body .badge{font-size:12.5px;padding:4px 10px;margin-top:6px}
-body .group-title{font-size:12.5px;margin:14px 0 10px;padding:8px 12px}
-body .persona,body .zone{padding:16px}
-body .persona h4{font-size:17px}
-body .persona p{font-size:14.5px;line-height:1.8}
-body .tags span{font-size:12px;padding:4px 10px}
-body .skill{font-size:13px;padding:6px 11px;margin-bottom:6px}
-body .note{padding:13px;font-size:14.5px;line-height:1.8;margin-top:10px}
-body .progress{margin:8px 0 4px}
-body .formula{padding:15px}
-body .formula p{font-size:15px;line-height:1.8}
+html body{font-size:16px;line-height:1.7}
+body .wrap{padding:12px 18px 60px}
+body .topbar{padding:8px 10px;gap:10px}
+body .topbar .logo{width:40px;height:40px;flex-basis:40px}
+body .topbar b{font-size:14px}
+body .lv{font-size:11px}
+body .hero{margin:10px 0}
+body .hero-left{padding:20px 18px 16px}
+body .hero-right{padding:16px}
+body h1{font-size:28px}
+body .class-line{font-size:11px}
+body .lead{font-size:15px;line-height:1.75}
+body .kpis{gap:8px;margin-top:12px}
+body .kpi{padding:10px 12px}
+body .kpi small{font-size:11.5px}
+body .kpi strong{font-size:18px}
+body .treasury{padding:14px;margin-bottom:10px}
+body .treas-head{margin-bottom:10px}
+body .treas-head .ticon{width:38px;height:38px;flex-basis:38px;font-size:19px}
+body .treas-head h2{font-size:17px}
+body .treas-total strong{font-size:22px}
+body .treas-grid{gap:9px}
+body .vault{padding:10px 11px}
+body .vault .vamt{font-size:17px}
+body .vault.boss .vamt{font-size:19px}
+body .vault .vrow{font-size:13px;padding:4px 0}
+body .treas-foot{font-size:13px;margin-top:8px}
+body .board{gap:12px}
+body .nav{padding:6px;top:70px;max-height:calc(100vh - 86px);overflow:auto}
+body .nav::before{font-size:9px;padding:2px 8px 3px}
+body .nav-group{padding:7px 8px 2px;font-size:9.5px}
+body .nav a{font-size:13px;padding:6px 9px}
+body .nav a span.n{font-size:10.5px;padding:1px 7px}
+body .sections{gap:12px}
+body section.card{padding:18px}
+body .shead{margin-bottom:8px;padding-bottom:8px;gap:10px}
+body .icon{flex-basis:36px;width:36px;height:36px;font-size:17px;border-radius:10px}
+body .shead h2{font-size:20px}
+body .shead p{font-size:13px}
+body .count{font-size:11.5px;padding:5px 10px}
+body .grid2,body .grid3{gap:8px}
+body .item{padding:11px 12px 11px 14px;font-size:14.5px;line-height:1.75;gap:9px;border-radius:13px}
+body .item .txt small{font-size:13px;line-height:1.65}
+body .dot{flex-basis:26px;width:26px;height:26px;font-size:14px;border-radius:8px}
+body .badge{font-size:12px;padding:3px 9px;margin-top:5px}
+body .group-title{font-size:12px;margin:12px 0 8px;padding:7px 10px}
+body .persona,body .zone{padding:14px;border-radius:13px}
+body .persona h4{font-size:16px}
+body .persona p{font-size:14px;line-height:1.75}
+body .tags span{font-size:11.5px;padding:3px 9px}
+body .skill{font-size:12.5px;padding:5px 10px;margin-bottom:6px}
+body .note{padding:11px 13px;font-size:14px;line-height:1.75;margin-top:8px}
+body .progress{height:12px;margin:8px 0 4px}
+body .formula{padding:13px}
+body .formula p{font-size:14px;line-height:1.75}
+body footer{font-size:11.5px;margin-top:14px}
 /* OS layer compact */
-body .os-card{padding:16px}
-body #os-dash{gap:12px;margin:12px 0 16px}
-body .os-grid{gap:12px}
-body .os-next{padding:18px}
-body .os-next .qtitle{font-size:22px}
-body .dq{padding:10px;margin-bottom:8px}
-body .ach{padding:10px;margin-bottom:8px}
-body .kcol{min-height:90px}
+body .os-card{padding:14px;border-radius:16px}
+body #os-dash{gap:10px;margin:10px 0 14px}
+body .os-grid{gap:10px}
+body .os-next{padding:16px}
+body .os-next .qtitle{font-size:20px}
+body .os-charname{font-size:17px}
+body .os-avatar{width:54px;height:54px;flex-basis:54px}
+body .os-hud{gap:8px;margin-top:10px}
+body .os-hud .cell{padding:8px 10px}
+body .os-hud strong{font-size:17px}
+body .os-btn{padding:9px 15px;font-size:12.5px}
+body .dq{padding:9px 10px;margin-bottom:7px}
+body .dq .t{font-size:14.5px}
+body .ach{padding:9px 10px;margin-bottom:7px}
+body .kcol{min-height:80px}
+body .stat{padding:10px}
+body .mq-big{font-size:27px}
 @media(max-width:900px){
-  body h1{font-size:27px}
+  body h1{font-size:24px}
   body .nav{max-height:none}
-  body section.card{padding:18px}
+  body section.card{padding:15px}
+  body .os-next .qtitle{font-size:18px}
+}
+
+/* ============================================================
+   RPG GLASS SKIN — glass bubbles + game chrome.
+   Translucent panels, orb icons, chunky buttons, pixel labels.
+   No movement on hover anywhere (flat readability).
+   ============================================================ */
+body .topbar,body .hero,body .treasury,body section.card,body .os-card,body .os-next{
+  background:linear-gradient(180deg,rgba(32,37,62,.72),rgba(13,16,27,.82));
+  -webkit-backdrop-filter:blur(14px) saturate(1.25);
+  backdrop-filter:blur(14px) saturate(1.25);
+  border:1px solid rgba(255,215,94,.35);
+  border-radius:22px;
+  box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.14),0 0 26px rgba(255,215,94,.07);
+}
+body .topbar{border-radius:18px}
+body .item,body .dq,body .proj-os,body .kcard,body .kcol,body .ach,body .jentry,body .stat,body .vault,body .kpi,body .zone,body .persona,body .os-hud .cell,body .qm-q{
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:18px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 18px rgba(0,0,0,.35);
+}
+body .item:hover,body .dq:hover,body .proj-os:hover,body .kcard:hover,body .ach:hover{border-color:rgba(255,215,94,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 0 16px rgba(255,215,94,.18)}
+/* orbs — everything round like bubbles */
+body .topbar .logo,body .os-avatar,body .icon,body .ticon,body .dot,body .ach .ic{border-radius:50%!important}
+body .os-avatar{transform:none}
+/* glossy orb bars */
+body .hbar,body .os-bar,body .progress,body .vault .vbar,body .kpi .bar{border-radius:999px}
+body .hbar i,body .os-bar i{border-radius:999px}
+/* chunky RPG buttons */
+body .os-btn{border-bottom:3px solid #8a6a14}
+body .os-btn:active{transform:translateY(1px);border-bottom-width:1px}
+body .fbtn{border-radius:999px}
+body .nav a{border-radius:999px}
+/* RPG glow titles + pixel labels */
+body .shead h2{text-shadow:0 0 18px rgba(255,215,94,.28)}
+body .eyebrow,body .lv,body .count,body .nav::before{
+  font-family:'Press Start 2P','Chakra Petch',sans-serif;
+  font-size:9px;letter-spacing:.06em;
+}
+body .nav-group{font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px}
+@media(max-width:700px){
+  body .topbar,body .hero,body .treasury,body section.card,body .os-card,body .os-next{
+    -webkit-backdrop-filter:blur(8px);
+    backdrop-filter:blur(8px);
+  }
 }
