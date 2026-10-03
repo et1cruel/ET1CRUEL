@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFE9A3"/>
+      <stop offset=".55" stop-color="#FFD75E"/>
+      <stop offset="1" stop-color="#B8860B"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1C2030"/>
+      <stop offset="1" stop-color="#0B0D14"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".35" r=".7">
+      <stop offset="0" stop-color="#FFD75E" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#FFD75E" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="110" fill="url(#bg)" stroke="url(#g)" stroke-width="18"/>
+  <rect x="16" y="16" width="480" height="480" rx="110" fill="url(#glow)"/>
+  <text x="256" y="340" text-anchor="middle" font-family="serif" font-weight="900" font-size="240" fill="url(#g)">夢</text>
+  <text x="256" y="415" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="44" letter-spacing="8" fill="#FFD75E">ET1CRUEL</text>
+</svg>
