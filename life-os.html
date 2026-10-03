@@ -271,7 +271,8 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;fon
 
   <div class="os-grid g2">
     <div class="os-card">
-      <h3>🏆 ACHIEVEMENTS</h3>
+      <h3>🏆 ACHIEVEMENTS <span class="rm">titles</span></h3>
+      <div id="os-titles-list" style="margin-bottom:10px"></div>
       <div id="os-ach-list"></div>
     </div>
     <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
@@ -298,6 +299,8 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;fon
     </div>
     <div class="os-card">
       <h3>⚙️ SETTINGS + DATA</h3>
+      <div class="os-row" style="margin-bottom:8px"><span class="badge b-indigo">DAILY LIMIT</span><input class="os-input" id="os-limit-input" type="number" value="7" min="1" max="30" style="max-width:90px;margin:0"><button class="os-btn small ghost" data-act="limit-save">SET</button><select class="os-sel" id="os-theme-sel" style="max-width:170px;margin:0"><option value="dark">🌙 DARK</option><option value="void">🕳 VOID</option><option value="neon">✨ NEON</option></select></div>
+      <div class="note" style="margin-top:0">XP curve: <b>5,000 XP / level</b> · next threshold = <b>100,000 + (LV−21)×5,000</b> · level-up rewards <b>+5 MUSIC +3 TECH +2 FINANCE</b> · quests grant XP+stat instantly, stored in localStorage</div>
       <div class="os-row"><button class="os-btn small" data-act="export">EXPORT life-os-backup.json</button><label class="os-btn small ghost" style="cursor:pointer">IMPORT <input type="file" id="os-import-file" accept=".json" style="display:none"></label><button class="os-btn small danger" data-act="reset-all">RESET OS</button></div>
       <div class="note">State เก็บใน <b>localStorage (et1cruel_lifeos_v1)</b> — schema ออกแบบให้ migrate ไป <b>Supabase</b> ได้ทันที (tables: quests/stats/money/projects/content/achievements/journal/memories/xp_log). ไฟล์นี้คือ backup/restore</div>
       <div class="group-title"><span class="gnum">✓</span> LIFE OS SYSTEM STATUS</div>

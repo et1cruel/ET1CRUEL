@@ -248,6 +248,16 @@ body .eyebrow,body .lv,body .count,body .nav::before{
   font-size:9px;letter-spacing:.06em;
 }
 body .nav-group{font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px}
+.os-task{display:flex;gap:8px;align-items:center;font-size:13.5px;color:#DDE3F5;padding:3px 0}
+.os-task button{flex:0 0 26px;width:26px;height:26px;border-radius:8px;border:1.5px solid var(--gold-dim);background:#0B0D14;color:var(--gold);cursor:pointer;font-size:13px;font-weight:800}
+.os-task button.done{background:rgba(61,255,136,.2);border-color:var(--xp);color:#7DFFB2}
+.os-task span.tdone{text-decoration:line-through;opacity:.55}
+.os-title{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;color:#111;background:linear-gradient(180deg,var(--gold),#d9a91f);border-radius:8px;padding:4px 11px;margin:0 6px 6px 0;box-shadow:0 0 10px rgba(255,215,94,.35)}
+/* themes */
+body.os-void{background:#000}
+body.os-void .topbar,body.os-void .hero,body.os-void .treasury,body.os-void section.card,body.os-void .os-card,body.os-void .os-next{background:linear-gradient(180deg,rgba(12,12,14,.88),rgba(0,0,0,.94));box-shadow:0 18px 50px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.08)}
+body.os-neon .topbar,body.os-neon .hero,body.os-neon .treasury,body.os-neon section.card,body.os-neon .os-card,body.os-neon .os-next{box-shadow:0 0 34px rgba(255,215,94,.25),inset 0 1px 0 rgba(255,255,255,.2)}
+body.os-neon .shead h2{text-shadow:0 0 26px rgba(255,215,94,.55)}
 @media(max-width:700px){
   body .topbar,body .hero,body .treasury,body section.card,body .os-card,body .os-next{
     -webkit-backdrop-filter:blur(8px);

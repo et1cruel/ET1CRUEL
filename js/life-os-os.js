@@ -164,7 +164,8 @@ function addXP(amt, why, statKey, statPts) {
     S.stats[statKey].xp += amt;
     S.stats[statKey].pts += (statPts || 0);
   }
-  S.xpLog.push({ d: dayKey(new Date()), amt: amt, why: why || '' });
+  S.titles = S.titles || [];
+  S.xpLog.push({ d: dayKey(new Date()), amt: amt, why: why || '', stat: statKey || null });
   if (S.xpLog.length > 400) S.xpLog = S.xpLog.slice(-400);
   var after = before;
   while (S.character.xp >= nextThreshold(after)) {
@@ -176,8 +177,10 @@ function addXP(amt, why, statKey, statPts) {
   }
   S.character.level = after;
   if (after > before) {
+    S.titles.push({ name: 'LV ' + after + ' SLAYER', d: dayKey(new Date()) });
     levelUpModal(before, after);
     toast('LEVEL UP! LV ' + before + ' → ' + after, 'xp');
+    toast('🏆 Title: LV ' + after + ' SLAYER', 'xp');
     unlock('a-streak', true);
   }
   Store.save(S);
@@ -226,6 +229,23 @@ function bestStreak() {
     prev = k;
   });
   return Math.max(best, S.streak.best || 0, currentStreak());
+}
+function weekActivity() {
+  var done = 0, days = {}, d = new Date();
+  for (var i = 0; i < 7; i++) { days[dayKey(d)] = false; d.setDate(d.getDate() - 1); }
+  Object.keys(days).forEach(function (k) {
+    var n = 0;
+    S.dailies.forEach(function (q) { if (q.done[k]) { n++; done++; } });
+    if (n > 0) days[k] = true;
+  });
+  var active = Object.keys(days).filter(function (k) { return days[k]; }).length;
+  return { done: done, active: active, missed: 7 - active };
+}
+function lastStatActivity(k) {
+  for (var i = S.xpLog.length - 1; i >= 0; i--) {
+    if (S.xpLog[i].stat === k) return S.xpLog[i];
+  }
+  return null;
 }
 function unlock(id, silent) {
   var a = S.achievements.filter(function (x) { return x.id === id; })[0];
@@ -301,6 +321,10 @@ function weeklyReview() {
 
 /* ---------- rendering ---------- */
 var STAT_ICON = { MUSIC: '🎵', TECH: '💻', FINANCE: '💰', ART: '🎨', BODY: '💪', MIND: '🧠', LIFE: '🌱', CONTENT: '🎬' };
+function statRec(k) {
+  var r = lastStatActivity(k);
+  return r ? '<br>↳ ' + esc(String(r.why).slice(0, 26)) + ' · ' + esc(String(r.d).slice(5)) : '<br>↳ —';
+}
 function nextQuest() {
   var today = dayKey(new Date());
   var open = S.dailies.filter(function (q) { return !q.done[today]; }).sort(function (a, b) { return b.xp - a.xp; });
@@ -357,7 +381,7 @@ function renderDailies() {
     dots.innerHTML = h;
   }
   var meta = document.getElementById('os-streak-meta');
-  if (meta) meta.textContent = 'STREAK ' + currentStreak() + ' · BEST ' + bestStreak() + ' · WEEK XP ' + fmt(weekXP());
+  if (meta) { var w = weekActivity(); meta.textContent = 'STREAK ' + currentStreak() + ' · BEST ' + bestStreak() + ' · WEEK ' + w.active + '/7 · +' + fmt(weekXP()) + ' XP'; }
 }
 function renderStats() {
   var el = document.getElementById('os-stats-grid');
@@ -365,7 +389,7 @@ function renderStats() {
   el.innerHTML = Object.keys(S.stats).map(function (k) {
     var s = S.stats[k], lv = statLevel(s.pts), pct = ((s.pts % 20) / 20 * 100).toFixed(0);
     return '<div class="stat"><span class="lv">LV ' + lv + '</span><b>' + (STAT_ICON[k] || '') + ' ' + k + '</b>' +
-      '<div class="os-bar xp"><i style="width:' + pct + '%"></i></div><small>' + s.pts + ' pts · ' + fmt(s.xp) + ' XP</small></div>';
+      '<div class="os-bar xp"><i style="width:' + pct + '%"></i></div><small>' + s.pts + ' pts · ' + fmt(s.xp) + ' XP' + statRec(k) + '</small></div>';
   }).join('');
 }
 function renderMoney() {
@@ -392,7 +416,14 @@ function renderMoney() {
     '<div style="display:flex;gap:6px;align-items:flex-end;background:#0B0D14;border:1px solid #343c58;border-radius:12px;padding:12px">' + hist + '</div>' +
     '<div class="group-title"><span class="gnum">⇄</span> MONEY FLOW (this log)</div>' +
     '<div class="os-row"><span class="badge b-done">IN +' + fmt(flow.income) + '</span><span class="badge" style="border-color:#FF4D5E;color:#ff8b96">OUT −' + fmt(flow.expense) + '</span><span class="badge b-indigo">NET ' + (flow.income - flow.expense >= 0 ? '+' : '') + fmt(flow.income - flow.expense) + '</span></div>' +
-    '<div class="os-row" style="margin-top:10px"><input class="os-input" id="os-flow-amt" type="number" placeholder="จำนวน ฿" style="max-width:150px;margin:0"><select class="os-sel" id="os-flow-type" style="max-width:150px;margin:0"><option value="income">+ Income</option><option value="expense">− Expense</option><option value="investment">⇄ Investment</option><option value="saving">🛡 Saving</option></select><button class="os-btn small" data-act="flow-add">ADD</button></div>';
+    '<div class="os-row" style="margin-top:10px"><input class="os-input" id="os-flow-amt" type="number" placeholder="จำนวน ฿" style="max-width:150px;margin:0"><select class="os-sel" id="os-flow-type" style="max-width:150px;margin:0"><option value="income">+ Income</option><option value="expense">− Expense</option><option value="investment">⇄ Investment</option><option value="saving">🛡 Saving</option></select><button class="os-btn small" data-act="flow-add">ADD</button></div>' +
+    '<div class="os-row" style="margin-top:8px"><button class="os-btn small ghost" data-act="vault-toggle">EDIT VAULTS</button><button class="os-btn small ghost" data-act="hist-toggle">+ HISTORY</button></div><div id="os-vault-edit"></div><div id="os-hist-edit"></div>';
+  var ve = document.getElementById('os-vault-edit');
+  if (ve) ve.innerHTML = OSUI.vaultEdit ? Object.keys(S.money.vaults).map(function (k) {
+    return '<div class="os-row" style="margin-top:6px"><span class="badge b-indigo" style="min-width:140px">' + esc(VAULT_LABEL[k] || k) + '</span><input class="os-input" id="os-vault-' + k + '" type="number" value="' + S.money.vaults[k] + '" style="max-width:150px;margin:0"></div>';
+  }).join('') + '<button class="os-btn small" data-act="vault-save" style="margin-top:8px">SAVE VAULTS</button>' : '';
+  var he = document.getElementById('os-hist-edit');
+  if (he) he.innerHTML = OSUI.histEdit ? '<div class="os-row" style="margin-top:8px"><input class="os-input" id="os-hist-m" placeholder="เดือน (เช่น Oct)" style="max-width:110px;margin:0"><input class="os-input" id="os-hist-v" type="number" placeholder="net worth ฿" style="max-width:150px;margin:0"><button class="os-btn small" data-act="hist-add">ADD</button></div>' : '';
 }
 function renderProjects() {
   var el = document.getElementById('os-projects-list');
@@ -401,9 +432,15 @@ function renderProjects() {
     var tracks = p.tracks ? '<div class="os-row" style="margin-top:6px">' + p.tracks.map(function (t, i) {
       return '<button data-act="track" data-id="' + p.id + '" data-i="' + i + '" style="background:' + (t ? 'var(--xp)' : '#0B0D14') + ';border:1px solid ' + (t ? 'var(--xp)' : '#3d4666') + ';color:' + (t ? '#06130c' : 'var(--muted)') + ';border-radius:6px;font-size:10px;padding:2px 7px;cursor:pointer;font-family:\'Chakra Petch\',sans-serif">T' + ('0' + (i + 1)).slice(-2) + '</button>';
     }).join('') + '</div>' : '';
+    var stat = PROJ_STAT[p.id] || 'TECH';
+    var tasks = (p.tasks || []).map(function (t, i) {
+      return '<div class="os-task"><button class="' + (t.done ? 'done' : '') + '" data-act="task" data-id="' + p.id + '" data-i="' + i + '">' + (t.done ? '✓' : '○') + '</button><span class="' + (t.done ? 'tdone' : '') + '">' + esc(t.t) + '</span></div>';
+    }).join('');
     return '<div class="proj-os"><div class="os-row"><b>' + esc(p.name) + '</b><span class="badge b-money" style="margin-left:auto">' + p.pct + '%</span></div>' +
-      '<small style="color:var(--muted)">' + esc(p.goal) + ' · NEXT: ' + esc(p.next) + ' · +' + p.xp + ' XP</small>' +
-      '<div class="os-bar xp"><i style="width:' + p.pct + '%"></i></div>' + tracks +
+      '<small style="color:var(--muted)">' + esc(p.goal) + ' · +' + p.xp + ' XP · ' + stat + '</small><br>' +
+      '<small style="color:var(--muted)">NEXT: ' + esc(p.next) + ' · 🗓 <input class="os-input os-deadline" data-id="' + p.id + '" value="' + esc(p.deadline || '') + '" placeholder="deadline" style="display:inline-block;width:130px;margin:0;padding:4px 8px;font-size:12px"></small>' +
+      '<div class="os-bar xp"><i style="width:' + p.pct + '%"></i></div>' + tracks + tasks +
+      '<div class="os-row" style="margin-top:6px"><input class="os-input" id="os-task-' + p.id + '" placeholder="+ task" style="flex:1;margin:0;padding:6px 10px;font-size:12.5px"><button class="os-btn small ghost" data-act="task-add" data-id="' + p.id + '">ADD</button></div>' +
       '<div class="os-row" style="margin-top:8px"><button class="os-btn small ghost" data-act="proj-dec" data-id="' + p.id + '">−10%</button><button class="os-btn small ghost" data-act="proj-inc" data-id="' + p.id + '">+10%</button><button class="os-btn small" data-act="proj-done" data-id="' + p.id + '">SHIP +XP</button></div></div>';
   }).join('');
 }
@@ -426,10 +463,13 @@ function renderAch() {
   var el = document.getElementById('os-ach-list');
   if (!el) return;
   el.innerHTML = S.achievements.map(function (a) {
+    var cond = ACH_COND[a.id] ? '🎯 ' + ACH_COND[a.id] : '';
     return '<div class="ach' + (a.unlocked ? '' : ' lock') + '"><div class="ic">' + (a.unlocked ? a.icon : '🔒') + '</div>' +
-      '<div><b>' + esc(a.name) + '</b><small>' + esc(a.desc) + '</small></div>' +
+      '<div><b>' + esc(a.name) + '</b><small>' + esc(a.desc) + (cond ? '<br>' + esc(cond) : '') + '</small></div>' +
       '<span class="dt">' + (a.unlocked ? '✓ ' + esc(a.unlocked) : 'LOCKED') + '</span></div>';
   }).join('');
+  var tl = document.getElementById('os-titles-list');
+  if (tl) tl.innerHTML = (S.titles && S.titles.length) ? S.titles.map(function (t) { return '<span class="os-title">🎖 ' + esc(t.name) + '</span>'; }).join(' ') : '<small style="color:var(--muted)">Level up เพื่อปลดล็อก title แรก</small>';
 }
 function renderJournal() {
   var el = document.getElementById('os-journal-list');
@@ -561,6 +601,45 @@ document.addEventListener('click', function (e) {
     document.getElementById('os-dq-text').value = '';
     Store.save(S); renderAll();
   }
+  else if (act === 'limit-save') {
+    var lim = parseInt((document.getElementById('os-limit-input') || {}).value, 10);
+    if (lim >= 1 && lim <= 30) { S.settings.dailyLimit = lim; Store.save(S); renderAll(); toast('Daily limit = ' + lim); }
+    else toast('Limit 1–30');
+  }
+  else if (act === 'vault-toggle') { OSUI.vaultEdit = !OSUI.vaultEdit; renderAll(); }
+  else if (act === 'vault-save') {
+    Object.keys(S.money.vaults).forEach(function (k) {
+      var vi = document.getElementById('os-vault-' + k);
+      if (vi) { var vv = parseInt(vi.value, 10); if (!isNaN(vv) && vv >= 0) S.money.vaults[k] = vv; }
+    });
+    OSUI.vaultEdit = false; Store.save(S); renderAll(); checkAchievements(); toast('Vaults updated 💰', 'xp');
+  }
+  else if (act === 'hist-toggle') { OSUI.histEdit = !OSUI.histEdit; renderAll(); }
+  else if (act === 'hist-add') {
+    var hm = ((document.getElementById('os-hist-m') || {}).value || '').trim() || 'Now';
+    var hv = parseInt((document.getElementById('os-hist-v') || {}).value, 10);
+    if (!hv || hv <= 0) { toast('ใส่มูลค่าก่อน'); return; }
+    S.money.history.push({ m: hm, v: hv });
+    if (S.money.history.length > 12) S.money.history = S.money.history.slice(-12);
+    OSUI.histEdit = false; Store.save(S); renderAll(); toast('History added 📈', 'xp');
+  }
+  else if (act === 'task') {
+    var pt = S.projects.filter(function (x) { return x.id === id; })[0];
+    var ti = parseInt(b.getAttribute('data-i'), 10);
+    if (pt && pt.tasks && pt.tasks[ti]) {
+      pt.tasks[ti].done = !pt.tasks[ti].done;
+      if (pt.tasks[ti].done) addXP(30, pt.name + ': ' + pt.tasks[ti].t, PROJ_STAT[pt.id] || 'TECH', 1);
+      else { Store.save(S); renderAll(); }
+    }
+  }
+  else if (act === 'task-add') {
+    var pa = S.projects.filter(function (x) { return x.id === id; })[0];
+    var ta = document.getElementById('os-task-' + id);
+    var tv = ((ta || {}).value || '').trim();
+    if (!pa || !tv) { toast('ใส่ชื่อ task ก่อน'); return; }
+    pa.tasks = pa.tasks || []; pa.tasks.push({ t: tv, done: false });
+    Store.save(S); renderAll();
+  }
   else if (act === 'export') {
     var blob = new Blob([Store.export(S)], { type: 'application/json' });
     var a = document.createElement('a');
@@ -583,6 +662,15 @@ document.addEventListener('click', function (e) {
 
 /* import file */
 document.addEventListener('change', function (e) {
+  if (e.target && e.target.classList && e.target.classList.contains('os-deadline')) {
+    var pd = S.projects.filter(function (x) { return x.id === e.target.getAttribute('data-id'); })[0];
+    if (pd) { pd.deadline = e.target.value; Store.save(S); toast('Deadline saved 🗓'); }
+    return;
+  }
+  if (e.target && e.target.id === 'os-theme-sel') {
+    S.settings.theme = e.target.value; Store.save(S); applyTheme(); toast('Theme: ' + e.target.value);
+    return;
+  }
   if (e.target && e.target.id === 'os-import-file') {
     var f = e.target.files[0];
     if (!f) return;
@@ -598,9 +686,48 @@ document.addEventListener('change', function (e) {
   }
 });
 
-/* ---------- boot ---------- */
+/* ---------- boot + migrations (never reset user data) ---------- */
+var ACH_COND = {
+  'a-beat': 'ขายบีทแรกได้', 'a-cust': 'ปิดลูกค้าคนแรก', 'a-100k': 'Net worth 100K',
+  'a-cam': 'ซื้อ Insta360 Ace Pro 2', 'a-cont': 'โพสต์คลิปแรก',
+  'a-streak': 'Daily ครบ 7 วันติด', 'a-1m': 'Net worth 1,000,000 ฿',
+  'a-100b': 'ทำบีทครบ 100', 'a-album': 'HIMORIYACORE 100%',
+  'a-100kf': 'ผู้ติดตามรวม 100K', 'a-robot': 'Aom Universe online'
+};
+var PROJ_STAT = { 'p-himori': 'MUSIC', 'p-beat': 'FINANCE', 'p-content': 'CONTENT', 'p-tattoo': 'ART', 'p-lifeos': 'TECH' };
+var PROJ_TASKS = {
+  'p-himori': ['Finish Track 04', 'Mix / master', 'Cover art'],
+  'p-beat': ['ลง Beatstore 3 บีท', 'TikTok loop 3 คลิป', 'Drumkit pack'],
+  'p-content': ['ตัดคลิปบีท 1 ตัว', 'โพสต์ 1 ชิ้น', 'Lucky content 1'],
+  'p-tattoo': ['ฝึกหนังเทียม 1 ลาย', 'Stylebook 3 ลาย', 'รับสักจริง 1'],
+  'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
+};
+var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
+var VAULT_LABEL = { savings: '🛡 Savings', kasikorn: '💳 Kasikorn e-Sav', ktb: '🏦 KTB', dime: '💚 DIME', cash: '💵 Cash', stocks: '📈 US Stocks', btc: '₿ BTC' };
+var OSUI = { vaultEdit: false, histEdit: false };
+function migrate() {
+  S.titles = S.titles || [];
+  S.settings = S.settings || { dailyLimit: 7 };
+  if (!S.settings.theme) S.settings.theme = 'dark';
+  if (!S.settings.dailyLimit) S.settings.dailyLimit = 7;
+  S.projects.forEach(function (p) {
+    if (!p.tasks) p.tasks = (PROJ_TASKS[p.id] || ['Next action']).map(function (t) { return { t: t, done: false }; });
+    if (!p.deadline) p.deadline = PROJ_DEADLINE[p.id] || 'ongoing';
+  });
+}
+function applyTheme() {
+  if (!document.body || !document.body.classList) return;
+  document.body.classList.toggle('os-void', S.settings.theme === 'void');
+  document.body.classList.toggle('os-neon', S.settings.theme === 'neon');
+  var sel = document.getElementById('os-theme-sel');
+  if (sel) sel.value = S.settings.theme;
+  var lim = document.getElementById('os-limit-input');
+  if (lim) lim.value = S.settings.dailyLimit || 7;
+}
 function boot() {
   if (!S.character.level) S.character.level = 21; // identity preserved, never derived
+  migrate();
+  applyTheme();
   S.streak.best = Math.max(S.streak.best || 0, bestStreak());
   Store.save(S);
   renderAll();
