@@ -91,45 +91,52 @@
       </section>
 
       <!-- ================= MONEY ================= -->
-      <section>
+      <section id="money-section">
         <div class="sechead">
           <div class="kanji">富</div>
           <div class="t">เส้นทางการสั่งสม<small>WEALTH JOURNEY · หน่วย: บาท</small></div>
           <div class="line"></div>
         </div>
+        <div class="money-toolbar">
+          <span class="money-updated" id="moneyUpdated">แตะตัวเลขเพื่อแก้ไขได้เลย</span>
+          <span class="money-actions">
+            <button type="button" id="editMoneyBtn" class="money-btn">✎ แก้ไขยอดเงิน</button>
+            <button type="button" id="resetMoneyBtn" class="money-btn ghost" hidden>รีเซ็ตค่าเดิม</button>
+          </span>
+        </div>
         <div class="chart" id="chart">
-          <div class="cbar" data-h="5.2" data-v="33000">
+          <div class="cbar" data-h="5.2" data-v="33000" data-money-key="h1">
             <div class="val">0</div>
             <div class="col"></div>
             <div class="lbl"><b>จุดแรก</b>ที่บันทึกไว้</div>
           </div>
-          <div class="cbar" data-h="10" data-v="63300">
+          <div class="cbar" data-h="10" data-v="63300" data-money-key="h2">
             <div class="val">0</div>
             <div class="col"></div>
             <div class="lbl"><b>ก้าวที่สอง</b>เกือบเท่าตัว</div>
           </div>
-          <div class="cbar" data-h="11.3" data-v="72000">
+          <div class="cbar" data-h="11.3" data-v="72000" data-money-key="h3">
             <div class="val">0</div>
             <div class="col"></div>
             <div class="lbl"><b>ก้าวที่สาม</b>ความมั่นคง</div>
           </div>
-          <div class="cbar hero" data-h="90" data-v="651400">
+          <div class="cbar hero" data-h="90" data-v="651400" data-money-key="total-bar">
             <div class="val">0</div>
             <div class="col"></div>
             <div class="lbl"><b>ก.ย. 2569</b>เกินเป้าปี 6 เท่า</div>
           </div>
         </div>
-        <div class="chartnote">* ตัวเลขจากบันทึกการสนทนา — เติบโต ~19 เท่าจากจุดแรก</div>
+        <div class="chartnote" id="chartNote">* ตัวเลขจากบันทึกการสนทนา — เติบโต ~19 เท่าจากจุดแรก</div>
 
         <div class="wallets">
-          <div class="w hero"><div class="wn">รวมทั้งสิ้น</div><div class="wv" data-count="651400">0</div></div>
-          <div class="w"><div class="wn">สมุดฝากกสิกร — เก็บ</div><div class="wv" data-count="585000">0</div></div>
-          <div class="w"><div class="wn">กสิกร e-Savings — ใช้จ่าย</div><div class="wv" data-count="40000">0</div></div>
-          <div class="w"><div class="wn">KTB e-Savings</div><div class="wv" data-count="15600">0</div></div>
-          <div class="w"><div class="wn">DIME Save</div><div class="wv" data-count="3000">0</div></div>
-          <div class="w"><div class="wn">เงินสด</div><div class="wv" data-count="1000">0</div></div>
-          <div class="w"><div class="wn">DIME US Stocks</div><div class="wv" data-count="6400">0</div></div>
-          <div class="w"><div class="wn">BTC</div><div class="wv" data-count="400">0</div></div>
+          <div class="w hero"><div class="wn">รวมทั้งสิ้น <span class="auto-tag">คำนวณอัตโนมัติ</span></div><div class="wv" id="totalWallet" data-count="651400">0</div></div>
+          <div class="w" data-money-key="kasikorn-save"><div class="wn">สมุดฝากกสิกร — เก็บ</div><div class="wv" data-count="585000">0</div></div>
+          <div class="w" data-money-key="kasikorn-esav"><div class="wn">กสิกร e-Savings — ใช้จ่าย</div><div class="wv" data-count="40000">0</div></div>
+          <div class="w" data-money-key="ktb"><div class="wn">KTB e-Savings</div><div class="wv" data-count="15600">0</div></div>
+          <div class="w" data-money-key="dime-save"><div class="wn">DIME Save</div><div class="wv" data-count="3000">0</div></div>
+          <div class="w" data-money-key="cash"><div class="wn">เงินสด</div><div class="wv" data-count="1000">0</div></div>
+          <div class="w" data-money-key="dime-us"><div class="wn">DIME US Stocks</div><div class="wv" data-count="6400">0</div></div>
+          <div class="w" data-money-key="btc"><div class="wn">BTC</div><div class="wv" data-count="400">0</div></div>
         </div>
 
         <div class="income">
@@ -302,13 +309,13 @@
           <div class="t">ภารกิจแห่งอนาคต<small>THE ROAD AHEAD</small></div>
           <div class="line"></div>
         </div>
-        <div class="goal main">
+        <div class="goal main" id="goalMain">
           <span class="gico">⭐</span>
           <div class="gb">
             <div class="gt">มหาสมบัติ 1,000,000 ฿<span class="tag">大任</span></div>
-            <div class="gd">เป้าหมายหลัก — เหลืออีก 348,600 ฿</div>
+            <div class="gd" id="goalMainDesc">เป้าหมายหลัก — เหลืออีก 348,600 ฿</div>
           </div>
-          <div class="gp"><div class="pb"><i data-w="65.1"></i></div><span>65%</span></div>
+          <div class="gp"><div class="pb"><i data-w="65.1" id="goalMainBar"></i></div><span id="goalMainPct">65%</span></div>
         </div>
         <div class="goal">
           <span class="gico">🌾</span>
@@ -352,6 +359,7 @@
 </div>
 
 <script src="js/main.js"></script>
+<script src="js/money-edit.js"></script>
 <script src="js/dream.js"></script>
 </body>
 </html>

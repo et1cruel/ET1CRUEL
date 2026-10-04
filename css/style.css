@@ -357,6 +357,52 @@
   .val.flash{animation:vflash .5s ease;}
   @keyframes vflash{0%{color:var(--ver);transform:scale(1.25);}100%{color:var(--ink);transform:scale(1);}}
 
+  /* ===== MONEY inline edit ===== */
+  .money-toolbar{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+    margin-bottom:12px;padding:8px 12px;
+    border:1.5px dashed var(--ink-faint);background:rgba(255,242,205,.3);
+    font-size:12.5px;color:var(--ink-soft);
+  }
+  .money-updated{font-weight:500;}
+  .money-updated b{color:var(--ver);}
+  .money-actions{display:flex;gap:8px;}
+  .money-btn{
+    font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;
+    border:2px solid var(--ver);background:var(--ver);color:#f5e3c0;
+    padding:5px 14px;border-radius:20px;
+    box-shadow:0 2px 6px rgba(90,20,10,.35);
+    transition:transform .15s ease, box-shadow .2s ease;
+  }
+  .money-btn:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(90,20,10,.4);}
+  .money-btn.ghost{background:transparent;color:var(--ink-faint);border-color:var(--ink-faint);box-shadow:none;font-weight:500;}
+  .money-btn.active{background:var(--ink);border-color:var(--ink);color:var(--leaf);}
+  .auto-tag{
+    font-size:9.5px;font-weight:600;color:var(--ver);
+    border:1px solid var(--ver);border-radius:10px;padding:0 7px;margin-left:5px;white-space:nowrap;
+  }
+  #money-section.editing .w:not(.hero),
+  #money-section.editing .cbar:not(.hero){
+    outline:2px dashed var(--ver);outline-offset:3px;
+  }
+  .wv.editable, .cbar .val.editable{cursor:pointer;position:relative;}
+  #money-section.editing .wv.editable:hover,
+  #money-section.editing .cbar .val.editable:hover{
+    background:rgba(158,43,30,.12);
+  }
+  .wv.editable::after, .cbar .val.editable::after{
+    content:'✎';font-size:11px;color:var(--ver);margin-left:5px;opacity:0;vertical-align:2px;
+  }
+  #money-section.editing .wv.editable::after,
+  #money-section.editing .cbar .val.editable::after{opacity:.9;}
+  .money-input{
+    font-family:'Zen Old Mincho',serif;font-weight:700;color:var(--ver);
+    background:#fff8e6;border:2px solid var(--ver);border-radius:4px;
+    padding:2px 6px;width:130px;max-width:100%;font-size:15px;
+  }
+  .cbar .money-input{width:90px;font-size:13px;text-align:center;}
+  .money-hint{font-size:11px;color:var(--ink-faint);margin-top:2px;}
+
   @media (prefers-reduced-motion:reduce){
     .hero .oct{animation:none;}
   }
