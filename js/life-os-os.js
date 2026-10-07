@@ -54,12 +54,12 @@ function seed() {
       BODY:    { pts: 28, xp: 1400 }, MIND: { pts: 32, xp: 1600 },
       LIFE:    { pts: 24, xp: 1200 }, CONTENT: { pts: 36, xp: 1800 }
     },
-    mainQuest: { name: 'PROJECT 1M', current: 651400, target: 1000000,
+    mainQuest: { name: 'PROJECT 1M', current: 639420, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { savings: 585000, kasikorn: 40000, ktb: 15600, dime: 3000, cash: 1000, stocks: 6400, btc: 400 },
+      vaults: { savings: 200000, kasikorn: 425820, ktb: 0, dime: 2000, cash: 200, stocks: 11000, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
-      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 } ]
+      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 639420 } ]
     },
     projects: [
       { id: 'p-himori', name: 'HIMORIYACORE', goal: '10 SONG ALBUM', pct: 60, next: 'Finish Track 04', xp: 500, tracks: [1,1,1,0,0,0,0,0,0,0] },
@@ -405,7 +405,7 @@ function renderMoney() {
   S.money.flow.forEach(function (f) { if (f.type === 'income') flow.income += f.amt; else if (f.type === 'expense') flow.expense += f.amt; });
   var histMax = Math.max.apply(null, S.money.history.map(function (h) { return h.v; }).concat([1]));
   var hist = S.money.history.map(function (h) {
-    return '<div style="flex:1;text-align:center"><div style="height:70px;display:flex;align-items:flex-end;justify-content:center"><div style="width:70%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--gold),#b8860b);height:' + Math.max(4, (h.v / histMax * 100)) + '%"></div></div><small style="color:var(--muted);font-family:\'Chakra Petch\',sans-serif;font-size:10.5px">' + esc(h.m) + '<br>' + fmt(h.v) + '</small></div>';
+    return '<div style="flex:1;text-align:center"><div style="height:70px;display:flex;align-items:flex-end;justify-content:center"><div style="width:70%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--gold),#15803d);height:' + Math.max(4, (h.v / histMax * 100)) + '%"></div></div><small style="color:var(--muted);font-family:\'Chakra Petch\',sans-serif;font-size:10.5px">' + esc(h.m) + '<br>' + fmt(h.v) + '</small></div>';
   }).join('');
   el.innerHTML =
     '<div class="mq-big num">' + fmt(nw) + ' ฿</div>' +
@@ -703,7 +703,7 @@ var PROJ_TASKS = {
   'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
 };
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
-var VAULT_LABEL = { savings: '🛡 Savings', kasikorn: '💳 Kasikorn e-Sav', ktb: '🏦 KTB', dime: '💚 DIME', cash: '💵 Cash', stocks: '📈 US Stocks', btc: '₿ BTC' };
+var VAULT_LABEL = { savings: '🪴 Kept Grow', kasikorn: '💳 Kasikorn e-Sav', ktb: '🏦 KTB', dime: '💚 DIME', cash: '💵 Cash', stocks: '📈 US Stocks', btc: '₿ BTC' };
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
   S.titles = S.titles || [];

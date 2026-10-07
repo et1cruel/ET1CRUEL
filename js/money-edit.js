@@ -1,6 +1,6 @@
 /* ===== Inline money editor — แตะตัวเลขเพื่อแก้ไข, เซฟลง localStorage อัตโนมัติ ===== */
 (function () {
-  var STORE_KEY = 'aom-money-v1';
+  var STORE_KEY = 'aom-money-v3'; // v3: ยอด ต.ค. 2026 (Kept 200K / DIME US 11K)
   var GOAL = 1000000;
 
   var section = document.getElementById('money-section');

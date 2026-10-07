@@ -1,0 +1,87 @@
+/* ===== STOCK TALK — เรียบแฟลต สไตล์แชท (คลาสเดียวกับ stock-talk.js) ===== */
+#stocks .shead{margin-bottom:12px}
+/* tab — RPG segmented */
+.os-tabs{display:flex;gap:6px;margin-bottom:12px;background:rgba(11,13,20,.7);border:1px solid rgba(74,222,128,.3);border-radius:14px;padding:5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.os-tab{flex:1;font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:10px;font-weight:400;cursor:pointer;border:none;background:transparent;color:var(--muted,#9AA3BD);border-radius:9px;padding:11px 6px;letter-spacing:.03em}
+.os-tab.on{background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;box-shadow:0 0 14px rgba(74,222,128,.4)}
+.os-pane{display:none}
+.os-pane.on{display:block}
+/* ตารางตลาด/พอร์ต — เรียบ */
+.market-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.stock-refresh{margin-left:auto;font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid rgba(74,222,128,.5);background:rgba(74,222,128,.1);color:var(--gold,#4ADE80);border-radius:10px;padding:8px 14px}
+.stock-refresh:hover{background:rgba(74,222,128,.22);box-shadow:0 0 12px rgba(74,222,128,.3)}
+.stock-updated{font-size:13px;color:var(--muted,#9AA3BD);font-weight:600;line-height:1.7}
+.stock-updated b{color:#fff}
+.stock-table{width:100%;border-collapse:collapse;font-size:14.5px}
+.stock-table th{font-size:11.5px;color:var(--gold,#4ADE80);text-align:left;padding:8px 6px;border-bottom:1px solid rgba(74,222,128,.3);font-weight:700;font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px;letter-spacing:.05em;white-space:nowrap}
+.stock-table td{padding:10px 6px;border-bottom:1px solid #1c2130;vertical-align:middle;color:#fff}
+.stock-table tr:last-child td{border-bottom:none}
+#watchBody tr:hover td,#pfBody tr:hover td{background:rgba(74,222,128,.05)}
+.stock-sym{font-weight:700;color:#fff;font-family:'Chakra Petch',sans-serif}
+.stock-sym small{display:block;font-weight:600;font-size:12px;color:var(--muted,#9AA3BD);font-family:'IBM Plex Sans Thai',sans-serif}
+.stock-price{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;white-space:nowrap;color:#fff}
+.stock-up{color:#3DFF88;font-weight:700}
+.stock-down{color:#FF8b96;font-weight:700}
+.stock-flat{color:var(--muted,#9AA3BD);font-weight:600}
+.stock-hl{font-size:12px;color:var(--muted,#9AA3BD);white-space:nowrap}
+.pf-input{font-family:'Chakra Petch',sans-serif;font-size:13px;width:80px;padding:7px 9px;border:1px solid #3d4666;border-radius:8px;background:#0B0D14;color:#fff}
+.pf-input.qty{width:66px}
+.pf-del{cursor:pointer;border:1px solid #3d4666;background:transparent;border-radius:8px;padding:2px 9px;font-size:12.5px;color:var(--muted,#9AA3BD);font-family:inherit}
+.pf-del:hover{border-color:#FF4D5E;color:#FF4D5E}
+.pf-addrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.pf-addrow select{font-family:inherit;font-size:14px;font-weight:600;padding:8px 10px;border:1px solid #3d4666;border-radius:8px;background:#0B0D14;color:#fff;max-width:170px}
+.pf-add{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;background:#fff;color:#111;padding:9px 16px;border-radius:8px}
+.pf-total{margin-top:12px;padding-top:10px;border-top:1px solid #2B3248;font-size:14.5px;font-weight:700;color:#fff;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pf-total b{color:var(--gold,#4ADE80)}
+/* แชทสไตล์ ChatGPT — เรียบ ไม่มีกรอบฟอง */
+.chat-msgs{display:flex;flex-direction:column;gap:14px;padding:6px 2px 12px;max-height:380px;overflow-y:auto}
+.msg{max-width:100%;font-size:15.5px;line-height:1.9;word-break:break-word;padding:0;background:none;border:none;border-radius:0}
+.msg.me{align-self:flex-end;background:#2f333f;color:#fff;border-radius:16px;padding:8px 15px;max-width:85%}
+.msg.bot{align-self:flex-start;color:#ECECF1;width:100%}
+.msg.bot b{color:var(--gold,#4ADE80)}
+.msg .pill{display:inline-block;font-size:12px;border:1px solid #4a557e;border-radius:8px;padding:1px 9px;margin:3px 5px 3px 0;font-weight:700;font-family:'Chakra Petch',sans-serif;color:#fff;background:#212637}
+.chat-chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 10px}
+.chat-chips button{font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid #3d4666;background:transparent;color:#C9D2E8;border-radius:16px;padding:6px 13px}
+.chat-chips button:hover{border-color:var(--gold,#4ADE80);color:#fff}
+.chat-form{display:flex;gap:8px;padding:4px 0 2px}
+.chat-form input{flex:1;font-family:inherit;font-size:14.5px;padding:12px 18px;border-radius:24px;border:1px solid #3d4666;background:#212637;color:#fff;outline:none;min-width:0}
+.chat-form input::placeholder{color:#5d6785}
+.chat-form input:focus{border-color:#6b7386}
+.chat-form button{font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;border-radius:50%;width:44px;height:44px;flex:0 0 44px;line-height:1;box-shadow:0 0 14px rgba(74,222,128,.35)}
+.chat-form button:hover{box-shadow:0 0 20px rgba(74,222,128,.55)}
+.chat-note{font-size:11.5px;color:#5d6785;padding:8px 2px 0;line-height:1.6}
+.shead .fx-badge{font-family:'Chakra Petch',sans-serif;white-space:nowrap}
+/* ===== แผนหลัก MASTER PLAN ===== */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:6px}
+.plan-bucket{border:1px solid rgba(255,255,255,.2);border-top:4px solid var(--bdot,#4ADE80);border-radius:14px;padding:16px;background:rgba(255,255,255,.06)}
+.pb-top{display:flex;align-items:center;gap:8px}
+.pb-dot{width:13px;height:13px;border-radius:50%;background:var(--bdot);box-shadow:0 0 10px var(--bdot)}
+.pb-top b{font-size:19px;color:#fff}
+.pb-h{margin-left:auto;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;color:var(--bdot);border:1px solid var(--bdot);border-radius:8px;padding:2px 10px}
+.pb-holds{font-size:13px;color:var(--muted,#AAB4CC);margin-top:6px;font-weight:600;line-height:1.7}
+.pb-amt{font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;color:#fff;margin:6px 0 4px}
+.pb-amt small{font-size:14px;color:var(--muted,#AAB4CC)}
+.pb-bar{height:12px;background:#0B0D14;border:1px solid #343c58;border-radius:7px;overflow:hidden;margin:8px 0}
+.pb-bar i{display:block;height:100%;background:var(--bdot);box-shadow:0 0 10px var(--bdot)}
+.pb-ret{font-size:13.5px;color:#DDE3F5}
+.pb-ret b{color:var(--bdot)}
+.plan-table td.num,.plan-table th:nth-child(n+2){font-family:'Chakra Petch',sans-serif}
+.plan-total td{background:rgba(74,222,128,.08);border-top:2px solid rgba(74,222,128,.5)}
+.plan-dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:8px;vertical-align:1px}
+.plan-live{display:flex;flex-direction:column;gap:8px;margin:4px 0 6px}
+.plan-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.plan-line>b{color:#fff;min-width:52px}
+.plan-pill{font-family:'Chakra Petch',sans-serif;font-size:12px;background:#212637;border:1px solid #3d4666;border-radius:8px;padding:4px 10px;color:#fff;white-space:nowrap}
+.plan-pill.stale{opacity:.55}
+.wgroup td{font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px;letter-spacing:.05em;color:var(--gold,#4ADE80);padding-top:12px!important;border-bottom:1px solid rgba(74,222,128,.3)}
+@media(max-width:900px){.plan-grid{grid-template-columns:1fr}.pb-amt{font-size:26px}}
+/* ปุ่มลอย + ป๊อปอัพ */
+#stockFab{position:fixed;right:18px;bottom:18px;z-index:90;width:54px;height:54px;border-radius:50%;border:1px solid rgba(74,222,128,.6);background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;font-size:24px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 18px rgba(74,222,128,.45)}
+#stockFab:hover{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 26px rgba(74,222,128,.65)}
+#stockFab .ping{position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;background:#3DFF88;border:2px solid #0B0D14}
+#stockPop{position:fixed;right:18px;bottom:82px;z-index:91;width:min(370px,calc(100vw - 28px));display:none;background:#141824;border:1px solid #3d4666;border-radius:16px;padding:14px}
+#stockPop.open{display:block}
+#stockPop .chat-msgs{max-height:300px}
+#stockPopClose{margin-left:auto;background:transparent;border:1px solid #3d4666;color:var(--muted,#9AA3BD);border-radius:8px;cursor:pointer;font-size:12px;padding:3px 10px;font-family:inherit}
+#stockPopHead{display:flex;align-items:center;gap:8px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:10px}
+#stockPopHead .dotlive{width:8px;height:8px;border-radius:50%;background:#3DFF88}
