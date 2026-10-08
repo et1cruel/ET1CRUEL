@@ -57,7 +57,7 @@ function seed() {
     mainQuest: { name: 'PROJECT 1M', current: 651420, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { keptKrungsri: 9000, growKrungsri: 400000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 },
+      vaults: { savings: 409000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
       history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 651420 } ]
     },
@@ -745,9 +745,9 @@ var PROJ_TASKS = {
   'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
 };
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
-var VAULT_LABEL = { keptKrungsri: '🏦 Kept Krungsri', growKrungsri: '🌱 Grow Krungsri', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
-var SAVE_VAULTS = ['keptKrungsri', 'growKrungsri'];
-var DEF_VAULTS = { keptKrungsri: 9000, growKrungsri: 400000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 };
+var VAULT_LABEL = { savings: '🪴 Kept Grow', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
+var SAVE_VAULTS = ['savings'];
+var DEF_VAULTS = { savings: 409000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
@@ -766,7 +766,8 @@ function migrate() {
   });
   if (S.money.vaults.dime === 1000) S.money.vaults.dime = 3000; // ยอด seed รอบก่อน
   if (S.money.vaults.kasikorn === 157420) S.money.vaults.kasikorn = 225820; // ยอด seed รอบก่อน
-  delete S.money.vaults.savings; // ตัด Kept Grow 200K ออกถาวร
+  delete S.money.vaults.keptKrungsri; delete S.money.vaults.growKrungsri; // รวม Krungsri กลับเป็น Kept Grow
+  if (S.money.vaults.savings === 200000) S.money.vaults.savings = 409000; // ยอด seed เก่า
   if (S.mainQuest) S.mainQuest.current = netWorth();
   if (Array.isArray(S.money.history) && S.money.history.length) {
     var last = S.money.history[S.money.history.length - 1];
