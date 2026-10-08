@@ -1,366 +1,1249 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>阿夢心物語 — ชีวประวัติ ออมสิน</title>
+<title>ET1CRUEL · QUEST LOG RPG — ระบบชีวิตสายเกม</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="logo.svg">
-<meta name="theme-color" content="#0B0D14">
+<meta name="theme-color" content="#08090E">
 <meta property="og:image" content="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Zen+Old+Mincho:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/life-os-os.css">
+<link rel="stylesheet" href="css/stock-os.css">
+<script>document.documentElement.classList.add('js');</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{
+  --bg:#08090E; --card:#12141D; --card2:#1A1E2B; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --gold:#4ADE80; --gold-dim:#166534; --hp:#FF4D5E; --mp:#4DA6FF; --xp:#3DFF88;
+  --green:#34D399; --amber:#FBBF24; --pink:#F472B6; --indigo:#A5B4FC;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:
+  radial-gradient(1000px 420px at 15% -5%,rgba(74,222,128,.12) 0%,transparent 60%),
+  radial-gradient(900px 500px at 90% 0%,rgba(124,58,237,.22) 0%,transparent 55%),
+  radial-gradient(700px 600px at 50% 110%,rgba(255,77,94,.1) 0%,transparent 60%),
+  var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:19px;line-height:2.05;font-weight:500;letter-spacing:.01em;-webkit-font-smoothing:antialiased}
+body strong,body b{font-weight:700}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:36px 36px;mask-image:radial-gradient(ellipse at 50% 0%,black 30%,transparent 85%)}
+.wrap{max-width:none;width:100%;margin:0;padding:20px 28px 80px;position:relative;z-index:1}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+/* ===== TOP HUD ===== */
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:14px;align-items:center;background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);border-radius:14px;padding:10px 12px 10px 14px;box-shadow:var(--shadow)}
+.topbar .logo{width:46px;height:46px;flex:0 0 46px;background:conic-gradient(from 0deg,#4ADE80,#15803d,#4ADE80);border-radius:10px;padding:2px;transform:rotate(-3deg)}
+.topbar .logo span{display:flex;width:100%;height:100%;background:#0B0D14;border-radius:8px;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--gold)}
+.lv{background:#0B0D14;border:1px solid var(--gold);color:var(--gold);font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:12px;border-radius:8px;padding:3px 9px;letter-spacing:.08em}
+.topbar b{font-size:16px;color:#fff;letter-spacing:.02em}
+.topbar small{color:var(--muted);font-size:12px;display:block;line-height:1.3;font-weight:600}
+.hudbars{display:flex;flex-direction:column;gap:5px;margin-left:8px;min-width:170px;flex:0 1 220px}
+.hbar{height:12px;background:#080A10;border:1px solid #343c58;border-radius:6px;overflow:hidden;position:relative}
+.hbar i{display:block;height:100%;border-radius:5px}
+.hbar.hp i{background:linear-gradient(180deg,#ff7a86,#e11d2e);width:82%;box-shadow:0 0 10px rgba(255,77,94,.7)}
+.hbar.mp i{background:linear-gradient(180deg,#8ec5ff,#2563eb);width:64%;box-shadow:0 0 10px rgba(77,166,255,.7)}
+.hbar.xp i{background:linear-gradient(180deg,#a7f3d0,#059669);width:96.5%;box-shadow:0 0 10px rgba(61,255,136,.6)}
+.hbar em{position:absolute;inset:0;font-style:normal;font-family:'Chakra Petch',sans-serif;font-size:9px;font-weight:700;color:#fff;text-align:center;line-height:11px;letter-spacing:.1em;text-shadow:0 1px 2px #000}
+.search{margin-left:auto;display:flex;gap:8px;align-items:center}
+.search input{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:14px;font-weight:600;width:200px;outline:none}
+.search input::placeholder{color:#5d6785}
+.search input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(74,222,128,.25)}
+.filters{display:flex;gap:6px}
+.fbtn{border:1px solid #3d4666;background:#0B0D14;color:var(--muted);border-radius:10px;padding:9px 13px;font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;letter-spacing:.03em}
+.fbtn.on{background:var(--gold);color:#111;border-color:var(--gold);box-shadow:0 0 14px rgba(74,222,128,.45)}
+/* ===== HERO = CHARACTER CARD ===== */
+.hero{background:linear-gradient(180deg,#1B2032 0%,#12141D 60%,#10131c 100%);border:1px solid #454f76;border-radius:20px;box-shadow:var(--shadow);padding:0;margin:18px 0;display:grid;grid-template-columns:1.15fr .85fr;gap:0;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.hero-left{padding:34px 30px 28px}
+.hero-right{background:rgba(0,0,0,.35);border-left:1px dashed #3d4666;padding:28px 24px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.18em;color:var(--gold);font-weight:700;font-family:'Chakra Petch',sans-serif}
+.eyebrow i{width:9px;height:9px;background:var(--xp);display:inline-block;transform:rotate(45deg);box-shadow:0 0 8px var(--xp);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.4}}
+h1{font-size:44px;line-height:1.15;margin:10px 0 6px;color:#fff;font-weight:700}
+h1 span{font-family:'Noto Serif Thai',serif;color:var(--gold);text-shadow:0 0 24px rgba(74,222,128,.4)}
+.class-line{display:inline-block;margin:6px 0 10px;font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.1em;color:#0B0D14;background:linear-gradient(90deg,var(--gold),#DCFCE7);border-radius:6px;padding:4px 12px}
+.lead{color:#E2E8FA;font-size:18px;font-weight:500;max-width:60ch;line-height:1.95}
+.lead b{color:#fff}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.kpi{border:2px solid #4a557e;border-radius:14px;padding:16px;background:#0C0F18;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.kpi small{color:#D3DAEE;font-size:13px;font-weight:700;letter-spacing:.06em;font-family:'Chakra Petch',sans-serif}
+.kpi strong{font-size:24px;display:block;line-height:1.3;color:#fff;font-family:'Chakra Petch',sans-serif}
+.kpi .bar{height:10px;background:#1e2436;border:1px solid #343c58;border-radius:6px;margin-top:8px;overflow:hidden}
+.kpi .bar i{display:block;height:100%;background:repeating-linear-gradient(-55deg,var(--gold) 0 8px,#16a34a 8px 16px);animation:slide 1.2s linear infinite}
+@keyframes slide{to{background-position:22px 0}}
+.formula{background:#080A0F;border:1px solid var(--gold-dim);border-radius:14px;padding:20px;position:relative}
+.formula::before{content:'✦ SKILL TREE';position:absolute;top:-11px;left:16px;background:var(--gold);color:#111;font-family:'Chakra Petch',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.12em;border-radius:6px;padding:2px 10px}
+.formula h3{font-size:12px;letter-spacing:.1em;color:var(--gold);font-family:'Chakra Petch',sans-serif}
+.formula p{font-size:17px;margin-top:10px;color:#fff;font-weight:500;line-height:1.95}
+.formula p b{color:var(--gold)}
+/* ===== BOARD — FULLSCREEN PC ===== */
+.board{display:grid;grid-template-columns:250px 1fr;gap:22px;align-items:start}
+.nav{position:sticky;top:84px;background:linear-gradient(180deg,#151927,#0E1119);border:1px solid #3d4666;border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+.nav::before{content:'◆ WORLD MAP';display:block;font-family:'Chakra Petch',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.15em;color:var(--gold);padding:4px 8px 6px}
+.nav-group{font-family:'Chakra Petch',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--muted);padding:12px 11px 4px}
+.nav-group:first-of-type{padding-top:2px}
+.nav a{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:#fff;font-size:15.5px;font-weight:700;padding:12px;border-radius:10px;border:1px solid transparent}
+.nav a:hover{background:#222946;color:#fff;border-color:#3d4666}
+.nav a span.n{font-size:13px;background:#0B0D14;border:1px solid #3d4666;border-radius:6px;padding:2px 9px;color:var(--gold);font-family:'Chakra Petch',sans-serif;font-weight:700}
+.sections{display:flex;flex-direction:column;gap:22px;min-width:0;counter-reset:board}
+.sections section.card{min-width:0;counter-increment:board}
+.sections section.card .shead{position:relative}
+.sections section.card .shead::after{content:counter(board,decimal-leading-zero);position:absolute;right:0;top:-8px;font-family:'Chakra Petch',sans-serif;font-size:44px;font-weight:700;color:rgba(255,255,255,.07);line-height:1;pointer-events:none}
+.shead .count{position:relative;z-index:1}
+#lucky,#content,#vision{grid-column:auto}
+section.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;box-shadow:var(--shadow);padding:32px;overflow:hidden;position:relative}
+/* หัวข้อกลุ่มย่อย — แบบเดียวกันทั้งเว็บ */
+.group-title{display:flex;align-items:center;gap:10px;font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;letter-spacing:.12em;color:var(--gold);margin:20px 0 14px;padding:10px 14px;background:rgba(74,222,128,.07);border:1px solid var(--gold-dim);border-left:4px solid var(--gold);border-radius:10px}
+.group-title:first-of-type{margin-top:6px}
+.group-title .gnum{background:var(--gold);color:#111;border-radius:6px;padding:1px 9px;font-size:12.5px}
+.grid2,.grid3{align-items:stretch}
+.item{height:100%}
+.treas-grid{align-items:stretch}
+.vault{display:flex;flex-direction:column}
+.vault .vbar{margin-top:auto;padding-top:0}
+.vault .vbar{margin-top:12px}
+section.card::before{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(74,222,128,.5),transparent)}
+.shead{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;border-bottom:1px solid #2B3248;padding-bottom:14px}
+.icon{flex:0 0 48px;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(180deg,#262c45,#12141d)!important;border:1px solid var(--gold-dim);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.shead h2{font-size:27px;line-height:1.4;color:#fff;font-weight:700;letter-spacing:.01em}
+.shead h2::after{content:' ⚔';color:var(--gold);font-size:17px}
+.shead p{color:#C9D2E8;font-size:15.5px;margin-top:4px;font-weight:600}
+.count{margin-left:auto;flex:0 0 auto;font-size:14px;font-weight:700;border-radius:8px;padding:8px 15px;background:linear-gradient(180deg,var(--gold),#16a34a);color:#111;font-family:'Chakra Petch',sans-serif;box-shadow:0 0 12px rgba(74,222,128,.35);white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* PC fullscreen: ใช้จอกว้างให้คุ้ม + อ่านง่าย */
+.hero{grid-template-columns:1.2fr 1fr}
+#lucky .grid3{grid-template-columns:repeat(3,1fr)}
+#content .grid2{grid-template-columns:repeat(2,1fr)}
+#vision .grid2{grid-template-columns:repeat(2,1fr)}
+#gear .grid3{grid-template-columns:repeat(3,1fr)}
+@media(min-width:1600px){
+  .wrap{padding:24px 40px 90px}
+  .board{grid-template-columns:280px 1fr}
+  #lucky .grid3{grid-template-columns:repeat(3,1fr)}
+  #content .grid2{grid-template-columns:repeat(2,1fr)}
+  h1{font-size:54px}
+}
+@media(max-width:1200px){
+  .sections{grid-template-columns:1fr}
+  #lucky .grid3,#content .grid2,#vision .grid2{grid-template-columns:1fr 1fr}
+}
+.item{border:2px solid #4a557e;border-radius:16px;padding:20px 20px 20px 22px;background:linear-gradient(180deg,#222839,#151927);font-size:17px;font-weight:600;color:#FFFFFF;display:flex;gap:14px;align-items:flex-start;transition:.18s;line-height:1.95;position:relative;overflow:hidden}
+.item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:#5d6785}
+.done.item::before{background:var(--xp);box-shadow:0 0 8px var(--xp)}
+.todo.item::before{background:var(--amber);box-shadow:0 0 8px var(--amber);animation:questGlow 1.8s ease-in-out infinite}
+@keyframes questGlow{50%{opacity:.5}}
+.item:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px var(--gold)}
+.item.hide{display:none}
+.dot{flex:0 0 32px;width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;margin-top:3px;font-family:'Chakra Petch',sans-serif}
+.done .dot{background:rgba(61,255,136,.2);color:#7DFFB2;border:2px solid var(--xp)}
+.todo .dot{background:rgba(251,191,36,.14);color:var(--amber);border:2px solid var(--amber)}
+.item .txt{flex:1;min-width:0}
+.item .txt small{display:block;color:#D3DAEE;font-size:15px;margin-top:5px;font-weight:500;line-height:1.8}
+.item b{color:#fff}
+.badge{display:inline-block;font-size:14px;font-weight:700;border-radius:8px;padding:5px 13px;margin:8px 6px 0 0;border:1.5px solid #3A435C;background:#0C0F18;color:#fff;font-family:'Chakra Petch',sans-serif;letter-spacing:.02em}
+.b-done{background:rgba(61,255,136,.14);color:#6EE7B7;border-color:var(--xp)}
+.b-done::before{content:'✔ '}
+.b-todo{background:rgba(251,191,36,.12);color:var(--amber);border-color:var(--amber)}
+.b-todo::before{content:'◆ '}
+.b-money{background:linear-gradient(180deg,#BBF7D0,var(--gold));color:#052e16;border-color:#fff3}
+.b-money::before{content:'◉ '}
+.b-pink{background:rgba(244,114,182,.14);color:#F9A8D4;border-color:#F472B6}
+.b-indigo{background:rgba(165,180,252,.13);color:#C7D2FE;border-color:#A5B4FC}
+.b-cyan{background:rgba(103,232,249,.1);color:#A5F3FC;border-color:#67E8F9}
+.b-violet{background:rgba(196,181,253,.13);color:#DDD6FE;border-color:#C4B5FD}
+.progress{height:14px;background:#080A10;border:1px solid #3d4666;border-radius:8px;overflow:hidden;margin:12px 0 6px}
+.progress i{display:block;height:100%;background:repeating-linear-gradient(-55deg,var(--gold) 0 10px,#15803d 10px 20px);box-shadow:0 0 14px rgba(74,222,128,.5);animation:slide 1s linear infinite}
+.persona{border:2px solid #4a557e;border-radius:16px;padding:22px;background:linear-gradient(180deg,#222839,#151927);position:relative}
+.persona::after{content:'RANK ' attr(data-rank);position:absolute;top:12px;right:12px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--gold);border:1.5px solid var(--gold-dim);border-radius:6px;padding:3px 10px;background:rgba(0,0,0,.4)}
+.persona h4{font-size:19px;color:#fff;font-weight:700;padding-right:80px;line-height:1.6}
+.persona p{font-size:16.5px;color:#DDE3F5;margin-top:8px;line-height:1.95}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tags span{font-size:13.5px;font-weight:700;background:#0C0F18;color:var(--gold);border:1.5px solid var(--gold-dim);border-radius:7px;padding:5px 13px;font-family:'Chakra Petch',sans-serif}
+.zone{border:2px solid #4a557e;border-radius:16px;padding:20px;background:linear-gradient(180deg,#222839,#12141d)}
+.zone h4{font-size:18px;color:var(--gold)}
+.zone p,.zone ul{font-size:16px;color:#DDE3F5;line-height:1.9}
+.zone ul{margin:10px 0 0 20px}
+.skill{display:inline-flex;align-items:center;gap:6px;border:1.5px solid #4a557e;border-radius:8px;padding:8px 14px;font-size:14.5px;font-weight:700;background:#141824;color:#fff;margin:0 8px 8px 0;font-family:'Chakra Petch',sans-serif}
+.skill.hot{background:linear-gradient(180deg,#BBF7D0,var(--gold));color:#052e16;border-color:#fff3;box-shadow:0 0 10px rgba(74,222,128,.3)}
+.note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;padding:18px;font-size:16.5px;color:#fff;margin-top:14px;line-height:1.95}
+.note b{color:var(--gold)}
+.note::before{content:'📜 NPC TIP — ';font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--gold)}
+footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;font-family:'Chakra Petch',sans-serif;letter-spacing:.06em}
+/* ===== TREASURY RPG ===== */
+.treasury{margin:0 0 18px;background:linear-gradient(180deg,#1C2135,#0E1119);border:1px solid #4a557e;border-top:3px solid var(--gold);border-radius:18px;box-shadow:var(--shadow),0 0 30px rgba(74,222,128,.12);padding:24px;position:relative;overflow:hidden}
+.treasury::before{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(74,222,128,.6),transparent)}
+.treas-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.treas-head .ticon{width:46px;height:46px;flex:0 0 46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(180deg,#BBF7D0,var(--gold));border:1px solid #fff6;box-shadow:0 0 18px rgba(74,222,128,.45)}
+.treas-head h2{font-size:20px;color:#fff}
+.treas-head h2 span{color:var(--gold);font-family:'Chakra Petch',sans-serif;letter-spacing:.08em;font-size:12px;display:block}
+.treas-total{margin-left:auto;text-align:right}
+.treas-total small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.treas-total strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;color:var(--gold);line-height:1.1;text-shadow:0 0 18px rgba(74,222,128,.5)}
+.treas-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.vault{border:1px solid #3d4666;border-radius:14px;padding:15px 16px;background:#0B0E16;position:relative;overflow:hidden}
+.vault::after{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.vault.save::after{background:var(--mp);box-shadow:0 0 10px var(--mp)}
+.vault.spend::after{background:var(--amber);box-shadow:0 0 10px var(--amber)}
+.vault.boss{background:linear-gradient(180deg,#2a2410,#14110a);border-color:var(--gold)}
+.vault.boss::after{background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.vault small{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted)}
+.vault .vamt{font-family:'Chakra Petch',sans-serif;font-size:23px;font-weight:700;color:#fff;margin:4px 0 2px}
+.vault.boss .vamt{color:var(--gold);font-size:26px;text-shadow:0 0 14px rgba(74,222,128,.45)}
+.vault .vrow{display:flex;justify-content:space-between;font-size:16px;font-weight:600;color:#fff;padding:7px 0;border-top:1px dashed #2B3248}
+.vault .vrow b{font-family:'Chakra Petch',sans-serif;color:#fff}
+.vault .vbar{height:9px;background:#1e2436;border:1px solid #343c58;border-radius:6px;overflow:hidden;margin-top:9px}
+.vault .vbar i{display:block;height:100%}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-right{border-left:none;border-top:1px dashed #3d4666}.board{grid-template-columns:1fr}.treas-grid{grid-template-columns:1fr!important}.nav{position:static;display:flex;overflow:auto}.nav::before{display:none}.nav a{white-space:nowrap}.grid2,.grid3{grid-template-columns:1fr}h1{font-size:30px}.search input{width:130px}.hudbars{display:none}}
+/* ===== FLAT LAYER (เอา 3D tilt ออก — เรียบง่าย) ===== */
+#bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1}
+.topbar,.hero,.treasury,section.card{will-change:transform}
+html.js .hero,html.js .treasury,html.js section.card{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transform:translateY(0)}
+.item,.persona,.zone,.vault,.kpi{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.item:hover,.persona:hover,.zone:hover{transform:translateY(-2px)}
+/* icon flat — ไม่ใช้ translateZ แล้ว */
+/* flat — ไม่ใช้ translateZ แล้ว */
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero-left h1{animation:floaty 7s ease-in-out infinite}
+.float-coin{position:fixed;bottom:-70px;z-index:1;pointer-events:none;animation:rise linear infinite;opacity:0;text-shadow:0 0 12px rgba(74,222,128,.8)}
+@keyframes rise{0%{transform:translateY(0) rotateY(0deg);opacity:0}8%{opacity:.9}88%{opacity:.65}100%{transform:translateY(-115vh) rotateY(720deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+/* ===== MONEY HUD — ยอดเงินรวมมุมขวาบนสไตล์ GTA ===== */
+.money-hud{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:23px;color:var(--gold);background:#0B0D14;border:1.5px solid var(--gold-dim);border-radius:12px;padding:8px 18px;white-space:nowrap;text-shadow:0 0 14px rgba(74,222,128,.45);margin-left:4px}
+.money-hud b{font-weight:700}
+body .topbar{flex-wrap:wrap}
+@media(max-width:900px){.money-hud{font-size:17px;padding:6px 12px}}
+/* ===== QUEST TRACKER — แถบเควสขวาจอแบบเกม openworld ===== */
+#qtracker{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;width:258px;background:rgba(11,13,20,.93);border:1px solid #3d4666;border-left:4px solid var(--amber);border-radius:14px;padding:14px 14px 12px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+#qtracker h4{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+#qtracker h4 .qmin{margin-left:auto;border:1px solid #3d4666;background:#0B0D14;color:var(--muted);border-radius:8px;width:26px;height:26px;font-size:14px;cursor:pointer;line-height:1}
+#qtracker ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0}
+#qtracker li a{display:block;text-decoration:none;color:#fff;font-size:13.5px;font-weight:600;line-height:1.6;border-left:2px solid var(--amber);padding-left:9px}
+#qtracker li a small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+#qtracker li a:hover{color:var(--amber)}
+#qtracker.min ul{display:none}
+#qtracker .qempty{font-size:13px;color:var(--muted)}
+  #qtracker h4 .qcount{color:var(--muted);font-size:11px;letter-spacing:.06em}
+@media(max-width:1280px){
+  /* จอเล็ก: ย้ายลงมุมขวาล่าง (เหนือปุ่มแชท) เริ่มแบบพับไว้ */
+  #qtracker{top:auto;bottom:92px;right:12px;transform:none;width:242px}
+}</style>
 </head>
 <body>
-<div id="dust"></div>
-<div class="scroll">
-  <div class="roller"></div>
+<canvas id="bg3d"></canvas>
+<div class="wrap">
 
-  <div class="card">
-    <div class="corner c-tl"></div><div class="corner c-tr"></div>
-    <div class="corner c-bl"></div><div class="corner c-br"></div>
-
-    <div class="inner">
-
-      <!-- ================= HERO ================= -->
-      <div class="hero">
-        <div class="oct tilt3d"><div class="ph"><div class="phfb">阿夢心</div><img src="aom_profile.jpg" alt="阿夢心" onerror="this.style.display='none'"></div><div class="shine"></div></div>
-        <div class="ht">
-          <h1>ออมสิน</h1>
-          <div class="jp">阿夢心物語 <span>— เรื่องราว 21 ปีของผู้เดินทาง</span></div>
-          <div class="desc">
-            จากเด็กศรีราชาสู่ <b>et1cruel</b> โปรดิวเซอร์สายเมฆ — ผู้แต่งเพลง 90+ บท ผู้ก่อตั้ง
-            <b>ThaiBeat Academy</b> และนักเวทฝึกหัดแห่ง AI ที่เชื่อว่า <b>808 กับโค้ด</b> เปลี่ยนโลกได้
-          </div>
-          <div class="heroTags">
-            <span class="tg">เกิด <b>17 ธ.ค. 2004</b></span>
-            <span class="tg">กำเนิด <b>ศรีราชา</b></span>
-            <span class="tg">ปัจจุบัน <b>บางใหญ่ นนทบุรี</b></span>
-            <span class="tg">สัญลักษณ์ <b>♪ 432Hz</b></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= TIMELINE ================= -->
-      <section>
-        <div class="sechead">
-          <div class="kanji">道</div>
-          <div class="t">เส้นทางแห่งการเดินทาง<small>THE JOURNEY · 2547–2569</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="tl">
-          <div class="ev">
-            <div class="dot"></div>
-            <div class="yr">2547 <small>17 ธันวาคม</small></div>
-            <div class="tt">กำเนิดที่ศรีราชา ชลบุรี</div>
-            <div class="dd">จุดเริ่มต้นของผู้เดินทาง — ก่อนย้ายฐานสู่บางใหญ่ นนทบุรี</div>
-          </div>
-          <div class="ev">
-            <div class="dot"></div>
-            <div class="yr">การศึกษา <small>เส้นทางที่บิดเบี้ยวแต่มีความหมาย</small></div>
-            <div class="tt">มนุษยศาสตร์ → ไบโอเทค → มิวสิคเทค → 42</div>
-            <div class="dd">เรียนสายมนุษย์-ภาษาอังกฤษ เปลี่ยนไป Biotechnology ลอง Music Technology แค่ 1 เดือนก็ออก — ก่อนผ่านค่ายโค้ดดิ่ง <b>42 Bangkok Piscine</b></div>
-          </div>
-          <div class="ev major">
-            <div class="dot"></div>
-            <div class="yr">2566 <small>จุดเปลี่ยน</small></div>
-            <div class="tt">ปีที่ยากที่สุด — และวันแรกของเส้นทางใหม่</div>
-            <div class="dd">ช่วงเศร้าและลำบากของชีวิต แต่เป็นปีที่เริ่มฝึก <b>beat making, content, tattoo design</b> — เปลี่ยนความเจ็บเป็นทักษะ</div>
-          </div>
-          <div class="ev">
-            <div class="dot"></div>
-            <div class="yr">2566–2567</div>
-            <div class="tt">ยุคบ่มเพาะฝีมือ</div>
-            <div class="dd">ฝึกฝนงานครีเอทีฟต่อเนื่อง — FL Studio, กล้อง, งานออกแบบ จนเริ่มมีผลงานสะสม</div>
-          </div>
-          <div class="ev">
-            <div class="dot"></div>
-            <div class="yr">2568</div>
-            <div class="tt">ชีวิตเริ่มนิ่ง — รายได้แรกๆ</div>
-            <div class="dd">จากขายนมเปรี้ยว งานหมูกระทะ busking ถ่ายวิดีโอ ออกแบบสัก สู่การขายบีทชุดแรก</div>
-          </div>
-          <div class="ev major">
-            <div class="dot"></div>
-            <div class="yr">2569 <small>ปัจจุบัน</small></div>
-            <div class="tt">ปีแห่งโค้ดและปัญญาประดิษฐ์</div>
-            <div class="dd">โฟกัส <b>coding, AI automation, สร้างรายได้</b> — ก่อตั้ง ThaiBeat Academy, สร้าง Aom Universe ระบบ AI หลายตัว, เรียน Python/C++ และรัน LLM ในเครื่องตัวเอง</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= MONEY ================= -->
-      <section id="money-section">
-        <div class="sechead">
-          <div class="kanji">富</div>
-          <div class="t">เส้นทางการสั่งสม<small>WEALTH JOURNEY · หน่วย: บาท</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="money-toolbar">
-          <span class="money-updated" id="moneyUpdated">แตะตัวเลขเพื่อแก้ไขได้เลย</span>
-          <span class="money-actions">
-            <button type="button" id="editMoneyBtn" class="money-btn">✎ แก้ไขยอดเงิน</button>
-            <button type="button" id="resetMoneyBtn" class="money-btn ghost" hidden>รีเซ็ตค่าเดิม</button>
-          </span>
-        </div>
-        <div class="chart" id="chart">
-          <div class="cbar" data-h="5.2" data-v="33000" data-money-key="h1">
-            <div class="val">0</div>
-            <div class="col"></div>
-            <div class="lbl"><b>จุดแรก</b>ที่บันทึกไว้</div>
-          </div>
-          <div class="cbar" data-h="10" data-v="63300" data-money-key="h2">
-            <div class="val">0</div>
-            <div class="col"></div>
-            <div class="lbl"><b>ก้าวที่สอง</b>เกือบเท่าตัว</div>
-          </div>
-          <div class="cbar" data-h="11.3" data-v="72000" data-money-key="h3">
-            <div class="val">0</div>
-            <div class="col"></div>
-            <div class="lbl"><b>ก้าวที่สาม</b>ความมั่นคง</div>
-          </div>
-          <div class="cbar hero" data-h="90" data-v="639420" data-money-key="total-bar">
-            <div class="val">0</div>
-            <div class="col"></div>
-            <div class="lbl"><b>ก.ย. 2569</b>เกินเป้าปี 6 เท่า</div>
-          </div>
-        </div>
-        <div class="chartnote" id="chartNote">* ตัวเลขจากบันทึกการสนทนา — เติบโต ~19 เท่าจากจุดแรก</div>
-
-        <div class="wallets">
-          <div class="w hero"><div class="wn">รวมทั้งสิ้น <span class="auto-tag">คำนวณอัตโนมัติ</span></div><div class="wv" id="totalWallet" data-count="639420">0</div>
-          <div class="w" data-money-key="kept-grow"><div class="wn">Kept Grow — เก็บ</div><div class="wv" data-count="200000">0</div></div>
-          <div class="w" data-money-key="kasikorn-esav"><div class="wn">กสิกร e-Savings — ใช้จ่าย</div><div class="wv" data-count="425820">0</div></div>
-          <div class="w" data-money-key="ktb"><div class="wn">KTB e-Savings</div><div class="wv" data-count="0">0</div></div>
-          <div class="w" data-money-key="dime-save"><div class="wn">DIME Save</div><div class="wv" data-count="2000">0</div></div>
-          <div class="w" data-money-key="cash"><div class="wn">เงินสด</div><div class="wv" data-count="200">0</div></div>
-          <div class="w" data-money-key="dime-us"><div class="wn">DIME US Stocks</div><div class="wv" data-count="11000">0</div></div>
-          <div class="w" data-money-key="btc"><div class="wn">BTC</div><div class="wv" data-count="400">0</div></div>
-        </div>
-
-        <div class="income">
-          <div class="ih">แหล่งรายได้ที่เคยสร้างมาตลอดทาง</div>
-          <div class="chips">
-            <span class="chip">ขายบีท <b>26 สลิป · 8,970฿</b></span>
-            <span class="chip">งาน <b>Videographer</b></span>
-            <span class="chip">ออกแบบ <b>Tattoo</b></span>
-            <span class="chip"><b>Busking</b></span>
-            <span class="chip">งาน <b>หมูกระทะ</b></span>
-            <span class="chip">ขาย <b>นมเปรี้ยว</b></span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= MUSIC ================= -->
-      <section>
-        <div class="sechead">
-          <div class="kanji">音</div>
-          <div class="t">มิติแห่งบทเพลง<small>MUSIC IDENTITY · et1cruel</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="music-grid">
-          <div>
-            <div class="album reveal">
-              <div class="ah">himoriyacore</div>
-              <div class="ag">อัลบั้มเต็ม · Ambient Cloud Rap</div>
-              <div class="ad">10 บทเพลงบน Spotify และ YouTube — งานที่ร้อยเรียงความฝันกับม่านเมฆ ในโทนเสียงที่เป็นเอกลักษณ์</div>
-              <span class="freq">♪ 432Hz</span>
-            </div>
-            <div style="height:10px"></div>
-            <div class="album reveal" style="border-color:var(--indigo);">
-              <div class="ah">perryblonde a dozen</div>
-              <div class="ag">โปรเจกต์วง · Shoegaze</div>
-              <div class="ad">อีกด้านของหัวใจ — กีตาร์ร้องห่มหมอกแบบ shoegaze ที่อยู่ตรงข้ามสุดกับโลก cloud rap</div>
-            </div>
-          </div>
-          <div>
-            <div class="mstats">
-              <div class="ms reveal"><div class="mv" data-count="90" data-suffix="+">0</div><div class="ml">บทเพลงที่ปล่อยแล้ว</div></div>
-              <div class="ms reveal"><div class="mv" data-count="10">0</div><div class="ml">เพลงในอัลบั้มแรก</div></div>
-              <div class="ms reveal"><div class="mv" data-count="5">0</div><div class="ml">MV ที่วางแผนไว้</div></div>
-              <div class="ms reveal"><div class="mv">S</div><div class="ml">ระดับวิชาดนตรี</div></div>
-            </div>
-            <div class="mtags">
-              <span class="mt">เครื่องมือ <b>FL Studio</b></span>
-              <span class="mt"><b>Reason</b></span>
-              <span class="mt">สอน beat <b>1,000฿</b></span>
-              <span class="mt">สอน mix <b>500฿</b></span>
-              <span class="mt">บีท <b>500–7,900฿</b></span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TECH ================= -->
-      <section>
-        <div class="sechead">
-          <div class="kanji">技</div>
-          <div class="t">มิติแห่งเทคโนโลยี<small>TECH ARSENAL</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="tech-grid">
-          <div class="tbox">
-            <div class="th">อาวุธหลัก<small>CODING</small></div>
-            <div class="stack">
-              <span class="sk hot">Python</span>
-              <span class="sk hot">C++</span>
-              <span class="sk">React + Vite</span>
-              <span class="sk">Node/Express</span>
-              <span class="sk">Supabase</span>
-              <span class="sk">PostgreSQL</span>
-              <span class="sk">Vercel</span>
-              <span class="sk">Git</span>
-              <span class="sk">C · Rust · Arduino · RPi</span>
-            </div>
-            <div class="rig">
-              <b>เครื่อง:</b> i5-12400F · RTX 4060 · RAM 32GB · SSD 1TB<br>
-              <b>กล้อง:</b> Insta360 Ace Pro 2 · <b>โปรแกรม:</b> Figma, Blender, TouchDesigner, AE
-            </div>
-          </div>
-          <div class="tbox">
-            <div class="th">สำนักเวท AI ส่วนตัว<small>LOCAL AI</small></div>
-            <div class="stack">
-              <span class="sk hot">LM Studio</span>
-              <span class="sk hot">Llama 3 8B</span>
-              <span class="sk">Gemma 4B</span>
-              <span class="sk">RAG</span>
-              <span class="sk">Vector DB</span>
-              <span class="sk">LoRA / QLoRA</span>
-              <span class="sk">GGUF</span>
-            </div>
-            <div class="rig">
-              ปณิธาน: <b>AI ที่เป็นของตัวเอง ทำงาน offline</b> — เพราะเน็ตบ้าน 15Mbps โควตาหมดเหลือ 384kbps<br>
-              สูตร: <b>บ่มเพาะ dataset → JSONL → RAG → LoRA</b>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= PROJECTS ================= -->
-      <section>
-        <div class="sechead">
-          <div class="kanji">業</div>
-          <div class="t">สี่อาณาจักรแห่งงาน<small>PROJECTS</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="proj-grid">
-          <div class="proj">
-            <span class="st live">LIVE</span>
-            <div class="pn">ThaiBeat Academy</div>
-            <div class="pc">เว็บสอนทำบีท + ร้านขายบีท</div>
-            <div class="pd">กิลด์ของตัวเอง — ฟรีแล็บ 8 บท, คอร์ส 990–2,990฿, Showcase รายสัปดาห์, XP/Level, ส่งสลิปในเว็บ</div>
-            <div class="pt">บีท <b>500–7,900฿</b> · Bundle คิท <b>599฿</b> · Wall of Credit <b>26 สลิป</b> · <a href="./beat-select.html" style="color:inherit;font-weight:700">🎧 เปิดหน้า BEAT SELECT</a></div>
-          </div>
-          <div class="proj">
-            <span class="st wip">กำลังสร้าง</span>
-            <div class="pn">Aom Universe</div>
-            <div class="pc">ระบบ AI หลายตัวในเครื่องตัวเอง</div>
-            <div class="pd">สหายสี่องค์ — Core (วางแผน) Dev (โค้ด) Robot (ฮาร์ดแวร์) Creative (ศิลป์) พร้อมความจำถาวรแบบ RAG</div>
-            <div class="pt">ความคืบหน้า <b>25%</b> · รากฐานคือ dataset ส่วนตัว</div>
-          </div>
-          <div class="proj">
-            <span class="st wip">แนวคิด</span>
-            <div class="pn">พักใจ (Pakjai)</div>
-            <div class="pc">โซเชียลที่คัดกรองพลังงานลบด้วย AI</div>
-            <div class="pd">โลกที่ไม่มีคอมเมนต์ด่ากัน — ปุ่มพักใจเปลี่ยนฟีดตามใจ รีเซ็ตทุกเที่ยงคืน สไตล์ solarpunk</div>
-            <div class="pt">Stack <b>React · Express · Supabase</b></div>
-          </div>
-          <div class="proj">
-            <span class="st plan">ทดลอง</span>
-            <div class="pn">Photo Organizer AI</div>
-            <div class="pc">AI จัดรูปอัตโนมัติในเครื่อง</div>
-            <div class="pd">LM Studio วิเคราะห์ภาพ → JSON → Python จัดโฟลเดอร์ — บทเรียนแรกของโลก local AI + automation</div>
-            <div class="pt">สอนเรื่อง <b>API · structured output · automation</b></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= LIFE ================= -->
-      <section>
-        <div class="sechead">
-          <div class="kanji">命</div>
-          <div class="t">ชีวิตนอกหน้าจอ<small>DAILY LIFE</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="life-grid">
-          <div class="lf">
-            <span class="ico">🐭</span>
-            <div class="lh">คู่หูวิญญาณ</div>
-            <div class="ld"><b>หนูน้อยลัคกี้</b> — สหายที่ไปหาหมอด้วยกันเสมอ บัฟ +10 กำลังใจทุกครั้งที่กลับบ้าน</div>
-          </div>
-          <div class="lf">
-            <span class="ico">🏋️</span>
-            <div class="lh">การบำเพ็ญร่างกาย</div>
-            <div class="ld">สูง <b>185–187 ซม.</b> น้ำหนัก <b>74 กก.</b> — เวทเทรนนิ่ง วิ่ง ปั่นจักรยาน ทุก <b>จันทร์–ศุกร์ 18:00</b></div>
-          </div>
-          <div class="lf">
-            <span class="ico">🧘</span>
-            <div class="lh">การบำเพ็ญจิต</div>
-            <div class="ld">สาย <b>432Hz / 528Hz</b> · อานาปานสติ · วิปัสสนา — ความสงบคือเครื่องมือทำงานชิ้นเอก</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= GOALS ================= -->
-      <section>
-        <div class="sechead">
-          <div class="kanji">志</div>
-          <div class="t">ภารกิจแห่งอนาคต<small>THE ROAD AHEAD</small></div>
-          <div class="line"></div>
-        </div>
-        <div class="goal main" id="goalMain">
-          <span class="gico">⭐</span>
-          <div class="gb">
-            <div class="gt">มหาสมบัติ 1,000,000 ฿<span class="tag">大任</span></div>
-            <div class="gd" id="goalMainDesc">เป้าหมายหลัก — เหลืออีก 360,580 ฿</div>
-          </div>
-          <div class="gp"><div class="pb"><i data-w="63.9" id="goalMainBar"></i></div><span id="goalMainPct">63.9%</span></div>
-        </div>
-        <div class="goal">
-          <span class="gico">🌾</span>
-          <div class="gb">
-            <div class="gt">ผืนดินของตัวเอง</div>
-            <div class="gd">ที่ดิน 1–3 ไร่ งบ 300,000 ฿ ใกล้บางใหญ่</div>
-          </div>
-          <div class="gp"><div class="pb"><i data-w="0"></i></div><span>0%</span></div>
-        </div>
-        <div class="goal">
-          <span class="gico">🏍</span>
-          <div class="gb">
-            <div class="gt">ม้าเหล็กแห่งอิสรภาพ</div>
-            <div class="gd">มอเตอร์ไซค์น้ำมัน — ได้แล้ว ไม่ต้องรอใครไปส่งอีกต่อไป</div>
-          </div>
-          <div class="gp"><div class="pb"><i data-w="100"></i></div><span>100% · ได้แล้ว</span></div>
-        </div>
-        <div class="goal">
-          <span class="gico">🤖</span>
-          <div class="gb">
-            <div class="gt">Aom Universe สมบูรณ์</div>
-            <div class="gd">AI สหายสี่องค์ พร้อมความจำ RAG + LoRA ทำงาน offline 100%</div>
-          </div>
-          <div class="gp"><div class="pb"><i data-w="25"></i></div><span>25%</span></div>
-        </div>
-      </section>
-
-      <div class="divider-lotus">❁ ✦ ❁</div>
-
-      <!-- ================= FOOTER ================= -->
-      <div class="seal-row">
-        <span class="l">เวลาเดินทาง: 21 ปี 9 เดือน<br>บทที่ ๑ — ยังเดินต่อ</span>
-        <div class="sealbig">ออม</div>
-        <span class="r">AOM-CORE<br>ชีวประวัติฉบับสมบูรณ์</span>
-      </div>
-
-    </div>
+<div class="topbar">
+  <div class="logo"><span>夢</span></div>
+  <div><div class="lv">LV 21 · ARTIST</div><b>ET1CRUEL · LIFE OS</b><small>QUEST LOG — 60 CLEAR · 8 ACTIVE</small></div>
+  <div class="hudbars">
+    <div class="hbar hp"><i></i><em>HP 82/100</em></div>
+    <div class="hbar mp"><i></i><em>MP 64/100</em></div>
+    <div class="hbar xp"><i></i><em>EXP 96.5% · 96,500G</em></div>
   </div>
-
-  <div class="roller"></div>
+  <div class="search">
+    <div class="filters">
+      <button class="fbtn on" data-f="all">ALL</button>
+      <button class="fbtn" data-f="done">✔ CLEAR</button>
+      <button class="fbtn" data-f="todo">◆ QUEST</button>
+    </div>
+    <input id="q" placeholder="ค้นหาเควส… บีท / สัก / ลัคกี้">
+  </div>
+  <div class="money-hud" id="moneyHud" title="เงินรวมทั้งหมด">฿ <b id="moneyHudAmt">…</b></div>
 </div>
 
-<script src="js/main.js"></script>
-<script src="js/money-edit.js"></script>
-<script src="js/dream.js"></script>
+<div class="hero">
+  <div class="hero-left">
+    <div class="eyebrow"><i></i>RPG EDITION · QUEST LOG SYSTEM</div>
+    <h1><span>ET1CRUEL</span> — ตัวละคร<br>สาย ARTIST / LV 21</h1>
+    <div class="class-line">⚔ CLASS: BEATMAKER × TATTOO × DIRECTOR · บางใหญ่</div>
+    <p class="lead">โน้ตยาวรุงรังถูกแปลงเป็น <b>เควสบอร์ด 12 หมวด</b> — เควสทองคือเงิน เควสเขียวคือเคลียร์แล้ว ไม่ต้องจำทั้งหมด เปิดหน้านี้แล้วรู้ว่าต้องล่าอะไรต่อ</p>
+    <div class="kpis">
+      <div class="kpi"><small>✔ CLEAR · จ่ายแล้ว</small><strong class="num">58 QUESTS</strong><div class="bar"><i style="width:86%"></i></div></div>
+      <div class="kpi"><small>◆ ACTIVE QUEST</small><strong class="num">9 QUESTS</strong><div class="bar"><i style="width:14%"></i></div></div>
+      <div class="kpi"><small>◉ GOLD · อุปกรณ์</small><strong class="num">96,500 / 100K</strong><div class="bar"><i style="width:96.5%"></i></div></div>
+      <div class="kpi"><small>👥 PARTY · ผู้ติดตาม</small><strong class="num">25,143</strong><div class="bar"><i style="width:62%"></i></div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="formula">
+      <h3>สูตรเงินของมึง — จำแค่นี้</h3>
+      <p>🎵 <b>เพลง = แบรนด์หลัก</b> (ตัวตน อย่าปล่อย)<br>💻 <b>บีท = เงินรายวัน</b> (cashflow เร็ว)<br>🖋️ <b>สัก = เงินก้อน</b> (high-ticket)<br>👕🎬 <b>เสื้อ / MV = เสริม vibe</b> (ยังไม่ต้องแบก)</p>
+      <p style="margin-top:10px;opacity:.85">Beat = ลง Beatstore + TikTok loop + type beat ที่ขายได้<br>Tattoo = build style ให้ตรงกับเพลง (dark / abstract / emo)</p>
+    </div>
+    <div class="note">💡 วิธีใช้หน้านี้: พิมพ์ค้นหาด้านบน · กดปุ่ม เสร็จ/รอทำ เพื่อกรอง · ตัวเลข <span class="badge b-money">฿</span> คือเงินที่เกี่ยวกับงานนั้น</div>
+  </div>
+</div>
+
+<div class="treasury" id="treasury">
+  <div class="treas-head">
+    <div class="ticon">💰</div>
+    <div><h2>คลังทอง — TREASURY<span>GOLD LEDGER · สมุดบัญชี RPG</span></h2></div>
+    <div class="treas-total"><small>◆ GRAND TOTAL · ยอดรวมทั้งหมด</small><strong class="num" id="treasTotal">… ฿</strong></div>
+  </div>
+  <div class="treas-grid" id="treasGrid"></div>
+  <div class="treas-foot" id="treasFoot"></div>
+</div>
+
+<div class="board">
+<nav class="nav" id="nav">
+  <div class="nav-group">💰 การเงิน</div>
+  <a href="#treasury">💰 คลังทอง <span class="n" id="navTreas">651K</span></a>
+  <a href="#money-os">💵 Money OS <span class="n">EDIT</span></a>
+  <a href="#masterplan">🎯 แผนหลัก <span class="n">300K</span></a>
+  <a href="#stocks">📈 หุ้น US+คริปโต <span class="n">LIVE</span></a>
+  <a href="#port-snap">💼 พอร์ตสแนป <span class="n">10</span></a>
+  <a href="#watch17">👁 Watch 17 <span class="n">AI</span></a>
+  <a href="#sp500">🇺🇸 S&amp;P 75 <span class="n">2026</span></a>
+  <div class="nav-group">🎵 งานเพลง</div>
+  <a href="#beat">🎛️ บีท+สอน <span class="n">7</span></a>
+  <a href="./beat-select.html">🎧 ฟังบีท <span class="n">21 ↗</span></a>
+  <a href="#gear">🎸 อุปกรณ์ <span class="n">27 ชิ้น</span></a>
+  <a href="#wishlist">🛒 Wishlist <span class="n">5</span></a>
+  <div class="nav-group">🐭 งาน + คอนเทนต์</div>
+  <a href="#lucky">🐭 งานลัคกี้ <span class="n">28 จ๊อบ</span></a>
+  <a href="#quests">📋 เควสทั่วไป <span class="n">17</span></a>
+  <a href="#content">🎬 คอนเทนต์ <span class="n">30+</span></a>
+  <a href="#channels">📡 ช่อง <span class="n">7</span></a>
+  <div class="nav-group">🧬 ตัวตน + แผน</div>
+  <a href="#skills">⚔️ สกิล <span class="n">S++</span></a>
+  <a href="#passive">💤 Passive <span class="n">11</span></a>
+  <a href="#base">🏠 Base GEN.1 <span class="n">5 โซน</span></a>
+  <a href="#plan">🧭 แผนรอด <span class="n">2 ระยะ</span></a>
+  <a href="#vision">📜 วิสัยทัศน์ <span class="n">FULL</span></a>
+  <a href="#verse">🌌 5 ร่าง <span class="n">verse</span></a>
+</nav>
+
+<div class="sections">
+
+<!-- 0 MASTER PLAN -->
+<section class="card" id="masterplan">
+  <div class="shead"><div class="icon">🎯</div>
+  <div><h2>แผนหลัก — MASTER PLAN 300K</h2><p>3 กระปุก กระปุกละ 100K · เป้าปีแรก +85,000 (+28.3%)</p></div><span class="count">300K → 385K</span></div>
+  <div class="plan-grid">
+    <div class="plan-bucket" style="--bdot:#3DFF88">
+      <div class="pb-top"><span class="pb-dot"></span><b>Income</b><span class="pb-h">ยาว</span></div>
+      <div class="pb-holds">QQQI</div>
+      <div class="pb-amt num">100,000 <small>฿</small></div>
+      <div class="pb-bar"><i style="width:22%"></i></div>
+      <div class="pb-ret">เป้า <b>+10%</b> → 110,000 (+10,000)</div>
+    </div>
+    <div class="plan-bucket" style="--bdot:#FF4D5E">
+      <div class="pb-top"><span class="pb-dot"></span><b>Growth</b><span class="pb-h">1 ปี</span></div>
+      <div class="pb-holds">AMD / MU / DELL / MRVL</div>
+      <div class="pb-amt num">100,000 <small>฿</small></div>
+      <div class="pb-bar"><i style="width:100%"></i></div>
+      <div class="pb-ret">เป้า <b>+45%</b> → 145,000 (+45,000)</div>
+    </div>
+    <div class="plan-bucket" style="--bdot:#4DA6FF">
+      <div class="pb-top"><span class="pb-dot"></span><b>AI Core</b><span class="pb-h">ยาว</span></div>
+      <div class="pb-holds">NVDA / ASML / AMAT / VRT / TSM</div>
+      <div class="pb-amt num">100,000 <small>฿</small></div>
+      <div class="pb-bar"><i style="width:67%"></i></div>
+      <div class="pb-ret">เป้า <b>+30%</b> → 130,000 (+30,000)</div>
+    </div>
+  </div>
+  <div class="group-title"><span class="gnum">1Y</span> คำเตา 1 ปี — เงินเริ่ม → ปลายปี</div>
+  <table class="stock-table plan-table">
+    <thead><tr><th>แผน</th><th>เงินเริ่ม</th><th>ผลตอบแทน</th><th>ปลายปี</th><th>กำไร</th></tr></thead>
+    <tbody>
+      <tr><td><span class="plan-dot" style="background:#3DFF88"></span><b>QQQI</b></td><td class="num">100,000</td><td class="stock-up">+10%</td><td class="num">110,000</td><td class="stock-up">+10,000</td></tr>
+      <tr><td><span class="plan-dot" style="background:#FF4D5E"></span><b>AMD / MU / DELL / MRVL</b></td><td class="num">100,000</td><td class="stock-up">+45%</td><td class="num">145,000</td><td class="stock-up">+45,000</td></tr>
+      <tr><td><span class="plan-dot" style="background:#4DA6FF"></span><b>NVDA / ASML / AMAT / VRT / TSM</b></td><td class="num">100,000</td><td class="stock-up">+30%</td><td class="num">130,000</td><td class="stock-up">+30,000</td></tr>
+      <tr class="plan-total"><td><b>รวม</b></td><td class="num"><b>300,000</b></td><td class="stock-up"><b>+28.3%</b></td><td class="num"><b>385,000</b></td><td class="stock-up"><b>+85,000</b></td></tr>
+    </tbody>
+  </table>
+  <div class="group-title"><span class="gnum">$</span> ราคาสดหุ้นในแผนตอนนี้</div>
+  <div class="plan-live" id="planLive">กำลังโหลดราคา…</div>
+  <div class="note">🎯 <b>นี่คือแผนหลัก</b> — Income ถือยาวกินปันผล · Growth ลุย 1 ปี · AI Core ถือยาวกับเมกะเทรนด์ · ถามราคาตัวไหนพิมพ์ชื่อได้เลย เช่น <b>MU เท่าไหร่</b> · เป้านี้คือสมมติฐานส่วนตัว ไม่ใช่คำแนะนำการลงทุน</div>
+</section>
+
+<!-- MONEY OS -->
+<section class="card" id="money-os">
+  <div class="shead"><div class="icon">💵</div>
+  <div><h2>Money OS — บัญชี + เส้นทางสู่ 1M</h2><p>แก้ vault ได้ · ประวัติ net worth · เงินไหลเข้า–ออก</p></div><span class="count">1M QUEST</span></div>
+  <div id="os-money-body"></div>
+  <div class="note">💡 แก้ยอด vault ที่ <b>EDIT VAULTS</b> → คลังทองด้านบนอัปเดทตามทันที · แหล่งเดียว ไม่ต้องแก้ 2 ที่</div>
+</section>
+
+<!-- 0 STOCKS -->
+<section class="card" id="stocks">
+  <div class="shead"><div class="icon">📈</div>
+  <div><h2>หุ้น US + คริปโต — ห้องเทรด</h2><p>ราคาสด TradingView · พอร์ตจำลอง · คุยกับออมได้</p></div><span class="count fx-badge">$1 ≈ … ฿</span></div>
+  <div class="os-tabs">
+    <button type="button" class="os-tab on" data-tab="pane-chat">💬 แชท</button>
+    <button type="button" class="os-tab" data-tab="pane-market">📈 ตลาด</button>
+    <button type="button" class="os-tab" data-tab="pane-pf">💼 พอร์ต</button>
+  </div>
+  <div class="os-pane on" id="pane-chat">
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-chips">
+      <button type="button" data-chatchip="NVDA เท่าไหร่">NVDA เท่าไหร่</button>
+      <button type="button" data-chatchip="BTC เป็นไง">BTC เป็นไง</button>
+      <button type="button" data-chatchip="พอร์ตฉันเป็นไง">พอร์ตฉันเป็นไง</button>
+      <button type="button" data-chatchip="DCA คืออะไร">DCA คืออะไร</button>
+    </div>
+    <form class="chat-form" id="chatForm"><input id="chatInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง">↑</button></form>
+    <div class="chat-note">ราคาสด: หุ้น TradingView · คริปโต CoinGecko · ค่าเงิน ER-API · ไม่ใช่คำแนะนำการลงทุน</div>
+  </div>
+  <div class="os-pane" id="pane-market">
+    <div class="market-bar">
+      <div class="stock-updated" id="stockUpdated">กำลังโหลดราคา…</div>
+      <button type="button" class="stock-refresh" id="refreshBtn">↻ รีเฟรช</button>
+    </div>
+    <table class="stock-table">
+      <thead><tr><th>หุ้น</th><th>ราคา</th><th>เปลี่ยน (vs ปิดก่อนหน้า)</th></tr></thead>
+      <tbody id="watchBody"><tr><td colspan="3" style="text-align:center">กำลังดึงราคาสด…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="os-pane" id="pane-pf">
+    <div class="dime-head" id="dimeHead"></div>
+    <div class="dime-tools">
+      <span class="dime-count" id="dimeCount"></span>
+      <button type="button" class="dime-toggle" id="plToggle">กำไรขาดทุน ⇄</button>
+    </div>
+    <div class="dime-list" id="dimeList"></div>
+    <details class="dime-edit">
+      <summary>✎ แก้จำนวน / ทุนเฉลี่ย / เพิ่ม–ลบหุ้น</summary>
+      <table class="stock-table">
+        <thead><tr><th>หุ้น</th><th>จำนวน</th><th>ทุนเฉลี่ย $</th><th>มูลค่า</th><th>P/L</th></tr></thead>
+        <tbody id="pfBody"></tbody>
+      </table>
+      <div class="pf-addrow">
+        <select id="pfSym" aria-label="เลือกหุ้น"></select>
+        <button type="button" class="pf-add" id="pfAdd">+ เพิ่มหุ้น</button>
+      </div>
+    </details>
+    <div class="chat-note">พอร์ต DIME จริง 8/10 ตัว · อีก 2 ตัวเพิ่มเองได้ · ไม่ใช่คำแนะนำการลงทุน</div>
+  </div>
+  <div class="note">⚔ <b>กฎห้องเทรด:</b> เงินเย็นเท่านั้น · ไม่เกิน 5–10% ต่อตัวสำหรับหุ้นซิ่ง/คริปโต · แบ่งไม้ DCA อย่าหมดแม็กไม้เดียว</div>
+</section>
+
+<!-- PORT SNAPSHOT -->
+<section class="card" id="port-snap">
+  <div class="shead"><div class="icon">💼</div>
+  <div><h2>พอร์ตหุ้น DIME — สแนปช็อต</h2><p>10 ตัวตามบัญชีจริง · แตะแก้ราคา/จำนวนได้ · หน่วย: บาท</p></div><span class="count">NASDAQ</span></div>
+  <div class="px-toolbar">
+    <span class="px-updated" id="portUpdated">แตะตัวเลขเพื่อแก้ไขได้เลย</span>
+    <span class="px-actions">
+      <label class="port-fx">FX US$→฿ <input id="portFx" class="money-input port-fx-input" type="text" inputmode="decimal" value="33.65"></label>
+      <button type="button" id="editPortBtn" class="money-btn">✎ แก้ไขพอร์ต</button>
+      <button type="button" id="resetPortBtn" class="money-btn ghost" hidden>รีเซ็ต</button>
+    </span>
+  </div>
+  <div class="port-scroll">
+    <table class="port-table" id="portTable">
+      <thead>
+        <tr>
+          <th class="l" data-sort="symbol">NASDAQ ↓↑</th>
+          <th data-sort="price">↓↑ PRICE</th>
+          <th data-sort="qty">↓↑ QUANTITY</th>
+          <th data-sort="value" class="sorted">↓ VALUE</th>
+          <th data-sort="cap">↓↑ CAPITAL GAIN</th>
+          <th data-sort="inc">↓↑ INCOME</th>
+          <th data-sort="curr">↓↑ CURRENCY</th>
+          <th data-sort="ret">↓↑ RETURN</th>
+        </tr>
+      </thead>
+      <tbody id="portBody"></tbody>
+      <tfoot>
+        <tr class="total">
+          <td class="l"><b>Total (THB)</b></td>
+          <td></td><td></td>
+          <td class="num" id="portTotalValue">฿0</td>
+          <td class="num muted" id="portTotalCap">฿0.00</td>
+          <td class="num muted" id="portTotalInc">฿0.00</td>
+          <td class="num" id="portTotalCurr">฿0.00</td>
+          <td class="num" id="portTotalRet">฿0.00</td>
+        </tr>
+        <tr class="grand">
+          <td class="l"><b>Grand total (THB)</b></td>
+          <td></td><td></td>
+          <td class="num" id="portGrandValue">฿0</td>
+          <td class="num muted" id="portGrandCap">฿0.00</td>
+          <td class="num muted" id="portGrandInc">฿0.00</td>
+          <td class="num" id="portGrandCurr">฿0.00</td>
+          <td class="num" id="portGrandRet">฿0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="note">สแนปช็อต manual — ตัวเลขสดดูที่แท็บ 💼 พอร์ต ด้านบน · ยอด DIME US Stocks ในคลังทองคุมเอง (13,000 ฿ รวมเงินสด USD)</div>
+</section>
+
+<!-- WATCH 17 -->
+<section class="card" id="watch17">
+  <div class="shead"><div class="icon">👁</div>
+  <div><h2>Watchlist · 17 หุ้น AI Infra</h2><p>1-YEAR &amp; 3-YEAR RETURN · ข้อมูลต้น ต.ค. 2026</p></div><span class="count">17 STOCKS</span></div>
+  <div class="px-toolbar">
+    <span class="px-updated">สูตร 3Y CAGR = (1+R)<sup>1/3</sup>−1 · กดหัวตารางเพื่อเรียง</span>
+    <span class="px-actions">
+      <button type="button" id="watchSort1Y" class="money-btn">เรียงตาม 1Y</button>
+      <button type="button" id="watchSortCagr" class="money-btn ghost">เรียงตาม 3Y CAGR</button>
+    </span>
+  </div>
+  <div class="watch-grid">
+    <div class="wbox">
+      <div class="wh">1-Year Return <small>ต.ค. 2025 – ต.ค. 2026</small></div>
+      <div class="wbar-row"><span class="wbar-sym">LITE</span><div class="wbar-track"><div class="wbar-fill g" style="width:100%">607.0%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">MU</span><div class="wbar-track"><div class="wbar-fill g" style="width:80%">485.9%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">DELL</span><div class="wbar-track"><div class="wbar-fill g" style="width:47%">283.8%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">BE</span><div class="wbar-track"><div class="wbar-fill g" style="width:39%">238.5%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">MRVL</span><div class="wbar-track"><div class="wbar-fill g" style="width:37%">227.3%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">AMD</span><div class="wbar-track"><div class="wbar-fill g" style="width:34%">205.4%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">PENG</span><div class="wbar-track"><div class="wbar-fill b" style="width:28%">168.9%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">CRWD</span><div class="wbar-track"><div class="wbar-fill b" style="width:20%">119.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">ASML</span><div class="wbar-track"><div class="wbar-fill b" style="width:13%">80.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">TSM</span><div class="wbar-track"><div class="wbar-fill b" style="width:10%">60.6%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">VRT</span><div class="wbar-track"><div class="wbar-fill b" style="width:9%">55.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">ANET</span><div class="wbar-track"><div class="wbar-fill gr" style="width:6%">37.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">NVDA</span><div class="wbar-track"><div class="wbar-fill gr" style="width:5%">28.3%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">AVGO</span><div class="wbar-track"><div class="wbar-fill gr" style="width:4%">11.9%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">PLTR</span><div class="wbar-track"><div class="wbar-fill gr" style="width:3%">6.6%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">CEG</span><div class="wbar-track"><div class="wbar-fill r" style="width:3%">−16.4%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">VST</span><div class="wbar-track"><div class="wbar-fill r" style="width:3%">−16.5%</div></div></div>
+    </div>
+    <div class="wbox">
+      <div class="wh">3-Year CAGR <small>ต.ค. 2023 – ต.ค. 2026 · ต่อปีทบต้น</small></div>
+      <div class="wbar-row"><span class="wbar-sym">LITE</span><div class="wbar-track"><div class="wbar-fill g" style="width:100%">178.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">BE</span><div class="wbar-track"><div class="wbar-fill g" style="width:98%">175.4%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">MU</span><div class="wbar-track"><div class="wbar-fill g" style="width:84%">149.6%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">PLTR</span><div class="wbar-track"><div class="wbar-fill g" style="width:71%">127.0%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">VRT</span><div class="wbar-track"><div class="wbar-fill b" style="width:47%">83.7%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">AMD</span><div class="wbar-track"><div class="wbar-fill b" style="width:46%">82.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">CRWD</span><div class="wbar-track"><div class="wbar-fill b" style="width:45%">80.1%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">NVDA</span><div class="wbar-track"><div class="wbar-fill b" style="width:42%">74.5%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">VST</span><div class="wbar-track"><div class="wbar-fill b" style="width:42%">74.2%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">DELL</span><div class="wbar-track"><div class="wbar-fill b" style="width:41%">73.0%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">MRVL</span><div class="wbar-track"><div class="wbar-fill b" style="width:39%">69.6%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">TSM</span><div class="wbar-track"><div class="wbar-fill b" style="width:38%">67.3%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">ANET</span><div class="wbar-track"><div class="wbar-fill b" style="width:36%">63.9%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">AVGO</span><div class="wbar-track"><div class="wbar-fill b" style="width:34%">60.8%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">PENG</span><div class="wbar-track"><div class="wbar-fill gr" style="width:25%">44.5%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">CEG</span><div class="wbar-track"><div class="wbar-fill gr" style="width:21%">38.0%</div></div></div>
+      <div class="wbar-row"><span class="wbar-sym">ASML</span><div class="wbar-track"><div class="wbar-fill gr" style="width:8%">13.4%</div></div></div>
+    </div>
+  </div>
+  <div class="port-scroll" style="margin-top:12px">
+    <table class="port-table" id="w17Table">
+      <thead>
+        <tr>
+          <th class="l" data-wsort="sym">STOCK ↓↑</th>
+          <th data-wsort="y1">1Y % ↓</th>
+          <th data-wsort="cumul">3Y รวม % ↓↑</th>
+          <th data-wsort="cagr">3Y CAGR % ↓↑</th>
+        </tr>
+      </thead>
+      <tbody id="w17Body">
+        <tr data-y1="607" data-cumul="2050" data-cagr="178.1"><td class="l"><b>LITE</b> <span class="wname">Lumentum</span></td><td class="num"><b class="up">+607.0%</b></td><td class="num">+2,050%</td><td class="num"><b>178.1%</b></td></tr>
+        <tr data-y1="485.9" data-cumul="1455" data-cagr="149.6"><td class="l"><b>MU</b> <span class="wname">Micron</span></td><td class="num"><b class="up">+485.9%</b></td><td class="num">+1,455%</td><td class="num"><b>149.6%</b></td></tr>
+        <tr data-y1="283.8" data-cumul="418" data-cagr="73"><td class="l"><b>DELL</b> <span class="wname">Dell</span></td><td class="num"><b class="up">+283.8%</b></td><td class="num">+418%</td><td class="num"><b>73.0%</b></td></tr>
+        <tr data-y1="238.5" data-cumul="1989" data-cagr="175.4"><td class="l"><b>BE</b> <span class="wname">Bloom Energy</span></td><td class="num"><b class="up">+238.5%</b></td><td class="num">+1,989%</td><td class="num"><b>175.4%</b></td></tr>
+        <tr data-y1="227.3" data-cumul="388" data-cagr="69.6"><td class="l"><b>MRVL</b> <span class="wname">Marvell</span></td><td class="num"><b class="up">+227.3%</b></td><td class="num">+388%</td><td class="num"><b>69.6%</b></td></tr>
+        <tr data-y1="205.4" data-cumul="504" data-cagr="82.1"><td class="l"><b>AMD</b> <span class="wname">AMD</span></td><td class="num"><b class="up">+205.4%</b></td><td class="num">+504%</td><td class="num"><b>82.1%</b></td></tr>
+        <tr data-y1="168.9" data-cumul="202" data-cagr="44.5"><td class="l"><b>PENG</b> <span class="wname">Penguin Solutions</span></td><td class="num"><b class="up">+168.9%</b></td><td class="num">+202%</td><td class="num"><b>44.5%</b></td></tr>
+        <tr data-y1="119.1" data-cumul="484" data-cagr="80.1"><td class="l"><b>CRWD</b> <span class="wname">CrowdStrike</span></td><td class="num"><b class="up">+119.1%</b></td><td class="num">+484%</td><td class="num"><b>80.1%</b></td></tr>
+        <tr data-y1="80.1" data-cumul="46" data-cagr="13.4"><td class="l"><b>ASML</b> <span class="wname">ASML</span></td><td class="num"><b class="up">+80.1%</b></td><td class="num">+46%</td><td class="num"><b>13.4%</b></td></tr>
+        <tr data-y1="60.6" data-cumul="368" data-cagr="67.3"><td class="l"><b>TSM</b> <span class="wname">TSMC</span></td><td class="num"><b class="up">+60.6%</b></td><td class="num">+368%</td><td class="num"><b>67.3%</b></td></tr>
+        <tr data-y1="55.1" data-cumul="520" data-cagr="83.7"><td class="l"><b>VRT</b> <span class="wname">Vertiv</span></td><td class="num"><b class="up">+55.1%</b></td><td class="num">+520%</td><td class="num"><b>83.7%</b></td></tr>
+        <tr data-y1="37.1" data-cumul="340" data-cagr="63.9"><td class="l"><b>ANET</b> <span class="wname">Arista</span></td><td class="num"><b class="up">+37.1%</b></td><td class="num">+340%</td><td class="num"><b>63.9%</b></td></tr>
+        <tr data-y1="28.3" data-cumul="431" data-cagr="74.5"><td class="l"><b>NVDA</b> <span class="wname">NVIDIA</span></td><td class="num"><b class="up">+28.3%</b></td><td class="num">+431%</td><td class="num"><b>74.5%</b></td></tr>
+        <tr data-y1="11.9" data-cumul="316" data-cagr="60.8"><td class="l"><b>AVGO</b> <span class="wname">Broadcom</span></td><td class="num"><b class="up">+11.9%</b></td><td class="num">+316%</td><td class="num"><b>60.8%</b></td></tr>
+        <tr data-y1="6.6" data-cumul="1069" data-cagr="127"><td class="l"><b>PLTR</b> <span class="wname">Palantir</span> <span class="wflag">1Y นิ่ง แต่ 3Y โหด</span></td><td class="num"><b class="up">+6.6%</b></td><td class="num">+1,069%</td><td class="num"><b>127.0%</b></td></tr>
+        <tr data-y1="-16.4" data-cumul="163" data-cagr="38"><td class="l"><b>CEG</b> <span class="wname">Constellation Energy</span></td><td class="num"><b class="down">−16.4%</b></td><td class="num">+163%</td><td class="num"><b>38.0%</b></td></tr>
+        <tr data-y1="-16.5" data-cumul="429" data-cagr="74.2"><td class="l"><b>VST</b> <span class="wname">Vistra</span> <span class="wflag">ย่อ 1Y แต่ 3Y แข็ง</span></td><td class="num"><b class="down">−16.5%</b></td><td class="num">+429%</td><td class="num"><b>74.2%</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">ที่มา: 1Y (Finnhub / MarketBeat ต้น ต.ค. 2026) · 3Y รวม ต.ค. 2023 – ต.ค. 2026 · CAGR ทบต้นต่อปี — ไม่ใช่คำแนะนำการลงทุน</div>
+</section>
+
+<!-- SP500 2026 -->
+<section class="card" id="sp500">
+  <div class="shead"><div class="icon">🇺🇸</div>
+  <div><h2>S&amp;P 500 · 75 หุ้นใหญ่สุดในปี 2026</h2><p>YTD · 31 ธ.ค. 2025 – 7 ต.ค. 2026</p></div><span class="count">S&amp;P +13.97%</span></div>
+  <div class="sp-hero">
+    <div class="sp-idx">S&amp;P 500: <b class="up">+13.97%</b></div>
+    <div class="sp-chips">
+      <span class="sp-chip">ท็อป <b>Sandisk +613.09%</b></span>
+      <span class="sp-chip">รั้งท้าย <b>Oracle −26.35%</b></span>
+      <span class="sp-chip">เขียว <b>54</b> · แดง <b>21</b></span>
+      <span class="sp-chip" id="spCount">แสดง <b>75/75</b></span>
+    </div>
+  </div>
+  <div class="px-toolbar">
+    <span class="px-updated">พิมพ์ค้นหาชื่อหุ้น หรือกดหัวตารางเพื่อเรียง</span>
+    <span class="px-actions">
+      <input id="spSearch" class="money-input sp-search" type="text" placeholder="ค้นหา… เช่น Micron">
+      <button type="button" id="spSortRet" class="money-btn">เรียงตาม %</button>
+    </span>
+  </div>
+  <div class="port-scroll">
+    <table class="port-table" id="spTable">
+      <thead>
+        <tr>
+          <th class="l" data-spsort="rank"># ↓↑</th>
+          <th class="l">COMPANY</th>
+          <th data-spsort="ret">YTD 2026 ↓↑</th>
+        </tr>
+      </thead>
+      <tbody id="spBody">
+        <tr data-rank="1" data-ret="27.27"><td class="l num">1</td><td class="l"><b>Nvidia</b></td><td class="num"><b class="up">+27.27%</b></td></tr>
+        <tr data-rank="2" data-ret="23.82"><td class="l num">2</td><td class="l"><b>Apple</b></td><td class="num"><b class="up">+23.82%</b></td></tr>
+        <tr data-rank="3" data-ret="9.5"><td class="l num">3</td><td class="l"><b>Microsoft</b></td><td class="num"><b class="up">+9.50%</b></td></tr>
+        <tr data-rank="4" data-ret="12.59"><td class="l num">4</td><td class="l"><b>Amazon</b></td><td class="num"><b class="up">+12.59%</b></td></tr>
+        <tr data-rank="5" data-ret="11.94"><td class="l num">5</td><td class="l"><b>Alphabet A</b></td><td class="num"><b class="up">+11.94%</b></td></tr>
+        <tr data-rank="6" data-ret="10.65"><td class="l num">6</td><td class="l"><b>Alphabet C</b></td><td class="num"><b class="up">+10.65%</b></td></tr>
+        <tr data-rank="7" data-ret="9.25"><td class="l num">7</td><td class="l"><b>Meta</b></td><td class="num"><b class="up">+9.25%</b></td></tr>
+        <tr data-rank="8" data-ret="8.72"><td class="l num">8</td><td class="l"><b>Broadcom</b></td><td class="num"><b class="up">+8.72%</b></td></tr>
+        <tr data-rank="9" data-ret="-16.03"><td class="l num">9</td><td class="l"><b>Tesla</b></td><td class="num"><b class="down">−16.03%</b></td></tr>
+        <tr data-rank="10" data-ret="281.15"><td class="l num">10</td><td class="l"><b>Micron</b></td><td class="num"><b class="up">+281.15%</b></td></tr>
+        <tr data-rank="11" data-ret="0.72"><td class="l num">11</td><td class="l"><b>Berkshire</b></td><td class="num"><b class="up">+0.72%</b></td></tr>
+        <tr data-rank="12" data-ret="10.57"><td class="l num">12</td><td class="l"><b>Eli Lilly</b></td><td class="num"><b class="up">+10.57%</b></td></tr>
+        <tr data-rank="13" data-ret="201.56"><td class="l num">13</td><td class="l"><b>AMD</b></td><td class="num"><b class="up">+201.56%</b></td></tr>
+        <tr data-rank="14" data-ret="2.26"><td class="l num">14</td><td class="l"><b>JPMorgan</b></td><td class="num"><b class="up">+2.26%</b></td></tr>
+        <tr data-rank="15" data-ret="-2.95"><td class="l num">15</td><td class="l"><b>Walmart</b></td><td class="num"><b class="down">−2.95%</b></td></tr>
+        <tr data-rank="16" data-ret="6.08"><td class="l num">16</td><td class="l"><b>Visa</b></td><td class="num"><b class="up">+6.08%</b></td></tr>
+        <tr data-rank="17" data-ret="36.32"><td class="l num">17</td><td class="l"><b>Exxon</b></td><td class="num"><b class="up">+36.32%</b></td></tr>
+        <tr data-rank="18" data-ret="24.83"><td class="l num">18</td><td class="l"><b>J&amp;J</b></td><td class="num"><b class="up">+24.83%</b></td></tr>
+        <tr data-rank="19" data-ret="206.4"><td class="l num">19</td><td class="l"><b>Intel</b></td><td class="num"><b class="up">+206.40%</b></td></tr>
+        <tr data-rank="20" data-ret="-0.15"><td class="l num">20</td><td class="l"><b>Mastercard</b></td><td class="num"><b class="down">−0.15%</b></td></tr>
+        <tr data-rank="21" data-ret="18.74"><td class="l num">21</td><td class="l"><b>AbbVie</b></td><td class="num"><b class="up">+18.74%</b></td></tr>
+        <tr data-rank="22" data-ret="9.18"><td class="l num">22</td><td class="l"><b>Palantir</b></td><td class="num"><b class="up">+9.18%</b></td></tr>
+        <tr data-rank="23" data-ret="52.38"><td class="l num">23</td><td class="l"><b>Cisco</b></td><td class="num"><b class="up">+52.38%</b></td></tr>
+        <tr data-rank="24" data-ret="-26.35"><td class="l num">24</td><td class="l"><b>Oracle</b></td><td class="num"><b class="down">−26.35%</b></td></tr>
+        <tr data-rank="25" data-ret="9.24"><td class="l num">25</td><td class="l"><b>Costco</b></td><td class="num"><b class="up">+9.24%</b></td></tr>
+        <tr data-rank="26" data-ret="92.39"><td class="l num">26</td><td class="l"><b>Lam Research</b></td><td class="num"><b class="up">+92.39%</b></td></tr>
+        <tr data-rank="27" data-ret="102.6"><td class="l num">27</td><td class="l"><b>Applied Mat.</b></td><td class="num"><b class="up">+102.60%</b></td></tr>
+        <tr data-rank="28" data-ret="34.62"><td class="l num">28</td><td class="l"><b>Chevron</b></td><td class="num"><b class="up">+34.62%</b></td></tr>
+        <tr data-rank="29" data-ret="-2.67"><td class="l num">29</td><td class="l"><b>BofA</b></td><td class="num"><b class="down">−2.67%</b></td></tr>
+        <tr data-rank="30" data-ret="42.02"><td class="l num">30</td><td class="l"><b>Caterpillar</b></td><td class="num"><b class="up">+42.02%</b></td></tr>
+        <tr data-rank="31" data-ret="22.73"><td class="l num">31</td><td class="l"><b>Coca-Cola</b></td><td class="num"><b class="up">+22.73%</b></td></tr>
+        <tr data-rank="32" data-ret="359.95"><td class="l num">32</td><td class="l"><b>Dell</b></td><td class="num"><b class="up">+359.95%</b></td></tr>
+        <tr data-rank="33" data-ret="35.63"><td class="l num">33</td><td class="l"><b>Merck</b></td><td class="num"><b class="up">+35.63%</b></td></tr>
+        <tr data-rank="34" data-ret="3.13"><td class="l num">34</td><td class="l"><b>P&amp;G</b></td><td class="num"><b class="up">+3.13%</b></td></tr>
+        <tr data-rank="35" data-ret="13.83"><td class="l num">35</td><td class="l"><b>UnitedHealth</b></td><td class="num"><b class="up">+13.83%</b></td></tr>
+        <tr data-rank="36" data-ret="120.09"><td class="l num">36</td><td class="l"><b>Palo Alto</b></td><td class="num"><b class="up">+120.09%</b></td></tr>
+        <tr data-rank="37" data-ret="-1.43"><td class="l num">37</td><td class="l"><b>GE Aero</b></td><td class="num"><b class="down">−1.43%</b></td></tr>
+        <tr data-rank="38" data-ret="20.13"><td class="l num">38</td><td class="l"><b>Philip Morris</b></td><td class="num"><b class="up">+20.13%</b></td></tr>
+        <tr data-rank="39" data-ret="6.84"><td class="l num">39</td><td class="l"><b>Morgan Stanley</b></td><td class="num"><b class="up">+6.84%</b></td></tr>
+        <tr data-rank="40" data-ret="-25.67"><td class="l num">40</td><td class="l"><b>Netflix</b></td><td class="num"><b class="down">−25.67%</b></td></tr>
+        <tr data-rank="41" data-ret="-16.97"><td class="l num">41</td><td class="l"><b>Home Depot</b></td><td class="num"><b class="down">−16.97%</b></td></tr>
+        <tr data-rank="42" data-ret="64.67"><td class="l num">42</td><td class="l"><b>Arista</b></td><td class="num"><b class="up">+64.67%</b></td></tr>
+        <tr data-rank="43" data-ret="126.44"><td class="l num">43</td><td class="l"><b>CrowdStrike</b></td><td class="num"><b class="up">+126.44%</b></td></tr>
+        <tr data-rank="44" data-ret="52.64"><td class="l num">44</td><td class="l"><b>GE Vernova</b></td><td class="num"><b class="up">+52.64%</b></td></tr>
+        <tr data-rank="45" data-ret="66.55"><td class="l num">45</td><td class="l"><b>Texas Instr.</b></td><td class="num"><b class="up">+66.55%</b></td></tr>
+        <tr data-rank="46" data-ret="0.91"><td class="l num">46</td><td class="l"><b>Goldman</b></td><td class="num"><b class="up">+0.91%</b></td></tr>
+        <tr data-rank="47" data-ret="61.95"><td class="l num">47</td><td class="l"><b>KLA</b></td><td class="num"><b class="up">+61.95%</b></td></tr>
+        <tr data-rank="48" data-ret="235.06"><td class="l num">48</td><td class="l"><b>Marvell</b></td><td class="num"><b class="up">+235.06%</b></td></tr>
+        <tr data-rank="49" data-ret="613.09"><td class="l num">49</td><td class="l"><b>Sandisk</b> <span class="wflag">ท็อปสุด</span></td><td class="num"><b class="up">+613.09%</b></td></tr>
+        <tr data-rank="50" data-ret="14.21"><td class="l num">50</td><td class="l"><b>Thermo Fisher</b></td><td class="num"><b class="up">+14.21%</b></td></tr>
+        <tr data-rank="51" data-ret="-1.71"><td class="l num">51</td><td class="l"><b>RTX</b></td><td class="num"><b class="down">−1.71%</b></td></tr>
+        <tr data-rank="52" data-ret="-13.88"><td class="l num">52</td><td class="l"><b>Wells Fargo</b></td><td class="num"><b class="down">−13.88%</b></td></tr>
+        <tr data-rank="53" data-ret="26.18"><td class="l num">53</td><td class="l"><b>Amgen</b></td><td class="num"><b class="up">+26.18%</b></td></tr>
+        <tr data-rank="54" data-ret="13.5"><td class="l num">54</td><td class="l"><b>Linde</b></td><td class="num"><b class="up">+13.50%</b></td></tr>
+        <tr data-rank="55" data-ret="29.58"><td class="l num">55</td><td class="l"><b>Amphenol</b></td><td class="num"><b class="up">+29.58%</b></td></tr>
+        <tr data-rank="56" data-ret="9.08"><td class="l num">56</td><td class="l"><b>Citi</b></td><td class="num"><b class="up">+9.08%</b></td></tr>
+        <tr data-rank="57" data-ret="-25.57"><td class="l num">57</td><td class="l"><b>IBM</b></td><td class="num"><b class="down">−25.57%</b></td></tr>
+        <tr data-rank="58" data-ret="-17.78"><td class="l num">58</td><td class="l"><b>AmEx</b></td><td class="num"><b class="down">−17.78%</b></td></tr>
+        <tr data-rank="59" data-ret="51.18"><td class="l num">59</td><td class="l"><b>Analog Dev.</b></td><td class="num"><b class="up">+51.18%</b></td></tr>
+        <tr data-rank="60" data-ret="12.36"><td class="l num">60</td><td class="l"><b>Verizon</b></td><td class="num"><b class="up">+12.36%</b></td></tr>
+        <tr data-rank="61" data-ret="3.55"><td class="l num">61</td><td class="l"><b>Qualcomm</b></td><td class="num"><b class="up">+3.55%</b></td></tr>
+        <tr data-rank="62" data-ret="-15.24"><td class="l num">62</td><td class="l"><b>Salesforce</b></td><td class="num"><b class="down">−15.24%</b></td></tr>
+        <tr data-rank="63" data-ret="193.26"><td class="l num">63</td><td class="l"><b>Seagate</b></td><td class="num"><b class="up">+193.26%</b></td></tr>
+        <tr data-rank="64" data-ret="19.62"><td class="l num">64</td><td class="l"><b>Gilead</b></td><td class="num"><b class="up">+19.62%</b></td></tr>
+        <tr data-rank="65" data-ret="-7.91"><td class="l num">65</td><td class="l"><b>Disney</b></td><td class="num"><b class="down">−7.91%</b></td></tr>
+        <tr data-rank="66" data-ret="-17.47"><td class="l num">66</td><td class="l"><b>T-Mobile</b></td><td class="num"><b class="down">−17.47%</b></td></tr>
+        <tr data-rank="67" data-ret="41.1"><td class="l num">67</td><td class="l"><b>Deere</b></td><td class="num"><b class="up">+41.10%</b></td></tr>
+        <tr data-rank="68" data-ret="-21.21"><td class="l num">68</td><td class="l"><b>Abbott</b></td><td class="num"><b class="down">−21.21%</b></td></tr>
+        <tr data-rank="69" data-ret="-13.84"><td class="l num">69</td><td class="l"><b>PepsiCo</b></td><td class="num"><b class="down">−13.84%</b></td></tr>
+        <tr data-rank="70" data-ret="-1.49"><td class="l num">70</td><td class="l"><b>AT&amp;T</b></td><td class="num"><b class="down">−1.49%</b></td></tr>
+        <tr data-rank="71" data-ret="35.41"><td class="l num">71</td><td class="l"><b>Eaton</b></td><td class="num"><b class="up">+35.41%</b></td></tr>
+        <tr data-rank="72" data-ret="-0.08"><td class="l num">72</td><td class="l"><b>BlackRock</b></td><td class="num"><b class="down">−0.08%</b></td></tr>
+        <tr data-rank="73" data-ret="-4.35"><td class="l num">73</td><td class="l"><b>Schwab</b></td><td class="num"><b class="down">−4.35%</b></td></tr>
+        <tr data-rank="74" data-ret="-24.46"><td class="l num">74</td><td class="l"><b>McDonald's</b></td><td class="num"><b class="down">−24.46%</b></td></tr>
+        <tr data-rank="75" data-ret="18.75"><td class="l num">75</td><td class="l"><b>Union Pacific</b></td><td class="num"><b class="up">+18.75%</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">ตัวเลขจากรูป @TheMarketHustle · 31 ธ.ค. 2025 – 7 ต.ค. 2026 · S&amp;P 500 +13.97% · ไม่ใช่คำแนะนำการลงทุน</div>
+</section>
+
+<!-- 1 -->
+<section class="card" id="wishlist">
+  <div class="shead"><div class="icon" style="background:#FEF3C7">🛒</div>
+  <div><h2>Wishlist — ของที่อยากได้</h2><p>เรียงตามอาชีพ: สักก่อน → ดนตรี → คอนเทนต์ → รถ</p></div><span class="count">ทำแล้ว 5 / 5</span></div>
+  <div class="grid2">
+    <div class="item done"><div class="dot">✓</div><div class="txt">เครื่องสักชิ้นแรก — ฝึกเพื่อเป็นอาชีพ จะได้ซื้อชิ้นต่อไปง่าย<small>เหตุผลชัดที่สุดในลิสต์นี้</small><span class="badge b-money">2,200 ฿</span> <span class="badge b-done">ซื้อแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ซ่อมรูกีต้าร์ SG + เปลี่ยนสายกีต้าร์<span class="badge b-money">150 ฿</span> <span class="badge b-done">เสร็จ</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">เปลี่ยนสายเบส + ซื้อแอมป์<span class="badge b-money">1,900 ฿</span> <span class="badge b-done">เสร็จ</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">กล้อง Insta360 Ace Pro 2 · 8K ไว้ถ่ายคอนเทนต์<small>13,600 + 1,490 = 15,090</small><span class="badge b-money">~15,000 ฿</span> <span class="badge b-done">ซื้อแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">มอเตอร์ไซค์น้ำมัน — ได้แล้ว ไว้ขับทำงาน<small>ม้าเหล็กแห่งอิสรภาพ — ไม่ต้องรอใครไปส่ง</small> <span class="badge b-done">ได้แล้ว</span></div></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="card" id="lucky">
+  <div class="shead"><div class="icon">🐭</div>
+  <div><h2>ประวัติงานวิดีโอลัคกี้ — ครบทุกล็อต</h2><p>ทุกงานที่เคยส่งมา · ไม่มีตัดทิ้ง · จ่ายแล้วทั้งหมด</p></div><span class="count">25 จ๊อบ · จ่ายครบ</span></div>
+  <div class="group-title"><span class="gnum">A</span> LOT A — ชุดหลัก มิ.ย. → ก.ย. · 13 จ๊อบ</div>
+  <div class="grid3">
+    <div class="item done"><div class="dot">✓</div><div class="txt">งานออกแบบรอยสัก 100%<small>ออกแบบครบ จบงาน</small><span class="badge b-money">1,500 จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">13. วิดีโออวยพรติดมหาลัย<small>ส่งวันที่ 20 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">14. วิดีโอลัคกี้<small>ส่งวันที่ 3 กรกฎาคม</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">15. วิดีโอลัคกี้<small>ส่งวันที่ 27 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">16. วิดีโอลัคกี้<small>ส่งวันที่ 12 กรกฎาคม 00.00</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">17. งานคอลแลบหมาเล็ก<small>บรีฟมา 1 ทุ่ม ส่งพรุ่งนี้ก่อนเที่ยงคืน</small><span class="badge b-money">+1,000</span> <span class="badge b-done">บิ๊กจ๊อบ จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">18. อวยพรลัคกี้<small>ส่งวันที่ 22 ก.ค.</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">19. อวยพรวันเกิดลัคกี้<small>ส่งวันที่ 1 สิงหา แบบโพส</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">20. ลัคกี้อวยพรวันเกิด<small>8 สิงหาคม วันเสาร์</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">21. ลัคกี้อวยพรวันเกิด<small>22 สิงหาคม วันเสาร์</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">22. ลัคกี้อวยพรวันเกิด<small>21 สิงหาคม วันศุกร์</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">23. ลัคกี้อวยพรวันเกิด<small>5 กันยายน วันจันทร์</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">บีทลอยๆ เบสหนักๆ<small>ส่งวันที่ 31 กรกฎาคม</small><span class="badge b-money">+800</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+  </div>
+  <div class="group-title"><span class="gnum">B</span> LOT B — ชุดต้นมิถุนายน · 15 จ๊อบ</div>
+  <div class="grid3">
+    <div class="item done"><div class="dot">✓</div><div class="txt">1. วิดีโอลัคกี้อวยพรวันเกิด<small>ส่งงาน 07/06/2026</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">2. วิดีโอลัคกี้ 3 คลิปรวด<small>ส่งงานล็อตใหญ่</small><span class="badge b-money">+300</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">3. วิดีโอลัคกี้อวยพรวันเกิดพี่วิว<small>ส่งวันนี้</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">4. วิดีโออวยพรวันเกิด<small>ส่งวันที่ 7 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">5. วิดีโออวยพรวันเกิด<small>ส่งวันที่ 4 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">6. วิดีโออวยพรวันเกิด<small>ส่งวันที่ 4 มิถุนายน (อีกล็อต)</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">7. วิดีโออวยพรวันเกิด<small>ส่งวันที่ 1 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">8. วิดีโออวยพรวันเกิด<small>ส่งวันที่ 6 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">9. วิดีโอรีวิวแมวมะตอย<small>ส่งวันที่ 4 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">10. วิดีโออวยพรวันเกิด<small>ส่งวันที่ 9 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">10(2). วิดีโออวยพรวันเกิด<small>ส่งวันที่ 8 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">11. วิดีโอให้กำลังใจ<small>ส่งวันที่ 6 มิถุนายน</small><span class="badge b-money">+150</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">12. วิดีโอฝากบอกศิลปิน<small>ส่งวันที่ 6 มิถุนายน</small><span class="badge b-money">+100</span> <span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">งานบีท Ambient 700/700<small>100% เสร็จ · กำหนดส่ง 2 มิถุนายน</small><span class="badge b-money">700 จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">งานบีทจารจู 450/900<small>100% เสร็จ · จ่ายมัดจำแล้ว · ส่ง 2 มิถุนายน</small><span class="badge b-money">มัดจำแล้ว</span></div></div>
+  </div>
+  <div class="note">รวม LOT A+B = งานลัคกี้ล้วนประมาณ <b>+3,050</b> ไม่รวมงานออกแบบสัก 1,500 กับงานบีท — งานละ 100 แต่มาถี่คือกระแสเงินสดรายวัน</div>
+</section>
+
+<!-- 3 -->
+<section class="card" id="beat">
+  <div class="shead"><div class="icon" style="background:#EEF0FF">🎛️</div>
+  <div><h2>งานบีท + สอนบีท — เงินหลักชั่วคราว</h2><p>ทำเป็นระบบ อย่ารอแค่ลูกค้า DM</p></div><span class="count">จ่ายแล้ว 5 · รอ 2</span></div>
+  <div class="grid2">
+    <div class="item done"><div class="dot">✓</div><div class="txt">บีท Ambient ส่ง 20 ส.ค.<span class="badge b-money">+800 จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">บีท Ambient ส่ง 7 ก.ย.<span class="badge b-money">+900 จ่ายแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">บีท Ambient 500/700 · Regalia 700/700 · จารจู 450/900 · เบสหนักลอยๆ +800<small>ชุดงานกลางปี — ปิดจ๊อบครบ</small><span class="badge b-indigo">4 งาน</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">สอนทำเพลง +1,270 (เสาร์)<span class="badge b-done">จ่ายแล้ว</span></div></div>
+    <div class="item todo"><div class="dot">○</div><div class="txt">สอนทำบีท พฤ 10 ก.ย. 20:00–22:00 — สอนถึงสิ้นเดือน / จนกว่าจะไม่มีอะไรสอน<span class="badge b-money">+1,000 จ่ายแล้ว</span> <span class="badge b-todo">รอสอน</span></div></div>
+    <div class="item todo"><div class="dot">○</div><div class="txt">สอนทำบีท จ. 14 ก.ย. 20:00–22:00<span class="badge b-money">+2,500 จ่ายแล้ว</span> <span class="badge b-todo">รอสอน</span></div></div>
+  </div>
+  <div class="note">👉 สเต็ปต่อไป: ลง Beatstore · ตัด TikTok/Reels loop · ทำ type beat ที่ “ขายได้ ไม่ใช่แค่เท่” · ทำ preset/drumkit pack ละ 200–300 ขายซ้ำได้ · <a href="./beat-select.html" style="color:var(--gold);font-weight:700">🎧 เปิดหน้า BEAT SELECT (21 บีท) →</a></div>
+</section>
+
+<!-- 4 -->
+<section class="card" id="quests">
+  <div class="shead"><div class="icon" style="background:#E0F5FA">📋</div>
+  <div><h2>เควสทั่วไป — ชีวิต + งานสร้างตัว</h2><p>อะไรเสร็จแล้วให้มันจบ อะไรค้างให้เห็นชัดๆ</p></div><span class="count">เสร็จ 13 · ค้าง 4</span></div>
+  <div class="group-title"><span class="gnum">✔</span> เสร็จแล้ว — ย้ายออกจากหัวได้</div>
+  <div class="grid3" style="margin-bottom:12px">
+    <div class="item done"><div class="dot">✓</div><div class="txt">ไปเอาแว่นวันจันทร์</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ทำคลิปบีทแบบดีๆ</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">Collection Set เสื้อผ้าตัวเอง</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">อาบน้ำลัคกี้กับน้าหมา 🐕</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ฝึกสักหนังเทียม 1 ลาย ×2</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">คลิป promote pain lipsync 29 พ.ค. 2026</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">Discord ม.วิทยาการทำบีท</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">Affiliate ลัคกี้ / Poster / อวยพร / รีวิว</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ลงความรู้ใน ม.วิทยาการทำบีท</div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">รับนักศึกษา 5 คน<span class="badge b-money">+1,500</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">รีโนเวทห้อง Producer + ทำ Vocal booth เอง + ที่แขวนกีต้าร์<span class="badge b-done">เสร็จแล้ว</span></div></div>
+  </div>
+  <div class="group-title"><span class="gnum">○</span> ค้างอยู่ — ทำต่อตามนี้</div>
+  <div class="grid2">
+    <div class="item todo" data-pin="1"><div class="dot">○</div><div class="txt">ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small><span class="badge b-todo">3 ธ.ค. 69</span></div></div>
+    <div class="item todo" data-pin="1"><div class="dot">○</div><div class="txt">อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small><span class="badge b-todo">โปรเจกต์ใหญ่</span></div></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="card" id="gear">
+  <div class="shead"><div class="icon">🎸</div>
+  <div><h2>คลังอุปกรณ์ — ลงครบทุกชิ้นที่เคยส่งมา</h2><p>รายชื่อเต็ม · ราคาเต็ม · total 96,500 / 100,000</p></div><span class="count">96,500 ฿</span></div>
+  <div class="progress"><i style="width:96.5%"></i></div>
+  <div class="group-title"><span class="gnum">01</span> กีต้าร์ + เปิดหมวก · 6 ชิ้น</div>
+  <div class="grid3">
+    <div class="item done"><div class="dot">✓</div><div class="txt">แอมป์เปิดหมวก<small>2,800 + 3,500 = 6,200</small><span class="badge b-money">6,200 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">กระเป๋าสะพายกีต้าร์<small>ใบหลัก</small><span class="badge b-money">400 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">กีต้าร์โปร่ง<small>2,500 + 3,200 = 5,700</small><span class="badge b-money">5,700 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">กีต้าร์ไฟฟ้า<small>1,700 + 3,000 = 4,700 · ขายได้</small><span class="badge b-money">4,700 ฿</span> <span class="badge b-done">ขายได้</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">กระเป๋าสะพาย<small>ใบรอง</small><span class="badge b-money">300 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">แอมป์เล่นกีต้าร์<small>ปี 2026</small><span class="badge b-money">1,800 ฿</span></div></div>
+  </div>
+  <div class="group-title"><span class="gnum">02</span> เอฟเฟค + สาย + ไฟ · 5 ชิ้น</div>
+  <div class="grid3">
+    <div class="item done"><div class="dot">✓</div><div class="txt">เอฟเฟคเสียงแตก Boss Overdrive<small>ขายได้</small><span class="badge b-money">400 ฿</span> <span class="badge b-done">ขายได้</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">เอฟเฟครีเวิบ Mooer A7<small>สาย ambient</small><span class="badge b-indigo">มีแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">เอฟเฟค Multi Effect<small>รวมหลายเสียงในตัวเดียว</small><span class="badge b-indigo">มีแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">อแดปเตอร์ 2 อัน<small>จ่ายไฟเอฟเฟค</small><span class="badge b-money">200 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">สายแจ็คยาว 4 เส้น<small>สายสัญญาณ</small><span class="badge b-money">300 ฿</span></div></div>
+  </div>
+  <div class="group-title"><span class="gnum">03</span> สตูดิโอเพลง · 12 ชิ้น</div>
+  <div class="grid3">
+    <div class="item done"><div class="dot">✓</div><div class="txt">คอมพิวเตอร์<small>เครื่องหลักทำเพลง</small><span class="badge b-money">15,200 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">Notebook<small>ขายได้ · เครื่องสำรอง</small><span class="badge b-money">4,500 ฿</span> <span class="badge b-done">ขายได้</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">เปียโนคีย์บอร์ด<small>คีย์ทำเมโลดี้</small><span class="badge b-money">1,200 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ออดิโออินเตอร์เฟส Focusrite 2nd<small>หัวใจห้องอัด</small><span class="badge b-money">2,300 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ขาตั้งไมค์ + ฟิลเตอร์กันเสียงสะท้อน + สายไมค์ + ป็อปฟิลเตอร์<small>ชุดห้องอัดครบ</small><span class="badge b-money">500 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ไมค์ร้อง Behringer B2<small>ไมค์คอนเดนเซอร์</small><span class="badge b-money">1,300 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ไมค์ AT 2020<small>ไมค์ร้องหลัก</small><span class="badge b-money">1,500 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ไมค์ Avantone CK-6 + M-Audio Interface Duo 2<small>เซ็ตอัปเกรดเสียง</small><span class="badge b-money">4,000 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">หูฟังมิกซ์ Artesia AMH-11<small>Studio Monitoring Headphones</small><span class="badge b-indigo">มีแล้ว</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ลำโพง Shreman<small>ลำโพงห้อง</small><span class="badge b-money">900 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">ลำโพงมอนิเตอร์<small>ฟังมิกซ์ตรง</small><span class="badge b-money">2,500 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">Sound Absorption ผนังกันเสียง<small>ซับเสียงห้องอัด</small><span class="badge b-money">500 ฿</span></div></div>
+  </div>
+  <div class="group-title"><span class="gnum">04</span> กล้อง + สัก · 4 ชิ้น</div>
+  <div class="grid3">
+    <div class="item done"><div class="dot">✓</div><div class="txt">กล้อง Nikon D5200<small>กล้องถ่ายรูปหลัก</small><span class="badge b-money">4,700 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">iPhone<small>กล้องสำรอง + ตัดต่อ</small><span class="badge b-money">5,000 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">Insta360 Ace Pro 2<small>13,600 + 1,490 = 15,090 · 8K ถ่ายคอนเทนต์</small><span class="badge b-money">~15,000 ฿</span></div></div>
+    <div class="item done"><div class="dot">✓</div><div class="txt">เครื่องสัก<small>ปี 2026 เดือน 4 · ชิ้นแรกฝึกเป็นอาชีพ</small><span class="badge b-money">2,200 ฿</span></div></div>
+  </div>
+  <div class="note">ยอดอุปกรณ์รวม <b>96,500 / 100,000 ฿ (96.5%)</b> — ชิ้นที่ป้าย “ขายได้” = เคยขายทำทุนหมุนต่อ · Mooer A7 / Multi / Artesia ไม่มีราคาในโน้ตเลยไม่บวกเพิ่ม</div>
+</section>
+
+<!-- 6 -->
+<section class="card" id="channels">
+  <div class="shead"><div class="icon" style="background:#F0EAFD">📡</div>
+  <div><h2>อาณาจักร 7 ช่อง — คนดูรวม 25K</h2><p>ลัคกี้คือหัวหอก บีทคือเครื่องทำเงิน</p></div><span class="count">18.7K ใหญ่สุด</span></div>
+  <div class="grid3">
+    <div class="item"><div class="dot" style="background:#FCE7F3;color:#DB2777;border:1px solid #F5C2DB">★</div><div class="txt"><b>ลัคกี้ Content</b> — 18.7K<small>หัวหอกดึงคน · affiliate · อวยพร · รีวิวของ</small></div></div>
+    <div class="item"><div class="dot" style="background:#EEF0FF;color:#4F46E5;border:1px solid #C9CFFD">♪</div><div class="txt"><b>prod.et1cruel</b> — 5,158<small>บีท · discord ม.ทำบีท · mix/master · สอน 1-1</small></div></div>
+    <div class="item"><div class="dot" style="background:#F1EEE8;color:#555;border:1px solid #ddd">◐</div><div class="txt"><b>et1cruel</b> — 612<small>เพลงหลัก</small></div></div>
+    <div class="item"><div class="dot" style="background:#E0F5FA;color:#0E7490;border:1px solid #A9DEF0">▶</div><div class="txt"><b>dir.et1cruel</b> — 255<small>ถ่ายรูป / ตัดต่อ / MV</small></div></div>
+    <div class="item"><div class="dot" style="background:#F0EAFD;color:#7C3AED;border:1px solid #D6C6FA">✒</div><div class="txt"><b>art.et1cruel</b> — 248<small>สัก · ออกแบบรอยสัก</small></div></div>
+    <div class="item"><div class="dot" style="background:#FEF3C7;color:#92400E;border:1px solid #F3D9A8">✦</div><div class="txt"><b>เสื้อผ้า</b> — 90 · <b>Tanapawarinpong</b> — 80<small>แบรนด์ + ชีวิตจริง</small></div></div>
+  </div>
+  <div class="note">🍀 เปิดหมวกจตุจักร/สยาม · Affiliate Shopee/TikTok · YT/IG/FB/TikTok — content layer คือตัวดึงคนเข้าระบบบีท+สัก</div>
+</section>
+
+<!-- 7 -->
+<section class="card" id="skills">
+  <div class="shead"><div class="icon" style="background:#191B1F;color:#fff">⚔️</div>
+  <div><h2>ตารางสกิล — แบบเกม RPG</h2><p> S = หากินได้ · A = ใช้งานจริง · B/C = เสริม</p></div><span class="count">S++ ร้องเพลง</span></div>
+  <div>
+    <span class="skill hot">S++ ร้องเพลง</span><span class="skill hot">S+ กีต้าร์</span><span class="skill hot">S บีท</span><span class="skill hot">S มิกซ์/มาสเตอร์</span><span class="skill hot">S แร็ป</span><span class="skill hot">S แต่งเพลง</span><span class="skill hot">S อัดเสียง</span><span class="skill hot">S พิมพ์ดีด</span><span class="skill hot">S อังกฤษ</span><span class="skill hot">S คอม</span><span class="skill hot">S หุ้น/ลงทุน</span><span class="skill">A ตัดต่อ</span><span class="skill">A ช่างภาพ</span><span class="skill">A กลอง</span><span class="skill">A เบส</span><span class="skill">A บอล</span><span class="skill">A วิ่ง</span><span class="skill">A โป๊กเกอร์</span><span class="skill">B เปียโน</span><span class="skill">B วาดรูป</span><span class="skill">B มวย</span><span class="skill">B สัก</span><span class="skill">B โปรแกรมมิ่ง</span><span class="skill">C ทำอาหาร</span><span class="skill">C ทำเกม</span><span class="skill">C กำกับหนัง</span>
+  </div>
+  <div class="grid3" style="margin-top:12px">
+    <div class="item"><div class="txt"><b>ภาษา</b><small>ไทย ✓ · อังกฤษ ✓ · จีน/ญี่ปุ่น/เกาหลี/ฝรั่งเศส/เยอรมัน/สเปน ○</small></div></div>
+    <div class="item"><div class="txt"><b>เอกสาร</b><small>บัตรประชาชน ✓ · ใบขับขี่มอไซต์/รถยนต์ · Visa · Passport ○</small></div></div>
+    <div class="item"><div class="txt"><b>เรทงาน Max</b><small>เปิดหมวก 2,000 · ดนตรีสด 400 · รถตู้ 400 · KFC 350 · Tops 400 · หมูกระทะ 230 · นมเปรี้ยว 200</small></div></div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="card" id="passive">
+  <div class="shead"><div class="icon" style="background:#E7F6EF">💤</div>
+  <div><h2>Passive + Active รายได้ 11 ทาง</h2><p>ทำครั้งเดียว → เก็บยาว · Active ที่กลายพันธุ์เป็น Passive คือของดีสุด</p></div><span class="count">11 ทาง</span></div>
+  <div class="group-title"><span class="gnum">💰</span> เสาหลักหาเงิน 3 ทาง — ภาพรวม</div>
+  <div class="grid3" style="margin-bottom:6px">
+    <div class="persona" data-rank="S"><h4>📈 หุ้น + คริปโต</h4><p>DCA รายเดือน · 3 กระปุก Income / Growth / AI Core · กำไรถอนเข้า vault — ดูพอร์ตที่ <b>ห้องเทรด</b></p><div class="tags"><span>เสาหลัก #1</span></div></div>
+    <div class="persona" data-rank="A"><h4>🃏 โป๊กเกอร์</h4><p>เล่นด้วยระบบ + วินัยแบ๊งก์โรล · ได้กำไรถอนเก็บทันที ไม่ถัวมั่ว</p><div class="tags"><span>เสาหลัก #2</span></div></div>
+    <div class="persona" data-rank="B"><h4>🛵 ขับ GRAB</h4><p>รายได้รายวันด้วยมอเตอร์ไซค์ · รอใบขับขี่ <b>3 ธ.ค. 69</b> แล้วเปิดเครื่อง</p><div class="tags"><span>เสาหลัก #3</span></div></div>
+  </div>
+  <div class="grid2">
+    <div class="item"><div class="txt">🎵 เพลง — สตรีมมิ่ง + เล่นสด + Merch<small>ต้องมี: อุปกรณ์ทำเพลง</small></div></div>
+    <div class="item"><div class="txt">📷 ช่างภาพ — ขายภาพ Stock<small>ต้องมี: กล้อง</small></div></div>
+    <div class="item"><div class="txt">📺 Youtuber — ยอดวิว + สปอนเซอร์<small>ต้องมี: กล้อง + ไอเดีย</small></div></div>
+    <div class="item"><div class="txt">🎮 เกม — ขายเกมได้ตลอด<small>ต้องมี: คอม + ไอเดีย</small></div></div>
+    <div class="item"><div class="txt">📖 หนังสือ — ขายได้ตลอด<small>“กูไม่ได้บ้าที่คิดว่ากูคือจักรวาล” + Affirmation Card</small></div></div>
+    <div class="item"><div class="txt">🛒 ของออนไลน์ — ถ่ายลง รอออเดอร์<small>ต้องมี: ทุน + สินค้า</small></div></div>
+    <div class="item"><div class="txt">🥁 ห้องซ้อม — คนเช่าเรื่อยๆ · 🌱 ปลูกต้นไม้ขาย · 🏠 ห้องเช่า</div></div>
+    <div class="item"><div class="txt">🔗 Affiliate + 🌐 Web Adsense + 📱 Application</div></div>
+  </div>
+  <div class="note">🏢 <b>ไอเดียที่ตึก:</b> สตูดิโออัดเพลง · ห้องซ้อม · ตัดผม · ร้านอาหาร · ร้านสัก/เจาะ · สตูดิโอถ่ายภาพ · โรงแรมชั่วคราว — <b>RUN = ลุยเลย</b> คือ สตูดิโอ / อาหาร / สัก</div>
+  <div class="note">📦 <b>Sell list:</b> Serum preset · Drumkit · Vocal preset · FL template · เสียงร้องรวม pack 200–300/ศิลปิน · <b>ทำครั้งเดียวขายซ้ำ:</b> beat pack / sample / loop ambient-shoegaze / LUT</div>
+</section>
+
+<!-- 9 -->
+<section class="card" id="content">
+  <div class="shead"><div class="icon">🎬</div>
+  <div><h2>คลังไอเดียคอนเทนต์ — ครบทุกเม็ดที่เคยส่งมา</h2><p>ไม่มีตัดทิ้ง · หยิบไปถ่ายได้เลยทีละอัน</p></div><span class="count">30+ ไอเดีย</span></div>
+  <div class="grid2">
+    <div class="persona" data-rank="S"><h4>🍜 Food Cinematic</h4><p>ถ่ายร้านก๋วยเตี๋ยวให้เหมือนฉากหนัง ใส่เสียง ambient เล่าเรื่องเจ้าของร้านแบบเหงาๆ — ฟีล Wong Kar-wai แต่เป็นร้านข้าวมันไก่บางใหญ่ · รีวิวร้านอาหารแลกค่าข้าวแค่ 1 จาน: “ผมรีวิวร้าน ขอข้าวกินเพียงจานเดียว”</p><div class="tags"><span>FOOD IS KING</span><span>กินวันละ 3 มื้อ</span></div></div>
+    <div class="persona" data-rank="S"><h4>🧥 Lifestyle ศิลปิน + OOTD</h4><p>ชีวิต beatmaker วันธรรมดา: กินข้าวร้านข้างทางก่อนเข้าสตู · หา reference สีจากตลาดกลางคืน · you dress well, food looks tasty = gain aura · dress OOTD ตอนทำอาหารอร่อยๆ</p><div class="tags"><span>CLOTHES IS QUEEN</span><span>FOOD+CLOTHES COMBO</span></div></div>
+    <div class="persona" data-rank="A"><h4>🌆 Travel Introspective</h4><p>ไม่ใช่ “ที่นี่สวยมากครับทุกคน” แต่ “บางใหญ่ตอนตีห้า มันเงียบจนได้ยินเสียงใจตัวเอง” — vibe หนัง Lost in Translation แต่เป็นไทย</p></div>
+    <div class="persona" data-rank="S"><h4>🎵 YouTube Set 1 — เสียงรอบตัว</h4><p>“เสียงฝนจริง vs เสียงปลอม ต่างกันยังไง” · “ทำ beat จากเสียงรอบตัวใน 10 นาที” · “1 วันของคนทำเพลง ambient ที่ไม่มีใครฟัง” · “อัดเสียงตอนตี 3 แล้วเอามาทำเพลง”</p></div>
+    <div class="persona" data-rank="A"><h4>🎵 YouTube Set 2 — MV จักรวาล</h4><p>ทำ MV ที่เรื่องราวต่อกันไปเรื่อยๆ รวมกันเป็นหนังเรื่องนึงได้ · ปล่อยเพลงแบบ lyrics video / visualizer เยอะๆ · รวมเพลงทุกเพลงใน mix เดียวทำเป็นหนังยาว</p></div>
+    <div class="persona" data-rank="A"><h4>🎛️ สายสอนทำบีท</h4><p>คลิปสอนแนะนำทำบีท / มิกซ์ / มาสเตอร์ลง TikTok · ทำบีท emopluggnb ผสมเครื่องดนตรีไทย · คลิปความรู้ดนตรี plugin beat · BEFORE-AFTER MIX MASTER + ขาย PRESET · playlist course “วิธีเป็น Underground rapper series part 1”</p></div>
+    <div class="persona" data-rank="A"><h4>🎛️ สายทดลองเสียง</h4><p>เอาบีทจาก FL เชื่อมเข้า TouchDesigner ทำ Reactive audio คอนเทนต์ · เอา producer ไปทำบีทที่สาธารณะ · ทำบีท AV type beat · บีทหนักๆ ครบๆ + กีต้าร์ + คอร์ด + เสียงร้องหุ่นยนต์ cyber + เบส + กลอง shoegaze + slow digital core</p></div>
+    <div class="persona" data-rank="S"><h4>👺 โขน + ชุดไทย MV</h4><p>แต่งชุดโขนหนุมาน ชุดไทย ทำเอ็มวีบีท emopluggnb ผสมเครื่องดนตรีไทย — ภาพจำที่ไม่มีใครเหมือน</p></div>
+    <div class="persona" data-rank="S"><h4>🌌 มังงะ-เกม-หนัง จักรวาลเดียว</h4><p>ทำฟอนต์ + ภาษาของตัวเอง · ทำมังงะที่ตัวการ์ตูนทำเพลง + ทำเสื้อผ้า — เพลงกับเสื้อในมังงะฟังได้จริงใส่ได้จริง · มีเกมของมัน + หนังของมัน · ทำ Brand ถ่ายเสื้อแบบเดินแบบ มังงะ/เกม/เสื้อผ้า/installation art</p></div>
+    <div class="persona" data-rank="A"><h4>🎮 เกมชีวิต SIN</h4><p>สร้างเกมชีวิตตัวเอง ตัวเอกชื่อ สิน/SIN เลือกทางเดินชีวิตได้ — เกมเนื้อเรื่องผสมปรัชญาการดำเนินชีวิต setting อำเภอบางใหญ่ · ทำเกมรวมศิลปะวิชาต่อสู้ทั่วโลก + กำลังภายใน + ยุคล่าอาณานิคม เลือกเกิดในเมือง ขโมยวิชาข้ามเมืองได้ · ทำเกมฝึกสมาธิ/แก้ปัญหา</p></div>
+    <div class="persona" data-rank="A"><h4>🌙 Life Content Series</h4><p>Cinematic Life Vlog storytelling ลึกๆ · Eco Challenge กิจกรรมรักษ์โลกเล็กๆ · Daily Mood Diary วิดีโอ/รูป/เสียงบันทึกอารมณ์ · Mini Art Project art ชิ้นเล็กเป็น series · Short Story Post micro story/poem + ภาพประกอบ · ช่องยูทูปนั่งสมาธิ timelapse + เพลงที่ทำเอง</p></div>
+    <div class="persona" data-rank="A"><h4>🎤 สัมภาษณ์ + ช่องสอนเพลง</h4><p>สร้างจักรวาลเพลง: ช่องสอนทำเพลง เล่นกีต้าร์ ทำบีท ทุกอย่างเกี่ยวกับเพลง · สัมภาษณ์ “เชื่อไหมว่าจิตวิญญาณมีจริง” · สัมภาษณ์คนสยามแต่งตัวเฟี้ยวๆ ถามดนตรี Emo trap ไทยฟังใคร · สัมภาษณ์ศิลปินลงลึกจิตวิญญาณ · ทำ YouTube เบื้องหลังสัก/ทำเพลง/vlog underground lifestyle · short aesthetic TikTok/Reels ปั้น audience ขายงานต่อ</p></div>
+    <div class="persona" data-rank="B"><h4>🏠 บ้านสร้างเองทั้งหลัง</h4><p>สร้างบ้านเอง เฟอร์นิเจอร์สร้างเองหมดยกเว้นเครื่องใช้ไฟฟ้า · เสื้อผ้าในตู้มีแต่ที่ทำเอง รองเท้าด้วย · งาน art + ต้นไม้ปลูกเอง · art installation ในบ้าน · functional furniture ทำงานได้ 2 อย่าง เช่นเก้าอี้มีลำโพงในตัว · Renovate ห้อง Producer + vocal booth เอง + ที่แขวนกีต้าร์ + ที่ห้อยผนัง</p></div>
+    <div class="persona" data-rank="B"><h4>🌐 เว็บ + โปรดิวเซอร์ Official</h4><p>ทำเว็บไซต์ส่วนตัวรวมเพลง + ผลงานทุกอย่างของศิลปิน · ทำบีทเป็น Producer ที่ official กว่านี้ ลงโปรโมทคอนเทนต์ Youtube IG Tiktok · ทำช่องสอนทำเพลง/เกี่ยวกับเพลง · ทำ affiliate ลัคกี้/poster/อวยพร/รีวิวของ</p></div>
+    <div class="persona" data-rank="A"><h4>🕯️ งานเขียน + เสียงเบา</h4><p>ทำชูเกสเสียงร้องเบาๆ แต่ดนตรีหนักแน่น ความหมายจรรโลง · ทำ poster art สวยๆ ประโยคอุปมาอุปไมย (บทยามรปภตรวจอาวุธ → ทำไมต้องมีรปภในหัว) · ทำพอดแคส · หนังสือ “กูไม่ได้บ้าที่คิดว่ากูคือจักรวาล” · Affirmation Card (ปลุกใจ/รักตัวเอง/เงิน/Manifest) · สื่อธรรมะด้วยอุปมาอุปไมยเป็นเกม/หนัง/หนังสือ/ชีวิตจริง</p></div>
+    <div class="persona" data-rank="A"><h4>🌱 ช่องศิลปะเอาตัวรอด</h4><p>ช่องแนวทางการทำงานศิลปะ + เอาตัวรอดจากชีวิตวนลูปงานประจำงานหนักเงินน้อยเวลาไม่มี · ศูนย์รวมความคิดดีๆ ให้คนทุกรุ่นกลับมา reflex แล้วเปลี่ยนชีวิต · รายการสัมภาษณ์ศิลปิน · คลิปจัดอันดับ type beat · อยากทำคอนเทนต์รีวิวร้านแลกข้าว 1 จาน</p></div>
+  </div>
+  <div class="note">😄 <b>ความสุขง่ายๆ ของฉัน (ครบ):</b> กินของอร่อย · กินน้ำหวาน · เล่นเกม · ทำเพลง · ดูหนัง · ร้องเพลง · ฟังเพลง · แต่งเพลง · เล่นกีต้าร์ · เล่นเครื่องดนตรี · ทำ Youtube กับการทำเพลง/เล่นเกม · ดูหนัง-ทำหนัง-ทำบริษัทหนัง · ถ่ายรูป-รับจ้างถ่าย-ขายรูป · เขียนหนังสือ<br>🌳 <b>พันธกิจ 7 อย่าง:</b> เพลงให้คนพักใจ · หนังสือถ่ายทอดวิธีดูแลตัวเอง · เกมฝึกสมาธิ · ศาสตร์การแพทย์เข้าใจกายใจตามหลักฐาน · เทคโนโลยี AI/แอปให้เข้าถึงความรู้สุขภาพง่าย · วิดีโออธิบายเรื่องยากให้ง่าย · รูปภาพ/ออกแบบสื่อให้จำไปใช้ได้<br>📦 <b>SELL LIST เต็ม:</b> Serum preset · Drumkits · Vocal preset · FL template · PRESET เสียงร้องรวม PACK 200–300/ศิลปิน · Beat pack · Sample/Preset · Loop ambient/shoegaze · Visual pack/LUT — ทำครั้งเดียวขายซ้ำ = Active กลายพันธุ์เป็น Passive</div>
+</section>
+
+<!-- 10 -->
+<section class="card" id="base">
+  <div class="shead"><div class="icon" style="background:#EEF0FF">🏠</div>
+  <div><h2>Base GEN.1 — บ้าน = Studio + Lab + Soul Space</h2><p>4+1 โซน · ทุกโซนต้องทำเงินได้</p></div><span class="count">5 โซน</span></div>
+  <div class="grid2">
+    <div class="zone"><h4>🖋️ TATTOO STATION</h4><ul><li>โต๊ะสัก + เก้าอี้ Recline + ไฟ + กล้อง + iPad Procreate</li><li>→ รับสัก · ขายลาย NFT · คอนเทนต์เบื้องหลังลายจักรวาล</li></ul></div>
+    <div class="zone"><h4>🎬 MV STUDIO</h4><ul><li>DSLR/iPhone + Gimbal · ไฟ 3 จุด · Green/Black wall · คอม RAM 32GB</li><li>→ MV ตัวเอง · รับถ่าย Vlog · ยอดวิว TikTok/Reels</li></ul></div>
+    <div class="zone"><h4>👕 FASHION ZONE — แบรนด์ Amata</h4><ul><li>จักรเย็บ + โต๊ะแพทเทิร์น · Heat press · หุ่นลองเสื้อ · printer</li><li>→ ขาย Shopee/IG/TikTok · Pre-order · เสื้อวงใน MV</li></ul></div>
+    <div class="zone"><h4>🎵 MUSIC STUDIO</h4><ul><li>Interface · ไมค์ condenser · มอนิเตอร์ · FL/Ableton</li><li>→ เพลงตัวเอง · รับอัด/มิกซ์ · รายได้ streaming passive</li></ul></div>
+  </div>
+  <div class="zone" style="margin-top:10px"><h4>🌌 COMMAND CENTER — ศูนย์บัญชาการ</h4><p style="font-size:13px;color:#555">จอใหญ่ + WiFi แรง · vision board · โต๊ะคุมไฟ/กล้อง · SSD + Drive — ที่นั่งวางกลยุทธ์สร้างโลกใหม่ + อยากสร้างบ้าน/เฟอร์นิเจอร์เอง + เก้าอี้มีลำโพงในตัว</p></div>
+</section>
+
+<!-- 11 -->
+<section class="card" id="plan">
+  <div class="shead"><div class="icon" style="background:#FEF3C7">🧭</div>
+  <div><h2>แผนเอาตัวรอด — 2 ระยะ</h2><p>อยู่รอดก่อน แล้วค่อยปูทางกลับเข้าทำเพลง</p></div><span class="count">ตอนนี้ → 2 เดือน</span></div>
+  <div class="grid2">
+    <div class="persona" style="border-color:#BDE5D2;background:#F2FBF6"><h4 style="color:#064E3B">⚡️ ระยะสั้น — 2 สัปดาห์</h4><p style="color:#1E293B">1. กินวันละ 100–120 → 4,500 อยู่ได้เดือนกว่า<br>2. เงินด่วนจากของที่มี: เปิดหมวก BTS/ห้าง/ตลาด · ขายบีท 300–500 ในกลุ่ม FB · รับตัดคลิป 300–500 · ดันเพลงเก่า 60 เพลงลง TikTok แบบ raw<br>3. ตัดเพลงเก่าเป็นคอนเทนต์สั้น — อารมณ์จริง คน TikTok ชอบของจริง</p></div>
+    <div class="persona" style="border-color:#F3D9A8;background:#FFFBEB"><h4 style="color:#78350F">🔥 ระยะกลาง — 1–2 เดือน</h4><p style="color:#1E293B">1. สะสมอุปกรณ์ทีละชิ้น: ไมค์ Maono ~1,200 → หูฟัง Superlux ~800–1,000 → คอม/โน้ตบุ๊ก<br>2. ทำ Portfolio 1 หน้า: บีท · เพลง · ตัดต่อ · สัก + ช่องทางติดต่อ → ส่งหาลูกค้าง่าย</p><div class="tags"><span>ไมค์ดี = อันดับ 1</span><span>หูฟัง = อันดับ 2</span><span>คอม = อันดับ 3</span></div></div>
+  </div>
+  <div class="note">มึงไม่ได้ล้มเหลว แค่หยุดพักก่อนเริ่มใหม่ — ขายของเพื่อเอาตัวรอดไม่ใช่แพ้ คือรอกลับมาโหดกว่าเดิม</div>
+</section>
+
+<!-- 11.5 VISION FULL -->
+<section class="card" id="vision">
+  <div class="shead"><div class="icon">📜</div>
+  <div><h2>วิสัยทัศน์ฉบับเต็ม</h2></div><span class="count">FULL LORE</span></div>
+  <div class="grid2">
+    <div class="item"><div class="txt">📚 ดูเรื่องเขียนหนังสือ<small>เอาไว้เล่าเรื่องตัวเอง + สอนคนอื่น</small></div></div>
+    <div class="item"><div class="txt">🌿 ดูเรื่องธรรมชาติ สัตว์ป่า · พีชพักสวนครัว · ปลูกต้นไม้ · ระบบน้ำ · เกษตรพอเพียง<small>เอาไว้สร้างที่ดิน “ตู้เย็นธรรมชาติ” ให้มันดูแลกันเอง — ของพ่อ + ของลุง + ของออมสินอีกแปลง อยู่ร่วมกัน</small></div></div>
+    <div class="item"><div class="txt">🤖 ดูเรื่องโค้ด Python ทำ AI ธรรมชาติ<small>AI รักษาระบบนิเวศ · AI ระบบป้องกัน SHELTER · ขุดดินวางแผนระบบต่างๆ</small></div></div>
+    <div class="item"><div class="txt">📐 ดูเรื่องคณิต ฟิสิกส์<small>ฐานรากของโค้ดและ AI ทุกประเภท SOFTWARE/HARDWARE ทั้งสิ้นมาจากคณิตฟิสิกส์</small></div></div>
+    <div class="item"><div class="txt">🎵 ดูเรื่องเพลงดีๆ ความหมายดีๆ<small>เพลงมิติที่ 5 · เพลงนิพพาน · เพลงพาลอย · เพลงมีความสุข — เพลงทุกข์ไม่เอา เบื่อ</small></div></div>
+    <div class="item"><div class="txt">🔬 ดูเรื่องวิทยาศาสตร์ ชีววิทยา ไบโอเทคโนโลยี<small>ศึกษาระบบธรรมชาติทั้งมิตินี้และมิติหน้า — ค่อยๆ ไป เอามิตินี้ก่อน</small></div></div>
+    <div class="item"><div class="txt">☸️ ดูเรื่องศาสนาพุทธเพิ่มเติมเรื่อยๆ<small>รากฐานสำคัญของทุกสิ่งทุกอย่าง</small></div></div>
+    <div class="item"><div class="txt">💪 ออกกำลังกายทุกวัน · ทำบีททุกวัน · วาดรูปทุกวัน<small>ส่งต่อความคิด + ฝึกเส้น</small></div></div>
+    <div class="item"><div class="txt">🏺 ทำโถแก้ว หมวกแอร์ความเย็น + กรองอากาศ<small>เหมือนเผ่ามังกรฟ้า</small></div></div>
+    <div class="item"><div class="txt">🎮 ทำเกมรวมศิลปะวิชาต่อสู้ทั่วโลก<small>กำลังภายในทั่วโลก + วัฒนธรรมทั่วโลกยุคล่าอาณานิคม · เลือกเกิดในเมืองได้ เรียนวิชานักรบ/สายผลิตอาวุธ · ขโมยวิชาข้ามเมืองได้ · พระเอกหนังแอคชั่นช่วยธรรมชาติด้วยวิทย์+จิตวิญญาณ+ธรรมะ</small></div></div>
+    <div class="item"><div class="txt">📖 ทำสื่ออุปมาอุปไมยธรรมะ<small>เป็นเกม เป็นหนัง เป็นหนังสือ เป็นชีวิตจริง — เอาเหตุการณ์จริงอุปมาอุปไมยให้คน 2026 เข้าใจง่าย</small></div></div>
+  </div>
+  <div class="note">ข้อความต้นฉบับทั้งหมดอยู่ครบในบล็อกนี้แล้ว — ไม่มีการย่อทิ้ง</div>
+</section>
+
+<!-- 12 -->
+<section class="card" id="verse">
+  <div class="shead"><div class="icon" style="background:#191B1F;color:#fff">🌌</div>
+  <div><h2>et1cruelverse — 5 ร่างในคนเดียว</h2><p>Art + Sound + Vision + Play + Soul = ระบบศิลปินเต็มตัว</p></div><span class="count">5 ร่าง</span></div>
+  <div class="grid2">
+    <div class="persona"><h4>🩸 et1cruel — ศิลปิน</h4><p>tattoo / art / music / drawing — ร่างดิบ ถ่ายทอดอารมณ์ลงภาพ mood/tone + branding ตัวตนชัด</p></div>
+    <div class="persona"><h4>💽 prod.et1cruel — โปรดิวเซอร์</h4><p>sound design · arrangement · mix/master · DAW — สร้าง “ซาวด์ลายเซ็น” ที่ฟังแล้วรู้ว่าเป็นมึง</p></div>
+    <div class="persona"><h4>🎬 dir.et1cruel — ผู้กำกับ</h4><p>ตัดต่อ · แสงสี · storytelling · FX — มองโลกเป็นภาพยนตร์ คุม mood ให้ coherent</p></div>
+    <div class="persona"><h4>🕹️ Cruelmanblack — เกมเมอร์</h4><p>game analysis · cinematic content · Unity/Unreal · streaming persona — ผสานศิลปะกับเกม</p></div>
+  </div>
+  <div class="persona" style="margin-top:10px"><h4>🌙 himoriyacore / tana pawarinpong — ตัวจริง</h4><p>vlog · aesthetic storytelling · voice over จริงใจ — เบื้องหลังทุกอย่าง ทำให้คนเชื่อมกับตัวจริงของมึง · daily mood diary · mini art · micro story · eco challenge · cinematic life vlog</p></div>
+</section>
+
+<footer>⚔ ET1CRUEL · QUEST LOG RPG v2 — CLEAR 60 · ACTIVE 8 · GOLD 96,500 · ม้าเหล็กได้แล้ว 🏍 NEXT BOSS: ที่ดิน 🌾</footer>
+
+</div>
+</div>
+</div>
+
+<script>
+// auto RANK for personas/zones without data-rank
+document.querySelectorAll('.persona:not([data-rank]),.zone:not([data-rank])').forEach((el,i)=>{
+  const ranks=['S','A','S','A','B','S'];
+  el.setAttribute('data-rank',ranks[i%ranks.length]);
+});
+const q=document.getElementById('q');
+let mode='all';
+document.querySelectorAll('.fbtn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); mode=b.dataset.f; apply();
+});
+q.oninput=apply;
+function apply(){
+  const s=q.value.trim().toLowerCase();
+  document.querySelectorAll('.item,.persona,.zone').forEach(el=>{
+    const t=el.innerText.toLowerCase();
+    const isDone=el.classList.contains('done');
+    const isTodo=el.classList.contains('todo');
+    let ok=true;
+    if(mode==='done'&&!isDone&&el.classList.contains('item'))ok=false;
+    if(mode==='todo'&&!isTodo&&el.classList.contains('item'))ok=false;
+    if(s&&!t.includes(s))ok=false;
+    el.classList.toggle('hide',!ok);
+  });
+}
+</script>
+<script>
+/* ===== COLLAPSE — กดหัวข้อแล้วค่อยกางเนื้อหา (progressive disclosure) ===== */
+(function(){
+  var KEY='et1cruel-collapsed-v1';
+  var OPEN_BY_DEFAULT=['masterplan']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
+  function load(){try{var s=JSON.parse(localStorage.getItem(KEY));return Array.isArray(s)?s:null}catch(e){return null}}
+  function save(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+  var saved=load();
+  function isOpen(id){
+    if(saved) return saved.indexOf(id)<0;
+    return OPEN_BY_DEFAULT.indexOf(id)>=0;
+  }
+  function syncState(){
+    var closed=[];
+    document.querySelectorAll('section.card.collapsed,.treasury.collapsed').forEach(function(el){
+      if(el.id) closed.push(el.id);
+    });
+    save(closed);
+  }
+  function setBtn(btn,open){
+    btn.textContent=open?'▾':'▸';
+    btn.setAttribute('aria-expanded',open?'true':'false');
+    btn.setAttribute('aria-label',open?'พับเก็บ':'กางออก');
+  }
+  function makeToggle(host,head,anchorSel){
+    var body=document.createElement('div');
+    body.className='cbody';
+    var kids=Array.prototype.slice.call(host.children);
+    var past=false;
+    kids.forEach(function(k){
+      if(k===head){past=true;return}
+      if(past) body.appendChild(k);
+    });
+    host.appendChild(body);
+    var btn=document.createElement('button');
+    btn.type='button';btn.className='collapse-btn';
+    var anchor=head.querySelector(anchorSel);
+    if(anchor) head.insertBefore(btn,anchor); else head.appendChild(btn);
+    var open=isOpen(host.id);
+    host.classList.toggle('collapsed',!open);
+    setBtn(btn,open);
+    btn.addEventListener('click',function(ev){
+      ev.preventDefault();ev.stopPropagation();
+      var now=host.classList.toggle('collapsed');
+      setBtn(btn,!now);syncState();
+    });
+    return {host:host,btn:btn};
+  }
+  // sections
+  document.querySelectorAll('section.card').forEach(function(sec){
+    var head=sec.querySelector('.shead');
+    if(head) makeToggle(sec,head,'.count');
+  });
+  // treasury (ยอดรวมยังเห็นที่หัว)
+  var treasury=document.getElementById('treasury');
+  if(treasury){
+    var thead=treasury.querySelector('.treas-head');
+    if(thead) makeToggle(treasury,thead,'.treas-total');
+  }
+  function expandAll(){
+    document.querySelectorAll('section.card.collapsed,.treasury.collapsed').forEach(function(el){
+      el.classList.remove('collapsed');
+      var b=el.querySelector(':scope > .shead > .collapse-btn, :scope > .treas-head > .collapse-btn');
+      if(b) setBtn(b,true);
+    });
+  }
+  function restoreSaved(){
+    var closed=load();
+    document.querySelectorAll('section.card,.treasury').forEach(function(el){
+      if(!el.id) return;
+      var shut=closed?closed.indexOf(el.id)>=0:OPEN_BY_DEFAULT.indexOf(el.id)<0;
+      el.classList.toggle('collapsed',shut);
+      var b=el.querySelector(':scope > .shead > .collapse-btn, :scope > .treas-head > .collapse-btn');
+      if(b) setBtn(b,!shut);
+    });
+  }
+  // กดเมนู nav → กาง section นั้นให้เลย
+  document.querySelectorAll('#nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(){
+      var t=document.querySelector(a.getAttribute('href'));
+      if(t&&(t.classList.contains('collapsed'))){
+        t.classList.remove('collapsed');
+        var b=t.querySelector(':scope > .shead > .collapse-btn, :scope > .treas-head > .collapse-btn');
+        if(b) setBtn(b,true);
+        syncState();
+      }
+    });
+  });
+  // ค้นหา → กางทั้งหมดให้เห็นผล; ล้างค้นหา → กลับสู่สถานะเดิม
+  var qbox=document.getElementById('q');
+  if(qbox) qbox.addEventListener('input',function(){
+    if(qbox.value.trim()) expandAll(); else restoreSaved();
+  });
+})();
+</script>
+<script>
+/* ===== QUEST TRACKER — ดึงเควสค้างมาโชว์ขวาจอ ===== */
+(function(){
+  var box=document.getElementById('qtracker');
+  var list=document.getElementById('qtrackerList');
+  var minBtn=document.getElementById('qtrackerMin');
+  if(!box||!list) return;
+  try{
+    var pref=localStorage.getItem('et1cruel-qtracker-min');
+    if(pref==='1'||(pref===null&&window.innerWidth<1280)){box.classList.add('min');minBtn.textContent='+';}
+  }catch(e){}
+  function build(){
+    // ตัวปักหมุดโชว์เสมอ (แม้ตอนค้นหา) → แล้วค่อยตามด้วยเควสค้างอื่นที่เห็นอยู่
+    var pins=document.querySelectorAll('#quests .item.todo[data-pin="1"] .txt');
+    var others=document.querySelectorAll('#quests .item.todo:not(.hide):not([data-pin]) .txt');
+    list.innerHTML='';
+    function addRow(t,pinned){
+      var clone=t.cloneNode(true);
+      clone.querySelectorAll('.badge').forEach(function(b){b.remove()});
+      var main=(clone.childNodes[0]&&clone.childNodes[0].textContent||'').trim();
+      var subEl=clone.querySelector('small');
+      var sub=subEl?subEl.textContent.trim():'';
+      if(main.length>64) main=main.slice(0,64)+'…';
+      var li=document.createElement('li');
+      var a=document.createElement('a');
+      a.href='#quests';
+      a.innerHTML=(pinned?'📌 ':'◆ ')+main+(sub?'<small>'+sub+'</small>':'');
+      a.addEventListener('click',function(){
+        var sec=document.getElementById('quests');
+        if(sec&&sec.classList.contains('collapsed')){
+          sec.classList.remove('collapsed');
+          var b=sec.querySelector(':scope > .shead > .collapse-btn');
+          if(b){b.textContent='▾';b.setAttribute('aria-expanded','true')}
+          try{
+            var k='et1cruel-collapsed-v1';
+            var s=JSON.parse(localStorage.getItem(k))||[];
+            localStorage.setItem(k,JSON.stringify(s.filter(function(x){return x!=='quests'})));
+          }catch(e){}
+        }
+      });
+      li.appendChild(a);
+      list.appendChild(li);
+    }
+    var cc=document.getElementById('qtrackerCount');
+    if(cc) cc.textContent='· '+(pins.length+others.length);
+    if(!pins.length&&!others.length){list.innerHTML='<li class="qempty">✔ เคลียร์หมดแล้ว!</li>';return}
+    pins.forEach(function(t){addRow(t,true)});
+    others.forEach(function(t){addRow(t,false)});
+  }
+  build();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build);
+  var qbox=document.getElementById('q');
+  if(qbox) qbox.addEventListener('input',build);
+  function toggleMin(){
+    var min=box.classList.toggle('min');
+    minBtn.textContent=min?'+':'–';
+    try{localStorage.setItem('et1cruel-qtracker-min',min?'1':'0')}catch(e){}
+  }
+  if(minBtn) minBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleMin()});
+  var head=document.getElementById('qtrackerHead');
+  if(head) head.addEventListener('click',function(ev){if(ev.target!==minBtn)toggleMin()});
+})();
+</script>
+<script>
+/* ===== FX: particles + reveal + coins (graceful if CDN fails) ===== */
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* --- scroll reveal (เรียบๆ เลื่อนขึ้นนิดเดียว) --- */
+  var revealEls = document.querySelectorAll('.hero,.treasury,section.card');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    },{threshold:.06});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* --- floating gold coins --- */
+  if (!reduce) {
+    var glyphs = ['◉','✦','★','◆'];
+    for (var i = 0; i < 10; i++) {
+      var c = document.createElement('div');
+      c.className = 'float-coin';
+      c.textContent = glyphs[i % glyphs.length];
+      c.style.left = (Math.random()*100) + 'vw';
+      c.style.fontSize = (16 + Math.random()*22) + 'px';
+      c.style.color = i % 3 ? '#4ADE80' : '#67E8F9';
+      c.style.animationDuration = (9 + Math.random()*10) + 's';
+      c.style.animationDelay = (Math.random()*12) + 's';
+      document.body.appendChild(c);
+    }
+  }
+
+  /* --- Three.js particle galaxy --- */
+  try {
+    if (reduce || !window.THREE) return;
+    var canvas = document.getElementById('bg3d');
+    var renderer = new THREE.WebGLRenderer({canvas:canvas, alpha:true, antialias:false});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, .1, 100);
+    camera.position.z = 9;
+    var N = 650, pos = new Float32Array(N*3), col = new Float32Array(N*3);
+    var palette = [[1,.84,.37],[.4,.91,.98],[.77,.71,.99],[1,.45,.7]];
+    for (var j = 0; j < N; j++) {
+      pos[j*3] = (Math.random()-.5)*26;
+      pos[j*3+1] = (Math.random()-.5)*16;
+      pos[j*3+2] = (Math.random()-.5)*12;
+      var p = palette[j % palette.length];
+      col[j*3] = p[0]; col[j*3+1] = p[1]; col[j*3+2] = p[2];
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col,3));
+    var mat = new THREE.PointsMaterial({size:.09, vertexColors:true, transparent:true, opacity:.85, sizeAttenuation:true});
+    var stars = new THREE.Points(geo, mat);
+    scene.add(stars);
+    var mx = 0, my = 0;
+    window.addEventListener('mousemove', function(e){
+      mx = (e.clientX/window.innerWidth - .5);
+      my = (e.clientY/window.innerHeight - .5);
+    }, {passive:true});
+    window.addEventListener('resize', function(){
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    var t = 0;
+    (function anim(){
+      requestAnimationFrame(anim);
+      t += .0016;
+      stars.rotation.y = t + mx*.35;
+      stars.rotation.x = my*.25;
+      camera.position.x += ((mx*1.4) - camera.position.x)*.04;
+      camera.position.y += ((-my*1.0) - camera.position.y)*.04;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    })();
+  } catch (err) { /* 2D fallback stays — page still fully readable */ }
+})();
+</script>
+<script src="js/life-os-os.js"></script>
+<script src="js/stock-talk.js"></script>
+<script src="js/port.js"></script>
+<script src="js/watch.js"></script>
+<script src="js/sp500.js"></script>
+<div id="os-toasts"></div>
+<div id="os-modal-bg"><div id="os-modal"></div></div>
+<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button class="qmin" id="qtrackerMin" aria-label="พับ/กาง">–</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
+<!-- ปุ่มแชทหุ้นลอย -->
+<button type="button" id="stockFab" aria-label="คุยเรื่องหุ้น">💹<span class="ping"></span></button>
+<div id="stockPop">
+  <div id="stockPopHead"><span class="dotlive"></span> 💹 คุยหุ้นกับออม <button type="button" id="stockPopClose">ปิด</button></div>
+  <div class="chat-msgs" id="popMsgs"></div>
+  <div class="chat-chips">
+    <button type="button" data-popchip="NVDA เท่าไหร่">NVDA เท่าไหร่</button>
+    <button type="button" data-popchip="พอร์ตฉันเป็นไง">พอร์ตฉัน</button>
+    <button type="button" data-popchip="ตัวไหนวิ่งแรง">ตัวไหนวิ่งแรง</button>
+  </div>
+  <form class="chat-form" id="popForm"><input id="popInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง">↑</button></form>
+  <div class="chat-note">ราคาสด: หุ้น TradingView · คริปโต CoinGecko · ไม่ใช่คำแนะนำการลงทุน</div>
+</div>
 </body>
 </html>
-

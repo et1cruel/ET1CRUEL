@@ -74,8 +74,89 @@
 .plan-pill{font-family:'Chakra Petch',sans-serif;font-size:12px;background:#212637;border:1px solid #3d4666;border-radius:8px;padding:4px 10px;color:#fff;white-space:nowrap}
 .plan-pill.stale{opacity:.55}
 .wgroup td{font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px;letter-spacing:.05em;color:var(--gold,#4ADE80);padding-top:12px!important;border-bottom:1px solid rgba(74,222,128,.3)}
+/* ===== พอร์ต DIME ===== */
+.dime-head{background:linear-gradient(180deg,#1c2233,#12162a);border:1px solid rgba(74,222,128,.35);border-radius:16px;padding:18px}
+.dime-total{font-family:'Chakra Petch',sans-serif;font-size:36px;font-weight:700;color:#fff;line-height:1.1}
+.dime-total small{font-size:15px;color:var(--muted,#AAB4CC)}
+.dime-sub{font-size:13.5px;color:var(--muted,#AAB4CC);margin-top:3px}
+.dime-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed #2B3248}
+.dime-cols span{display:block;font-size:12.5px;color:var(--muted,#AAB4CC)}
+.dime-cols b{font-size:16.5px;font-family:'Chakra Petch',sans-serif}
+.dime-tools{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
+.dime-count{font-size:12.5px;color:var(--muted,#AAB4CC);font-weight:600}
+.dime-toggle{margin-left:auto;font-family:inherit;font-size:12.5px;font-weight:700;border:1px solid #3d4666;background:transparent;color:#fff;border-radius:16px;padding:6px 14px;cursor:pointer}
+.dime-toggle:hover{border-color:var(--gold,#4ADE80)}
+.dime-list{display:flex;flex-direction:column}
+.dime-row{display:grid;grid-template-columns:44px 1fr auto auto;gap:10px;align-items:center;padding:12px 2px;border-bottom:1px solid #1c2130}
+.dime-logo{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#fff;font-family:'Chakra Petch',sans-serif}
+.dime-mid b{display:block;font-size:16px;color:#fff;font-family:'Chakra Petch',sans-serif}
+.dime-mid span{font-size:12.5px;color:var(--muted,#AAB4CC)}
+.dime-val{text-align:right}
+.dime-val b{display:block;font-size:17px;font-family:'Chakra Petch',sans-serif;color:#fff}
+.dime-val span{font-size:12px;color:var(--muted,#AAB4CC)}
+.dime-pl{text-align:right;font-weight:700;font-size:15px;min-width:118px}
+.dime-pl span{display:block;font-size:12px;font-weight:600}
+.dime-edit{margin-top:12px;border:1px dashed #3d4666;border-radius:12px;padding:10px 12px}
+.dime-edit summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--gold,#4ADE80);padding:4px}
+.dime-edit .stock-table{margin-top:8px}
+@media(max-width:520px){.dime-cols{grid-template-columns:1fr}.dime-pl{min-width:0}.dime-total{font-size:30px}}
 @media(max-width:900px){.plan-grid{grid-template-columns:1fr}.pb-amt{font-size:26px}}
-/* ปุ่มลอย + ป๊อปอัพ */
+/* ===== พอร์ตสแนป / Watch17 / S&P — ดาร์กธีม LIFE OS ===== */
+.px-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;border:1px dashed #3d4666;background:rgba(74,222,128,.05);border-radius:12px;font-size:13px;color:var(--muted,#AAB4CC)}
+.px-updated b{color:var(--gold,#4ADE80)}
+.px-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.money-btn{font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;border:1.5px solid var(--gold,#4ADE80);background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;padding:8px 16px;border-radius:10px}
+.money-btn.ghost{background:#0B0D14;color:var(--muted,#AAB4CC);border-color:#3d4666}
+.money-btn.active{background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;border-color:var(--gold,#4ADE80)}
+.money-input{font-family:'Chakra Petch',sans-serif;font-weight:700;color:#fff;background:#0B0D14;border:1px solid #3d4666;border-radius:8px;padding:7px 10px;font-size:13px;outline:none}
+.money-input:focus{border-color:var(--gold,#4ADE80)}
+.port-fx{font-size:12.5px;font-weight:600;color:var(--muted,#AAB4CC);display:flex;align-items:center;gap:6px}
+.port-fx-input{width:70px;text-align:center}
+.sp-search{width:170px}
+.port-scroll{overflow-x:auto;border:1px solid #2B3248;background:rgba(11,13,20,.6);border-radius:14px}
+.port-table{width:100%;min-width:720px;border-collapse:collapse;font-size:13.5px}
+.port-table thead th{font-family:'Chakra Petch',sans-serif;font-size:10px;letter-spacing:.06em;color:var(--gold,#4ADE80);text-align:right;padding:10px;border-bottom:1px solid rgba(74,222,128,.3);white-space:nowrap;cursor:pointer;user-select:none;background:rgba(74,222,128,.05)}
+.port-table thead th.l{text-align:left}
+.port-table thead th.sorted{color:#fff}
+.port-table tbody td{padding:10px;border-bottom:1px solid #1c2130;text-align:right;vertical-align:middle;white-space:nowrap;color:#E2E8FA}
+.port-table tbody td.l{text-align:left;white-space:normal;min-width:200px}
+.port-table tbody tr:hover td{background:rgba(74,222,128,.05)}
+.port-sym{display:flex;gap:9px;align-items:center}
+.port-logo{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:#212637;border:1px solid #3d4666;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.port-sym .sn{font-weight:700;font-size:13.5px;color:#fff}
+.port-sym .sn small{color:var(--muted,#AAB4CC);font-weight:600}
+.port-sym .fn{font-size:12px;color:var(--muted,#AAB4CC)}
+.port-table .num{font-variant-numeric:tabular-nums;font-family:'Chakra Petch',sans-serif}
+.port-table .num.muted{color:#5d6785}
+.port-table tfoot td{padding:11px 10px;border-top:2px solid rgba(74,222,128,.4);text-align:right;font-weight:700;white-space:nowrap;background:rgba(74,222,128,.06);color:#fff}
+.port-table tfoot td.l{text-align:left}
+.port-table tfoot tr.grand td{background:rgba(74,222,128,.1)}
+.port-table td .up,.sp-idx .up{color:#3DFF88}
+.port-table td .down{color:#FF8b96}
+#port-snap.editing .port-table tbody td[data-field]{outline:1.5px dashed var(--gold,#4ADE80);outline-offset:-2px;cursor:pointer}
+#w17Table .wname{font-size:11.5px;color:var(--muted,#AAB4CC);font-weight:600;margin-left:5px;font-family:'IBM Plex Sans Thai',sans-serif}
+#w17Table .wflag{font-size:10.5px;font-weight:700;color:var(--gold,#4ADE80);border:1px solid var(--gold,#4ADE80);border-radius:10px;padding:1px 8px;margin-left:6px;white-space:nowrap}
+/* watch bars */
+.watch-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wbox{border:1px solid #2B3248;background:rgba(11,13,20,.6);border-radius:14px;padding:14px}
+.wbox .wh{font-weight:700;font-size:15px;color:#fff;margin-bottom:10px}
+.wbox .wh small{font-weight:600;font-size:12px;color:var(--muted,#AAB4CC);margin-left:6px}
+.wbar-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.wbar-sym{flex:0 0 44px;font-size:11px;font-weight:700;color:var(--muted,#AAB4CC);text-align:right;font-family:'Chakra Petch',sans-serif}
+.wbar-track{flex:1;background:#0B0D14;border:1px solid #1c2130;border-radius:6px;min-width:0;overflow:hidden}
+.wbar-fill{font-size:10.5px;font-weight:700;color:#06130c;line-height:1.9;white-space:nowrap;border-radius:5px;padding-left:7px;min-width:52px;font-family:'Chakra Petch',sans-serif}
+.wbar-fill.g{background:linear-gradient(90deg,#16a34a,#4ADE80)}
+.wbar-fill.b{background:linear-gradient(90deg,#2563eb,#7fb2ff);color:#06121f}
+.wbar-fill.gr{background:linear-gradient(90deg,#64748b,#b6c2d6);color:#101418}
+.wbar-fill.r{background:linear-gradient(90deg,#dc2626,#ff8b96);color:#1c0505}
+/* sp500 hero */
+.sp-hero{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1.5px solid var(--gold,#4ADE80);background:rgba(74,222,128,.07);padding:12px 15px;margin-bottom:12px;border-radius:14px}
+.sp-idx{font-weight:700;font-size:19px;color:#fff;font-family:'Chakra Petch',sans-serif}
+.sp-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sp-chip{font-size:12px;border:1px solid #3d4666;padding:4px 12px;border-radius:16px;background:#0B0D14;color:var(--muted,#AAB4CC);font-weight:600}
+.sp-chip b{color:#fff}
+@media(max-width:900px){.watch-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.port-sym .fn{display:none}.port-table{min-width:620px}}
 #stockFab{position:fixed;right:18px;bottom:18px;z-index:90;width:54px;height:54px;border-radius:50%;border:1px solid rgba(74,222,128,.6);background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;font-size:24px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 18px rgba(74,222,128,.45)}
 #stockFab:hover{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 26px rgba(74,222,128,.65)}
 #stockFab .ping{position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;background:#3DFF88;border:2px solid #0B0D14}

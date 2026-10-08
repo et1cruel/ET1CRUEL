@@ -54,12 +54,12 @@ function seed() {
       BODY:    { pts: 28, xp: 1400 }, MIND: { pts: 32, xp: 1600 },
       LIFE:    { pts: 24, xp: 1200 }, CONTENT: { pts: 36, xp: 1800 }
     },
-    mainQuest: { name: 'PROJECT 1M', current: 639420, target: 1000000,
+    mainQuest: { name: 'PROJECT 1M', current: 651420, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { savings: 200000, kasikorn: 425820, ktb: 0, dime: 2000, cash: 200, stocks: 11000, btc: 400 },
+      vaults: { keptKrungsri: 9000, growKrungsri: 400000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
-      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 639420 } ]
+      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 651420 } ]
     },
     projects: [
       { id: 'p-himori', name: 'HIMORIYACORE', goal: '10 SONG ALBUM', pct: 60, next: 'Finish Track 04', xp: 500, tracks: [1,1,1,0,0,0,0,0,0,0] },
@@ -392,6 +392,48 @@ function renderStats() {
       '<div class="os-bar xp"><i style="width:' + pct + '%"></i></div><small>' + s.pts + ' pts · ' + fmt(s.xp) + ' XP' + statRec(k) + '</small></div>';
   }).join('');
 }
+function renderTreasury() {
+  var grid = document.getElementById('treasGrid');
+  if (!grid) return; // หน้านี้ไม่มี treasury block
+  var v = S.money.vaults, mq = S.mainQuest;
+  function sum(keys) { return keys.reduce(function (s, k) { return s + (Number(v[k]) || 0); }, 0); }
+  var saveKeys = SAVE_VAULTS.filter(function (k) { return k in v; });
+  var spendKeys = Object.keys(v).filter(function (k) { return saveKeys.indexOf(k) < 0; });
+  var saveT = sum(saveKeys), spendT = sum(spendKeys), total = saveT + spendT;
+  var savePct = total ? (saveT / total * 100) : 0, spendPct = total ? (spendT / total * 100) : 0;
+  var bossPct = Math.min(100, total / mq.target * 100);
+  function rows(keys) {
+    return keys.map(function (k) {
+      return '<div class="vrow"><span>' + esc(VAULT_LABEL[k] || k) + '</span><b>' + fmt(v[k]) + '</b></div>';
+    }).join('');
+  }
+  grid.innerHTML =
+    '<div class="vault save"><small>🛡️ SAVINGS VAULT · เงินเก็บ</small>' +
+    '<div class="vamt num">' + fmt(saveT) + ' ฿</div>' + rows(saveKeys) +
+    '<div class="vbar"><i style="width:' + savePct.toFixed(1) + '%;background:linear-gradient(90deg,#4DA6FF,#8ec5ff);box-shadow:0 0 10px rgba(77,166,255,.6)"></i></div>' +
+    '<div class="treas-foot" style="text-align:left;margin-top:8px">สัดส่วน <b>' + savePct.toFixed(1) + '%</b> ของทั้งหมด</div></div>' +
+    '<div class="vault spend"><small>⚡ SPEND WALLET · เงินใช้จ่าย</small>' +
+    '<div class="vamt num">' + fmt(spendT) + ' ฿</div>' + rows(spendKeys) +
+    '<div class="vrow" style="border-top:1px solid var(--gold-dim);color:var(--gold)"><span>' + spendKeys.map(function (k) { return fmt(v[k]); }).join('+') + ' =</span><b style="color:var(--gold)">' + fmt(spendT) + '</b></div>' +
+    '<div class="vbar"><i style="width:' + spendPct.toFixed(1) + '%;background:linear-gradient(90deg,#FBBF24,#ffef9e)"></i></div></div>' +
+    '<div class="vault boss"><small>👑 BOSS CHEST · ยอดรวม</small>' +
+    '<div class="vamt num">' + fmt(total) + ' ฿</div>' +
+    '<div class="vrow"><span>เงินเก็บ</span><b>' + fmt(saveT) + '</b></div>' +
+    '<div class="vrow"><span>เงินใช้จ่าย</span><b>' + fmt(spendT) + '</b></div>' +
+    '<div class="vrow" style="border-top:1px solid var(--gold-dim);color:var(--gold)"><span>' + fmt(saveT) + ' + ' + fmt(spendT) + ' =</span><b style="color:var(--gold)">' + fmt(total) + '</b></div>' +
+    '<div class="vbar"><i style="width:' + bossPct.toFixed(1) + '%;background:repeating-linear-gradient(-55deg,var(--gold) 0 10px,#15803d 10px 20px);animation:slide 1s linear infinite"></i></div></div>';
+  var tt = document.getElementById('treasTotal');
+  if (tt) tt.textContent = fmt(total) + ' ฿';
+  var foot = document.getElementById('treasFoot');
+  if (foot) {
+    var remain = Math.max(0, mq.target - total);
+    foot.innerHTML = 'สูตร: <b>' + fmt(saveT) + ' + (' + spendKeys.map(function (k) { return fmt(v[k]); }).join(' + ') + ') = ' + fmt(total) + '</b> · เหลืออีก <b>' + fmt(remain) + '</b> ถึงบอสใหญ่ 1,000,000 ฿ ⚔';
+  }
+  var nav = document.getElementById('navTreas');
+  if (nav) nav.textContent = total >= 1000 ? Math.round(total / 1000) + 'K' : fmt(total);
+  var hud = document.getElementById('moneyHudAmt');
+  if (hud) hud.textContent = fmt(total);
+}
 function renderMoney() {
   var el = document.getElementById('os-money-body');
   if (!el) return;
@@ -509,7 +551,7 @@ function renderSysStatus() {
   }).join(' ');
 }
 function renderAll() {
-  renderHeader(); renderDailies(); renderStats(); renderMoney();
+  renderHeader(); renderDailies(); renderStats(); renderMoney(); renderTreasury();
   renderProjects(); renderKanban(); renderAch(); renderJournal(); renderQM(); renderSysStatus();
 }
 
@@ -703,13 +745,33 @@ var PROJ_TASKS = {
   'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
 };
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
-var VAULT_LABEL = { savings: '🪴 Kept Grow', kasikorn: '💳 Kasikorn e-Sav', ktb: '🏦 KTB', dime: '💚 DIME', cash: '💵 Cash', stocks: '📈 US Stocks', btc: '₿ BTC' };
+var VAULT_LABEL = { keptKrungsri: '🏦 Kept Krungsri', growKrungsri: '🌱 Grow Krungsri', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
+var SAVE_VAULTS = ['keptKrungsri', 'growKrungsri'];
+var DEF_VAULTS = { keptKrungsri: 9000, growKrungsri: 400000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 };
+var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
   S.titles = S.titles || [];
   S.settings = S.settings || { dailyLimit: 7 };
   if (!S.settings.theme) S.settings.theme = 'dark';
   if (!S.settings.dailyLimit) S.settings.dailyLimit = 7;
+  // รวม vaults ใหม่ (Krungsri) + อัปยอดเก่าที่ยังไม่เคยแก้ — ไม่ทับค่าที่ผู้ใช้แก้เอง
+  S.money = S.money || { vaults: {}, flow: [], history: [] };
+  S.money.vaults = S.money.vaults || {};
+  Object.keys(DEF_VAULTS).forEach(function (k) {
+    if (typeof S.money.vaults[k] !== 'number') S.money.vaults[k] = DEF_VAULTS[k];
+  });
+  Object.keys(OLD_VAULTS).forEach(function (k) {
+    if (S.money.vaults[k] === OLD_VAULTS[k]) S.money.vaults[k] = DEF_VAULTS[k];
+  });
+  if (S.money.vaults.dime === 1000) S.money.vaults.dime = 3000; // ยอด seed รอบก่อน
+  if (S.money.vaults.kasikorn === 157420) S.money.vaults.kasikorn = 225820; // ยอด seed รอบก่อน
+  delete S.money.vaults.savings; // ตัด Kept Grow 200K ออกถาวร
+  if (S.mainQuest) S.mainQuest.current = netWorth();
+  if (Array.isArray(S.money.history) && S.money.history.length) {
+    var last = S.money.history[S.money.history.length - 1];
+    if (last && (last.v === 639420 || last.v === 783020 || last.v === 583020) && netWorth() !== last.v) last.v = netWorth();
+  }
   S.projects.forEach(function (p) {
     if (!p.tasks) p.tasks = (PROJ_TASKS[p.id] || ['Next action']).map(function (t) { return { t: t, done: false }; });
     if (!p.deadline) p.deadline = PROJ_DEADLINE[p.id] || 'ongoing';

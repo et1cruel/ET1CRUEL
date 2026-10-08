@@ -17,7 +17,6 @@
     { sym: 'DELL', name: 'Dell',      tv: 'NYSE:DELL',    bucket: 'growth', desc: 'เซิร์ฟเวอร์ AI + PC — ได้อานิสงส์ AI infra' },
     { sym: 'MRVL', name: 'Marvell',   tv: 'NASDAQ:MRVL',  bucket: 'growth', desc: 'ชิป data center + custom AI' },
     { sym: 'NVDA', name: 'NVIDIA',    tv: 'NASDAQ:NVDA',  bucket: 'aicore', desc: 'ชิป AI เบอร์ 1 ของโลก — หัวใจพอร์ตสาย AI' },
-    { sym: 'GOOGL', name: 'Alphabet', tv: 'NASDAQ:GOOGL', bucket: 'aicore', desc: 'โฆษณา + Cloud + AI — ครบเครื่อง' },
     { sym: 'ASML', name: 'ASML',      tv: 'NASDAQ:ASML',  bucket: 'aicore', desc: 'เครื่อง lithography เจ้าเดียวในโลก — คอขวดชิป' },
     { sym: 'AMAT', name: 'Applied Materials', tv: 'NASDAQ:AMAT', bucket: 'aicore', desc: 'เครื่องจักรผลิตชิป' },
     { sym: 'VRT',  name: 'Vertiv',    tv: 'NYSE:VRT',     bucket: 'aicore', desc: 'ระบบไฟ + ระบายความร้อน data center' },
@@ -28,16 +27,21 @@
     { sym: 'AMZN', name: 'Amazon',    tv: 'NASDAQ:AMZN', desc: 'AWS + ค้าปลีก — โตเงียบแต่ชัวร์' },
     { sym: 'META', name: 'Meta',      tv: 'NASDAQ:META', desc: 'โฆษณา + AI — กำไรโหด ราคาเหวี่ยงตามงบ' },
     { sym: 'AVGO', name: 'Broadcom',  tv: 'NASDAQ:AVGO', desc: 'ชิป + ซอฟต์แวร์ ปันผลดี — ขวัญใจสาย DCA' },
+    { sym: 'CRWD', name: 'CrowdStrike', tv: 'NASDAQ:CRWD', hidden: true, desc: 'ไซเบอร์ซีเคียวริตี้เบอร์ต้น — Falcon' },
+    { sym: 'PLTR', name: 'Palantir',    tv: 'NASDAQ:PLTR', hidden: true, desc: 'AI วิเคราะห์ข้อมูลรัฐ + เอกชน' },
+    { sym: 'PENG', name: 'Penguin Solutions', tv: 'NASDAQ:PENG', hidden: true, desc: 'เดิม SGH — หน่วยความจำ + edge AI' },
+    { sym: 'LITE', name: 'Lumentum',    tv: 'NASDAQ:LITE', hidden: true, desc: 'ชิปแสง/เลเซอร์สื่อสาร optical' },
+    { sym: 'COST', name: 'Costco',      tv: 'NASDAQ:COST', hidden: true, desc: 'ค้าปลีกสมาชิก — หุ้นป้อมปราการ' },
     { sym: 'BTC',  name: 'Bitcoin',   crypto: true, cg: 'bitcoin',  bn: 'BTCUSDT',  desc: 'ทองดิจิทัล — ผันผวนโหด แบ่งไม้เล็กๆ พอ' },
     { sym: 'ETH',  name: 'Ethereum',  crypto: true, cg: 'ethereum', bn: 'ETHUSDT',  desc: 'แพลตฟอร์ม smart contract — เหวี่ยงตาม BTC' }
   ];
   var CACHE_KEY = 'aom-stock-cache-v1';
-  var HOLD_KEY = 'aom-stock-hold-v1';
+  var HOLD_KEY = 'aom-stock-hold-v2'; // v2: พอร์ต DIME จริง 8 ตัว
   var CACHE_MS = 5 * 60 * 1000;
   var FETCH_TIMEOUT = 12000;
   var FALLBACK_FX = 33.61;
   // ราคาอ้างอิง 7-8 ต.ค. 2026 (ใช้เฉพาะตอนออฟไลน์สนิท)
-  var FALLBACK = { QQQI: 56.60, AMD: 646.91, MU: 1086.16, DELL: 580.76, MRVL: 282.01, NVDA: 237.34, GOOGL: 347.89, ASML: 1802.69, AMAT: 519.46, VRT: 243.88, TSM: 473.28, AAPL: 335.98, TSLA: 377.17, MSFT: 528.67, AMZN: 259.24, META: 724.67, AVGO: 373.70, BTC: 83218, ETH: 2560 };
+  var FALLBACK = { QQQI: 56.60, AMD: 646.91, MU: 1086.16, DELL: 580.76, MRVL: 282.01, NVDA: 237.34, ASML: 1802.69, AMAT: 519.46, VRT: 243.88, TSM: 473.28, AAPL: 335.98, TSLA: 377.17, MSFT: 528.67, AMZN: 259.24, META: 724.67, AVGO: 373.70, CRWD: 264.74, PLTR: 193.20, PENG: 72.57, LITE: 1111.95, COST: 943.54, BTC: 83218, ETH: 2560 };
 
   var state = { prices: {}, fx: FALLBACK_FX, fxLive: false, ts: null, stale: true, loading: false, src: { stock: null, crypto: null, fx: null } };
 
@@ -48,9 +52,11 @@
     [/broadcom|avgo/, 'AVGO'], [/amd/, 'AMD'],
     [/bitcoin|บิตคอย|บิทคอย|btc/, 'BTC'], [/ethereum|อีเธอ|eth/, 'ETH'],
     [/qqqi/, 'QQQI'], [/\bmu\b|micron|ไมครอน/, 'MU'], [/dell|เดล/, 'DELL'],
-    [/mrvl|marvell/, 'MRVL'], [/googl|google|alphabet|กูเกิล/, 'GOOGL'],
+    [/mrvl|marvell/, 'MRVL'],
     [/asml/, 'ASML'], [/amat/, 'AMAT'],
-    [/\bvrt\b|vertiv/, 'VRT'], [/\btsm\b|tsmc|ไต้หวันเซมิ/, 'TSM']
+    [/\bvrt\b|vertiv/, 'VRT'], [/\btsm\b|tsmc|ไต้หวันเซมิ/, 'TSM'],
+    [/crwd|crowdstrike/, 'CRWD'], [/pltr|palantir|พาลานเทียร์/, 'PLTR'],
+    [/peng|penguin|เพนกวิน/, 'PENG'], [/lite|lumentum/, 'LITE'], [/cost|costco|คอสต์โก/, 'COST']
   ];
 
   function $(id) { return document.getElementById(id); }
@@ -226,12 +232,17 @@
     });
   }
 
-  /* ---------- พอร์ต ---------- */
+  /* ---------- พอร์ต DIME จริง ---------- */
   function defaultHold() {
     return [
-      { sym: 'NVDA', qty: 0.3, avg: 130 },
-      { sym: 'AAPL', qty: 0.5, avg: 200 },
-      { sym: 'BTC', qty: 0.0001, avg: 100000 }
+      { sym: 'NVDA', qty: 0.4536, avg: 236.55 },
+      { sym: 'AVGO', qty: 0.1717, avg: 352.06 },
+      { sym: 'CRWD', qty: 0.1532, avg: 264.71 },
+      { sym: 'PLTR', qty: 0.1532, avg: 193.03 },
+      { sym: 'PENG', qty: 0.4050, avg: 73.02 },
+      { sym: 'LITE', qty: 0.0108, avg: 1110.84 },
+      { sym: 'COST', qty: 0.0100, avg: 888.79 },
+      { sym: 'AMZN', qty: 0.0306, avg: 246.34 }
     ];
   }
   function getHold() {
@@ -244,15 +255,20 @@
   function saveHold(a) { try { localStorage.setItem(HOLD_KEY, JSON.stringify(a)); } catch (e) {} }
   function priceOf(sym) { var p = state.prices[sym]; return p ? p.price : FALLBACK[sym]; }
   function holdStats() {
-    var hold = getHold(), cost = 0, val = 0;
-    var rows = hold.map(function (h) {
-      var px = priceOf(h.sym) || 0;
+    var hold = getHold(), cost = 0, val = 0, dayBase = 0, dayPl = 0;
+    var rows = hold.map(function (h, oi) {
+      var p = state.prices[h.sym] || {};
+      var px = p.price != null ? p.price : (FALLBACK[h.sym] || 0);
+      var prev = p.prev != null ? p.prev : px;
       var v = px * h.qty, c = h.avg * h.qty;
-      cost += c; val += v;
-      return { sym: h.sym, qty: h.qty, avg: h.avg, px: px, v: v, c: c, pl: v - c, plp: c ? ((v - c) / c) * 100 : 0 };
+      cost += c; val += v; dayBase += prev * h.qty; dayPl += (px - prev) * h.qty;
+      return { oi: oi, sym: h.sym, qty: h.qty, avg: h.avg, px: px, prev: prev, v: v, c: c, pl: v - c, plp: c ? ((v - c) / c) * 100 : 0, dayChg: (px - prev) * h.qty, dayPct: prev ? ((px - prev) / prev) * 100 : 0 };
     });
-    return { rows: rows, cost: cost, val: val, pl: val - cost, plp: cost ? ((val - cost) / cost) * 100 : 0 };
+    rows.sort(function (a, b) { return b.v - a.v; });
+    return { rows: rows, cost: cost, val: val, pl: val - cost, plp: cost ? ((val - cost) / cost) * 100 : 0, dayBase: dayBase, dayPl: dayPl, dayPct: dayBase ? (dayPl / dayBase) * 100 : 0 };
   }
+ var LOGO_BG = { NVDA: '#76B900', AVGO: '#CC092F', CRWD: '#F05523', PLTR: '#4258D0', PENG: '#14B8A6', LITE: '#9CA3AF', COST: '#005DAA', AMZN: '#FF9900', AAPL: '#555555', TSLA: '#E31937', MSFT: '#00A4EF', META: '#0082FB', AMD: '#ED1C24', QQQI: '#00A651', MU: '#E31837', DELL: '#007DB8', MRVL: '#C8102E', ASML: '#00A0DF', AMAT: '#7AC143', VRT: '#FF6600', TSM: '#B22222', BTC: '#F7931A', ETH: '#627EEA' };
+  var dimeMode = 'pl'; // 'pl' = กำไรรวม | 'day' = เปลี่ยนวันก่อน
 
   /* ---------- เรนเดอร์ ---------- */
   function chgClass(p) { return p.chg > 0 ? 'stock-up' : (p.chg < 0 ? 'stock-down' : 'stock-flat'); }
@@ -308,7 +324,7 @@
     ];
     var html = '';
     groups.forEach(function (g) {
-      var list = WATCH.filter(function (w) { return (w.bucket || null) === g.key; });
+      var list = WATCH.filter(function (w) { return !w.hidden && (w.bucket || null) === g.key; });
       if (!list.length) return;
       html += '<tr class="wgroup"><td colspan="3">' + esc(g.label) + '</td></tr>';
       list.forEach(function (w) { html += watchRow(w); });
@@ -319,7 +335,7 @@
   var PLAN = [
     { key: 'income', dot: '#3DFF88', name: 'Income', holds: ['QQQI'] },
     { key: 'growth', dot: '#FF4D5E', name: 'Growth', holds: ['AMD', 'MU', 'DELL', 'MRVL'] },
-    { key: 'aicore', dot: '#4DA6FF', name: 'AI Core', holds: ['NVDA', 'GOOGL', 'ASML', 'AMAT', 'VRT', 'TSM'] }
+    { key: 'aicore', dot: '#4DA6FF', name: 'AI Core', holds: ['NVDA', 'ASML', 'AMAT', 'VRT', 'TSM'] }
   ];
   function renderPlan() {
     var el = $('planLive');
@@ -351,42 +367,73 @@
     var head = state.stale ? '⚠ ออฟไลน์ ใช้ราคาแคช · ' : '● ราคาสด · ';
     el.innerHTML = head + bits.join(' · ') + ' · <b>' + esc(timeShort(state.ts)) + '</b><br>' + esc(usMarketStatus());
   }
+  /* ---------- พอร์ต DIME สไตล์ ---------- */
+  function dimeArrow(v) { return v > 0 ? '↗' : (v < 0 ? '↘' : '–'); }
   function renderPf() {
-    var tb = $('pfBody');
-    if (!tb) return;
     var st = holdStats();
-    tb.innerHTML = st.rows.map(function (r, i) {
-      var step = (r.sym === 'BTC' || r.sym === 'ETH') ? '0.0001' : '0.01';
-      var cls = r.pl > 0 ? 'stock-up' : (r.pl < 0 ? 'stock-down' : 'stock-flat');
-      return '<tr><td><span class="stock-sym">' + esc(r.sym) + '</span><div class="stock-hl">$' + fmtN(r.px, 2) + '</div></td>' +
-        '<td><input class="pf-input qty" data-i="' + i + '" data-f="qty" type="number" step="' + step + '" min="0" value="' + r.qty + '"></td>' +
-        '<td><input class="pf-input" data-i="' + i + '" data-f="avg" type="number" step="0.01" min="0" value="' + r.avg + '"></td>' +
-        '<td>$' + fmtN(r.v) + '<div class="stock-hl">' + fmtInt(r.v * state.fx) + ' ฿</div></td>' +
-        '<td><span class="' + cls + '">' + (r.pl >= 0 ? '+' : '') + fmtN(r.pl) + ' (' + fmtN(r.plp) + '%)</span><br><button class="pf-del" data-del="' + i + '">ลบ</button></td></tr>';
-    }).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--ink-faint)">ยังไม่มีหุ้น — กดเพิ่มด้านล่างได้เลย</td></tr>';
-    var t = $('pfTotal');
-    if (t) {
-      var cls = st.pl > 0 ? 'stock-up' : (st.pl < 0 ? 'stock-down' : 'stock-flat');
-      t.innerHTML = '<span>มูลค่าพอร์ต ≈ <b>$' + fmtN(st.val) + ' · ' + fmtInt(st.val * state.fx) + ' ฿</b></span>' +
-        '<span class="' + cls + '">P/L ' + (st.pl >= 0 ? '+' : '') + fmtN(st.pl) + '$ (' + fmtN(st.plp) + '%)</span>';
+    // หัวสรุป
+    var dh = $('dimeHead');
+    if (dh) {
+      var dc = st.dayPct > 0 ? 'stock-up' : (st.dayPct < 0 ? 'stock-down' : 'stock-flat');
+      var pc = st.plp > 0 ? 'stock-up' : (st.plp < 0 ? 'stock-down' : 'stock-flat');
+      dh.innerHTML = '<div class="dime-total">$' + fmtN(st.val) + ' <small>USD</small></div>' +
+        '<div class="dime-sub">≈ ' + fmtInt(st.val * state.fx) + ' THB &nbsp;·&nbsp; $1 ≈ ' + fmtN(state.fx) + ' ฿</div>' +
+        '<div class="dime-sub">ต้นทุนรวม ' + fmtN(st.cost) + ' USD</div>' +
+        '<div class="dime-cols"><div><span>% เปลี่ยนวันก่อน</span><b class="' + dc + '">' + dimeArrow(st.dayPct) + ' ' + fmtN(st.dayPct) + '%</b></div>' +
+        '<div><span>กำไรของสินทรัพย์ที่ถืออยู่</span><b class="' + pc + '">' + dimeArrow(st.plp) + ' ' + fmtN(st.plp) + '% (' + (st.pl >= 0 ? '+' : '') + fmtN(st.pl) + ' USD)</b></div></div>';
     }
-    // ผูก event
-    tb.querySelectorAll('input.pf-input').forEach(function (inp) {
-      inp.addEventListener('change', function () {
-        var hold = getHold();
-        var i = +inp.getAttribute('data-i'), f = inp.getAttribute('data-f');
-        var v = parseFloat(inp.value);
-        if (!isFinite(v) || v < 0) v = 0;
-        if (hold[i]) { hold[i][f] = v; saveHold(hold); renderPf(); }
+    var cnt = $('dimeCount');
+    if (cnt) cnt.textContent = st.rows.length + ' สินทรัพย์ · เรียงตามมูลค่า';
+    var tg = $('plToggle');
+    if (tg) tg.innerHTML = (dimeMode === 'pl' ? 'กำไรขาดทุน' : 'เปลี่ยนวันก่อน') + ' ⇄';
+    // รายการ
+    var list = $('dimeList');
+    if (list) {
+      list.innerHTML = st.rows.map(function (r) {
+        var w = (r.v / (st.val || 1)) * 100;
+        var showDay = dimeMode === 'day';
+        var v = showDay ? r.dayPct : r.plp, money = showDay ? r.dayChg : r.pl;
+        var cls = v > 0 ? 'stock-up' : (v < 0 ? 'stock-down' : 'stock-flat');
+        var bg = LOGO_BG[r.sym] || '#4b5563';
+        return '<div class="dime-row"><span class="dime-logo" style="background:' + bg + '">' + esc(r.sym.charAt(0)) + '</span>' +
+          '<div class="dime-mid"><b>' + esc(r.sym) + '</b><span>◔ ' + fmtN(w) + '%</span></div>' +
+          '<div class="dime-val"><b>' + fmtN(r.v) + '</b><span>≈ ' + fmtInt(r.v * state.fx) + ' THB</span></div>' +
+          '<div class="dime-pl ' + cls + '">' + dimeArrow(v) + ' ' + fmtN(v) + '%<span>(' + (money >= 0 ? '+' : '') + fmtN(money) + ' USD)</span></div></div>';
+      }).join('') || '<div style="text-align:center;color:var(--muted)">ยังไม่มีหุ้น — เพิ่มด้านล่างได้เลย</div>';
+    }
+    // ตารางแก้ไข (ใน details)
+    var tb = $('pfBody');
+    if (tb) {
+      tb.innerHTML = st.rows.map(function (r) {
+        var step = (r.sym === 'BTC' || r.sym === 'ETH') ? '0.0001' : '0.0001';
+        var cls = r.pl > 0 ? 'stock-up' : (r.pl < 0 ? 'stock-down' : 'stock-flat');
+        return '<tr><td><span class="stock-sym">' + esc(r.sym) + '</span><div class="stock-hl">$' + fmtN(r.px, 2) + '</div></td>' +
+          '<td><input class="pf-input qty" data-i="' + r.oi + '" data-f="qty" type="number" step="' + step + '" min="0" value="' + r.qty + '"></td>' +
+          '<td><input class="pf-input" data-i="' + r.oi + '" data-f="avg" type="number" step="0.01" min="0" value="' + r.avg + '"></td>' +
+          '<td>$' + fmtN(r.v) + '<div class="stock-hl">' + fmtInt(r.v * state.fx) + ' ฿</div></td>' +
+          '<td><span class="' + cls + '">' + (r.pl >= 0 ? '+' : '') + fmtN(r.pl) + ' (' + fmtN(r.plp) + '%)</span><br><button class="pf-del" data-del="' + r.oi + '">ลบ</button></td></tr>';
+      }).join('') || '<tr><td colspan="5" style="text-align:center">ยังไม่มีหุ้น — กดเพิ่มด้านล่างได้เลย</td></tr>';
+      tb.querySelectorAll('input.pf-input').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+          var hold = getHold();
+          var i = +inp.getAttribute('data-i'), f = inp.getAttribute('data-f');
+          var v = parseFloat(inp.value);
+          if (!isFinite(v) || v < 0) v = 0;
+          if (hold[i]) { hold[i][f] = v; saveHold(hold); renderAll(); }
+        });
       });
-    });
-    tb.querySelectorAll('[data-del]').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var hold = getHold();
-        hold.splice(+btn.getAttribute('data-del'), 1);
-        saveHold(hold); renderPf();
+      tb.querySelectorAll('[data-del]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var hold = getHold();
+          hold.splice(+btn.getAttribute('data-del'), 1);
+          saveHold(hold); renderPfSelectReset(); renderAll();
+        });
       });
-    });
+    }
+  }
+  function renderPfSelectReset() {
+    var sel = $('pfSym');
+    if (sel) { sel.innerHTML = ''; renderPfSelect(); }
   }
   function renderPfSelect() {
     var sel = $('pfSym');
@@ -551,6 +598,11 @@
     renderAll();
     bindChat('chat');
     bindChat('pop');
+    var plt = $('plToggle');
+    if (plt) plt.addEventListener('click', function () {
+      dimeMode = (dimeMode === 'pl' ? 'day' : 'pl');
+      renderPf();
+    });
     // tab สลับ แชท/ตลาด/พอร์ต
     document.querySelectorAll('#stocks .os-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
