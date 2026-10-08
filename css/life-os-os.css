@@ -148,7 +148,7 @@
    ============================================================ */
 html body{font-size:18px;line-height:1.9}
 body .wrap{padding:24px 32px 90px;max-width:1200px;margin:0 auto}
-body .topbar{padding:14px 18px;gap:14px}
+body .topbar{padding:14px 18px;gap:14px;position:static}
 body .topbar .logo{width:52px;height:52px;flex-basis:52px}
 body .topbar b{font-size:17px}
 body .lv{font-size:13px}
