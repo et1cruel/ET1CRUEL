@@ -54,7 +54,7 @@
 .stat .lv{float:right;font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--gold);font-weight:700}
 .stat .os-bar{height:9px}
 .stat small{color:var(--muted);font-size:11.5px;font-weight:600}
-.mq-big{font-family:'Chakra Petch',sans-serif;font-size:32px;font-weight:700;color:var(--gold);text-shadow:0 0 18px rgba(74,222,128,.5)}
+.mq-big{font-family:'Chakra Petch',sans-serif;font-size:32px;font-weight:700;color:var(--gold);text-shadow:0 0 10px rgba(74,222,128,.3)}
 .mstones{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .mstones span{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;border-radius:8px;padding:6px 12px;border:1.5px solid #3d4666;background:#0B0D14;color:var(--muted)}
 .mstones span.hit{border-color:var(--xp);color:#6EE7B7;background:rgba(61,255,136,.1)}
@@ -94,7 +94,7 @@
 #os-modal-bg.show{display:flex}
 #os-modal{background:linear-gradient(180deg,#1B2032,#10131c);border:2px solid var(--gold);border-radius:20px;padding:34px;text-align:center;max-width:420px;width:100%;box-shadow:0 0 60px rgba(74,222,128,.4);animation:lvlPop .5s cubic-bezier(.2,1.4,.4,1)}
 @keyframes lvlPop{from{transform:scale(.7);opacity:0}}
-#os-modal .big{font-family:'Chakra Petch',sans-serif;font-size:44px;font-weight:700;color:var(--gold);text-shadow:0 0 24px rgba(74,222,128,.6)}
+#os-modal .big{font-family:'Chakra Petch',sans-serif;font-size:44px;font-weight:700;color:var(--gold);text-shadow:0 0 14px rgba(74,222,128,.35)}
 #os-modal p{color:#fff;margin:8px 0 16px}
 /* bottom nav (mobile) */
 #os-bottomnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(11,13,20,.96);border-top:1px solid #3d4666;backdrop-filter:blur(8px);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
@@ -229,7 +229,9 @@ body .stat{padding:14px}
 body .mq-big{font-size:34px}
 @media(max-width:900px){
   body h1{font-size:34px}
-  body .nav{max-height:none}
+  body .nav{max-height:none;display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow:visible}
+  body .nav .nav-group{grid-column:1/-1;padding:12px 6px 2px}
+  body .nav a{white-space:normal;font-size:14px;padding:10px 12px}
   body section.card{padding:22px}
   body .os-next .qtitle{font-size:23px}
   html body{font-size:17px}
@@ -294,8 +296,8 @@ body .shead h2{text-shadow:0 0 10px rgba(74,222,128,.14)}
 /* nav scrollspy — หัวข้อที่กำลังอ่าน */
 body .nav a.on{background:#222946;color:#fff;border-color:var(--gold)}
 body .eyebrow,body .lv,body .count,body .nav::before{
-  font-family:'Press Start 2P','Chakra Petch',sans-serif;
-  font-size:9px;letter-spacing:.06em;
+  font-family:'Chakra Petch',sans-serif;
+  font-size:11px;letter-spacing:.08em;font-weight:700;
 }
 body .nav-group{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-size:17px;font-weight:700;
   color:#fff;letter-spacing:.03em;text-shadow:0 0 14px rgba(74,222,128,.55);

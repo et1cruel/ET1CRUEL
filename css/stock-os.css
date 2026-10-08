@@ -2,7 +2,7 @@
 #stocks .shead{margin-bottom:12px}
 /* tab — RPG segmented */
 .os-tabs{display:flex;gap:6px;margin-bottom:12px;background:rgba(11,13,20,.7);border:1px solid rgba(74,222,128,.3);border-radius:14px;padding:5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
-.os-tab{flex:1;font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:10px;font-weight:400;cursor:pointer;border:none;background:transparent;color:var(--muted,#9AA3BD);border-radius:9px;padding:11px 6px;letter-spacing:.03em}
+.os-tab{flex:1;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted,#9AA3BD);border-radius:9px;padding:11px 6px;letter-spacing:.03em}
 .os-tab.on{background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;box-shadow:0 0 14px rgba(74,222,128,.4)}
 .os-pane{display:none}
 .os-pane.on{display:block}
@@ -13,7 +13,7 @@
 .stock-updated{font-size:13px;color:var(--muted,#9AA3BD);font-weight:600;line-height:1.7}
 .stock-updated b{color:#fff}
 .stock-table{width:100%;border-collapse:collapse;font-size:14.5px}
-.stock-table th{font-size:11.5px;color:var(--gold,#4ADE80);text-align:left;padding:8px 6px;border-bottom:1px solid rgba(74,222,128,.3);font-weight:700;font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px;letter-spacing:.05em;white-space:nowrap}
+.stock-table th{color:var(--gold,#4ADE80);text-align:left;padding:8px 6px;border-bottom:1px solid rgba(74,222,128,.3);font-weight:700;font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.05em;white-space:nowrap}
 .stock-table td{padding:10px 6px;border-bottom:1px solid #1c2130;vertical-align:middle;color:#fff}
 .stock-table tr:last-child td{border-bottom:none}
 #watchBody tr:hover td,#pfBody tr:hover td{background:rgba(74,222,128,.05)}
@@ -73,7 +73,7 @@
 .plan-line>b{color:#fff;min-width:52px}
 .plan-pill{font-family:'Chakra Petch',sans-serif;font-size:12px;background:#212637;border:1px solid #3d4666;border-radius:8px;padding:4px 10px;color:#fff;white-space:nowrap}
 .plan-pill.stale{opacity:.55}
-.wgroup td{font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px;letter-spacing:.05em;color:var(--gold,#4ADE80);padding-top:12px!important;border-bottom:1px solid rgba(74,222,128,.3)}
+.wgroup td{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--gold,#4ADE80);padding-top:12px!important;border-bottom:1px solid rgba(74,222,128,.3)}
 /* ===== พอร์ต DIME ===== */
 .dime-head{background:linear-gradient(180deg,#1c2233,#12162a);border:1px solid rgba(74,222,128,.35);border-radius:16px;padding:18px}
 .dime-total{font-family:'Chakra Petch',sans-serif;font-size:36px;font-weight:700;color:#fff;line-height:1.1}
