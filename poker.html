@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POKER — แบ๊งก์โรล · ห้อง · บันทึกเล่น</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --gold:#4ADE80; --gold-dim:#166534; --amber:#FBBF24; --red:#F87171;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(1000px 420px at 15% -5%,rgba(74,222,128,.12),transparent 60%),var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:18px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 22px 90px}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);
+  border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.topbar a{color:var(--gold);text-decoration:none;font-weight:700;font-size:15px;border:1px solid #3d4666;border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar a:hover{border-color:var(--gold)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff}
+header.hero{margin:26px 0 8px}
+header.hero h1{font-size:38px;line-height:1.35;color:#fff}
+header.hero h1 span{color:var(--gold)}
+header.hero p{color:#E2E8FA;font-size:18px;margin-top:12px;max-width:70ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 6px}
+.toc a{font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid #3d4666;border-radius:20px;padding:6px 14px;background:#0B0D14}
+.toc a:hover{color:var(--gold);border-color:var(--gold)}
+details.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;
+  box-shadow:var(--shadow);margin:22px 0;overflow:hidden;scroll-margin-top:90px}
+details.card summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;padding:24px 26px}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary:hover{background:rgba(74,222,128,.04)}
+details.card summary .n{flex:0 0 46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;color:#111;background:linear-gradient(180deg,var(--gold),#16a34a)}
+details.card summary h2{font-size:25px;color:#fff;flex:1;line-height:1.4}
+details.card summary .chev{color:var(--gold);font-size:20px;font-weight:800}
+details.card[open] summary .chev{transform:rotate(180deg)}
+.cbody{padding:0 26px 28px}
+table.tl{width:100%;border-collapse:collapse;margin:14px 0;font-size:17px}
+table.tl th{text-align:left;font-family:'Chakra Petch',sans-serif;font-size:13px;letter-spacing:.08em;color:var(--gold);
+  padding:10px 8px;border-bottom:1px solid rgba(74,222,128,.3)}
+table.tl td{padding:11px 8px;border-bottom:1px solid #1c2130;color:#E2E8FA;vertical-align:top}
+table.tl td.num,table.tl th.num{text-align:right;font-family:'Chakra Petch',sans-serif}
+table.tl tr.total td{border-top:2px solid rgba(74,222,128,.4);background:rgba(74,222,128,.06);font-weight:700}
+.up{color:var(--gold);font-weight:700}
+.down{color:var(--red);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+.chip{font-size:14px;font-weight:700;border:1.5px solid #3A435C;border-radius:10px;padding:7px 15px;background:#0C0F18;color:#fff;font-family:'Chakra Petch',sans-serif}
+.chip b{color:var(--gold)}
+.calc{border:2px solid var(--gold-dim);border-radius:14px;padding:20px;margin:16px 0;background:rgba(74,222,128,.05)}
+.calc .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.calc input{flex:1;min-width:180px;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;
+  padding:12px 14px;font-family:inherit;font-size:16px;font-weight:700;outline:none}
+.calc input:focus{border-color:var(--gold)}
+.calc button{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;border-radius:10px;padding:12px 20px;cursor:pointer;
+  border:1.5px solid var(--gold);background:linear-gradient(180deg,var(--gold),#16a34a);color:#111}
+.calc .out{margin-top:14px;font-size:17px;color:#fff;display:none}
+.calc .out.show{display:block}
+.calc .out b{color:var(--gold)}
+.note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;
+  padding:18px 20px;font-size:16.5px;color:#fff;margin-top:16px;line-height:1.9}
+.note b{color:var(--gold)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
+@media(max-width:700px){
+  header.hero h1{font-size:28px}
+  body{font-size:17px}
+  details.card summary{padding:18px}
+  details.card summary h2{font-size:21px}
+  .cbody{padding:0 18px 22px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← หน้าแรก LIFE OS</a>
+  <span class="t">🃏 POKER · แบ๊งก์โรล + บันทึกเล่น</span>
+</div>
+
+<header class="hero">
+  <h1>🃏 POKER <span>— เล่นด้วยระบบ ไม่ถัวมั่ว</span></h1>
+  <p>รวมช่วงเงินแบ๊งก์โรล ขนาดห้องที่เหมาะ ตาราง blind มาตรฐาน และบันทึกผลเล่นจริงทุกวัน — ตัวเลขทั้งหมดมาจากโน้ตเดิม ไม่ตัดทิ้ง</p>
+  <nav class="toc">
+    <a href="#p1">1 แบ๊งก์โรล</a><a href="#p2">2 ขนาดห้อง</a><a href="#p3">3 ตาราง blind</a>
+    <a href="#p4">4 บันทึกเล่น</a><a href="#p5">5 เครื่องคำนวณห้อง</a>
+  </nav>
+</header>
+
+<!-- 1 -->
+<details class="card" id="p1" open>
+<summary><span class="n">฿</span><h2>Range Bank Roll — เงินบาท → ดอล</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <table class="tl">
+    <thead><tr><th class="num">เงิน (บาท)</th><th class="num">ได้ (ดอล)</th></tr></thead>
+    <tbody>
+      <tr><td class="num">200</td><td class="num">5</td></tr>
+      <tr><td class="num">300</td><td class="num">7.5</td></tr>
+      <tr><td class="num">400</td><td class="num">10</td></tr>
+      <tr><td class="num">1,000</td><td class="num">25</td></tr>
+      <tr><td class="num">2,400</td><td class="num">65</td></tr>
+      <tr><td class="num">3,500</td><td class="num">100</td></tr>
+      <tr><td class="num">5,000</td><td class="num">140</td></tr>
+      <tr><td class="num">10,000</td><td class="num">280</td></tr>
+      <tr><td class="num">50,000</td><td class="num">520</td></tr>
+    </tbody>
+  </table>
+  <div class="note">เติมตามงบที่มี — <b>อย่าเอาเงินร้อนมาเล่น</b> เริ่มห้องเล็กสุดก่อนเสมอ</div>
+</div>
+</details>
+
+<!-- 2 -->
+<details class="card" id="p2">
+<summary><span class="n">🚪</span><h2>Range Room — ห้องที่เหมาะกับงบ</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <table class="tl">
+    <thead><tr><th class="num">Buy in</th><th class="num">Max</th><th class="num">= บาท</th></tr></thead>
+    <tbody>
+      <tr><td class="num">2$</td><td class="num">10$</td><td class="num">400</td></tr>
+      <tr><td class="num">5$</td><td class="num">20$</td><td class="num">800</td></tr>
+      <tr><td class="num">10$</td><td class="num">50$</td><td class="num">1,700</td></tr>
+      <tr><td class="num">25$</td><td class="num">100$</td><td class="num">3,500</td></tr>
+    </tbody>
+  </table>
+  <div class="note">มีงบถึงขั้นไหน เล่นห้องนั้น — <b>อย่าข้ามห้อง</b> ถึงจะมั่นใจแค่ไหนก็ตาม</div>
+</div>
+</details>
+
+<!-- 3 -->
+<details class="card" id="p3">
+<summary><span class="n">♠</span><h2>No-Limit Cash Games — ตาราง blind มาตรฐาน</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <table class="tl">
+    <thead><tr><th>Blinds</th><th class="num">Buy-In</th><th class="num">Bankroll Required</th><th class="num">No. of Buy-ins</th></tr></thead>
+    <tbody>
+      <tr><td>$0.01 / $0.02</td><td class="num">$2</td><td class="num">$40 – $80</td><td class="num">20 – 40</td></tr>
+      <tr><td>$0.05 / $0.10</td><td class="num">$10</td><td class="num">$200 – $400</td><td class="num">20 – 40</td></tr>
+      <tr><td>$0.10 / $0.25</td><td class="num">$25</td><td class="num">$500 – $1,000</td><td class="num">20 – 40</td></tr>
+      <tr><td>$0.25 / $0.50</td><td class="num">$50</td><td class="num">$1,000 – $2,000</td><td class="num">20 – 40</td></tr>
+      <tr><td>$0.50 / $1.00</td><td class="num">$100</td><td class="num">$2,000 – $4,000</td><td class="num">20 – 40</td></tr>
+      <tr><td>$1.00 / $2.00</td><td class="num">$200</td><td class="num">$4,000 – $8,000</td><td class="num">20 – 40</td></tr>
+      <tr><td>$2.00 / $5.00</td><td class="num">$500</td><td class="num">$10,000 – $20,000</td><td class="num">20 – 40</td></tr>
+    </tbody>
+  </table>
+  <div class="note">กฎเหล็ก: แบ๊งก์ต้องมี <b>20–40 buy-ins</b> ของ blind ที่เล่น — ต่ำกว่านี้คือดวง ไม่ใช่ฝีมือ</div>
+</div>
+</details>
+
+<!-- 4 -->
+<details class="card" id="p4" open>
+<summary><span class="n">📓</span><h2>POKER FEEL — บันทึกผลเล่นรายวัน</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="chips">
+    <span class="chip">เซสชัน <b>8</b> · 7 วัน</span>
+    <span class="chip">กำไรรวม <b>+15.1$</b></span>
+    <span class="chip">ถอนออกรวม <b>104.6$</b></span>
+  </div>
+  <table class="tl">
+    <thead><tr><th>วันที่</th><th>Day</th><th class="num">ได้/เสีย</th><th class="num">ทุน (of)</th><th class="num">Total</th><th>Cash out</th></tr></thead>
+    <tbody>
+      <tr><td>29/6/2566</td><td>day 1</td><td class="num down">−5</td><td class="num">5$</td><td class="num">0</td><td>—</td></tr>
+      <tr><td>30/6/2566</td><td>day 2</td><td class="num down">−2</td><td class="num">25$</td><td class="num">23</td><td>—</td></tr>
+      <tr><td>30/6/2566</td><td>day 3</td><td class="num up">+17</td><td class="num">23$</td><td class="num">40</td><td class="up">Cash out 40$</td></tr>
+      <tr><td>30/6/2566</td><td>day 3</td><td class="num up">+5</td><td class="num">5$</td><td class="num">0</td><td>—</td></tr>
+      <tr><td>3/7/2566</td><td>day 4</td><td class="num up">+14</td><td class="num">10$</td><td class="num">24</td><td class="up">Cash out 24$</td></tr>
+      <tr><td>31/7/2566</td><td>day 5</td><td class="num up">+4.6</td><td class="num">25$</td><td class="num">29.60</td><td class="up">Cash out 29.60$</td></tr>
+      <tr><td>2/8/2566</td><td>day 6</td><td class="num down">−10</td><td class="num">10$</td><td class="num">0</td><td>Cash out 0</td></tr>
+      <tr><td>15/8/2566</td><td>day 7</td><td class="num up">+6</td><td class="num">5$</td><td class="num">11$</td><td class="up">cash out 11$</td></tr>
+      <tr class="total"><td colspan="5">Total (ตามโน้ตเดิม)</td><td class="num up">+15.1$</td></tr>
+    </tbody>
+  </table>
+  <div class="note">ถอนออกรวมที่นับจากแถว cash out = <b>40 + 24 + 29.60 + 11 = 104.6$</b> · ได้กำไรแล้วถอนเก็บทันทีตามระบบ</div>
+</div>
+</details>
+
+<!-- 5 -->
+<details class="card" id="p5">
+<summary><span class="n">🧮</span><h2>เครื่องคำนวณห้อง — งบเท่านี้เล่นห้องไหน</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="calc">
+    <div class="row">
+      <input id="pkBaht" type="number" min="0" placeholder="งบที่มี (บาท) เช่น 1000">
+      <button type="button" id="pkGo">ดูห้องที่เหมาะ</button>
+    </div>
+    <div class="out" id="pkOut"></div>
+  </div>
+  <div class="note">คิดเรท 35 ฿/ดอล · เกณฑ์ตามตาราง Range Room ด้านบน</div>
+</div>
+</details>
+
+<footer>⚔ ET1CRUEL · POKER LOG — เล่นด้วยเงินเย็นเท่านั้น · ไม่ใช่คำแนะนำการลงทุน</footer>
+
+</div>
+<script>
+(function(){
+  var RATE = 35;
+  var rooms = [
+    { bi: 25, max: 100, thb: 3500 },
+    { bi: 10, max: 50, thb: 1700 },
+    { bi: 5, max: 20, thb: 800 },
+    { bi: 2, max: 10, thb: 400 }
+  ];
+  var inp = document.getElementById('pkBaht');
+  var out = document.getElementById('pkOut');
+  if(!inp || !out) return;
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  document.getElementById('pkGo').addEventListener('click', function(){
+    var thb = parseFloat(inp.value);
+    if(!(thb > 0)){ out.classList.remove('show'); return; }
+    var usd = thb / RATE;
+    var room = null;
+    for(var i = 0; i < rooms.length; i++){
+      if(thb >= rooms[i].thb){ room = rooms[i]; break; }
+    }
+    if(!room){
+      out.classList.add('show');
+      out.innerHTML = 'งบ <b>400 ฿</b> ยังไม่พอห้องเล็กสุด — เก็บเพิ่มอีก <b>' + Math.ceil(400 - thb).toLocaleString('th-TH') + ' ฿</b> แล้วค่อยมา';
+      return;
+    }
+    var buyins = usd / room.bi;
+    var verdict = buyins >= 20
+      ? '<b>พร้อมลุย</b> — เกิน 20 buy-ins ตามตำรา'
+      : (buyins >= 10 ? '<b>พอไหวแต่เสี่ยง</b> — ต่ำกว่า 20 buy-ins' : '<b>แบ๊งก์ตึงไป</b> — ลดห้องลงดีกว่า');
+    out.classList.add('show');
+    out.innerHTML = 'งบ ' + esc(Math.round(thb).toLocaleString('th-TH')) + ' ฿ (≈ $' + usd.toFixed(1) + ') → ห้อง <b>Buy in ' +
+      room.bi + '$ / Max ' + room.max + '$</b> · มี <b>' + buyins.toFixed(1) + ' buy-ins</b><br>' + verdict;
+  });
+  inp.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') document.getElementById('pkGo').click();
+  });
+})();
+</script>
+</body>
+</html>
