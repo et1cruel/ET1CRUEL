@@ -745,7 +745,7 @@ var PROJ_TASKS = {
   'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
 };
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
-var VAULT_LABEL = { savings: '🪴 Kept Grow', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
+var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
 var SAVE_VAULTS = ['savings'];
 var DEF_VAULTS = { savings: 409000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
