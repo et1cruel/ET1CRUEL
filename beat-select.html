@@ -70,6 +70,8 @@
   .eq i:nth-child(5) { animation-delay:.6s }
   @keyframes eq { 0%,100% { height:6px } 50% { height:24px } }
   audio { width:100%; height:36px; filter:drop-shadow(0 0 6px #7c3aed44); }
+  .load-err { font-size:12px; color:#f87171; }
+  .card.audio-error { border-color:#ef4444; }
   .select-btn { padding:10px; border-radius:12px; border:1px solid #4c3a7a; background:#1f1b30; color:#fff; font-weight:700; cursor:pointer; font-size:14px; transition:.2s; }
   .select-btn:hover { border-color:#a78bfa; box-shadow:0 0 12px #7c3aed44; }
   .card.selected .select-btn { background:#22c55e; border-color:#22c55e; color:#04120a; }
@@ -187,7 +189,8 @@ function render(){
       '<div class="title">' + shortName(f) + '</div></div>' +
       '<div class="meta"><span class="badge ' + type + '">' + type.toUpperCase() + '</span><span>' + f + '</span></div>' +
       '<div class="eq"><i></i><i></i><i></i><i></i><i></i></div>' +
-      '<audio controls preload="none" src="' + fileUrl(f) + '"></audio>' +
+      '<audio controls preload="metadata" src="' + fileUrl(f) + '"></audio>' +
+      '<div class="load-err" hidden>⚠ โหลดเสียงไม่ได้ — เช็คเน็ตแล้วกดเล่นอีกครั้ง</div>' +
       '<button class="select-btn">' + (isSel ? '✅ เลือกแล้ว — กดเพื่อเอาออก' : '＋ เลือกบีทนี้') + '</button>';
     const audio = card.querySelector('audio');
     audio.addEventListener('play', () => {
@@ -196,6 +199,14 @@ function render(){
       card.classList.add('playing');
     });
     ['pause','ended'].forEach(ev => audio.addEventListener(ev, () => card.classList.remove('playing')));
+    audio.addEventListener('error', () => {
+      card.classList.add('audio-error');
+      const e = card.querySelector('.load-err'); if (e) e.hidden = false;
+    });
+    audio.addEventListener('loadedmetadata', () => {
+      card.classList.remove('audio-error');
+      const e = card.querySelector('.load-err'); if (e) e.hidden = true;
+    });
     card.querySelector('.select-btn').onclick = () => {
       if (selected.has(f)) selected.delete(f); else selected.add(f);
       localStorage.setItem('beat-select', JSON.stringify([...selected]));
