@@ -147,7 +147,7 @@
    beats the inline <style> in index.html without touching it.
    ============================================================ */
 html body{font-size:18px;line-height:1.9}
-body .wrap{padding:24px 32px 90px;max-width:1200px;margin:0 auto}
+body .wrap{padding:24px 28px 90px;max-width:none;margin:0}
 body .topbar{padding:14px 18px;gap:14px;position:static}
 body .topbar .logo{width:52px;height:52px;flex-basis:52px}
 body .topbar b{font-size:17px}
@@ -181,7 +181,7 @@ body .kpi .bar i,body .progress i,body .os-bar.xp i{animation:none}
 body .sections section.card .shead::after{opacity:.35}
 body .todo.item::before{animation:none}
 body .board{gap:28px}
-body .nav{padding:16px;top:84px;max-height:calc(100vh - 100px);overflow:auto}
+body .nav{padding:16px;top:12px;max-height:calc(100vh - 24px);overflow:auto}
 body .nav::before{font-size:12px;padding:6px 10px 10px}
 body .nav-group{padding:16px 10px 8px;font-size:12.5px}
 body .nav a{font-size:16.5px;padding:13px 14px;margin-bottom:4px}
