@@ -49,9 +49,12 @@ details.card[open] summary .chev{transform:rotate(180deg)}
   border:1.5px solid var(--gold-dim);border-radius:8px;padding:3px 12px;margin:4px 0 8px;background:rgba(74,222,128,.06)}
 .era{display:grid;grid-template-columns:200px 1fr;gap:18px;padding:20px 0;border-top:1px dashed var(--line)}
 .era:first-of-type{border-top:none}
-.art{border-radius:14px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
-  font-size:64px;border:1px solid #3d4666;background:linear-gradient(160deg,#232a44,#10131c);padding:18px;text-align:center}
-.art small{font-size:12.5px;color:var(--muted);font-family:'Chakra Petch',sans-serif}
+.art{position:relative;overflow:hidden;border-radius:14px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  border:1px solid #3d4666;background:linear-gradient(160deg,#232a44,#10131c);padding:18px;text-align:center}
+.art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.6));pointer-events:none}
+.art .emo{position:relative;z-index:1;font-size:64px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.8))}
+.art small{position:relative;z-index:1;font-size:12.5px;color:#fff;font-family:'Chakra Petch',sans-serif;background:rgba(0,0,0,.55);padding:2px 10px;border-radius:10px}
 .era h3{font-size:22px;color:#fff}
 .era ul{margin:10px 0 0 22px;color:#DDE3F5}
 .era li{margin-bottom:6px}
@@ -67,8 +70,10 @@ ul.dots{margin:10px 0 0 22px;color:#DDE3F5}
 ul.dots li{margin-bottom:6px}
 .pcard{border:1px solid #3d4666;border-radius:14px;padding:18px;margin:14px 0;background:rgba(255,255,255,.03)}
 .pcard .row{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start}
-.pcard .thumb{border-radius:12px;min-height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;
+.pcard .thumb{position:relative;overflow:hidden;border-radius:12px;min-height:110px;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(160deg,#232a44,#10131c);border:1px solid #3d4666}
+.pcard .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pcard .thumb .emo{position:relative;z-index:1;font-size:44px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.8))}
 .pcard h4{font-size:20px;color:#fff}
 .pcard .cat{color:var(--muted);font-size:15px;margin:2px 0 6px}
 .pcard p{color:#DDE3F5;font-size:16.5px}
@@ -135,7 +140,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 <summary><span class="n">1</span><h2>เส้นเวลาชีวิตโดยรวม</h2><span class="chev">▾</span></summary>
 <div class="cbody">
   <div class="era">
-    <div class="art">🏙️<small>ชลบุรี → บางใหญ่</small></div>
+    <div class="art"><img src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=800&q=60" alt="เมืองยามกลางวัน" loading="lazy" onerror="this.remove()"><span class="emo">🏙️</span><small>ชลบุรี → บางใหญ่</small></div>
     <div><span class="tag">จุดเริ่มต้น</span><h3>2004–วัยเด็ก</h3>
       <ul>
         <li>เกิดวันที่ 17 ธันวาคม 2004 เวลา 08:58 น. ในพื้นที่ชลบุรี/ศรีราชาตามข้อมูลเดิม</li>
@@ -145,7 +150,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
     </div>
   </div>
   <div class="era">
-    <div class="art">🏫<small>มัธยม → ค้นหาตัวเอง</small></div>
+    <div class="art"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=60" alt="ห้องเรียน" loading="lazy" onerror="this.remove()"><span class="emo">🏫</span><small>มัธยม → ค้นหาตัวเอง</small></div>
     <div><span class="tag">การศึกษาและค้นหาตัวเอง</span><h3>ช่วงมัธยม–หลัง ม.6</h3>
       <ul>
         <li>เรียนจบ ม.6 จากโรงเรียนราชวินิตบางเขน</li>
@@ -156,7 +161,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
     </div>
   </div>
   <div class="era">
-    <div class="art">🎸<small>et1cruel</small></div>
+    <div class="art"><img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=800&q=60" alt="กีตาร์" loading="lazy" onerror="this.remove()"><span class="emo">🎸</span><small>et1cruel</small></div>
     <div><span class="tag">ดนตรีและครีเอเตอร์</span><h3>ช่วงสร้างตัวตนศิลปิน</h3>
       <ul>
         <li>พัฒนาตัวตนทางดนตรีภายใต้ชื่อ et1cruel</li>
@@ -166,7 +171,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
     </div>
   </div>
   <div class="era">
-    <div class="art">💻<small>Full-Stack → AI</small></div>
+    <div class="art"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=60" alt="หน้าจอโค้ด" loading="lazy" onerror="this.remove()"><span class="emo">💻</span><small>Full-Stack → AI</small></div>
     <div><span class="tag">ขยายจากศิลปินสู่เทคโนโลยี</span><h3>2025–2026</h3>
       <ul>
         <li>ศึกษา Full-Stack, Backend, Python, C++, AI และระบบอัตโนมัติ</li>
@@ -177,7 +182,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
     </div>
   </div>
   <div class="era">
-    <div class="art">📈<small>เงิน + ธุรกิจ</small></div>
+    <div class="art"><img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=60" alt="กราฟหุ้น" loading="lazy" onerror="this.remove()"><span class="emo">📈</span><small>เงิน + ธุรกิจ</small></div>
     <div><span class="tag">ช่วงเปลี่ยนผ่านสำคัญ</span><h3>สิงหาคม–ตุลาคม 2026</h3>
       <ul>
         <li>เผชิญเหตุการณ์สูญเสียคนในครอบครัวและต้องติดตามเรื่องมรดก</li>
@@ -219,9 +224,18 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
     <li>การทำคอนเทนต์ ถ่ายวิดีโอ ตัดต่อ และงานภาพ</li>
   </ul>
   <h3 class="sub">เส้นทางอาชีพที่สนใจ</h3>
-  <div class="pcard"><h4>Music Producer / Artist</h4><p class="cat">สร้างเพลง ขายบีท ทำมิกซ์มาสเตอร์ สอนทำเพลง และสร้างแบรนด์ et1cruel</p></div>
-  <div class="pcard"><h4>Software / Full-Stack / Backend Engineer</h4><p class="cat">พัฒนาเว็บ ระบบหลังบ้าน ฐานข้อมูล API และแอปที่ใช้งานได้จริง</p></div>
-  <div class="pcard"><h4>Robotics / Embedded / AI Engineer</h4><p class="cat">ต่อยอดจากซอฟต์แวร์ไปสู่ชิพ อิเล็กทรอนิกส์ ระบบควบคุม และหุ่นยนต์อัจฉริยะ</p></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=400&q=60" alt="กีตาร์" loading="lazy" onerror="this.remove()"><span class="emo">🎸</span></div>
+    <div><h4>Music Producer / Artist</h4><p class="cat">สร้างเพลง ขายบีท ทำมิกซ์มาสเตอร์ สอนทำเพลง และสร้างแบรนด์ et1cruel</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=60" alt="หน้าจอโค้ด" loading="lazy" onerror="this.remove()"><span class="emo">💻</span></div>
+    <div><h4>Software / Full-Stack / Backend Engineer</h4><p class="cat">พัฒนาเว็บ ระบบหลังบ้าน ฐานข้อมูล API และแอปที่ใช้งานได้จริง</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=400&q=60" alt="หุ่นยนต์" loading="lazy" onerror="this.remove()"><span class="emo">🦾</span></div>
+    <div><h4>Robotics / Embedded / AI Engineer</h4><p class="cat">ต่อยอดจากซอฟต์แวร์ไปสู่ชิพ อิเล็กทรอนิกส์ ระบบควบคุม และหุ่นยนต์อัจฉริยะ</p></div>
+  </div></div>
   <div class="note">เส้นทางเหล่านี้ไม่จำเป็นต้องเป็นอาชีพที่แยกขาดจากกัน เป้าหมายที่นายเคยพูดถึงคือการพัฒนาความสามารถด้านเทคโนโลยีควบคู่กับงานสร้างสรรค์ และสร้างรายได้จากหลายทาง</div>
 </div>
 </details>
@@ -232,19 +246,19 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 <div class="cbody">
   <h3 class="sub" style="margin-top:4px">ตัวตนที่สร้างขึ้น</h3>
   <div class="pcard"><div class="row">
-    <div class="thumb">🌫️</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=60" alt="ภาพบุคคลโทนหม่น" loading="lazy" onerror="this.remove()"><span class="emo">🌫️</span></div>
     <div><h4>et1cruel</h4><p>ตัวตนศิลปินและโปรดิวเซอร์ ชื่อ et1 เชื่อมโยงกับแนวคิด “eternal oneness” งานมีความเกี่ยวข้องกับ Cloud Rap, Ambient, Emo Trap และซาวด์ที่เน้นบรรยากาศ ความรู้สึก และการสำรวจตัวเอง</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🎛️</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=400&q=60" alt="มิกเซอร์ในสตูดิโอ" loading="lazy" onerror="this.remove()"><span class="emo">🎛️</span></div>
     <div><h4>prod.et1cruel</h4><p>แบรนด์ด้านบีท การโปรดิวซ์เพลง การขายผลงาน และชุมชนผู้ทำบีท</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🎬</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=400&q=60" alt="กล้องถ่ายหนัง" loading="lazy" onerror="this.remove()"><span class="emo">🎬</span></div>
     <div><h4>dir.et1cruel</h4><p>ตัวตนที่เกี่ยวข้องกับงานกำกับ ตัดต่อ และภาพเคลื่อนไหว</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🤖</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=400&q=60" alt="หุ่นยนต์" loading="lazy" onerror="this.remove()"><span class="emo">🤖</span></div>
     <div><h4>akase001e8</h4><p>ตัวตนเชิงแนวคิดด้านเทคโนโลยี การเขียนโค้ด อนาคต และการประดิษฐ์สิ่งใหม่ โดยมีแนวคิดเชื่อมจาก มนุษย์ → ศิลปิน → ครีเอเตอร์ → โปรแกรมเมอร์ → วิศวกร → นักประดิษฐ์</p></div>
   </div></div>
 </div>
@@ -257,19 +271,19 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
   <p>ช่วงปี 2025–2026 เป็นช่วงที่นายเริ่มขยับจากการใช้เทคโนโลยี มาเป็นการพยายามสร้างระบบของตัวเองมากขึ้น</p>
   <h3 class="sub">โปรเจกต์ที่เคยทำหรือวางแผนไว้</h3>
   <div class="pcard"><div class="row">
-    <div class="thumb">📊</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60" alt="แดชบอร์ดวิเคราะห์ข้อมูล" loading="lazy" onerror="this.remove()"><span class="emo">📊</span></div>
     <div><h4>PAKJAI</h4><p class="cat">Web application</p><p>ใช้ React, Vite, Express และ Supabase เป็นเทคโนโลยีหลักที่เคยระบุไว้ เป็นส่วนหนึ่งของการฝึกสร้างแอปจริง</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🎹</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&w=400&q=60" alt="เปียโน" loading="lazy" onerror="this.remove()"><span class="emo">🎹</span></div>
     <div><h4>Thai Beat Academy</h4><p class="cat">Music Tech / Education</p><p>เว็บไซต์สอนทำบีทและสร้างชุมชนผู้ผลิตเพลง มีแนวคิดคอร์ส 990 บาท ระบบสมาชิก ระบบภาคี และการใช้ Supabase สำหรับบัญชีผู้ใช้และฐานข้อมูล<br>เว็บไซต์ที่เคยระบุ: <a href="https://thaibeatacademy.pages.dev" target="_blank" rel="noopener">thaibeatacademy.pages.dev ↗</a></p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🗂️</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=400&q=60" alt="โต๊ะทำงานคอมพิวเตอร์" loading="lazy" onerror="this.remove()"><span class="emo">🗂️</span></div>
     <div><h4>Life OS</h4><p class="cat">Personal System</p><p>แนวคิดระบบจัดการชีวิตและติดตามเป้าหมายส่วนตัว<br>เว็บไซต์: <a href="./index.html">Life OS ↗</a></p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">📉</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=400&q=60" alt="AI กับการเงิน" loading="lazy" onerror="this.remove()"><span class="emo">📉</span></div>
     <div><h4>AI STOCK</h4><p class="cat">AI / Finance</p><p>โปรเจกต์เว็บไซต์เกี่ยวกับหุ้นและ AI<br>เว็บไซต์: AI STOCK</p></div>
   </div></div>
   <h3 class="sub">เครื่องมือและทักษะที่อยู่ในเส้นทางการเรียนรู้</h3>
@@ -290,7 +304,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
   <div class="note">รายการนี้หมายถึงเทคโนโลยีที่นายสนใจหรือเคยทำงานด้วย ไม่ได้หมายความว่าชำนาญทุกตัวแล้ว</div>
   <h3 class="sub">สเปกคอมพิวเตอร์ที่เคยระบุ</h3>
   <div class="pcard">
-    <div class="row"><div class="thumb">🖥️</div><div><h4>PC Workstation</h4><p class="cat">ข้อมูล ณ ช่วงตุลาคม 2026</p></div></div>
+    <div class="row"><div class="thumb"><img src="https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=400&q=60" alt="ฮาร์ดแวร์คอมพิวเตอร์" loading="lazy" onerror="this.remove()"><span class="emo">🖥️</span></div><div><h4>PC Workstation</h4><p class="cat">ข้อมูล ณ ช่วงตุลาคม 2026</p></div></div>
     <div class="spec">
       <div><small>CPU</small><b>Intel Core i5-12400</b></div>
       <div><small>GPU</small><b>RTX 4060 8GB</b></div>
@@ -307,6 +321,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 <summary><span class="n">5</span><h2>Timeline กล้อง คอนเทนต์ และงานสร้างสรรค์</h2><span class="chev">▾</span></summary>
 <div class="cbody">
   <p>ช่วงปี 2026 นายเริ่มมองอุปกรณ์สร้างคอนเทนต์เป็นเครื่องมือทำงาน ไม่ใช่แค่ของเล่น</p>
+  <div class="art" style="min-height:190px;margin-top:14px"><img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=1000&q=60" alt="กล้องถ่ายทำ" loading="lazy" onerror="this.remove()"><span class="emo">📷</span><small>Insta360 Ace Pro 2 · ชุดถ่ายทำ</small></div>
   <ul class="dots">
     <li><b>กล้อง:</b> มีข้อมูลเกี่ยวกับ Insta360 Ace Pro 2 และการจัดชุดอุปกรณ์ถ่ายทำ</li>
     <li><b>อุปกรณ์เสริม:</b> เคยวางงบแบมโมรี่การ์ด SanDisk Extreme และขาตั้ง</li>
@@ -364,19 +379,19 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 <summary><span class="n">9</span><h2>ทรัพย์สิน อุปกรณ์ และโปรเจกต์ที่เกี่ยวข้องกับอนาคต</h2><span class="chev">▾</span></summary>
 <div class="cbody">
   <div class="pcard"><div class="row">
-    <div class="thumb">🎹</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1525201548942-d8732f6617a0?auto=format&fit=crop&w=400&q=60" alt="นักกีตาร์" loading="lazy" onerror="this.remove()"><span class="emo">🎹</span></div>
     <div><h4>อุปกรณ์ดนตรี</h4><p>มีการพูดถึงการซ่อมกีตาร์ SG และเปลี่ยนสาย รวมถึงสายเบสและแอมป์ โดยมียอดที่เคยจดไว้ 150 บาท และ 1,900 บาทตามลำดับ</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🖋️</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1568515045052-f9a854d70bfd?auto=format&fit=crop&w=400&q=60" alt="ช่างสักกำลังทำงาน" loading="lazy" onerror="this.remove()"><span class="emo">🖋️</span></div>
     <div><h4>อุปกรณ์ฝึกสัก</h4><p>เคยระบุงบเครื่องสัก 2,200 บาทเพื่อฝึกทักษะและต่อยอดรายได้</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🚗</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=400&q=60" alt="รถยนต์ไฟฟ้า" loading="lazy" onerror="this.remove()"><span class="emo">🚗</span></div>
     <div><h4>รถยนต์</h4><p>วางแผนซื้อรถ EV หรือรถน้ำมันเพื่อใช้ทำงานและเพิ่มความคล่องตัว แต่ยังไม่มีข้อมูลยืนยันว่าซื้อแล้ว</p></div>
   </div></div>
   <div class="pcard"><div class="row">
-    <div class="thumb">🦾</div>
+    <div class="thumb"><img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=60" alt="วิศวกรกับเทคโนโลยี" loading="lazy" onerror="this.remove()"><span class="emo">🦾</span></div>
     <div><h4>เส้นทางวิศวกรรมหุ่นยนต์</h4><p>เคยพิจารณาการเรียน Robotics &amp; Automation Engineering ที่สถาบันปัญญาภิวัฒน์ และตั้งเป้าหมายไปสู่การสร้างหุ่นยนต์อัจฉริยะ</p></div>
   </div></div>
 </div>
