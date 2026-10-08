@@ -10,49 +10,84 @@
 <meta property="og:image" content="logo.svg">
 <style>
   * { box-sizing: border-box; }
-  body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; background:#0b0b12; color:#eee; }
-  header { padding:32px 20px 16px; text-align:center; background: linear-gradient(135deg,#1a1033,#0b0b12 60%), radial-gradient(circle at 50% 0%, #7c3aed33, transparent); }
-  header h1 { margin:0; font-size:32px; letter-spacing:2px; }
+  body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; color:#eee; min-height:100vh;
+    background:linear-gradient(180deg,#0b1026 0%,#1a1033 35%,#2b1245 60%,#0b0b12 100%); background-attachment:fixed; overflow-x:hidden; }
+  /* ===== ท้องฟ้า cloud rap: ดาว + พระจันทร์ + เมฆลอย ===== */
+  .sky { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .stars { position:absolute; inset:0;
+    background-image:radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent),radial-gradient(1px 1px at 32% 8%, #c4b5fd, transparent),radial-gradient(2px 2px at 55% 22%, #fff, transparent),radial-gradient(1px 1px at 71% 12%, #a5f3fc, transparent),radial-gradient(1.5px 1.5px at 84% 28%, #fff, transparent),radial-gradient(1px 1px at 22% 38%, #c4b5fd, transparent),radial-gradient(2px 2px at 44% 5%, #fff, transparent),radial-gradient(1px 1px at 63% 32%, #fff, transparent),radial-gradient(1.5px 1.5px at 92% 8%, #a5f3fc, transparent),radial-gradient(1px 1px at 5% 30%, #fff, transparent);
+    animation:twinkle 4s ease-in-out infinite alternate; }
+  @keyframes twinkle { from { opacity:.5 } to { opacity:1 } }
+  .moon { position:absolute; top:6%; right:10%; width:90px; height:90px; border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fef9ff, #e9d5ff 60%, #a78bfa); box-shadow:0 0 60px #a78bfa88, 0 0 140px #7c3aed55; }
+  .cloud { position:absolute; border-radius:999px; filter:blur(38px); opacity:.5; animation:drift linear infinite; }
+  .cloud.c1 { width:420px; height:130px; top:12%; left:-10%; background:radial-gradient(ellipse, #7c3aed66, transparent 70%); animation-duration:65s; }
+  .cloud.c2 { width:520px; height:150px; top:32%; left:-30%; background:radial-gradient(ellipse, #22d3ee44, transparent 70%); animation-duration:95s; animation-delay:-30s; }
+  .cloud.c3 { width:360px; height:120px; top:58%; left:-20%; background:radial-gradient(ellipse, #f472b633, transparent 70%); animation-duration:80s; animation-delay:-55s; }
+  @keyframes drift { from { transform:translateX(-10vw) } to { transform:translateX(115vw) } }
+  header, .backbar, .toolbar, .ambience, .count, .grid, .bottombar { position:relative; z-index:1; }
+  header { padding:44px 20px 20px; text-align:center; }
+  header h1 { margin:0; font-size:38px; letter-spacing:4px; text-shadow:0 0 24px #7c3aedaa, 0 0 60px #22d3ee55; animation:floaty 6s ease-in-out infinite; }
   header h1 span { color:#a78bfa; }
-  header p { color:#aaa; margin:8px 0 0; }
-  .backbar { display:flex; justify-content:center; gap:10px; padding:12px 16px; background:#0b0b12; border-bottom:1px solid #222; flex-wrap:wrap; }
-  .backbar a { color:#a78bfa; text-decoration:none; font-size:14px; font-weight:700; border:1px solid #333; border-radius:10px; padding:8px 14px; background:#16161f; }
-  .backbar a:hover { border-color:#7c3aed; }
-  .backbar small { color:#666; font-size:12px; align-self:center; }
-  .toolbar { position:sticky; top:0; z-index:10; background:#0b0b12ee; backdrop-filter:blur(8px); padding:12px 16px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; border-bottom:1px solid #222; }
-  .toolbar input, .toolbar select, .toolbar button { padding:10px 14px; border-radius:10px; border:1px solid #333; background:#16161f; color:#eee; font-size:14px; }
+  @keyframes floaty { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-6px) } }
+  header p { color:#c4b5fd; margin:10px 0 0; font-size:15px; }
+  .backbar { display:flex; justify-content:center; gap:10px; padding:12px 16px; flex-wrap:wrap; }
+  .backbar a { color:#c4b5fd; text-decoration:none; font-size:14px; font-weight:700; border:1px solid #4c3a7a; border-radius:12px; padding:8px 14px; background:#16162acc; backdrop-filter:blur(8px); }
+  .backbar a:hover { border-color:#a78bfa; box-shadow:0 0 14px #7c3aed66; }
+  .backbar small { color:#8b8ba3; font-size:12px; align-self:center; }
+  .toolbar { position:sticky; top:0; z-index:10; background:#0d0a1acc; backdrop-filter:blur(12px); padding:12px 16px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center; border-bottom:1px solid #3b2d5e; }
+  .toolbar input, .toolbar select, .toolbar button { padding:10px 14px; border-radius:12px; border:1px solid #4c3a7a; background:#16162acc; color:#eee; font-size:14px; }
   .toolbar input { min-width:240px; flex:1; max-width:360px; }
-  .toolbar button { cursor:pointer; background:#7c3aed; border-color:#7c3aed; font-weight:600; }
-  .toolbar button.ghost { background:#16161f; border-color:#333; }
-  .count { text-align:center; color:#888; padding:12px; font-size:14px; }
-  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:16px; padding:16px; max-width:1200px; margin:0 auto 120px; }
-  .card { background:#14141d; border:1px solid #262633; border-radius:16px; padding:16px; display:flex; flex-direction:column; gap:10px; transition:.2s; }
-  .card:hover { border-color:#7c3aed; transform:translateY(-2px); }
-  .card.selected { border-color:#22c55e; background:#10231a; box-shadow:0 0 0 1px #22c55e; }
+  .toolbar input:focus { outline:none; border-color:#a78bfa; box-shadow:0 0 12px #7c3aed55; }
+  .toolbar button { cursor:pointer; background:linear-gradient(135deg,#7c3aed,#4c1d95); border-color:#7c3aed; font-weight:600; }
+  .toolbar button.ghost { background:#16162acc; border-color:#4c3a7a; }
+  /* ===== แถบบรรยากาศ ===== */
+  .ambience { display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center; padding:12px 16px; }
+  .amb-label { color:#a5f3fc; font-size:13px; font-weight:700; text-shadow:0 0 12px #22d3ee66; }
+  .amb-btn { padding:9px 16px; border-radius:20px; border:1px solid #4c3a7a; background:#16162acc; color:#c4b5fd; font-size:13px; font-weight:700; cursor:pointer; transition:.2s; backdrop-filter:blur(8px); }
+  .amb-btn:hover { border-color:#a78bfa; }
+  .amb-btn.on { background:linear-gradient(135deg,#0e7490,#155e75); border-color:#22d3ee; color:#ecfeff; box-shadow:0 0 16px #22d3ee66; }
+  #ambVol { width:120px; accent-color:#22d3ee; cursor:pointer; }
+  .count { text-align:center; color:#a5b4fc; padding:12px; font-size:14px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:18px; padding:16px; max-width:1200px; margin:0 auto 120px; }
+  .card { background:linear-gradient(160deg,#1c1533ee,#12101fee); border:1px solid #4c3a7a88; border-radius:18px; padding:16px; display:flex; flex-direction:column; gap:10px; transition:.25s; backdrop-filter:blur(10px); box-shadow:0 8px 28px #00000066; }
+  .card:hover { border-color:#a78bfa; transform:translateY(-4px); box-shadow:0 12px 32px #00000088, 0 0 20px #7c3aed44; }
+  .card.selected { border-color:#22c55e; background:linear-gradient(160deg,#10231acc,#0d1512ee); box-shadow:0 0 0 1px #22c55e, 0 0 22px #22c55e44; }
+  .card.playing { border-color:#22d3ee; box-shadow:0 0 0 1px #22d3ee, 0 0 28px #22d3ee55; }
   .card-top { display:flex; align-items:center; gap:10px; }
-  .num { background:#7c3aed; font-weight:800; width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .card.selected .num { background:#22c55e; }
+  .num { background:linear-gradient(135deg,#8b5cf6,#6d28d9); font-weight:800; width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 0 14px #7c3aed66; }
+  .card.selected .num { background:linear-gradient(135deg,#22c55e,#15803d); box-shadow:0 0 14px #22c55e66; }
   .title { font-weight:700; font-size:15px; line-height:1.3; word-break:break-word; }
-  .meta { display:flex; gap:8px; align-items:center; font-size:12px; color:#999; }
+  .meta { display:flex; gap:8px; align-items:center; font-size:12px; color:#a5b4fc; }
   .badge { font-size:11px; padding:3px 8px; border-radius:20px; background:#222; border:1px solid #333; }
   .badge.wav { background:#0ea5e933; border-color:#0ea5e9; color:#7dd3fc; }
   .badge.mp3 { background:#f59e0b33; border-color:#f59e0b; color:#fcd34d; }
-  audio { width:100%; height:36px; }
-  .select-btn { padding:10px; border-radius:10px; border:1px solid #333; background:#1f1f2b; color:#fff; font-weight:700; cursor:pointer; font-size:14px; }
+  .eq { display:none; gap:4px; align-items:flex-end; height:24px; padding-left:52px; }
+  .card.playing .eq { display:flex; }
+  .eq i { width:5px; border-radius:3px; background:linear-gradient(180deg,#22d3ee,#7c3aed); animation:eq .9s ease-in-out infinite; box-shadow:0 0 8px #22d3ee88; }
+  .eq i:nth-child(1) { animation-delay:0s } .eq i:nth-child(2) { animation-delay:.15s }
+  .eq i:nth-child(3) { animation-delay:.3s } .eq i:nth-child(4) { animation-delay:.45s }
+  .eq i:nth-child(5) { animation-delay:.6s }
+  @keyframes eq { 0%,100% { height:6px } 50% { height:24px } }
+  audio { width:100%; height:36px; filter:drop-shadow(0 0 6px #7c3aed44); }
+  .select-btn { padding:10px; border-radius:12px; border:1px solid #4c3a7a; background:#1f1b30; color:#fff; font-weight:700; cursor:pointer; font-size:14px; transition:.2s; }
+  .select-btn:hover { border-color:#a78bfa; box-shadow:0 0 12px #7c3aed44; }
   .card.selected .select-btn { background:#22c55e; border-color:#22c55e; color:#04120a; }
-  .bottombar { position:fixed; bottom:0; left:0; right:0; background:#101018f5; border-top:1px solid #2a2a3a; padding:12px 16px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .bottombar { position:fixed; bottom:0; left:0; right:0; background:#0d0a18f5; border-top:1px solid #3b2d5e; padding:12px 16px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; backdrop-filter:blur(12px); }
   .bottombar strong { color:#22c55e; }
   .bottombar button { padding:10px 16px; border-radius:10px; border:none; font-weight:700; cursor:pointer; }
   #copyBtn { background:#22c55e; color:#04120a; }
   #clearBtn { background:#222; color:#eee; border:1px solid #444; }
   #selectedList { font-size:13px; color:#aaa; max-width:100%; }
   .hidden { display:none !important; }
+  @media(prefers-reduced-motion:reduce){ .cloud,.stars,header h1,.eq i{animation:none !important} }
 </style>
 </head>
 <body>
+<div class="sky" aria-hidden="true"><div class="stars"></div><div class="moon"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
 <header>
-  <h1>🎧 BEAT <span>SELECT</span></h1>
-  <p>กดฟัง → กดเลือกบีทที่ชอบ จะเอาไปทำเพลง (22 บีท)</p>
+  <h1>☁️ BEAT <span>SELECT</span></h1>
+  <p>ลอยไปกับเมฆ — กดฟัง → เลือกบีทไปทำเพลง (22 บีท)</p>
 </header>
 
 <div class="backbar">
@@ -70,6 +105,13 @@
     <option value="selected">✅ ที่เลือกไว้</option>
   </select>
   <button class="ghost" id="stopAll">⏹ หยุดทั้งหมด</button>
+</div>
+<div class="ambience">
+  <span class="amb-label">🌌 บรรยากาศห้องทำเพลง</span>
+  <button class="amb-btn" data-amb="rain">🌧 ฝน</button>
+  <button class="amb-btn" data-amb="wind">🍃 ลม</button>
+  <button class="amb-btn" data-amb="wave">🌊 คลื่น</button>
+  <input id="ambVol" type="range" min="0" max="1" step="0.01" value="0.5" aria-label="ความดังบรรยากาศ">
 </div>
 <div class="count" id="count"></div>
 
@@ -144,12 +186,16 @@ function render(){
       '<div class="card-top"><div class="num">' + (i+1) + '</div>' +
       '<div class="title">' + shortName(f) + '</div></div>' +
       '<div class="meta"><span class="badge ' + type + '">' + type.toUpperCase() + '</span><span>' + f + '</span></div>' +
+      '<div class="eq"><i></i><i></i><i></i><i></i><i></i></div>' +
       '<audio controls preload="none" src="' + fileUrl(f) + '"></audio>' +
       '<button class="select-btn">' + (isSel ? '✅ เลือกแล้ว — กดเพื่อเอาออก' : '＋ เลือกบีทนี้') + '</button>';
     const audio = card.querySelector('audio');
     audio.addEventListener('play', () => {
       document.querySelectorAll('audio').forEach(a => { if (a !== audio) a.pause(); });
+      document.querySelectorAll('.card.playing').forEach(c => c.classList.remove('playing'));
+      card.classList.add('playing');
     });
+    ['pause','ended'].forEach(ev => audio.addEventListener(ev, () => card.classList.remove('playing')));
     card.querySelector('.select-btn').onclick = () => {
       if (selected.has(f)) selected.delete(f); else selected.add(f);
       localStorage.setItem('beat-select', JSON.stringify([...selected]));
@@ -182,6 +228,84 @@ document.getElementById('copyBtn').onclick = async () => {
     document.execCommand('copy'); ta.remove();
     alert('คัดลอกแล้ว');
   }
+};
+
+// ===== AMBIENCE — เสียงฝน/ลม/คลื่นสังเคราะห์ด้วย Web Audio (ไม่ต้องโหลดไฟล์) =====
+const amb = { ctx:null, master:null, nodes:{}, on:{rain:false,wind:false,wave:false} };
+function ambCtx(){
+  if(!amb.ctx){
+    amb.ctx = new (window.AudioContext||window.webkitAudioContext)();
+    amb.master = amb.ctx.createGain();
+    amb.master.gain.value = parseFloat(localStorage.getItem('beat-amb-vol')||'0.5');
+    amb.master.connect(amb.ctx.destination);
+    document.getElementById('ambVol').value = amb.master.gain.value;
+  }
+  if(amb.ctx.state==='suspended') amb.ctx.resume();
+  return amb.ctx;
+}
+function noiseBuffer(ctx){
+  const len = ctx.sampleRate*2, buf = ctx.createBuffer(1,len,ctx.sampleRate), d = buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  return buf;
+}
+function startAmbience(kind){
+  const ctx = ambCtx();
+  stopAmbience(kind);
+  const src = ctx.createBufferSource();
+  src.buffer = noiseBuffer(ctx); src.loop = true;
+  const g = ctx.createGain(); g.gain.value = 0;
+  g.connect(amb.master);
+  if(kind==='rain'){
+    const f = ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=1400;
+    const f2 = ctx.createBiquadFilter(); f2.type='lowpass'; f2.frequency.value=7000;
+    src.connect(f); f.connect(f2); f2.connect(g);
+    g.gain.linearRampToValueAtTime(0.25, ctx.currentTime+1.5);
+    amb.nodes[kind]={src,g};
+  } else if(kind==='wind'){
+    const f = ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=500; f.Q.value=0.6;
+    src.connect(f); f.connect(g);
+    const lfo = ctx.createOscillator(); lfo.frequency.value=0.07;
+    const lg = ctx.createGain(); lg.gain.value=300;
+    lfo.connect(lg); lg.connect(f.frequency); lfo.start();
+    const lfo2 = ctx.createOscillator(); lfo2.frequency.value=0.11;
+    const lg2 = ctx.createGain(); lg2.gain.value=0.06;
+    lfo2.connect(lg2); lg2.connect(g.gain); lfo2.start();
+    g.gain.linearRampToValueAtTime(0.14, ctx.currentTime+2);
+    amb.nodes[kind]={src,g,lfo,lfo2};
+  } else if(kind==='wave'){
+    const f = ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=420;
+    src.connect(f); f.connect(g);
+    const lfo = ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.12;
+    const lg = ctx.createGain(); lg.gain.value=0.09;
+    lfo.connect(lg); lg.connect(g.gain); lfo.start();
+    g.gain.linearRampToValueAtTime(0.12, ctx.currentTime+2);
+    amb.nodes[kind]={src,g,lfo};
+  }
+  src.start();
+}
+function stopAmbience(kind){
+  const n = amb.nodes[kind];
+  if(!n || !amb.ctx) return;
+  try{
+    const t = amb.ctx.currentTime;
+    n.g.gain.cancelScheduledValues(t);
+    n.g.gain.linearRampToValueAtTime(0.0001, t+0.6);
+    setTimeout(()=>{ try{n.src.stop()}catch(e){} ['lfo','lfo2'].forEach(k=>{try{n[k]&&n[k].stop()}catch(e){}}) }, 700);
+  }catch(e){}
+  amb.nodes[kind]=null;
+}
+document.querySelectorAll('.amb-btn').forEach(b=>{
+  b.onclick=()=>{
+    const kind=b.dataset.amb;
+    amb.on[kind]=!amb.on[kind];
+    b.classList.toggle('on',amb.on[kind]);
+    if(amb.on[kind]) startAmbience(kind); else stopAmbience(kind);
+  };
+});
+document.getElementById('ambVol').oninput=(e)=>{
+  const v=parseFloat(e.target.value);
+  localStorage.setItem('beat-amb-vol',String(v));
+  if(amb.master) amb.master.gain.linearRampToValueAtTime(v, amb.ctx.currentTime+0.2);
 };
 
 render();
