@@ -122,6 +122,24 @@
   .os-charname{font-size:17px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important}.os-bar i{transition:none}}
+/* ===== MONEY TREE — วิดเจ็ตต้นไม้การเงินมุมซ้ายล่าง ===== */
+#treeFab{position:fixed;left:18px;bottom:18px;z-index:90;width:54px;height:54px;border-radius:50%;border:1px solid rgba(74,222,128,.6);background:linear-gradient(180deg,#12351f,#0B0D14);font-size:26px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 18px rgba(74,222,128,.35)}
+#treeFab:hover{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 26px rgba(74,222,128,.6)}
+#treePop{position:fixed;left:18px;bottom:82px;z-index:91;width:min(300px,calc(100vw - 28px));display:none;background:#141824;border:1px solid #3d4666;border-radius:16px;padding:14px}
+#treePop.open{display:block}
+#treeHead{display:flex;align-items:center;gap:8px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px}
+#treeHead .tree-headbtns{margin-left:auto;display:flex;gap:6px}
+#treeHead button{background:transparent;border:1px solid #3d4666;color:var(--muted,#9AA3BD);border-radius:8px;cursor:pointer;font-size:12px;padding:3px 10px;font-family:inherit}
+#treeHead button:hover{border-color:var(--gold,#4ADE80);color:#fff}
+#treeArea{position:relative;height:170px;overflow:hidden;border-radius:12px;background:radial-gradient(circle at 50% 30%,rgba(74,222,128,.14),transparent 70%),#0B0D14;border:1px solid #1c2130}
+#treeStage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px;user-select:none}
+#treeStage.shake{animation:treeshake .5s ease}
+@keyframes treeshake{0%,100%{transform:rotate(0)}20%{transform:rotate(-9deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(4deg)}}
+.tree-coin{position:absolute;top:-8px;animation:coinfall 1.5s ease-in forwards;pointer-events:none}
+@keyframes coinfall{0%{transform:translateY(0);opacity:0}12%{opacity:1}85%{opacity:1}100%{transform:translateY(175px);opacity:0}}
+#treeInfo{font-size:13px;color:var(--gold,#4ADE80);font-weight:700;margin-top:8px}
+#treeCoins{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-top:4px}
+@media(prefers-reduced-motion:reduce){#treeStage.shake{animation:none}.tree-coin{display:none}}
 
 /* ============================================================
    READABILITY PASS — big type, generous whitespace, calm glow.
