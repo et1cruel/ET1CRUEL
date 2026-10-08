@@ -112,6 +112,18 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
   .cbody{padding:0 18px 22px}
   .goal strong{font-size:25px}
 }
+.tlfilter{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 4px}
+.tlfilter button{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+  border:1.5px solid #3d4666;background:#0B0D14;color:var(--muted);border-radius:20px;padding:7px 15px}
+.tlfilter button:hover{border-color:var(--gold);color:#fff}
+.tlfilter button.on{background:var(--gold);color:#111;border-color:var(--gold)}
+.tlfilter input{flex:1;min-width:180px;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;
+  padding:9px 14px;font-family:inherit;font-size:15px;font-weight:600;outline:none}
+.tlfilter input:focus{border-color:var(--gold)}
+.tlfilter input::placeholder{color:#5d6785}
+.tlcount{font-size:13.5px;color:var(--muted);font-family:'Chakra Petch',sans-serif;margin:6px 0 0}
+.tlempty{display:none;border:1.5px dashed #3d4666;border-radius:14px;padding:26px;text-align:center;color:var(--muted);margin:22px 0}
+.tlempty.show{display:block}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -133,7 +145,19 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
     <a href="#s8">8 สุขภาพ</a><a href="#s9">9 ทรัพย์สิน</a><a href="#s10">10 เป้าหมาย</a>
     <a href="#s11">11 ภาพรวม</a><a href="#s12">12 ข้อมูลที่ขาด</a>
   </nav>
+  <div class="tlfilter" role="group" aria-label="กรองไทม์ไลน์">
+    <button type="button" data-tlcat="all" class="on">ทั้งหมด</button>
+    <button type="button" data-tlcat="overview">ภาพรวม</button>
+    <button type="button" data-tlcat="life">ชีวิต</button>
+    <button type="button" data-tlcat="music">ดนตรี</button>
+    <button type="button" data-tlcat="tech">เทคโนโลยี</button>
+    <button type="button" data-tlcat="money">การเงิน</button>
+    <button type="button" data-tlcat="future">อนาคต</button>
+    <input id="tlq" type="text" placeholder="ค้นในไทม์ไลน์… เช่น 42 Bangkok, DCA">
+  </div>
+  <p class="tlcount" id="tlcount"></p>
 </header>
+<div class="tlempty" id="tlempty">ไม่เจอหัวข้อที่ตรง — ลองเปลี่ยนคำค้นหรือกด “ทั้งหมด”<br>อยากเติมข้อมูลส่วนนี้บอกออมสินได้เลย</div>
 
 <!-- 1 -->
 <details class="card" id="s1" open>
@@ -477,5 +501,50 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 <footer>⚔ ET1CRUEL · TIMELINE ชีวิตออมสิน · 2004 — 8 ต.ค. 2026 · ข้อมูลจากบทสนทนา ไม่ใช่คำแนะนำการลงทุน</footer>
 
 </div>
+<script>
+/* ===== TIMELINE FILTERS — กรองตามหมวด + ค้นข้อความ (ทำงานจริง) ===== */
+(function(){
+  var CATS = { s1:'overview', s2:'life', s3:'music', s4:'tech', s5:'tech', s6:'money',
+    s8:'life', s9:'life', s10:'future', s11:'overview', s12:'future' };
+  var cards = Object.keys(CATS).map(function(id){ return document.getElementById(id); })
+    .filter(function(el){ return !!el; });
+  var q = document.getElementById('tlq');
+  var count = document.getElementById('tlcount');
+  var empty = document.getElementById('tlempty');
+  var cur = 'all';
+  function apply(){
+    var s = q ? q.value.trim().toLowerCase() : '';
+    var shown = 0;
+    cards.forEach(function(el){
+      var okCat = (cur === 'all') || (CATS[el.id] === cur);
+      var okText = !s || el.textContent.toLowerCase().indexOf(s) >= 0;
+      var show = okCat && okText;
+      el.style.display = show ? '' : 'none';
+      if(show) shown++;
+    });
+    if(count) count.textContent = 'แสดง ' + shown + ' / ' + cards.length + ' หัวข้อ';
+    if(empty) empty.classList.toggle('show', shown === 0);
+  }
+  document.querySelectorAll('[data-tlcat]').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('[data-tlcat]').forEach(function(x){ x.classList.remove('on'); });
+      b.classList.add('on');
+      cur = b.getAttribute('data-tlcat');
+      apply();
+    });
+  });
+  if(q) q.addEventListener('input', apply);
+  // กดสารบัญ → ล้างตัวกรองก่อนเสมอ จะได้เลื่อนไปเห็นหัวข้อนั้นจริง
+  document.querySelectorAll('nav.toc a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(){
+      cur = 'all';
+      document.querySelectorAll('[data-tlcat]').forEach(function(x){ x.classList.toggle('on', x.getAttribute('data-tlcat') === 'all'); });
+      if(q) q.value = '';
+      apply();
+    });
+  });
+  apply();
+})();
+</script>
 </body>
 </html>

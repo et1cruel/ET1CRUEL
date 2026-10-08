@@ -290,7 +290,9 @@ body .os-btn:active{transform:translateY(1px);border-bottom-width:1px}
 body .fbtn{border-radius:999px}
 body .nav a{border-radius:999px}
 /* RPG glow titles + pixel labels */
-body .shead h2{text-shadow:0 0 18px rgba(74,222,128,.28)}
+body .shead h2{text-shadow:0 0 10px rgba(74,222,128,.14)}
+/* nav scrollspy — หัวข้อที่กำลังอ่าน */
+body .nav a.on{background:#222946;color:#fff;border-color:var(--gold)}
 body .eyebrow,body .lv,body .count,body .nav::before{
   font-family:'Press Start 2P','Chakra Petch',sans-serif;
   font-size:9px;letter-spacing:.06em;

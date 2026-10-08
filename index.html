@@ -265,10 +265,10 @@ body .topbar{flex-wrap:wrap}
 
 <div class="hero">
   <div class="hero-left">
-    <div class="eyebrow"><i></i>RPG EDITION · QUEST LOG SYSTEM</div>
-    <h1><span>ET1CRUEL</span> — ตัวละคร<br>สาย ARTIST / LV 21</h1>
+    <div class="eyebrow"><i></i>PERSONAL LIFE UNIVERSE · แผนที่ชีวิตที่ยังเขียนต่อ</div>
+    <h1><span>ET1CRUEL</span> — กำลังสร้างชีวิตที่เทคโนโลยี<br>ความคิดสร้างสรรค์ และอิสรภาพ เดินไปด้วยกัน</h1>
     <div class="class-line">⚔ CLASS: BEATMAKER × TATTOO × DIRECTOR · บางใหญ่</div>
-    <p class="lead">โน้ตยาวรุงรังถูกแปลงเป็น <b>เควสบอร์ด 12 หมวด</b> — เควสทองคือเงิน เควสเขียวคือเคลียร์แล้ว ไม่ต้องจำทั้งหมด เปิดหน้านี้แล้วรู้ว่าต้องล่าอะไรต่อ</p>
+    <p class="lead">ออมสิน — โปรดิวเซอร์ที่หันมาเขียนโค้ด ปั้น AI ของตัวเอง และ DCA สู่พอร์ต 1M · ตอนนี้โฟกัส <b>ทำเพลง + สร้างระบบและเว็บ + เก็บเงินล้าน</b> หน้านี้คือเควสบอร์ดชีวิต: เควสทองคือเงิน เควสเขียวคือเคลียร์แล้ว</p>
     <div class="kpis">
       <div class="kpi"><small>✔ CLEAR · จ่ายแล้ว</small><strong class="num">58 QUESTS</strong><div class="bar"><i style="width:86%"></i></div></div>
       <div class="kpi"><small>◆ ACTIVE QUEST</small><strong class="num">9 QUESTS</strong><div class="bar"><i style="width:14%"></i></div></div>
@@ -1171,6 +1171,30 @@ function apply(){
   try{ if(localStorage.getItem('et1cruel-qtracker-hidden')==='1'){box.classList.add('hidden');if(fab2)fab2.classList.add('show');} }catch(e){}
   if(hideBtn) hideBtn.addEventListener('click',function(ev){ev.stopPropagation();setHidden(true)});
   if(fab2) fab2.addEventListener('click',function(){setHidden(false)});
+})();
+</script>
+<script>
+/* ===== NAV SCROLLSPY — ไฮไลต์เมนูตาม section ที่อ่านอยู่ ===== */
+(function(){
+  var links={};
+  document.querySelectorAll('#nav a[href^="#"]').forEach(function(a){
+    links[a.getAttribute('href').slice(1)]=a;
+  });
+  var ids=Object.keys(links);
+  if(!ids.length||!('IntersectionObserver' in window)) return;
+  var cur=null;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting) cur=e.target.id;
+    });
+    Object.keys(links).forEach(function(id){
+      links[id].classList.toggle('on',id===cur);
+    });
+  },{rootMargin:'-30% 0px -60% 0px'});
+  ids.forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) io.observe(el);
+  });
 })();
 </script>
 <script>
