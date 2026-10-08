@@ -230,6 +230,10 @@ body .topbar{flex-wrap:wrap}
 #qtracker li a:hover{color:var(--amber)}
 #qtracker.min ul{display:none}
 #qtracker .qempty{font-size:13px;color:var(--muted)}
+#qtracker.hidden{display:none}
+#qtrackerFab{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;width:48px;height:48px;border-radius:14px;border:1.5px solid var(--amber);background:rgba(11,13,20,.93);color:var(--amber);font-size:22px;font-weight:800;cursor:pointer;display:none;box-shadow:var(--shadow)}
+#qtrackerFab.show{display:block}
+@media(max-width:1280px){#qtrackerFab{top:auto;bottom:92px;right:12px;transform:none}}
   #qtracker h4 .qcount{color:var(--muted);font-size:11px;letter-spacing:.06em}
 @media(max-width:1280px){
   /* จอเล็ก: ย้ายลงมุมขวาล่าง (เหนือปุ่มแชท) เริ่มแบบพับไว้ */
@@ -1155,7 +1159,18 @@ function apply(){
   }
   if(minBtn) minBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleMin()});
   var head=document.getElementById('qtrackerHead');
-  if(head) head.addEventListener('click',function(ev){if(ev.target!==minBtn)toggleMin()});
+  if(head) head.addEventListener('click',function(ev){if(ev.target!==minBtn&&ev.target.id!=='qtrackerHide')toggleMin()});
+  // เปิด/ปิดทั้งแถบ
+  var fab2=document.getElementById('qtrackerFab');
+  var hideBtn=document.getElementById('qtrackerHide');
+  function setHidden(hide){
+    box.classList.toggle('hidden',hide);
+    if(fab2) fab2.classList.toggle('show',hide);
+    try{localStorage.setItem('et1cruel-qtracker-hidden',hide?'1':'0')}catch(e){}
+  }
+  try{ if(localStorage.getItem('et1cruel-qtracker-hidden')==='1'){box.classList.add('hidden');if(fab2)fab2.classList.add('show');} }catch(e){}
+  if(hideBtn) hideBtn.addEventListener('click',function(ev){ev.stopPropagation();setHidden(true)});
+  if(fab2) fab2.addEventListener('click',function(){setHidden(false)});
 })();
 </script>
 <script>
@@ -1248,7 +1263,8 @@ function apply(){
 <script src="js/tv-widgets.js"></script>
 <div id="os-toasts"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
-<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button class="qmin" id="qtrackerMin" aria-label="พับ/กาง">–</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
+<button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆</button>
+<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button class="qmin" id="qtrackerMin" aria-label="พับ/กาง">–</button><button class="qmin" id="qtrackerHide" aria-label="ปิดแถบ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
 <!-- ต้นไม้การเงิน -->
 <button type="button" id="treeFab" aria-label="ต้นไม้การเงิน">🌳</button>
 <div id="treePop">
