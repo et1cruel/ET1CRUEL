@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline ชีวิตออมสิน — จากจุดเริ่มต้นจนถึง 8 ตุลาคม 2026</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --gold:#4ADE80; --gold-dim:#166534; --amber:#FBBF24;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(1000px 420px at 15% -5%,rgba(74,222,128,.12),transparent 60%),var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:18px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 22px 90px}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);
+  border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.topbar a{color:var(--gold);text-decoration:none;font-weight:700;font-size:15px;border:1px solid #3d4666;border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar a:hover{border-color:var(--gold)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff}
+header.hero{margin:26px 0 8px}
+header.hero h1{font-size:38px;line-height:1.35;color:#fff}
+header.hero h1 span{color:var(--gold)}
+header.hero p{color:#E2E8FA;font-size:18px;margin-top:12px;max-width:70ch}
+header.hero p+p{color:var(--muted);font-size:16.5px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 6px}
+.toc a{font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid #3d4666;border-radius:20px;padding:6px 14px;background:#0B0D14}
+.toc a:hover{color:var(--gold);border-color:var(--gold)}
+details.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;
+  box-shadow:var(--shadow);margin:22px 0;overflow:hidden}
+details.card summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;padding:24px 26px}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary:hover{background:rgba(74,222,128,.04)}
+details.card summary .n{flex:0 0 46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;color:#111;background:linear-gradient(180deg,var(--gold),#16a34a)}
+details.card summary h2{font-size:25px;color:#fff;flex:1;line-height:1.4}
+details.card summary .chev{color:var(--gold);font-size:20px;font-weight:800}
+details.card[open] summary .chev{transform:rotate(180deg)}
+.cbody{padding:0 26px 28px}
+.tag{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;color:var(--gold);
+  border:1.5px solid var(--gold-dim);border-radius:8px;padding:3px 12px;margin:4px 0 8px;background:rgba(74,222,128,.06)}
+.era{display:grid;grid-template-columns:200px 1fr;gap:18px;padding:20px 0;border-top:1px dashed var(--line)}
+.era:first-of-type{border-top:none}
+.art{border-radius:14px;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  font-size:64px;border:1px solid #3d4666;background:linear-gradient(160deg,#232a44,#10131c);padding:18px;text-align:center}
+.art small{font-size:12.5px;color:var(--muted);font-family:'Chakra Petch',sans-serif}
+.era h3{font-size:22px;color:#fff}
+.era ul{margin:10px 0 0 22px;color:#DDE3F5}
+.era li{margin-bottom:6px}
+table.tl{width:100%;border-collapse:collapse;margin:14px 0;font-size:17px}
+table.tl th{text-align:left;font-family:'Chakra Petch',sans-serif;font-size:13px;letter-spacing:.08em;color:var(--gold);
+  padding:10px 8px;border-bottom:1px solid rgba(74,222,128,.3)}
+table.tl td{padding:11px 8px;border-bottom:1px solid #1c2130;color:#E2E8FA;vertical-align:top}
+table.tl td:first-child{white-space:nowrap;color:var(--muted);font-family:'Chakra Petch',sans-serif;font-size:15px}
+table.tl td b.hi{color:#F87171}
+h3.sub{font-size:21px;color:#fff;margin:24px 0 6px}
+p.dim{color:var(--muted);font-size:16.5px}
+ul.dots{margin:10px 0 0 22px;color:#DDE3F5}
+ul.dots li{margin-bottom:6px}
+.pcard{border:1px solid #3d4666;border-radius:14px;padding:18px;margin:14px 0;background:rgba(255,255,255,.03)}
+.pcard .row{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:start}
+.pcard .thumb{border-radius:12px;min-height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;
+  background:linear-gradient(160deg,#232a44,#10131c);border:1px solid #3d4666}
+.pcard h4{font-size:20px;color:#fff}
+.pcard .cat{color:var(--muted);font-size:15px;margin:2px 0 6px}
+.pcard p{color:#DDE3F5;font-size:16.5px}
+.pcard a{color:var(--gold);font-size:15px}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.spec div{background:#0B0D14;border:1px solid #343c58;border-radius:12px;padding:14px 16px}
+.spec small{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.spec b{display:block;font-size:19px;color:#fff;font-family:'Chakra Petch',sans-serif;margin-top:2px}
+.goal{border:2px solid var(--gold-dim);border-radius:14px;padding:18px 20px;margin:14px 0;background:rgba(74,222,128,.05)}
+.goal small{font-size:14px;color:var(--muted)}
+.goal strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;color:var(--gold);line-height:1.3}
+.goal .how{color:#E2E8FA;font-size:17px;margin-top:4px}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:14px 0;border-top:1px dashed var(--line)}
+.step:first-of-type{border-top:none}
+.step .no{width:44px;height:44px;border-radius:50%;background:#0B0D14;border:2px solid var(--gold);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px}
+.step h4{font-size:19px;color:#fff}
+.step p{color:#DDE3F5;margin-top:4px}
+.axis{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+.axis div{border:1px solid #3d4666;border-radius:14px;padding:20px;background:rgba(255,255,255,.03)}
+.axis .ic{font-size:26px}
+.axis b{display:block;font-size:20px;color:#fff;margin:6px 0 4px}
+.axis p{color:var(--muted);font-size:16px}
+.note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;
+  padding:18px 20px;font-size:16.5px;color:#fff;margin-top:16px;line-height:1.9}
+.note b{color:var(--gold)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
+@media(max-width:700px){
+  header.hero h1{font-size:28px}
+  body{font-size:17px}
+  .era,.pcard .row{grid-template-columns:1fr}
+  .art{min-height:110px;font-size:52px}
+  .spec,.axis{grid-template-columns:1fr}
+  details.card summary{padding:18px}
+  details.card summary h2{font-size:21px}
+  .cbody{padding:0 18px 22px}
+  .goal strong{font-size:25px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← หน้าแรก LIFE OS</a>
+  <span class="t">TIMELINE ชีวิตออมสิน · 2004 — 8 ต.ค. 2026</span>
+</div>
+
+<header class="hero">
+  <h1>Timeline ชีวิตออมสิน<br><span>จากจุดเริ่มต้นจนถึง 8 ตุลาคม 2026</span></h1>
+  <p>ออมสิน เรามาเรียบเรียงชีวิตนายเป็นเส้นเวลาใหญ่กันเลย ตั้งแต่ประวัติส่วนตัว การเรียน งาน ดนตรี การเขียนโค้ด AI หุ่นยนต์ การเงิน การลงทุน ครอบครัว ไปจนถึงเป้าหมายในอนาคต</p>
+  <p>ผมจะรวบรวมข้อมูลจากบทสนทนาและบริบทเท่าที่มี โดยแยกให้ชัดว่าอะไรเป็น เหตุการณ์ที่มีวันที่ระบุ อะไรเป็นช่วงเวลาโดยประมาณ และอะไรเป็นแผนที่ยังต้องทำ จะใส่ให้เป็นประวัติชีวิตฉบับหลักของนายได้จริง ไม่เอาเป้าหมายในอนาคตมาปนกับสิ่งที่ทำสำเร็จแล้ว</p>
+  <nav class="toc">
+    <a href="#s1">1 เส้นเวลารวม</a><a href="#s2">2 ประวัติ+การเรียน</a><a href="#s3">3 ดนตรี+ตัวตน</a>
+    <a href="#s4">4 โค้ด+เว็บ+AI</a><a href="#s5">5 กล้อง+คอนเทนต์</a><a href="#s6">6 การเงิน</a>
+    <a href="#s8">8 สุขภาพ</a><a href="#s9">9 ทรัพย์สิน</a><a href="#s10">10 เป้าหมาย</a>
+    <a href="#s11">11 ภาพรวม</a><a href="#s12">12 ข้อมูลที่ขาด</a>
+  </nav>
+</header>
+
+<!-- 1 -->
+<details class="card" id="s1" open>
+<summary><span class="n">1</span><h2>เส้นเวลาชีวิตโดยรวม</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="era">
+    <div class="art">🏙️<small>ชลบุรี → บางใหญ่</small></div>
+    <div><span class="tag">จุดเริ่มต้น</span><h3>2004–วัยเด็ก</h3>
+      <ul>
+        <li>เกิดวันที่ 17 ธันวาคม 2004 เวลา 08:58 น. ในพื้นที่ชลบุรี/ศรีราชาตามข้อมูลเดิม</li>
+        <li>เติบโตช่วงแรกในจังหวัดชลบุรี</li>
+        <li>ย้ายมาอยู่บางใหญ่ จังหวัดนนทบุรี ตั้งแต่ ป.1</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era">
+    <div class="art">🏫<small>มัธยม → ค้นหาตัวเอง</small></div>
+    <div><span class="tag">การศึกษาและค้นหาตัวเอง</span><h3>ช่วงมัธยม–หลัง ม.6</h3>
+      <ul>
+        <li>เรียนจบ ม.6 จากโรงเรียนราชวินิตบางเขน</li>
+        <li>ทดลองค้นหาเส้นทางการเรียนที่เหมาะกับตัวเอง ทั้งสายภาษา เทคโนโลยี และดนตรี</li>
+        <li>เคยเรียนมนุษยศาสตร์ เอกภาษาอังกฤษ ที่รามคำแหง และเคยเรียนเทคโนโลยีชีวภาพ ก่อนหยุดพัก</li>
+        <li>เคยเข้าร่วมหลักสูตร Piscine ของ 42 Bangkok ในปี 2025 และหยุดไป</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era">
+    <div class="art">🎸<small>et1cruel</small></div>
+    <div><span class="tag">ดนตรีและครีเอเตอร์</span><h3>ช่วงสร้างตัวตนศิลปิน</h3>
+      <ul>
+        <li>พัฒนาตัวตนทางดนตรีภายใต้ชื่อ et1cruel</li>
+        <li>ทำบีท โปรดิวซ์เพลง ทดลองแนวเพลง และสร้างภาพลักษณ์ศิลปิน</li>
+        <li>เริ่มต่อยอดจากการทำเพลงไปสู่การขายบีท บริการมิกซ์มาสเตอร์ สอนทำเพลง และสร้างคอนเทนต์</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era">
+    <div class="art">💻<small>Full-Stack → AI</small></div>
+    <div><span class="tag">ขยายจากศิลปินสู่เทคโนโลยี</span><h3>2025–2026</h3>
+      <ul>
+        <li>ศึกษา Full-Stack, Backend, Python, C++, AI และระบบอัตโนมัติ</li>
+        <li>ทดลองสร้างเว็บไซต์และโปรเจกต์ของตัวเอง</li>
+        <li>สนใจ Embedded Systems, Electronics และ Robotics มากขึ้น</li>
+        <li>เริ่มสร้างระบบ AI Agent เพื่อช่วยงานเขียนโค้ด คอนเทนต์ และการวิเคราะห์ข้อมูล</li>
+      </ul>
+    </div>
+  </div>
+  <div class="era">
+    <div class="art">📈<small>เงิน + ธุรกิจ</small></div>
+    <div><span class="tag">ช่วงเปลี่ยนผ่านสำคัญ</span><h3>สิงหาคม–ตุลาคม 2026</h3>
+      <ul>
+        <li>เผชิญเหตุการณ์สูญเสียคนในครอบครัวและต้องติดตามเรื่องมรดก</li>
+        <li>วางแผนจัดการเงินก้อนและศึกษาการลงทุนหุ้นสหรัฐฯ อย่างจริงจัง</li>
+        <li>พัฒนาแนวคิดธุรกิจจากดนตรี AI และการสร้างคอนเทนต์</li>
+        <li>ตั้งเป้าสร้างความมั่นคงทางการเงินและมีรายได้จากผลงานของตัวเอง</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</details>
+
+<!-- 2 -->
+<details class="card" id="s2">
+<summary><span class="n">2</span><h2>ประวัติส่วนตัวและการศึกษา</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <table class="tl">
+    <thead><tr><th>ช่วงเวลา</th><th>เหตุการณ์ / ข้อมูล</th></tr></thead>
+    <tbody>
+      <tr><td>17 ธ.ค. 2004</td><td>วันเกิด เวลา 08:58 น.</td></tr>
+      <tr><td>วัยเด็ก</td><td>เกิดและมีพื้นเพราชลบุรี/<b class="hi">ศรีราชา</b></td></tr>
+      <tr><td>ป.1 เป็นต้นมา</td><td>ย้ายมาอยู่บางใหญ่ นนทบุรี</td></tr>
+      <tr><td>ช่วงมัธยม</td><td>เรียนโรงเรียนราชวินิตบางเขน</td></tr>
+      <tr><td>หลัง ม.6</td><td>เคยเรียนมนุษยศาสตร์ ภาษาอังกฤษ ที่มหาวิทยาลัยรามคำแหง</td></tr>
+      <tr><td>ช่วงต่อมา</td><td>เคยเรียนเทคโนโลยีชีวภาพที่รามคำแหง ก่อนพักการเรียน</td></tr>
+      <tr><td>ประมาณปี 2025</td><td>เข้าร่วม Piscine ของ 42 Bangkok แต่ไม่ได้เรียนต่อจนจบเส้นทางนั้น</td></tr>
+      <tr><td>ช่วงปี 2025–2026</td><td>ทดลองเส้นทางดนตรี ซอฟต์แวร์ AI และวิศวกรรมควบคู่กัน</td></tr>
+      <tr><td>ปลายปี 2026</td><td>อายุ 21 ปี ณ วันที่ 8 ตุลาคม 2026</td></tr>
+    </tbody>
+  </table>
+  <h3 class="sub">งานและประสบการณ์ที่เคยมี</h3>
+  <p class="dim">จากข้อมูลที่เคยเล่า มีประสบการณ์หรือกิจกรรมเกี่ยวกับ</p>
+  <ul class="dots">
+    <li>งานร้านอาหาร KFC และงานร้านค้าปลีก Tops</li>
+    <li>งานขายผลิตภัณฑ์นมหมัก</li>
+    <li>การออกแบบลายสักและฝึกทำงานด้านรอยสัก</li>
+    <li>การทำเพลงและขายบีท</li>
+    <li>การเล่นดนตรีเปิดหมวก</li>
+    <li>การทำคอนเทนต์ ถ่ายวิดีโอ ตัดต่อ และงานภาพ</li>
+  </ul>
+  <h3 class="sub">เส้นทางอาชีพที่สนใจ</h3>
+  <div class="pcard"><h4>Music Producer / Artist</h4><p class="cat">สร้างเพลง ขายบีท ทำมิกซ์มาสเตอร์ สอนทำเพลง และสร้างแบรนด์ et1cruel</p></div>
+  <div class="pcard"><h4>Software / Full-Stack / Backend Engineer</h4><p class="cat">พัฒนาเว็บ ระบบหลังบ้าน ฐานข้อมูล API และแอปที่ใช้งานได้จริง</p></div>
+  <div class="pcard"><h4>Robotics / Embedded / AI Engineer</h4><p class="cat">ต่อยอดจากซอฟต์แวร์ไปสู่ชิพ อิเล็กทรอนิกส์ ระบบควบคุม และหุ่นยนต์อัจฉริยะ</p></div>
+  <div class="note">เส้นทางเหล่านี้ไม่จำเป็นต้องเป็นอาชีพที่แยกขาดจากกัน เป้าหมายที่นายเคยพูดถึงคือการพัฒนาความสามารถด้านเทคโนโลยีควบคู่กับงานสร้างสรรค์ และสร้างรายได้จากหลายทาง</div>
+</div>
+</details>
+
+<!-- 3 -->
+<details class="card" id="s3">
+<summary><span class="n">3</span><h2>Timeline ดนตรีและตัวตนออนไลน์</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <h3 class="sub" style="margin-top:4px">ตัวตนที่สร้างขึ้น</h3>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🌫️</div>
+    <div><h4>et1cruel</h4><p>ตัวตนศิลปินและโปรดิวเซอร์ ชื่อ et1 เชื่อมโยงกับแนวคิด “eternal oneness” งานมีความเกี่ยวข้องกับ Cloud Rap, Ambient, Emo Trap และซาวด์ที่เน้นบรรยากาศ ความรู้สึก และการสำรวจตัวเอง</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🎛️</div>
+    <div><h4>prod.et1cruel</h4><p>แบรนด์ด้านบีท การโปรดิวซ์เพลง การขายผลงาน และชุมชนผู้ทำบีท</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🎬</div>
+    <div><h4>dir.et1cruel</h4><p>ตัวตนที่เกี่ยวข้องกับงานกำกับ ตัดต่อ และภาพเคลื่อนไหว</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🤖</div>
+    <div><h4>akase001e8</h4><p>ตัวตนเชิงแนวคิดด้านเทคโนโลยี การเขียนโค้ด อนาคต และการประดิษฐ์สิ่งใหม่ โดยมีแนวคิดเชื่อมจาก มนุษย์ → ศิลปิน → ครีเอเตอร์ → โปรแกรมเมอร์ → วิศวกร → นักประดิษฐ์</p></div>
+  </div></div>
+</div>
+</details>
+
+<!-- 4 -->
+<details class="card" id="s4">
+<summary><span class="n">4</span><h2>Timeline การเขียนโปรแกรม เว็บไซต์ และ AI</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <p>ช่วงปี 2025–2026 เป็นช่วงที่นายเริ่มขยับจากการใช้เทคโนโลยี มาเป็นการพยายามสร้างระบบของตัวเองมากขึ้น</p>
+  <h3 class="sub">โปรเจกต์ที่เคยทำหรือวางแผนไว้</h3>
+  <div class="pcard"><div class="row">
+    <div class="thumb">📊</div>
+    <div><h4>PAKJAI</h4><p class="cat">Web application</p><p>ใช้ React, Vite, Express และ Supabase เป็นเทคโนโลยีหลักที่เคยระบุไว้ เป็นส่วนหนึ่งของการฝึกสร้างแอปจริง</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🎹</div>
+    <div><h4>Thai Beat Academy</h4><p class="cat">Music Tech / Education</p><p>เว็บไซต์สอนทำบีทและสร้างชุมชนผู้ผลิตเพลง มีแนวคิดคอร์ส 990 บาท ระบบสมาชิก ระบบภาคี และการใช้ Supabase สำหรับบัญชีผู้ใช้และฐานข้อมูล<br>เว็บไซต์ที่เคยระบุ: <a href="https://thaibeatacademy.pages.dev" target="_blank" rel="noopener">thaibeatacademy.pages.dev ↗</a></p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🗂️</div>
+    <div><h4>Life OS</h4><p class="cat">Personal System</p><p>แนวคิดระบบจัดการชีวิตและติดตามเป้าหมายส่วนตัว<br>เว็บไซต์: <a href="./index.html">Life OS ↗</a></p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">📉</div>
+    <div><h4>AI STOCK</h4><p class="cat">AI / Finance</p><p>โปรเจกต์เว็บไซต์เกี่ยวกับหุ้นและ AI<br>เว็บไซต์: AI STOCK</p></div>
+  </div></div>
+  <h3 class="sub">เครื่องมือและทักษะที่อยู่ในเส้นทางการเรียนรู้</h3>
+  <table class="tl">
+    <thead><tr><th>ด้าน</th><th>เทคโนโลยีที่เคยศึกษา / ใช้</th></tr></thead>
+    <tbody>
+      <tr><td>Frontend</td><td>HTML, CSS, JavaScript, React, Vite</td></tr>
+      <tr><td>Backend</td><td>Node.js, Express, API</td></tr>
+      <tr><td>Database / Auth</td><td>Supabase, SQL, Row Level Security</td></tr>
+      <tr><td>Programming</td><td>Python, C++</td></tr>
+      <tr><td>Development</td><td>VS Code, Git, GitHub, Vercel, Cloudflare Pages</td></tr>
+      <tr><td>AI</td><td>Local LLM, Vision, AI Agent, Prompt Engineering</td></tr>
+      <tr><td>Automation</td><td>Hermes, n8n, Docker</td></tr>
+      <tr><td>Robotics</td><td>Arduino, Raspberry Pi, ESP32, STM32, Sensors, Motor Control</td></tr>
+      <tr><td>Electronics</td><td>วงจรไฟฟ้า อิเล็กทรอนิกส์ และระบบควบคุม</td></tr>
+    </tbody>
+  </table>
+  <div class="note">รายการนี้หมายถึงเทคโนโลยีที่นายสนใจหรือเคยทำงานด้วย ไม่ได้หมายความว่าชำนาญทุกตัวแล้ว</div>
+  <h3 class="sub">สเปกคอมพิวเตอร์ที่เคยระบุ</h3>
+  <div class="pcard">
+    <div class="row"><div class="thumb">🖥️</div><div><h4>PC Workstation</h4><p class="cat">ข้อมูล ณ ช่วงตุลาคม 2026</p></div></div>
+    <div class="spec">
+      <div><small>CPU</small><b>Intel Core i5-12400</b></div>
+      <div><small>GPU</small><b>RTX 4060 8GB</b></div>
+      <div><small>RAM</small><b>32GB</b></div>
+      <div><small>Storage</small><b>ประมาณ 1TB</b></div>
+    </div>
+    <p>ใช้ทำเพลง ตัดต่อวิดีโอ เขียนโค้ด ทดลอง Local AI และระบบอัตโนมัติ โดยเคยยืนยันว่าจะใช้ Windows 10 ต่อไป ไม่อัปเกรดเป็น Windows 11 ณ วันที่ 6 ตุลาคม 2026</p>
+  </div>
+</div>
+</details>
+
+<!-- 5 -->
+<details class="card" id="s5">
+<summary><span class="n">5</span><h2>Timeline กล้อง คอนเทนต์ และงานสร้างสรรค์</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <p>ช่วงปี 2026 นายเริ่มมองอุปกรณ์สร้างคอนเทนต์เป็นเครื่องมือทำงาน ไม่ใช่แค่ของเล่น</p>
+  <ul class="dots">
+    <li><b>กล้อง:</b> มีข้อมูลเกี่ยวกับ Insta360 Ace Pro 2 และการจัดชุดอุปกรณ์ถ่ายทำ</li>
+    <li><b>อุปกรณ์เสริม:</b> เคยวางงบแบมโมรี่การ์ด SanDisk Extreme และขาตั้ง</li>
+    <li><b>รูปแบบคอนเทนต์:</b> ถ่ายตัวเองกลางแจ้ง ธรรมชาติ วิดีโอแนว cinematic และใส่เพลงของตัวเองประกอบ</li>
+    <li><b>การตัดต่อ:</b> เชื่อมงานวิดีโอกับแบรนด์เพลงและบริการสร้างสรรค์</li>
+    <li><b>รายได้:</b> ผ่านการอนุมัติ Shopee Affiliate และเคยศึกษาการทำ TikTok Affiliate โดยสนใจหมวดพาวเวอร์แบงก์</li>
+  </ul>
+  <div class="note">งบอุปกรณ์ที่เคยระบุ ได้แก่ กล้อง 13,699 บาท เมมโมรี่การ์ด 1,490 บาท และขาตั้ง 300 บาท <b>รวม 15,489 บาท</b>ตามรายการที่เคยคุยกัน ตัวเลขนี้เป็นบทที่ระบุไว้ ไม่ใช่หลักฐานว่าทุกรายการซื้อเสร็จแล้ว</div>
+</div>
+</details>
+
+<!-- 6 -->
+<details class="card" id="s6">
+<summary><span class="n">6</span><h2>Timeline การเงินและการลงทุน</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <p>นี่เป็นอีกเส้นทางที่เห็นพัฒนาการชัดมาก จากการมองหาเงินเก็บที่ปลอดภัย ไปสู่การศึกษาเรื่องพอร์ตหุ้น ผลตอบแทนระยะยาว และการสร้างกระแสเงินสด</p>
+  <h3 class="sub">จุดเปลี่ยนในช่วงตุลาคม 2026</h3>
+  <div class="step"><div class="no">1</div><div><h4>6 ตุลาคม — วางรากฐานการเงิน</h4><p>มีการบันทึกยอดเงินรวมที่ใช้เป็นฐานวางแผนประมาณ 585,000 บาท พร้อมแยกเงินฝาก เงินสด หุ้นสหรัฐฯ และ Bitcoin</p></div></div>
+  <div class="step"><div class="no">2</div><div><h4>7 ตุลาคม — เปรียบเทียบเงินฝากกับ ETF</h4><p>ศึกษา Kept, e-Savings, JEPQ, JEPI, QQQI, SCHD และ VOO เพื่อเปรียบเทียบดอกเบี้ย เงินปันผล ความเสี่ยง และความสะดวกในการใช้เงิน</p></div></div>
+  <div class="step"><div class="no">3</div><div><h4>7 ตุลาคม — ตั้งเป้าสร้างกระแสเงินสด</h4><p>ทดลองคำนวณว่าพอร์ต 500,000–600,000 บาทจะสร้างรายได้จากเงินปันผลได้เท่าไร และวางเป้าหมายพอร์ต 5 ล้านบาท</p></div></div>
+  <div class="step"><div class="no">4</div><div><h4>7–8 ตุลาคม — วิเคราะห์หุ้นเติบโตและ AI</h4><p>เริ่มวิเคราะห์บริษัทในห่วงโซ่ AI และเซมิคอนดักเตอร์ เปรียบเทียบพื้นฐานธุรกิจ ความสามารถในการแข่งขัน การเติบโต และความเสี่ยง</p></div></div>
+  <div class="step"><div class="no">5</div><div><h4>8 ตุลาคม — สร้างระบบติดตามพอร์ตบนคอมพิวเตอร์</h4><p>ต้องการตารางเปรียบเทียบหุ้น ผลตอบแทนย้อนหลัง กำไรขาดทุน และเว็บไซต์ติดตามพอร์ตที่ใช้งานได้สะดวกคล้าย Dime</p></div></div>
+  <h3 class="sub">เป้าหมายทางการเงินที่เคยพูดถึง</h3>
+  <div class="goal"><small>เป้าหมายพอร์ต</small><strong class="num">5,000,000 บาท ↗</strong></div>
+  <div class="goal"><small>กระแสเงินสดที่อยากได้</small><strong class="num">25,000–30,000 บาท/เดือน 🗂</strong></div>
+  <div class="goal"><small>แนวทาง</small><div class="how"><b>เติบโตระยะยาว + กระแสเงินสด + รักษาเงินต้นให้เหมาะสมกับความเสี่ยง</b></div></div>
+  <div class="note">แนวคิดการลงทุนที่เคยพูดถึงมีทั้งการ DCA เดือนละ 1,200–2,000 บาท การถือหุ้นระยะยาว การทดลองกลยุทธ์ในวงเงินจำกัด และการจัดสรรบางส่วนใน ETF ที่เน้นเงินปันผล</div>
+  <div class="note">สิ่งที่ต้องแยกให้ชัดคือ <b>ผลตอบแทนที่คาดหวังไม่ใช่ผลตอบแทนที่รับประกัน</b> และเงินปันผลสูงไม่ได้แปลว่าความเสี่ยงต่ำเสมอไป</div>
+</div>
+</details>
+
+<!-- 8 -->
+<details class="card" id="s8">
+<summary><span class="n">8</span><h2>สุขภาพ กิจวัตร และสิ่งที่สนใจนอกเหนือจากงาน</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <table class="tl">
+    <thead><tr><th>ด้าน</th><th>ข้อมูลที่เคยระบุ</th></tr></thead>
+    <tbody>
+      <tr><td>ส่วนสูง</td><td>ประมาณ 187 ซม.</td></tr>
+      <tr><td>น้ำหนัก</td><td>เคยระบุ 74 กก. ในเดือนมีนาคม 2026</td></tr>
+      <tr><td>เป้าหมายร่างกาย</td><td>ลดไขมันพร้อมสร้างกล้ามเนื้อ</td></tr>
+      <tr><td>การออกกำลังกาย</td><td>เคยวางแผนเวท วิ่ง และปั่นจักรยานช่วงเย็นวันจันทร์–ศุกร์ และมีการออกกำลังกายช่วงเช้า/เย็นในช่วงหลัง</td></tr>
+      <tr><td>กีฬา</td><td>เล่นฟุตบอลกับคุณพ่อ</td></tr>
+      <tr><td>การฝึกจิต</td><td>สนใจการทำสมาธิ อานาปานสติ และแนวคิดทางพุทธศาสนา</td></tr>
+      <tr><td>สัตว์เลี้ยง</td><td>หนูสีขาวชื่อ Lucky รับมาเลี้ยงเมื่อ 31 มีนาคม 2025</td></tr>
+      <tr><td>ความสนใจระยะยาว</td><td>ปลูกผัก ทำสวน ระบบไฮโดรโปนิกส์ เลี้ยงไก่ บ่อปลา และอยากมี Border Collie กับหุ่นยนต์ที่เป็นมิตร</td></tr>
+    </tbody>
+  </table>
+  <div class="note">Lucky ยังเป็นส่วนหนึ่งของโลกครีเอเตอร์ด้วย โดยมีแนวคิดใช้เป็นมาสคอตของ himoriyacore และทำคอนเทนต์เกี่ยวกับหนูลัคกี้</div>
+</div>
+</details>
+
+<!-- 9 -->
+<details class="card" id="s9">
+<summary><span class="n">9</span><h2>ทรัพย์สิน อุปกรณ์ และโปรเจกต์ที่เกี่ยวข้องกับอนาคต</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="pcard"><div class="row">
+    <div class="thumb">🎹</div>
+    <div><h4>อุปกรณ์ดนตรี</h4><p>มีการพูดถึงการซ่อมกีตาร์ SG และเปลี่ยนสาย รวมถึงสายเบสและแอมป์ โดยมียอดที่เคยจดไว้ 150 บาท และ 1,900 บาทตามลำดับ</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🖋️</div>
+    <div><h4>อุปกรณ์ฝึกสัก</h4><p>เคยระบุงบเครื่องสัก 2,200 บาทเพื่อฝึกทักษะและต่อยอดรายได้</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🚗</div>
+    <div><h4>รถยนต์</h4><p>วางแผนซื้อรถ EV หรือรถน้ำมันเพื่อใช้ทำงานและเพิ่มความคล่องตัว แต่ยังไม่มีข้อมูลยืนยันว่าซื้อแล้ว</p></div>
+  </div></div>
+  <div class="pcard"><div class="row">
+    <div class="thumb">🦾</div>
+    <div><h4>เส้นทางวิศวกรรมหุ่นยนต์</h4><p>เคยพิจารณาการเรียน Robotics &amp; Automation Engineering ที่สถาบันปัญญาภิวัฒน์ และตั้งเป้าหมายไปสู่การสร้างหุ่นยนต์อัจฉริยะ</p></div>
+  </div></div>
+</div>
+</details>
+
+<!-- 10 -->
+<details class="card" id="s10">
+<summary><span class="n">10</span><h2>Timeline เป้าหมายในอนาคต</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <p class="dim">สิ่งต่อไปนี้เป็นเป้าหมายที่เคยพูดถึง <b>ไม่ใช่สิ่งที่ยืนยันว่าทำสำเร็จแล้ว</b></p>
+  <div class="pcard"><h4>ระยะที่ 1 — สร้างรายได้จากทักษะที่มี</h4>
+    <ul class="dots">
+      <li>ขายบีทและรับงานผลิตเพลง</li>
+      <li>รับงานมิกซ์มาสเตอร์ สอนทำเพลง และขาย Digital Products</li>
+      <li>ใช้ AI ช่วยเขียนโค้ด สร้างเว็บไซต์ และผลิตคอนเทนต์</li>
+      <li>ทดลอง Affiliate และงานวิดีโอเพื่อเพิ่มช่องทางรายได้</li>
+    </ul>
+  </div>
+  <div class="pcard"><h4>ระยะที่ 2 — สร้างระบบธุรกิจ</h4>
+    <ul class="dots">
+      <li>พัฒนา Thai Beat Academy ให้เป็นแพลตฟอร์มที่สร้างรายได้ได้จริง</li>
+      <li>รวมเว็บไซต์ ผลงานเพลง ชุมชน และบริการเข้าด้วยกัน</li>
+      <li>สร้าง AI Agent ช่วยทำงานซ้ำ ๆ เช่น วิจัย คัดคอนเทนต์ เขียนโค้ด และวิเคราะห์ผลลัพธ์</li>
+    </ul>
+  </div>
+  <div class="pcard"><h4>ระยะที่ 3 — พัฒนาทักษะวิศวกรรม</h4>
+    <ul class="dots">
+      <li>สร้างพื้นฐานคณิตศาสตร์ ฟิสิกส์ อิเล็กทรอนิกส์ และการเขียนโปรแกรม</li>
+      <li>ต่อยอดจากเว็บและ AI ไปสู่ Embedded Systems และ Robotics</li>
+      <li>เรียนรู้การสร้างระบบตั้งแต่ฮาร์ดแวร์ ชิป ซอฟต์แวร์ ไปจนถึง AI</li>
+    </ul>
+  </div>
+  <div class="pcard"><h4>ระยะที่ 4 — สร้างความมั่นคงทางการเงิน</h4>
+    <ul class="dots">
+      <li>รักษาเงินสำรองและบริหารความเสี่ยงก่อนลงทุนเพิ่ม</li>
+      <li>สร้างพอร์ตลงทุนระยะยาวและทดลองกลยุทธ์อย่างมีระบบ</li>
+      <li>ตั้งเป้าพอร์ต 5 ล้านบาทและกระแสเงินสด 25,000–30,000 บาทต่อเดือน</li>
+    </ul>
+  </div>
+</div>
+</details>
+
+<!-- 11 -->
+<details class="card" id="s11" open>
+<summary><span class="n">11</span><h2>ภาพรวมชีวิต ณ วันที่ 8 ตุลาคม 2026</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <p>จากข้อมูลที่มี ผมมองว่าเส้นทางของนายประกอบด้วย 4 แกนใหญ่ที่เชื่อมถึงกัน</p>
+  <div class="axis">
+    <div><span class="ic">🎵</span><b>Music</b><p>สร้างผลงานและแบรนด์ที่เป็นของตัวเอง</p></div>
+    <div><span class="ic">‹/›</span><b>Technology</b><p>สร้างซอฟต์แวร์ เว็บไซต์ และระบบ AI</p></div>
+    <div><span class="ic">⚙️</span><b>Engineering</b><p>พัฒนาสู่ระบบฝังตัว อิเล็กทรอนิกส์ และหุ่นยนต์</p></div>
+    <div><span class="ic">📊</span><b>Finance</b><p>บริหารเงิน ลงทุน และสร้างความเป็นอิสระทางการเงิน</p></div>
+  </div>
+  <div class="note">แกนทั้งสี่มีสิ่งหนึ่งร่วมกัน คือการสร้างสินทรัพย์ที่เติบโตได้ในระยะยาว ไม่ว่าจะเป็นผลงานเพลง เว็บไซต์ ทักษะทางวิศวกรรม หรือพอร์ตลงทุน</div>
+</div>
+</details>
+
+<!-- 12 -->
+<details class="card" id="s12">
+<summary><span class="n">12</span><h2>ข้อมูลที่ยังขาด หากต้องการให้ Timeline สมบูรณ์จริง ๆ</h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <p>ตอนนี้เรามีภาพรวมค่อนข้างกว้างแล้ว แต่ยังมีช่องว่างสำคัญที่ไม่ควรเดาเอง</p>
+  <ul class="dots">
+    <li>ปีและเดือนที่เริ่มทำเพลงเป็นครั้งแรก รวมถึงวันที่เริ่มใช้ชื่อ et1cruel</li>
+    <li>ลำดับปีที่เริ่มและหยุดเรียนในแต่ละสาขาอย่างละเอียด</li>
+    <li>วันเริ่ม–สิ้นสุดของงานแต่ละแห่ง</li>
+    <li>วันเปิดตัวเว็บไซต์และสถานะล่าสุดของแต่ละโปรเจกต์</li>
+    <li>วันที่ซื้ออุปกรณ์แต่ละชิ้นและสถานะการเป็นเจ้าของ</li>
+    <li>ยอดเงินและพอร์ตลงทุนล่าสุดที่ตรงกับบัญชีจริง</li>
+    <li>ความคืบหน้าของเรื่องมรดกหลังวันที่ 26 ตุลาคม 2026 เมื่อถึงกำหนด</li>
+    <li>โปรเจกต์หรือเหตุการณ์สำคัญอื่นที่เคยเกิดขึ้น แต่ไม่มีข้อมูลอยู่ในบริบทที่ผมเข้าถึงได้</li>
+  </ul>
+</div>
+</details>
+
+<footer>⚔ ET1CRUEL · TIMELINE ชีวิตออมสิน · 2004 — 8 ต.ค. 2026 · ข้อมูลจากบทสนทนา ไม่ใช่คำแนะนำการลงทุน</footer>
+
+</div>
+</body>
+</html>
