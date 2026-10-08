@@ -295,7 +295,10 @@ body .eyebrow,body .lv,body .count,body .nav::before{
   font-family:'Press Start 2P','Chakra Petch',sans-serif;
   font-size:9px;letter-spacing:.06em;
 }
-body .nav-group{font-family:'Press Start 2P','Chakra Petch',sans-serif;font-size:8.5px}
+body .nav-group{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-size:17px;font-weight:700;
+  color:#fff;letter-spacing:.03em;text-shadow:0 0 14px rgba(74,222,128,.55);
+  border-top:1px solid #2B3248;padding:16px 10px 10px;margin-top:10px}
+body .nav-group:first-of-type{border-top:none;margin-top:0}
 .os-task{display:flex;gap:8px;align-items:center;font-size:13.5px;color:#DDE3F5;padding:3px 0}
 .os-task button{flex:0 0 26px;width:26px;height:26px;border-radius:8px;border:1.5px solid var(--gold-dim);background:#0B0D14;color:var(--gold);cursor:pointer;font-size:13px;font-weight:800}
 .os-task button.done{background:rgba(61,255,136,.2);border-color:var(--xp);color:#7DFFB2}
