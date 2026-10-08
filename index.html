@@ -299,6 +299,7 @@ body .topbar{flex-wrap:wrap}
   <a href="#money-os">💵 Money OS <span class="n">EDIT</span></a>
   <a href="#masterplan">🎯 แผนหลัก <span class="n">300K</span></a>
   <a href="#stocks">📈 หุ้น US+คริปโต <span class="n">LIVE</span></a>
+  <a href="#charts">📊 กราฟเทคนิค <span class="n">TV</span></a>
   <a href="#port-snap">💼 พอร์ตสแนป <span class="n">10</span></a>
   <a href="#watch17">👁 Watch 17 <span class="n">AI</span></a>
   <a href="#sp500">🇺🇸 S&amp;P 75 <span class="n">2026</span></a>
@@ -426,6 +427,18 @@ body .topbar{flex-wrap:wrap}
     <div class="chat-note">พอร์ต DIME จริง 8/10 ตัว · อีก 2 ตัวเพิ่มเองได้ · ไม่ใช่คำแนะนำการลงทุน</div>
   </div>
   <div class="note">⚔ <b>กฎห้องเทรด:</b> เงินเย็นเท่านั้น · ไม่เกิน 5–10% ต่อตัวสำหรับหุ้นซิ่ง/คริปโต · แบ่งไม้ DCA อย่าหมดแม็กไม้เดียว</div>
+</section>
+
+<!-- CHARTS (TradingView — แนวเดียวกับ OpenStock) -->
+<section class="card" id="charts">
+  <div class="shead"><div class="icon">📊</div>
+  <div><h2>กราฟเทคนิค + ภาพรวมตลาด</h2><p>ชาร์ตเรียลไทม์ · heatmap S&amp;P 500 · กดปุ่มสลับหุ้นได้</p></div><span class="count">LIVE CHART</span></div>
+  <div class="tv-tape" id="tvTape"><div class="tv-loading">กำลังโหลดเทปหุ้น…</div></div>
+  <div class="tv-btns" id="tvBtns" role="group" aria-label="เลือกหุ้นดูกราฟ"></div>
+  <div class="tv-chart" id="tvChart"><div class="tv-loading">กำลังโหลดกราฟ… (กาง section นี้แล้วรอแป๊บ)</div></div>
+  <div class="group-title"><span class="gnum">🔥</span> HEATMAP S&amp;P 500</div>
+  <div class="tv-heat" id="tvHeat"><div class="tv-loading">กำลังโหลด heatmap…</div></div>
+  <div class="note">กราฟโดย <b>TradingView</b> · ไอเดียจากโปรเจกต์โอเพนซอร์ส <b>OpenStock</b> (<a href="https://github.com/Open-Dev-Society/OpenStock" target="_blank" rel="noopener" style="color:var(--gold);font-weight:700">GitHub ↗</a> · <a href="https://openstock-ods.vercel.app" target="_blank" rel="noopener" style="color:var(--gold);font-weight:700">ลองเล่นเว็บจริง ↗</a>) · ไม่ใช่คำแนะนำการลงทุน</div>
 </section>
 
 <!-- PORT SNAPSHOT -->
@@ -1232,6 +1245,7 @@ function apply(){
 <script src="js/watch.js"></script>
 <script src="js/sp500.js"></script>
 <script src="js/money-tree.js"></script>
+<script src="js/tv-widgets.js"></script>
 <div id="os-toasts"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
 <nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button class="qmin" id="qtrackerMin" aria-label="พับ/กาง">–</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>

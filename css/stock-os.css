@@ -101,6 +101,19 @@
 .dime-edit .stock-table{margin-top:8px}
 @media(max-width:520px){.dime-cols{grid-template-columns:1fr}.dime-pl{min-width:0}.dime-total{font-size:30px}}
 @media(max-width:900px){.plan-grid{grid-template-columns:1fr}.pb-amt{font-size:26px}}
+/* ===== TradingView widgets (แนว OpenStock) ===== */
+.tv-loading{color:var(--muted,#AAB4CC);font-size:14px;text-align:center;padding:26px 10px}
+.tv-tape{margin-bottom:12px;min-height:46px}
+.tv-tape .tradingview-widget-container iframe{height:46px!important}
+.tv-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tv-btn{font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;border:1px solid #3d4666;background:#0B0D14;color:var(--muted,#AAB4CC);border-radius:9px;padding:7px 13px}
+.tv-btn:hover{border-color:var(--gold,#4ADE80);color:#fff}
+.tv-btn.on{background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;border-color:var(--gold,#4ADE80)}
+.tv-chart{height:520px;border:1px solid #2B3248;border-radius:14px;overflow:hidden;background:#0B0D14}
+.tv-chart .tradingview-widget-container{height:100%}
+.tv-heat{border:1px solid #2B3248;border-radius:14px;overflow:hidden;background:#0B0D14;min-height:200px}
+.tv-heat .tradingview-widget-container iframe{height:600px!important}
+@media(max-width:680px){.tv-chart{height:420px}.tv-heat .tradingview-widget-container iframe{height:480px!important}}
 /* ===== พอร์ตสแนป / Watch17 / S&P — ดาร์กธีม LIFE OS ===== */
 .px-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;border:1px dashed #3d4666;background:rgba(74,222,128,.05);border-radius:12px;font-size:13px;color:var(--muted,#AAB4CC)}
 .px-updated b{color:var(--gold,#4ADE80)}
