@@ -764,6 +764,12 @@ function migrate() {
   Object.keys(OLD_VAULTS).forEach(function (k) {
     if (S.money.vaults[k] === OLD_VAULTS[k]) S.money.vaults[k] = DEF_VAULTS[k];
   });
+  // ซิงก์ยอดทางการครั้งเดียว (v3 = Kept 409K + กสิกร 225,820 + KTB 0 + DIME 3K + สด 200 + US 13K + BTC 400)
+  // แก้เองหลังเวอร์ชันนี้จะไม่โดนทับ
+  if (S.money.vaultVer !== 3) {
+    S.money.vaults = Object.assign({}, DEF_VAULTS);
+    S.money.vaultVer = 3;
+  }
   if (S.money.vaults.dime === 1000) S.money.vaults.dime = 3000; // ยอด seed รอบก่อน
   if (S.money.vaults.kasikorn === 157420) S.money.vaults.kasikorn = 225820; // ยอด seed รอบก่อน
   delete S.money.vaults.keptKrungsri; delete S.money.vaults.growKrungsri; // รวม Krungsri กลับเป็น Kept Grow
