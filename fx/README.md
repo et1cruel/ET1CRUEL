@@ -43,8 +43,9 @@
 ## Phase 5 — Sound Garden (`audio.js`)
 
 - อัปเกรดแผง 🌧️ เดิม (ID เดิมครบ) · `js/ambient.js` หลีกทางให้เมื่อ `ET1SOUND_V2` ขึ้น (guard 2 จุด)
-- 12 ชั้น: rain/waves/forest/night/wind/fire/stream/thunder + pad/flute/bowl/pluck
-- ดนตรีสเกลเพนทาโทนิก A เดียวกัน จูนอิง A4=432Hz (สเปกเสียง ไม่ใช่สรรพคุณรักษา)
+- 9 ชั้น: rain/waves/forest/night/wind/fire/stream/thunder + pad + ไฟล์เพลง
+- แพดโดรนอิง 528Hz (264+396+528, สเปกเสียง ไม่ใช่สรรพคุณรักษา)
+- ไฟล์เพลงจริงใน `audio/` (เช่น LeBerch 432Hz): โหลดเฉพาะตอนกดเปิด (fetch→decode→loop) มีสถานะโหลด/พังแบบนุ่มนวล — หย่อน mp3 ไฟล์อื่นลง `audio/` แล้วเพิ่ม 1 บรรทัดใน `LAYERS` + builder `bFile` ได้เลย
 - master + per-layer slider + fade (setTargetAtTime) · preset 6 แบบ · sleep timer 15/30/60 (fade 9 วิ)
 - ย้ายค่าเก่าจาก `et1cruel-ambient-v1` ครั้งเดียว (ไม่ลบ key เก่า) → จำใหม่ `et1_sound_v1`
 - เปิดฝน/ลมแล้วสั่ง `ET1FOREST.setWeather` ให้ป่าตอบสนอง (guard ถ้าไม่มีป่า)

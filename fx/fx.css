@@ -59,6 +59,7 @@
   padding:7px 6px;font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .snd-row button:hover{border-color:#4ADE80}
 .snd-row button.on{border-color:#4ADE80;background:rgba(74,222,128,.12);box-shadow:0 0 10px rgba(74,222,128,.25)}
+.snd-row button.loading{opacity:.5;pointer-events:none}
 .snd-row input{flex:1;accent-color:#4ADE80;min-width:0}
 .snd-timer{display:flex;gap:6px;flex-wrap:wrap}
 .snd-timer button{flex:1;border:1px solid #3d4666;background:#0B0D14;color:#fff;border-radius:10px;

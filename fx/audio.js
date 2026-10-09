@@ -10,9 +10,8 @@
    ============================================================ */
 (function () {
   'use strict';
-  /* ---------- config กลาง: สเกลเดียวทั้งวง ---------- */
-  var TUNE = { a4: 432, penta: [0, 3, 5, 7, 10, 12, 15, 17, 19, 22, 24] };
-  function freq(semi) { return TUNE.a4 * Math.pow(2, semi / 12); }
+  /* ---------- config กลาง ---------- */
+  var PAD_REF = 528; // แพดอิง 528Hz (สเปกเสียง ไม่ใช่สรรพคุณรักษา)
   var LAYERS = [
     { id: 'rain',   icon: '🌧', name: 'ฝน',       kind: 'nature' },
     { id: 'waves',  icon: '🌊', name: 'คลื่น',     kind: 'nature' },
@@ -22,20 +21,19 @@
     { id: 'fire',   icon: '🔥', name: 'กองไฟ',     kind: 'nature' },
     { id: 'stream', icon: '💧', name: 'ลำธาร',     kind: 'nature' },
     { id: 'thunder', icon: '⛈', name: 'ฟ้าร้องไกล', kind: 'nature' },
-    { id: 'pad',    icon: '🎵', name: 'แพด 432Hz', kind: 'music' },
-    { id: 'flute',  icon: '🪈', name: 'ขลุ่ย',     kind: 'music' },
-    { id: 'bowl',   icon: '🔔', name: 'ชามเสียง',   kind: 'music' },
-    { id: 'pluck',  icon: '🎹', name: 'พิณนุ่ม',    kind: 'music' }
+    { id: 'pad',    icon: '🎵', name: 'แพด 528Hz', kind: 'music' },
+    { id: 'med432', icon: '🎼', name: 'LeBerch 432', kind: 'music' }
   ];
   var PRESETS = {
     morning:  { label: '🌅 ป่าฝนยามเช้า', on: { forest: 70, wind: 40, stream: 30 } },
     rainforest: { label: '🌧 ป่าฝน', on: { rain: 80, thunder: 60, pad: 25 } },
-    meditate: { label: '🧘 นั่งสมาธิ', on: { pad: 60, bowl: 70 } },
-    flutestream: { label: '🪈 ขลุ่ยริมลำธาร', on: { flute: 70, stream: 60, wind: 30 } },
+    meditate: { label: '🧘 นั่งสมาธิ', on: { pad: 60, night: 30 } },
     focus:    { label: '🎯 โฟกัสทำงาน', on: { pad: 35, rain: 25 } },
     silent:   { label: '🔇 เงียบสงบ', on: {} }
   };
   var KEY = 'et1_sound_v1', OLD_KEY = 'et1cruel-ambient-v1';
+  var KNOWN = {};
+  (function () { var i; for (i = 0; i < LAYERS.length; i++) KNOWN[LAYERS[i].id] = true; })();
 
   function $(id) { return document.getElementById(id); }
   function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
@@ -62,7 +60,10 @@
       if (raw) {
         var o = JSON.parse(raw);
         if (o && typeof o === 'object') {
-          if (o.on && typeof o.on === 'object') s.on = o.on;
+          if (o.on && typeof o.on === 'object') {
+            s.on = o.on;
+            var _k; for (_k in s.on) { if (!KNOWN[_k]) delete s.on[_k]; } // ตัดเสียงที่ถูกถอดออก
+          }
           if (o.vol && typeof o.vol === 'object') { var k; for (k in s.vol) { if (typeof o.vol[k] === 'number') s.vol[k] = clamp(o.vol[k], 0, 100); } }
           if (typeof o.master === 'number') s.master = clamp(o.master, 0, 100);
           if (typeof o.preset === 'string') s.preset = o.preset;
@@ -322,21 +323,18 @@
     }
     return { stop: function () { clearInterval(timer); stopNodes(tg, []); }, setVol: stdSetVol('thunder', tg) };
   }
-  /* ----- music (สเกลเพนทาโทนิก A, จูน 432) ----- */
-  function penta(deg) {
-    var p = TUNE.penta, oct = Math.floor(deg / p.length), idx = ((deg % p.length) + p.length) % p.length;
-    return freq(p[idx] + oct * 12 - 12);
-  }
+  /* ----- music ----- */
   function bPad() {
+    // โดรนอิง 528Hz: ราก 264 + คู่ห้า 396 + อ็อกเทฟ 528 (สเปกเสียง)
     // สาย: oscs → mix → lowpass(หายใจช้าๆ) → g → master + send → reverb → master
     var g = layerGain('pad'), mix = AC.createGain(), oscs = [], i;
-    var parts = [0, 7, 12];
+    var parts = [PAD_REF / 2, PAD_REF * 0.75, PAD_REF];
     for (i = 0; i < parts.length; i++) {
       (function (i) {
         var o1 = AC.createOscillator(), o2 = AC.createOscillator(), og = AC.createGain();
         o1.type = 'sine'; o2.type = 'triangle';
-        o1.frequency.value = freq(parts[i] - 24);
-        o2.frequency.value = freq(parts[i] - 24);
+        o1.frequency.value = parts[i];
+        o2.frequency.value = parts[i];
         try { o1.detune.value = -4; o2.detune.value = 5; } catch (e) {}
         og.gain.value = i === 0 ? 0.5 : 0.3;
         o1.connect(og); o2.connect(og); og.connect(mix);
@@ -364,89 +362,76 @@
       setVol: stdSetVol('pad', g)
     };
   }
-  function bFlute() {
-    var g = layerGain('flute');
-    var deg = 7; // เริ่มกลางสเกล
-    var timer = setInterval(function () {
-      if (Math.random() < 0.3) return; // เว้นจังหวะหายใจ
-      deg += Math.floor(Math.random() * 5) - 2;
-      deg = clamp(deg, 0, TUNE.penta.length + 4);
-      note(penta(deg), 0.9 + Math.random() * 1.4);
-    }, 2600);
-
-    function note(f, dur) {
+  /* ----- ไฟล์เพลงจริง (โหลดเฉพาะตอนกดเปิด ไม่ถ่วงตอนเปิดหน้า) ----- */
+  var FILE_CACHE = {}; // id -> AudioBuffer
+  function bFile(id, url) {
+    var g = layerGain(id);
+    var st = { dead: false, src: null };
+    markLoad(true);
+    if (FILE_CACHE[id]) startSrc(FILE_CACHE[id]);
+    else {
+      fetch(url).then(function (res) {
+        if (!res.ok) throw new Error('http ' + res.status);
+        return res.arrayBuffer();
+      }).then(function (ab) {
+        return new Promise(function (resolve, reject) {
+          try {
+            if (AC.decodeAudioData.length >= 2) AC.decodeAudioData(ab, resolve, reject);
+            else {
+              var p = AC.decodeAudioData(ab);
+              if (p && p.then) p.then(resolve, reject);
+              else reject(new Error('decode?'));
+            }
+          } catch (e) { reject(e); }
+        });
+      }).then(function (buf) {
+        FILE_CACHE[id] = buf;
+        startSrc(buf);
+      }, function () { fail(); });
+    }
+    function startSrc(buf) {
+      if (st.dead) return;
       try {
-        var t = AC.currentTime, o = AC.createOscillator(), og = AC.createGain();
-        var vib = AC.createOscillator(), vg = AC.createGain(), br = AC.createBufferSource(), bf = AC.createBiquadFilter(), bg = AC.createGain();
-        o.type = 'triangle'; o.frequency.value = f;
-        vib.type = 'sine'; vib.frequency.value = 5; vg.gain.value = 6;
-        try { vib.connect(vg); vg.connect(o.frequency); } catch (e) {}
-        br.buffer = noise(); br.loop = true;
-        bf.type = 'bandpass'; bf.frequency.value = f * 2; bg.gain.value = 0.03;
-        og.gain.setValueAtTime(0.0001, t);
-        og.gain.exponentialRampToValueAtTime(0.24, t + dur * 0.3);
-        og.gain.setValueAtTime(0.24, t + dur * 0.7);
-        og.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-        o.connect(og); og.connect(g);
-        br.connect(bf); bf.connect(bg); bg.connect(g);
-        o.start(t); vib.start(t); br.start(t);
-        o.stop(t + dur + 0.1); vib.stop(t + dur + 0.1); br.stop(t + dur + 0.1);
+        var s = AC.createBufferSource();
+        s.buffer = buf; s.loop = true;
+        s.connect(g);
+        s.start();
+        st.src = s;
+      } catch (e) { fail(); return; }
+      markLoad(false);
+    }
+    function markLoad(loading) {
+      try {
+        var box = $('sndLayers');
+        if (!box || !box.querySelectorAll) return;
+        var rows = box.querySelectorAll('[data-layer]'), i;
+        for (i = 0; i < rows.length; i++) {
+          if (rows[i].getAttribute('data-layer') === id) {
+            var b = rows[i].querySelector('button');
+            if (b && b.classList) b.classList.toggle('loading', !!loading);
+          }
+        }
       } catch (e2) {}
     }
-    return { stop: function () { clearInterval(timer); stopNodes(g, []); }, setVol: stdSetVol('flute', g) };
-  }
-  function bBowl() {
-    var g = layerGain('bowl');
-    function strike() {
+    function fail() {
+      markLoad(false);
+      st.dead = true;
       try {
-        var t = AC.currentTime, base = freq(-12 + [0, 3, 5][Math.floor(Math.random() * 3)]);
-        var parts = [[1, 0.3, 8], [2.76, 0.12, 6], [5.4, 0.06, 4]];
-        var i;
-        for (i = 0; i < parts.length; i++) {
-          (function (p) {
-            var o = AC.createOscillator(), og = AC.createGain();
-            o.type = 'sine'; o.frequency.value = base * p[0];
-            og.gain.setValueAtTime(0.0001, t);
-            og.gain.exponentialRampToValueAtTime(p[1], t + 0.05);
-            og.gain.exponentialRampToValueAtTime(0.0001, t + p[2]);
-            o.connect(og); og.connect(g);
-            o.start(t); o.stop(t + p[2] + 0.2);
-          })(parts[i]);
-        }
-      } catch (e) {}
+        if (S.on[id]) { S.on[id] = false; engineStop(id); }
+        save(); paint();
+        toast('โหลดไฟล์เพลงไม่สำเร็จ');
+      } catch (e3) {}
     }
-    strike();
-    var timer = setInterval(function () { if (Math.random() < 0.8) strike(); }, 14000);
-    return { stop: function () { clearInterval(timer); stopNodes(g, []); }, setVol: stdSetVol('bowl', g) };
+    return {
+      stop: function () { st.dead = true; markLoad(false); stopNodes(g, st.src ? [st.src] : []); },
+      setVol: stdSetVol(id, g)
+    };
   }
-  function bPluck() {
-    var g = layerGain('pluck');
-    var deg = 5;
-    var timer = setInterval(function () {
-      if (Math.random() < 0.35) return;
-      deg += Math.floor(Math.random() * 5) - 2;
-      deg = clamp(deg, 0, TUNE.penta.length + 4);
-      pluck(penta(deg));
-    }, 3200);
-    function pluck(f) {
-      try {
-        var t = AC.currentTime, o = AC.createOscillator(), o2 = AC.createOscillator(), og = AC.createGain();
-        o.type = 'triangle'; o.frequency.value = f;
-        o2.type = 'sine'; o2.frequency.value = f * 4;
-        var og2 = AC.createGain(); og2.gain.value = 0.15;
-        og.gain.setValueAtTime(0.0001, t);
-        og.gain.exponentialRampToValueAtTime(0.26, t + 0.015);
-        og.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-        o.connect(og); o2.connect(og2); og2.connect(og); og.connect(g);
-        o.start(t); o2.start(t); o.stop(t + 1.8); o2.stop(t + 1.8);
-      } catch (e) {}
-    }
-    return { stop: function () { clearInterval(timer); stopNodes(g, []); }, setVol: stdSetVol('pluck', g) };
-  }
+  function bMed432() { return bFile('med432', 'audio/leberch-432hz.mp3'); }
   var BUILDERS = {
     rain: bRain, waves: bWaves, forest: bForest, night: bNight,
     wind: bWind, fire: bFire, stream: bStream, thunder: bThunder,
-    pad: bPad, flute: bFlute, bowl: bBowl, pluck: bPluck
+    pad: bPad, med432: bMed432
   };
 
   /* ---------- control ---------- */
