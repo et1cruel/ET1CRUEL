@@ -76,6 +76,17 @@
     tx.value = e ? (e.text || '') : '';
     setMood(e && e.mood ? e.mood : '🙂');
     updateEditorMeta();
+    // กู้ฉบับร่างถ้ายังไม่เคยบันทึกวันนี้
+    var dr = (!e && D[dateStr]) ? D[dateStr] : null;
+    if (dr && ((dr.text || '') || (dr.title || ''))) {
+      if (ti) ti.value = dr.title || '';
+      tx.value = dr.text || '';
+      setMood(dr.mood || '🙂');
+      updateEditorMeta();
+      var hint = $('diaryHint');
+      if (hint) hint.textContent += ' · ✎ กู้ฉบับร่างอัตโนมัติ';
+      paintSaved('● ฉบับร่างที่กู้คืน');
+    } else paintSaved('');
   }
 
   function updateEditorMeta() {
@@ -154,6 +165,8 @@
       updatedAt: new Date().toISOString()
     };
     save(DB);
+    if (D[k]) { delete D[k]; saveDrafts(); } // บันทึกแล้วล้างฉบับร่างวันนี้
+    paintSaved('✓ บันทึกแล้ว ' + hhmm());
     // sync ช่องเก่ากันสคริปต์ life-os หาไม่เจอ
     var jt = $('os-j-text'); if (jt) jt.value = '';
     updateEditorMeta();
@@ -162,6 +175,123 @@
     if (isNew && window.ET1OS && typeof window.ET1OS.addXP === 'function') {
       try { window.ET1OS.addXP(30, 'Diary ' + k, 'MIND', 1); } catch (e) {}
     }
+  }
+
+  /* ---------- Phase 7: ฉบับร่าง autosave ---------- */
+  var DRAFT_KEY = 'et1cruel_diary_draft_v1';
+  var D = {};
+  try { D = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}') || {}; if (typeof D !== 'object') D = {}; } catch (e0) { D = {}; }
+  var draftTimer = 0;
+  function saveDrafts() { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(D)); } catch (e) {} }
+  function hhmm() { try { return new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); } catch (e2) { return ''; } }
+  function paintSaved(msg) { var el = $('diarySaved'); if (el) el.textContent = msg || ''; }
+  function queueDraft() {
+    var de = $('diaryDate'), ti = $('diaryTitle'), tx = $('diaryText');
+    if (!de || !tx) return;
+    var k = de.value || todayKey();
+    var title = ((ti || {}).value || '').trim(), text = (tx.value || '');
+    if (!title && !text.trim()) {
+      if (D[k]) { delete D[k]; saveDrafts(); }
+      paintSaved('');
+      return;
+    }
+    D[k] = { title: title.slice(0, 80), text: text, mood: curMood, updatedAt: new Date().toISOString() };
+    saveDrafts();
+    paintSaved('● ฉบับร่าง ' + hhmm());
+  }
+  function queueDraftSoon() {
+    if (draftTimer) clearTimeout(draftTimer);
+    draftTimer = setTimeout(queueDraft, 1500);
+  }
+
+  /* ---------- Phase 7: สำรองรวมทุกอย่าง ---------- */
+  var BACKUP_DEFS = [
+    { key: 'et1cruel_diary_v1', label: 'ไดอารี่', valid: function (v) { return v == null || (typeof v === 'object' && (!v.entries || typeof v.entries === 'object')); }, info: function (v) { return v && v.entries ? Object.keys(v.entries).length + ' วัน' : 'ว่าง'; } },
+    { key: 'et1cruel_diary_draft_v1', label: 'ฉบับร่าง', valid: function (v) { return v == null || typeof v === 'object'; }, info: function (v) { return v ? Object.keys(v).length + ' วัน' : 'ว่าง'; } },
+    { key: 'et1_forest_v1', label: 'ป่า', valid: function (v) { return v == null || (typeof v === 'object' && (!v.trees || Array.isArray(v.trees))); }, info: function (v) { return v && v.trees ? v.trees.length + ' ต้น' : 'ว่าง'; } },
+    { key: 'et1_sound_v1', label: 'เสียง', valid: function (v) { return v == null || typeof v === 'object'; }, info: function (v) { return v ? 'มี' : 'ว่าง'; } },
+    { key: 'et1cruel_lifeos_v1', label: 'Life OS', valid: function (v) { return v == null || (typeof v === 'object' && (!v.character || typeof v.character === 'object')); }, info: function (v) { return v ? 'มี' : 'ว่าง'; } },
+    { key: 'et1_mouse_v1', label: 'หนู', valid: function (v) { return v == null || typeof v === 'object'; }, info: function (v) { return v ? 'มี' : 'ว่าง'; } },
+    { key: 'et1cruel-tree-coins', label: 'เหรียญต้นไม้', valid: function (v) { return v == null || isFinite(+v); }, info: function (v) { return v == null ? 'ว่าง' : String(v); } },
+    { key: 'et1cruel-collapsed-v1', label: 'การพับจอ', valid: function (v) { return v == null || Array.isArray(v); }, info: function (v) { return v ? v.length + ' section' : 'ว่าง'; } },
+    { key: 'et1cruel-qtracker-min', label: 'qtracker', valid: function (v) { return v == null || v === 0 || v === 1 || v === '0' || v === '1'; }, info: function (v) { return v == null ? 'ว่าง' : 'มี'; } },
+    { key: 'et1cruel-qtracker-hidden', label: 'qtracker-ซ่อน', valid: function (v) { return v == null || v === 0 || v === 1 || v === '0' || v === '1'; }, info: function (v) { return v == null ? 'ว่าง' : 'มี'; } }
+  ];
+  function parseRaw(raw) {
+    if (raw == null) return null;
+    try { return JSON.parse(raw); } catch (e) { return raw; }
+  }
+  function collectBackup(app) {
+    var data = {}, n = 0, i;
+    for (i = 0; i < BACKUP_DEFS.length; i++) {
+      var raw = null;
+      try { raw = localStorage.getItem(BACKUP_DEFS[i].key); } catch (e) {}
+      if (raw != null) { data[BACKUP_DEFS[i].key] = raw; n++; }
+    }
+    return { app: app || 'et1cruel-backup', v: 1, exportedAt: new Date().toISOString(), data: data, keys: n };
+  }
+  function download(name, text) {
+    try {
+      var blob = new Blob([text], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+      return true;
+    } catch (e) { return false; }
+  }
+  function doBackupAll() {
+    var b = collectBackup('et1cruel-backup');
+    if (!b.keys) { toast('ยังไม่มีข้อมูลอะไรให้สำรอง'); return; }
+    if (download('et1cruel-backup-' + todayKey() + '.json', JSON.stringify(b, null, 2))) {
+      toast('💾 สำรองทั้งหมด ' + b.keys + ' ชุดแล้ว ✓ (ไฟล์อยู่ในเครื่องคุณ)');
+    } else toast('สำรองไม่สำเร็จ');
+  }
+  function doImportAll(file) {
+    if (!file) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var o = null;
+      try { o = JSON.parse(r.result); } catch (err) { toast('ไฟล์ไม่ถูกต้อง (ไม่ใช่ JSON)'); return; }
+      var data = (o && o.data && typeof o.data === 'object') ? o.data : null;
+      if (!data) {
+        // ยอมรับไฟล์ flat ที่key ตรง (เช่น export เก่า)
+        data = {};
+        var hk = false, i;
+        for (i = 0; i < BACKUP_DEFS.length; i++) {
+          if (o && Object.prototype.hasOwnProperty.call(o, BACKUP_DEFS[i].key)) { data[BACKUP_DEFS[i].key] = o[BACKUP_DEFS[i].key]; hk = true; }
+        }
+        if (!hk) { toast('ไฟล์นี้ไม่มีข้อมูลที่รู้จัก'); return; }
+      }
+      // ตรวจทุก key ก่อนเขียนจริง (atomic: พัง = ไม่เขียนเลย)
+      var errors = [], previews = [], writes = [], i2;
+      for (i2 = 0; i2 < BACKUP_DEFS.length; i2++) {
+        var def = BACKUP_DEFS[i2];
+        if (!Object.prototype.hasOwnProperty.call(data, def.key)) continue;
+        var raw = data[def.key];
+        var val = (typeof raw === 'string') ? parseRaw(raw) : raw;
+        if (!def.valid(val)) { errors.push(def.label); continue; }
+        writes.push({ key: def.key, raw: (typeof raw === 'string') ? raw : JSON.stringify(raw) });
+        previews.push('• ' + def.label + ': ' + def.info(val));
+      }
+      if (errors.length) { toast('ไฟล์ไม่ผ่าน: ' + errors.join(' · ')); return; }
+      if (!writes.length) { toast('ไฟล์นี้ไม่มีข้อมูลที่รู้จัก'); return; }
+      var ok = false;
+      try { ok = confirm('นำเข้าทับของเดิม?\n' + previews.join('\n') + '\n\nตกลง = สำรองของเดิมเป็นไฟล์ recovery ก่อน แล้วนำเข้า'); }
+      catch (e2) { toast('เบราว์เซอร์นี้ยืนยันไม่ได้ ยกเลิกก่อน'); return; }
+      if (!ok) return;
+      // สำรองของเดิมก่อนทำลาย (กู้ได้)
+      var rec = collectBackup('et1cruel-recovery');
+      download('et1cruel-recovery-' + todayKey() + '.json', JSON.stringify(rec, null, 2));
+      var j;
+      for (j = 0; j < writes.length; j++) {
+        try { localStorage.setItem(writes[j].key, writes[j].raw); } catch (e3) {}
+      }
+      toast('📥 นำเข้า ' + writes.length + ' ชุดแล้ว ✓ (มีไฟล์ recovery กันพลาด)');
+      try { location.reload(); } catch (e4) {}
+    };
+    try { r.readAsText(file); } catch (e5) { toast('อ่านไฟล์ไม่ได้'); }
   }
 
   function doDelete(k) {
@@ -188,16 +318,17 @@
     var box = $('diaryMoods');
     if (box) box.addEventListener('click', function (e) {
       var b = e.target.closest ? e.target.closest('[data-mood]') : null;
-      if (b) setMood(b.getAttribute('data-mood'));
+      if (b) { setMood(b.getAttribute('data-mood')); queueDraftSoon(); }
     });
 
     de.addEventListener('change', function () { loadToEditor(de.value || todayKey()); });
     var tx = $('diaryText');
-    if (tx) tx.addEventListener('input', updateEditorMeta);
+    if (tx) tx.addEventListener('input', function () { updateEditorMeta(); queueDraftSoon(); });
     var ti = $('diaryTitle');
     if (ti) ti.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') { e.preventDefault(); if (tx) tx.focus(); }
     });
+    if (ti) ti.addEventListener('input', queueDraftSoon);
     // Ctrl/Cmd+S = บันทึก
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
@@ -265,6 +396,15 @@
         im.value = '';
       };
       r.readAsText(f);
+    });
+
+    var ba = $('diaryBackupAll');
+    if (ba) ba.addEventListener('click', doBackupAll);
+    var ia = $('diaryImportAll');
+    if (ia) ia.addEventListener('change', function () {
+      var f = ia.files && ia.files[0];
+      if (f) doImportAll(f);
+      ia.value = '';
     });
 
     loadToEditor(todayKey());

@@ -851,7 +851,7 @@ body .topbar{flex-wrap:wrap}
       <textarea id="diaryText" class="os-text diary-area" placeholder="วันนี้เป็นยังไงบ้าง? ดี / แย่ / ได้บทเรียนอะไร…&#10;&#10;ไอเดียเขียนไวๆ:&#10;• วันนี้ชนะอะไร 1 อย่าง&#10;• พรุ่งนี้จะทำอะไรต่อ&#10;• ความรู้สึกตอนนี้ (1 ประโยค)"></textarea>
       <div class="diary-row diary-foot">
         <span class="diary-hint" id="diaryHint">ยังไม่ได้เขียนของวันนี้</span>
-        <span class="diary-count-note"><span id="diaryChars">0</span> ตัวอักษร</span>
+        <span class="diary-count-note"><span id="diaryChars">0</span> ตัวอักษร · <span class="diary-saved" id="diarySaved"></span></span>
       </div>
       <div class="os-row" style="margin-top:10px">
         <button type="button" class="os-btn" id="diarySave">💾 บันทึกวันนี้</button>
@@ -874,11 +874,15 @@ body .topbar{flex-wrap:wrap}
           <button type="button" class="os-btn small ghost" id="diaryExport">⬇ Export</button>
           <label class="os-btn small ghost" style="cursor:pointer">⬆ Import<input type="file" id="diaryImport" accept="application/json" hidden></label>
         </div>
+        <div class="os-row" style="margin-top:8px">
+          <button type="button" class="os-btn small ghost" id="diaryBackupAll">💾 สำรองทั้งหมด</button>
+          <label class="os-btn small ghost" style="cursor:pointer">📥 นำไฟล์สำรองกลับ<input type="file" id="diaryImportAll" accept="application/json" hidden></label>
+        </div>
       </div>
       <div id="diaryList" class="diary-list"></div>
     </div>
   </div>
-  <div class="note">🔒 <b>เป็นส่วนตัว:</b> ไดอารี่เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ส่งออกเน็ต · อยากย้ายเครื่องกด <b>Export</b> เก็บไฟล์ไว้ · เขียนวันละนิด = <b>+30 XP</b> เข้าระบบ Life OS ด้วย</div>
+  <div class="note">🔒 <b>เป็นส่วนตัว:</b> ไดอารี่เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ส่งออกเน็ต · อยากย้ายเครื่องกด <b>Export</b> เก็บไฟล์ไว้ · เขียนวันละนิด = <b>+30 XP</b> เข้าระบบ Life OS ด้วย<br>💾 <b>สำรองทั้งหมด</b> เก็บไดอารี่+ฉบับร่าง+ป่า+เสียง+Life OS+หนู+เหรียญ+ค่าพับจอเป็นไฟล์เดียว · นำกลับมีพรีวิว+ถามก่อนทับ+สำรอง recovery ให้อัตโนมัติ · localStorage ไม่ใช่ที่เก็บถาวร ควร Export เก็บไว้บ้าง</div>
 </section>
 
 <!-- 5 -->
