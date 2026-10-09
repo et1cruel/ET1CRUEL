@@ -322,6 +322,8 @@ body .topbar{flex-wrap:wrap}
   <a href="#quests">📋 เควสทั่วไป <span class="n">17</span></a>
   <a href="#content">🎬 คอนเทนต์ <span class="n">30+</span></a>
   <a href="#channels">📡 ช่อง <span class="n">7</span></a>
+  <div class="nav-group">📓 ไดอารี่</div>
+  <a href="#diary">📓 ไดอารี่รายวัน <span class="n" id="navDiary">NEW</span></a>
   <div class="nav-group">🧬 ตัวตน + แผน</div>
   <a href="#skills">⚔️ สกิล <span class="n">S++</span></a>
   <a href="#passive">💤 Passive <span class="n">11</span></a>
@@ -793,6 +795,59 @@ body .topbar{flex-wrap:wrap}
   </div>
 </section>
 
+<!-- DIARY : สมุดไดอารี่รายวัน -->
+<section class="card" id="diary">
+  <div class="shead"><div class="icon">📓</div>
+  <div><h2>ไดอารี่รายวัน — ที่จดบันทึกของตัวเอง</h2><p>วันละหน้า · เก็บในเครื่องนี้ (localStorage) · กดบันทึกแล้วกลับมาอ่านได้ทุกวัน</p></div><span class="count" id="diaryCount">0 วัน</span></div>
+  <div class="diary-grid">
+    <div class="diary-write">
+      <div class="group-title"><span class="gnum">✎</span> เขียนวันนี้ — <span id="diaryTodayLabel">…</span></div>
+      <div class="diary-row">
+        <label class="diary-lab">📅 วันที่
+          <input type="date" id="diaryDate" class="os-input diary-date">
+        </label>
+        <div class="diary-moods" id="diaryMoods" role="group" aria-label="อารมณ์วันนี้">
+          <button type="button" data-mood="🔥" title="ไฟลุก">🔥</button>
+          <button type="button" data-mood="🙂" title="โอเค">🙂</button>
+          <button type="button" data-mood="😌" title="สงบ">😌</button>
+          <button type="button" data-mood="😴" title="เหนื่อย">😴</button>
+          <button type="button" data-mood="😭" title="แย่">😭</button>
+        </div>
+      </div>
+      <input id="diaryTitle" class="os-input" placeholder="หัวข้อวันนี้… เช่น วันที่บีทแรกเสร็จ" maxlength="80">
+      <textarea id="diaryText" class="os-text diary-area" placeholder="วันนี้เป็นยังไงบ้าง? ดี / แย่ / ได้บทเรียนอะไร…&#10;&#10;ไอเดียเขียนไวๆ:&#10;• วันนี้ชนะอะไร 1 อย่าง&#10;• พรุ่งนี้จะทำอะไรต่อ&#10;• ความรู้สึกตอนนี้ (1 ประโยค)"></textarea>
+      <div class="diary-row diary-foot">
+        <span class="diary-hint" id="diaryHint">ยังไม่ได้เขียนของวันนี้</span>
+        <span class="diary-count-note"><span id="diaryChars">0</span> ตัวอักษร</span>
+      </div>
+      <div class="os-row" style="margin-top:10px">
+        <button type="button" class="os-btn" id="diarySave">💾 บันทึกวันนี้</button>
+        <button type="button" class="os-btn ghost small" id="diaryToday">📅 กลับไปวันนี้</button>
+        <button type="button" class="os-btn danger small" id="diaryDelete" hidden>ลบวันนี้</button>
+      </div>
+      <div class="diary-streak" id="diaryStreak"></div>
+      <!-- ช่องเดิมของระบบ Life OS (กันสคริปต์เก่าหาไม่เจอ) -->
+      <div hidden>
+        <select id="os-j-mood"><option>🙂</option></select>
+        <input id="os-j-tags"><textarea id="os-j-text"></textarea>
+        <div id="os-journal-list"></div>
+      </div>
+    </div>
+    <div class="diary-history">
+      <div class="group-title"><span class="gnum">☰</span> ประวัติ — ย้อนอ่านทุกวัน</div>
+      <div class="diary-tools">
+        <input id="diarySearch" class="os-input" placeholder="🔍 ค้นหา… เช่น บีท / เหนื่อย / ลัคกี้" style="margin:0">
+        <div class="os-row" style="margin-top:8px">
+          <button type="button" class="os-btn small ghost" id="diaryExport">⬇ Export</button>
+          <label class="os-btn small ghost" style="cursor:pointer">⬆ Import<input type="file" id="diaryImport" accept="application/json" hidden></label>
+        </div>
+      </div>
+      <div id="diaryList" class="diary-list"></div>
+    </div>
+  </div>
+  <div class="note">🔒 <b>เป็นส่วนตัว:</b> ไดอารี่เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ส่งออกเน็ต · อยากย้ายเครื่องกด <b>Export</b> เก็บไฟล์ไว้ · เขียนวันละนิด = <b>+30 XP</b> เข้าระบบ Life OS ด้วย</div>
+</section>
+
 <!-- 5 -->
 <section class="card" id="gear">
   <div class="shead"><div class="icon">🎸</div>
@@ -1012,7 +1067,7 @@ function apply(){
 /* ===== COLLAPSE — กดหัวข้อแล้วค่อยกางเนื้อหา (progressive disclosure) ===== */
 (function(){
   var KEY='et1cruel-collapsed-v1';
-  var OPEN_BY_DEFAULT=['masterplan']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
+  var OPEN_BY_DEFAULT=['masterplan','diary']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
   function load(){try{var s=JSON.parse(localStorage.getItem(KEY));return Array.isArray(s)?s:null}catch(e){return null}}
   function save(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
   var saved=load();
@@ -1285,6 +1340,7 @@ function apply(){
 })();
 </script>
 <script src="js/life-os-os.js"></script>
+<script src="js/diary.js"></script>
 <script src="js/stock-talk.js"></script>
 <script src="js/port.js"></script>
 <script src="js/watch.js"></script>

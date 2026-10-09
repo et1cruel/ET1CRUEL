@@ -319,3 +319,26 @@ body.os-neon .shead h2{text-shadow:0 0 26px rgba(74,222,128,.55)}
     backdrop-filter:blur(8px);
   }
 }
+
+/* ============================================================
+   DIARY — สมุดไดอารี่รายวัน
+   ============================================================ */
+.diary-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:start}
+.diary-write,.diary-history{background:#0B0D14;border:1px solid #343c58;border-radius:14px;padding:16px;min-width:0}
+.diary-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+.diary-lab{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);display:flex;flex-direction:column;gap:6px;min-width:170px;flex:0 1 200px}
+.diary-date{margin:0!important;color-scheme:dark}
+.diary-moods{display:flex;gap:8px;flex-wrap:wrap}
+.diary-moods button{width:46px;height:46px;border-radius:50%;border:1.5px solid #3d4666;background:#151927;font-size:22px;cursor:pointer;transition:.15s;line-height:1}
+.diary-moods button:hover{border-color:var(--gold);transform:translateY(-2px)}
+.diary-moods button.on{border-color:var(--gold);background:rgba(74,222,128,.15);box-shadow:0 0 12px rgba(74,222,128,.4)}
+.diary-area{min-height:190px;line-height:1.9;font-size:16px}
+.diary-foot{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.diary-hint{font-size:13px;color:var(--gold);font-weight:600}
+.diary-count-note{font-family:'Chakra Petch',sans-serif;font-size:12px;color:var(--muted)}
+.diary-streak{margin-top:12px}
+.diary-streak small{color:var(--muted);font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700}
+.diary-tools{margin-bottom:12px}
+.diary-list{max-height:560px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px}
+.diary-entry{margin:0!important}
+@media(max-width:1100px){.diary-grid{grid-template-columns:1fr}.diary-list{max-height:420px}}
