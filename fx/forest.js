@@ -42,6 +42,33 @@
     if (h >= 17 && h < 20) return PALETTES.dusk;
     return PALETTES.night;
   }
+  /* Phase 3: crossfade พาเลตต์นุ่มๆ ตามเวลา (คีย์ปัดเป็นขั้นกัน rebuild บ่อย) */
+  function hexRgb(h) { var n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+  function mixHex(a, b, t) {
+    var A = hexRgb(a), B = hexRgb(b);
+    return 'rgb(' + Math.round(lerp(A[0], B[0], t)) + ',' + Math.round(lerp(A[1], B[1], t)) + ',' + Math.round(lerp(A[2], B[2], t)) + ')';
+  }
+  function mixPal(p, q, t) {
+    return {
+      sky: [mixHex(p.sky[0], q.sky[0], t), mixHex(p.sky[1], q.sky[1], t), mixHex(p.sky[2], q.sky[2], t)],
+      far: mixHex(p.far, q.far, t), mid: mixHex(p.mid, q.mid, t),
+      near: mixHex(p.near, q.near, t), ground: mixHex(p.ground, q.ground, t),
+      mist: t < 0.5 ? p.mist : q.mist, ray: t < 0.5 ? p.ray : q.ray,
+      mote: t < 0.5 ? p.mote : q.mote, firefly: !!(p.firefly || q.firefly)
+    };
+  }
+  var DAY_KEYS = [[0, 'night'], [5, 'night'], [6.5, 'dawn'], [8, 'day'], [17, 'day'], [18.5, 'dusk'], [20, 'night'], [24, 'night']];
+  function paletteNow(h) {
+    var i;
+    for (i = 0; i < DAY_KEYS.length - 1; i++) {
+      var a = DAY_KEYS[i], b = DAY_KEYS[i + 1];
+      if (h >= a[0] && h <= b[0]) {
+        var t = (h - a[0]) / ((b[0] - a[0]) || 1);
+        return { pal: mixPal(PALETTES[a[1]], PALETTES[b[1]], t), key: a[1] + '>' + b[1] + ':' + Math.round(t * 12) };
+      }
+    }
+    return { pal: PALETTES.night, key: 'night' };
+  }
   var STAGES = [
     { at: 0.2, icon: '🌱', name: 'เมล็ดพันธุ์' },
     { at: 0.4, icon: '🌿', name: 'สวนกล้า' },
@@ -326,7 +353,13 @@
   function drawTree(t, time, gust) {
     if (!t.sprite || t.g <= 0.01) return;
     var depth = t.layer === 2 ? 1 : 0.45;
-    var sway = (Math.sin(time * (0.6 + t.phase * 0.7) + t.phase * 6.28) * 0.012 + gust * 0.035) * depth;
+    var boost = 0;
+    if (!reduced && PM.x > -9000) {
+      var pdx = bx - PM.x, pdy = by - PM.y;
+      var pd = Math.sqrt(pdx * pdx + pdy * pdy);
+      if (pd < 260) boost = (1 - pd / 260) * 0.9;
+    }
+    var sway = (Math.sin(time * (0.6 + t.phase * 0.7) + t.phase * 6.28) * 0.012 * (1 + boost * 2) + (gust + gustBoost) * 0.035) * depth;
     if (reduced) sway = 0;
     var e = easeOutCubic(t.g);
     var sc = (0.25 + 0.75 * e) * (H / 800 > 1.4 ? 1.15 : 1);
@@ -344,6 +377,9 @@
     } catch (err) {}
   }
   var mistX = [0, 0.4, 0.7, 0.25];
+  /* Phase 3: pointer/scroll parallax + celebration */
+  var PM = { x: -9999, y: -9999 };
+  var scrollSm = 0, gustBoost = 0, burstGlow = 0;
   function frame(now) {
     if (!running) return;
     rafId = requestAnimationFrame(frame);
@@ -355,10 +391,16 @@
       if (slowFrames > 90 && !degraded) { degraded = true; motes = motes.slice(0, Math.ceil(motes.length / 2)); }
     }
     var time = now / 1000;
-    var pal = paletteFor(new Date().getHours());
-    var palKey = pal.sky[0];
-    if (palKey !== curPalKey) { curPal = pal; curPalKey = palKey; farCache = null; }
+    var _d = new Date();
+    var pn = paletteNow(_d.getHours() + _d.getMinutes() / 60);
+    if (pn.key !== curPalKey) { curPal = pn.pal; curPalKey = pn.key; farCache = null; }
     if (!farCache) buildFar();
+    // Phase 3: scroll parallax (lerp นุ่ม, clamp กันขอบโผล่)
+    var targetScroll = 0;
+    try { targetScroll = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0; } catch (e) {}
+    scrollSm += (targetScroll - scrollSm) * Math.min(1, dt * 3);
+    var scrollShift = clamp(scrollSm * 0.02, -20, 20);
+    gustBoost = Math.max(0, gustBoost - dt * 0.4);
     var gust = Math.max(0, Math.sin(time * 0.13) + Math.sin(time * 0.047 + 1.7) - 1.15) * 0.5 + S.weather.wind * 0.5;
     // เติบโต + งอกใหม่
     var target = targetCount(), i, t;
@@ -395,14 +437,15 @@
     try {
       cx.clearRect(0, 0, W, H);
       cx.drawImage(skyCache, 0, 0, W, H);
-      cx.drawImage(farCache, mx * -10, 0, W, H);
+      var os = 0.035; // overscan กันขอบโผล่ตอน parallax
+      cx.drawImage(farCache, -W * os + mx * -10, -H * os + scrollShift, W * (1 + os * 2), H * (1 + os * 2));
       var q = QUALITY[S.quality] || QUALITY.medium;
       // หมอกหลัง
       var m;
       for (m = 0; m < Math.min(2, q.mist); m++) {
         var mox = ((mistX[m] + time * 0.004 * (m + 1)) % 1.4) - 0.2;
         cx.globalAlpha = 0.5 + S.weather.rain * 0.4;
-        cx.drawImage(mistCache, mox * W - W * 0.1, H * (0.42 + m * 0.1), W * 1.1, 90);
+        cx.drawImage(mistCache, mox * W - W * 0.1, H * (0.42 + m * 0.1) + scrollSm * 0.03, W * 1.1, 90);
       }
       cx.globalAlpha = 1;
       // ต้นชั้นกลาง → ต้นใกล้ (เรียงตาม y)
@@ -412,9 +455,22 @@
       for (m = 2; m < q.mist; m++) {
         var mox2 = ((mistX[m] + time * 0.006 * (m - 1)) % 1.4) - 0.2;
         cx.globalAlpha = 0.65 + S.weather.rain * 0.3;
-        cx.drawImage(mistCache, mox2 * W - W * 0.1, H * (0.6 + (m - 2) * 0.09), W * 1.1, 90);
+        cx.drawImage(mistCache, mox2 * W - W * 0.1, H * (0.6 + (m - 2) * 0.09) + scrollSm * 0.04, W * 1.1, 90);
       }
       cx.globalAlpha = 1;
+      // Phase 3: แสงฉลอง (toast/XP/ไดอารี่) — วูบทองจางๆ
+      if (burstGlow > 0.01) {
+        try {
+          cx.save();
+          cx.globalAlpha = clamp(burstGlow, 0, 1) * 0.14;
+          var bg2 = cx.createRadialGradient(W / 2, H * 0.6, 10, W / 2, H * 0.6, W * 0.5);
+          bg2.addColorStop(0, '#ffe9a8'); bg2.addColorStop(1, 'rgba(255,233,168,0)');
+          cx.fillStyle = bg2; cx.fillRect(0, 0, W, H);
+          cx.restore();
+          cx.globalAlpha = 1;
+        } catch (e2) {}
+        burstGlow = Math.max(0, burstGlow - dt * 0.5);
+      }
       // god rays
       if (q.rays && !reduced) {
         cx.save();
@@ -444,9 +500,10 @@
         cx.fillRect(mo.x * W, mo.y * H, ms, ms);
       }
       cx.globalAlpha = 1;
-      // ใบไม้ร่วง
+      // ใบไม้ร่วง (รองรับ delay จาก celebrate)
       for (i = leaves.length - 1; i >= 0; i--) {
         var lf = leaves[i];
+        if (lf.delay > 0) { lf.delay -= dt; continue; }
         if (!reduced) {
           lf.y += lf.vy * dt;
           lf.x += Math.sin(time * 2 + lf.ph) * 0.0008;
@@ -462,6 +519,23 @@
       }
       cx.globalAlpha = 1;
     } catch (err) {}
+  }
+
+  /* ---------------- Phase 3: ฉลอง (toast → ใบไม้ร่วงพรู) ---------------- */
+  function celebrate(n) {
+    n = clamp(Math.round(n || 10), 1, 24);
+    if (reduced) return;
+    var i;
+    for (i = 0; i < n; i++) {
+      if (leaves.length >= 26) break;
+      leaves.push({
+        x: Math.random(), y: -0.02 - Math.random() * 0.1,
+        vy: 0.06 + Math.random() * 0.06, ph: Math.random() * 6.28,
+        s: 3 + Math.random() * 4, delay: Math.random() * 1.2
+      });
+    }
+    burstGlow = 1;
+    gustBoost = Math.min(1.2, gustBoost + 0.7);
   }
 
   /* ---------------- สถานะป่า (แผง) ---------------- */
@@ -528,8 +602,9 @@
   function drawOnce() {
     // เฟรมนิ่งสำหรับ reduced-motion
     try {
-      var pal = paletteFor(new Date().getHours());
-      curPal = pal; curPalKey = pal.sky[0];
+      var _d = new Date();
+      var pn = paletteNow(_d.getHours() + _d.getMinutes() / 60);
+      curPal = pn.pal; curPalKey = pn.key;
       if (!farCache) buildFar();
       cx.clearRect(0, 0, W, H);
       cx.drawImage(skyCache, 0, 0, W, H);
@@ -575,8 +650,26 @@
     });
     window.addEventListener('mousemove', function (e) {
       if (reduced) return;
-      try { mx = (e.clientX / (window.innerWidth || 1) - 0.5) * 2; } catch (e2) {}
+      try {
+        mx = (e.clientX / (window.innerWidth || 1) - 0.5) * 2;
+        PM.x = e.clientX; PM.y = e.clientY;
+      } catch (e2) {}
     }, { passive: true });
+    // Phase 3: toast ใหม่ = ฉลองในป่า (observer อย่างเดียว ไม่แตะโค้ดเดิม)
+    try {
+      if (typeof MutationObserver !== 'undefined') {
+        var toasts = $('os-toasts');
+        if (toasts) {
+          new MutationObserver(function (muts) {
+            var added = 0, i, j;
+            for (i = 0; i < muts.length; i++) {
+              if (muts[i].addedNodes) for (j = 0; j < muts[i].addedNodes.length; j++) added++;
+            }
+            if (added > 0) celebrate(8 + Math.min(8, added * 4));
+          }).observe(toasts, { childList: true });
+        }
+      }
+    } catch (e4) {}
     try {
       var mm = window.matchMedia('(prefers-reduced-motion: reduce)');
       if (mm && mm.addEventListener) mm.addEventListener('change', function () { location.reload(); });
@@ -586,6 +679,7 @@
     window.ET1FOREST = {
       status: status,
       refresh: function () { syncGlow(); paintStatus(); saveState(); },
+      celebrate: celebrate,
       setEnabled: setEnabled, setQuality: setQuality,
       setWeather: function (w) {
         if (!w) return;

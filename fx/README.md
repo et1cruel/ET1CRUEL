@@ -22,6 +22,14 @@
 
 `{seed, bornAt, updatedAt, quality, enabled, trees:[{x,layer,type,g,phase,glow,h}]}` — อ่านจำนวนวันไดอารี่จาก `et1cruel_diary_v1` และ XP จาก `et1cruel_lifeos_v1` แบบกันพัง (key เดิมไม่ถูกแตะ)
 
+## Phase 3 — เลเยอร์ลม + parallax + ฉลอง
+
+- **scroll parallax**: ชั้นไกล/หมอกขยับตาม scroll (lerp นุ่ม, overscan กันขอบโผล่)
+- **pointer parallax**: เมาส์ขยับชั้นไกลนิดหน่อย + ต้นใกล้เคอร์เซอร์โยกแรงขึ้นในรัศมี 260px
+- **toast → ฉลอง**: `MutationObserver` เฝ้า `#os-toasts` อย่างเดียว (ไม่แตะโค้ดเดิม) — toast ใหม่ = ใบไม้ร่วงพรู + แสงทองวูบ + ลมแรงชั่วครู่ · เรียกมือได้ด้วย `ET1FOREST.celebrate(n)`
+- **พาเลตต์ crossfade**: ผสมสีตามเวลาจริง (dawn/day/dusk/night) คีย์ปัดเป็นขั้นกัน rebuild บ่อย
+- ทั้งหมดปิดเมื่อ `prefers-reduced-motion`
+
 ## หมายเหตุ
 
 - canvas `z-index:0` เท่า galaxy เดิม (ไม่ใช้ -1 เพราะ body ทึบบังหาย) อยู่ใต้ `.wrap:1`
