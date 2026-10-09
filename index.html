@@ -221,9 +221,12 @@ html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transfor
 body .topbar{flex-wrap:wrap}
 @media(max-width:900px){.money-hud{font-size:17px;padding:6px 12px}}
 /* ===== QUEST TRACKER — แถบเควสขวาจอแบบเกม openworld ===== */
-#qtracker{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;width:258px;background:rgba(11,13,20,.93);border:1px solid #3d4666;border-left:4px solid var(--amber);border-radius:14px;padding:14px 14px 12px;box-shadow:var(--shadow);backdrop-filter:blur(8px)}
+#qtracker{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;width:258px;background:rgba(11,13,20,.93);border:1px solid #3d4666;border-left:4px solid var(--amber);border-radius:14px;padding:14px 14px 12px;box-shadow:var(--shadow);backdrop-filter:blur(8px);transition:opacity .22s ease}
+#qtracker.closing{opacity:0;pointer-events:none}
 #qtracker h4{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
-#qtracker h4 .qmin{margin-left:auto;border:1px solid #3d4666;background:#0B0D14;color:var(--muted);border-radius:8px;width:26px;height:26px;font-size:14px;cursor:pointer;line-height:1}
+#qtracker h4 .qmin{margin-left:auto;border:1.5px solid #3d4666;background:#0B0D14;color:#fff;border-radius:10px;min-width:34px;height:34px;font-size:17px;font-weight:800;cursor:pointer;line-height:1;padding:0 6px}
+#qtracker h4 .qmin + .qmin{margin-left:6px}
+#qtracker h4 .qmin:hover{border-color:var(--amber);color:var(--amber)}
 #qtracker ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0}
 #qtracker li a{display:block;text-decoration:none;color:#fff;font-size:13.5px;font-weight:600;line-height:1.6;border-left:2px solid var(--amber);padding-left:9px}
 #qtracker li a small{display:block;color:var(--muted);font-size:12px;font-weight:500}
@@ -231,9 +234,10 @@ body .topbar{flex-wrap:wrap}
 #qtracker.min ul{display:none}
 #qtracker .qempty{font-size:13px;color:var(--muted)}
 #qtracker.hidden{display:none}
-#qtrackerFab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:40;width:34px;padding:14px 0;border-radius:12px 0 0 12px;border:1.5px solid var(--amber);border-right:none;background:rgba(11,13,20,.93);color:var(--amber);font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;cursor:pointer;display:none;box-shadow:var(--shadow);writing-mode:vertical-rl;text-orientation:mixed}
-#qtrackerFab:hover{background:#222946}
-#qtrackerFab.show{display:block}
+#qtrackerFab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:40;width:40px;padding:18px 0;border-radius:12px 0 0 12px;border:1.5px solid var(--amber);border-right:none;background:rgba(11,13,20,.95);color:var(--amber);font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;letter-spacing:.2em;cursor:pointer;display:none;box-shadow:var(--shadow);writing-mode:vertical-rl;text-orientation:mixed}
+#qtrackerFab:hover{background:#222946;box-shadow:0 0 16px rgba(251,191,36,.4)}
+#qtrackerFab.show{display:block;animation:qtabIn .25s ease}
+@keyframes qtabIn{from{transform:translateY(-50%) translateX(100%);opacity:0}}
   #qtracker h4 .qcount{color:var(--muted);font-size:11px;letter-spacing:.06em}
 @media(max-width:1280px){
   /* จอเล็ก: ย้ายลงมุมขวาล่าง (เหนือปุ่มแชท) เริ่มแบบพับไว้ */
@@ -1219,17 +1223,31 @@ function apply(){
   if(minBtn) minBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleMin()});
   var head=document.getElementById('qtrackerHead');
   if(head) head.addEventListener('click',function(ev){if(ev.target!==minBtn&&ev.target.id!=='qtrackerHide')toggleMin()});
-  // เปิด/ปิดทั้งแถบ
+  // เปิด/ปิดทั้งแถบ (fade + จำสถานะ)
   var fab2=document.getElementById('qtrackerFab');
   var hideBtn=document.getElementById('qtrackerHide');
+  var QT_ANIM=220, qtTimer=null;
+  function qtShowFab(show){ if(fab2){ if(show) fab2.classList.add('show'); else fab2.classList.remove('show'); } }
   function setHidden(hide){
-    box.classList.toggle('hidden',hide);
-    if(fab2) fab2.classList.toggle('show',hide);
+    if(!box) return;
+    if(qtTimer){clearTimeout(qtTimer);qtTimer=null;}
+    if(hide){
+      box.classList.add('closing');
+      qtTimer=setTimeout(function(){ box.classList.add('hidden'); box.classList.remove('closing'); qtShowFab(true); },QT_ANIM);
+    }else{
+      box.classList.remove('hidden');
+      box.classList.add('closing');
+      void box.offsetWidth; /* reflow เพื่อให้ fade-in เล่น */
+      box.classList.remove('closing');
+      qtShowFab(false);
+    }
     try{localStorage.setItem('et1cruel-qtracker-hidden',hide?'1':'0')}catch(e){}
   }
-  try{ if(localStorage.getItem('et1cruel-qtracker-hidden')==='1'){box.classList.add('hidden');if(fab2)fab2.classList.add('show');} }catch(e){}
-  if(hideBtn) hideBtn.addEventListener('click',function(ev){ev.stopPropagation();setHidden(true)});
-  if(fab2) fab2.addEventListener('click',function(){setHidden(false)});
+  function isHidden(){ return !!(box && box.classList.contains('hidden')); }
+  try{ if(localStorage.getItem('et1cruel-qtracker-hidden')==='1'){box.classList.add('hidden');qtShowFab(true);} }catch(e){}
+  if(hideBtn) hideBtn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();setHidden(true)});
+  if(fab2) fab2.addEventListener('click',function(ev){ev.preventDefault();setHidden(false)});
+  window.ET1QT={open:function(){setHidden(false)},close:function(){setHidden(true)},toggle:function(){setHidden(!isHidden())},isHidden:isHidden};
 })();
 </script>
 <script>
@@ -1350,7 +1368,7 @@ function apply(){
 <div id="os-toasts"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
 <button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆ QUEST</button>
-<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button class="qmin" id="qtrackerMin" aria-label="พับ/กาง">–</button><button class="qmin" id="qtrackerHide" aria-label="ปิดแถบ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
+<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button type="button" class="qmin" id="qtrackerMin" aria-label="พับ/กางรายการ" title="พับ/กางรายการ">–</button><button type="button" class="qmin" id="qtrackerHide" aria-label="ซ่อนแผง" title="ซ่อนแผง — เปิดคืนจากแถบข้างจอ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
 <!-- ต้นไม้การเงิน -->
 <button type="button" id="treeFab" aria-label="ต้นไม้การเงิน">🌳</button>
 <div id="treePop">
