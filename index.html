@@ -316,6 +316,7 @@ body .topbar{flex-wrap:wrap}
   <a href="#charts">📊 กราฟเทคนิค <span class="n">TV</span></a>
   <a href="#port-snap">💼 พอร์ตสแนป <span class="n">10</span></a>
   <a href="#watch17">👁 Watch 17 <span class="n">AI</span></a>
+  <a href="#shield">🛡️ กันตาย <span class="n">17</span></a>
   <a href="#sp500">🇺🇸 S&amp;P 75 <span class="n">2026</span></a>
   <a href="./poker.html">🃏 โป๊กเกอร์ <span class="n">LOG ↗</span></a>
   <div class="nav-group">🎵 งานเพลง</div>
@@ -595,6 +596,27 @@ body .topbar{flex-wrap:wrap}
     </table>
   </div>
   <div class="note">ที่มา: 1Y (Finnhub / MarketBeat ต้น ต.ค. 2026) · 3Y รวม ต.ค. 2023 – ต.ค. 2026 · CAGR ทบต้นต่อปี — ไม่ใช่คำแนะนำการลงทุน</div>
+</section>
+
+<!-- SHIELD: หุ้นกันตาย 17 ตัว -->
+<section class="card" id="shield">
+  <div class="shead"><div class="icon">🛡️</div>
+  <div><h2>หุ้นกันตาย — ธุรกิจจริงที่ขึ้นได้แม้ชิป AI ลง</h2><p>ราคาสด TradingView · ลิสต์จัด 9 ต.ค. 2569 · ของจำเป็น+ปันผล+เงินสดนิ่ง</p></div><span class="count">17 STOCKS</span></div>
+  <div class="px-toolbar">
+    <span class="px-updated" id="shieldUpdated">กำลังดึงราคาสด…</span>
+    <span class="px-actions">
+      <span class="px-updated" id="shieldSum"></span>
+      <button type="button" id="shieldRefresh" class="money-btn">↻ รีเฟรช</button>
+    </span>
+  </div>
+  <div class="port-scroll">
+    <table class="stock-table">
+      <thead><tr><th>หุ้น + เหตุผลกันตาย</th><th>ราคา</th><th>เปลี่ยน (vs ปิดก่อนหน้า)</th></tr></thead>
+      <tbody id="shieldBody"><tr><td colspan="3" style="text-align:center">กำลังดึงราคาสด…</td></tr></tbody>
+    </table>
+  </div>
+  <div class="wmt-snap">📌 <b>WMT สแนปช็อต 8 ต.ค. 2569 (NASDAQ)</b> · $110.56 <b class="stock-up">+2.22%</b> (+2.40) · เปิด 108.60 · สูง 111.13 · ต่ำ 108.44 · มูลค่าตลาด 877.15B · P/E 40.06 · ปันผล 0.90% · 52wk 98.88–135.16</div>
+  <div class="note">🛡️ <b>ไอเดียตะกร้านี้:</b> วันที่หุ้นชิป AI (NVDA / AMD / MU / AVGO) ร่วง เงินมักหนีเข้าของจำเป็น ปันผล และธุรกิจเงินสดนิ่ง — ลิสต์นี้รวมตัวแบบนั้นไว้ดูเป็นกระจก · ราคาสด TradingView Scanner · ไม่ใช่คำแนะนำการลงทุน</div>
 </section>
 
 <!-- SP500 2026 -->
@@ -1398,6 +1420,7 @@ function apply(){
 <script src="js/stock-talk.js"></script>
 <script src="js/port.js"></script>
 <script src="js/watch.js"></script>
+<script src="js/shield.js"></script>
 <script src="js/sp500.js"></script>
 <script src="js/money-tree.js"></script>
 <script src="js/ambient.js"></script>
