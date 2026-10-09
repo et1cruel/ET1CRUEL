@@ -127,6 +127,24 @@
 #treeFab:hover{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 26px rgba(74,222,128,.6)}
 #treePop{position:fixed;left:18px;bottom:82px;z-index:91;width:min(300px,calc(100vw - 28px));display:none;background:#141824;border:1px solid #3d4666;border-radius:16px;padding:14px}
 #treePop.open{display:block}
+/* ===== AMBIENT — ปุ่ม + แผงเสียงธรรมชาติ ===== */
+#ambientFab{position:fixed;left:82px;bottom:18px;z-index:90;width:54px;height:54px;border-radius:50%;border:1px solid rgba(77,166,255,.6);background:linear-gradient(180deg,#16283f,#0B0D14);font-size:24px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 18px rgba(77,166,255,.3)}
+#ambientFab:hover{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 26px rgba(77,166,255,.55)}
+#ambientFab.playing{border-color:var(--gold);animation:ambPulse 2.4s ease-in-out infinite}
+@keyframes ambPulse{50%{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 30px rgba(74,222,128,.65)}}
+#ambientPop{position:fixed;left:18px;bottom:82px;z-index:93;width:min(280px,calc(100vw - 28px));display:none;background:#141824;border:1px solid #3d4666;border-radius:16px;padding:14px}
+#ambientPop.open{display:block}
+#ambientHead{display:flex;align-items:center;gap:8px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px}
+#ambientHead .ambient-headbtns{margin-left:auto;display:flex;gap:6px}
+#ambientHead button{background:transparent;border:1px solid #3d4666;color:var(--muted,#9AA3BD);border-radius:8px;cursor:pointer;font-size:12px;padding:3px 10px;font-family:inherit}
+#ambientHead button:hover{border-color:var(--gold,#4ADE80);color:#fff}
+.ambient-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.ambient-grid button{border:1.5px solid #3d4666;background:#0B0D14;color:#fff;border-radius:12px;padding:12px 6px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.ambient-grid button:hover{border-color:var(--gold,#4ADE80)}
+.ambient-grid button.on{border-color:var(--gold,#4ADE80);background:rgba(74,222,128,.12);box-shadow:0 0 12px rgba(74,222,128,.3)}
+.ambient-vol{display:flex;gap:8px;align-items:center;font-size:14px;color:#fff;margin:4px 0 8px}
+.ambient-vol input{flex:1;accent-color:#4ADE80}
+@media(prefers-reduced-motion:reduce){#ambientFab.playing{animation:none}}
 #treeHead{display:flex;align-items:center;gap:8px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff;margin-bottom:6px}
 #treeHead .tree-headbtns{margin-left:auto;display:flex;gap:6px}
 #treeHead button{background:transparent;border:1px solid #3d4666;color:var(--muted,#9AA3BD);border-radius:8px;cursor:pointer;font-size:12px;padding:3px 10px;font-family:inherit}
@@ -357,3 +375,72 @@ body.os-neon .shead h2{text-shadow:0 0 26px rgba(74,222,128,.55)}
 .sky-break[data-scene="night"]{background:radial-gradient(circle at 80% 18%,#f1f5f9 0%,rgba(226,232,240,.5) 6%,transparent 20%),radial-gradient(circle at 15% 65%,rgba(165,180,252,.5) 0%,transparent 18%),radial-gradient(circle at 60% 40%,rgba(255,255,255,.7) 0 1.5px,transparent 2px),radial-gradient(circle at 30% 25%,rgba(255,255,255,.7) 0 1.5px,transparent 2px),radial-gradient(circle at 45% 70%,rgba(255,255,255,.6) 0 1.5px,transparent 2px),linear-gradient(180deg,#020617 0%,#1e3a8a 100%)}
 .sky-break[data-scene="forest"]{background:radial-gradient(ellipse at 50% 110%,rgba(167,243,208,.55) 0%,transparent 55%),linear-gradient(180deg,#022c22 0%,#065f46 55%,#6ee7b7 100%)}
 @media(max-width:700px){.sky-break{min-height:32px}.sky-break span{font-size:10px;padding:2px 9px}}
+/* ===== SKY-BREAK ANIMATION — เมฆลอย / ดาวกะพริบ / หมอก / แสงหายใจ ===== */
+.sky-fx{position:absolute;inset:-25% -30%;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(70px 24px at 22% 42%,rgba(255,255,255,.7),transparent 70%),
+    radial-gradient(90px 28px at 62% 32%,rgba(255,255,255,.55),transparent 70%),
+    radial-gradient(56px 20px at 84% 55%,rgba(255,255,255,.6),transparent 70%);
+  animation:skyDrift 16s ease-in-out infinite alternate}
+@keyframes skyDrift{from{transform:translateX(-4%)}to{transform:translateX(4%)}}
+.sky-break[data-scene="sunrise"] .sky-fx,.sky-break[data-scene="sunset"] .sky-fx{animation:skyDrift 16s ease-in-out infinite alternate,glowBreathe 5s ease-in-out infinite}
+@keyframes glowBreathe{50%{opacity:.65}}
+.sky-break[data-scene="night"] .sky-fx{background:
+    radial-gradient(2px 2px at 10% 30%,#fff,transparent),
+    radial-gradient(2px 2px at 25% 60%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 40% 25%,#fff,transparent),
+    radial-gradient(2px 2px at 55% 55%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 70% 30%,#fff,transparent),
+    radial-gradient(2px 2px at 85% 60%,#fff,transparent),
+    radial-gradient(1.5px 1.5px at 93% 35%,#fff,transparent);
+  animation:starTwinkle 2.8s ease-in-out infinite}
+@keyframes starTwinkle{50%{opacity:.3}}
+.sky-break[data-scene="forest"] .sky-fx{background:linear-gradient(180deg,transparent 20%,rgba(167,243,208,.3));animation:mistRise 9s ease-in-out infinite alternate}
+@keyframes mistRise{from{transform:translateY(14%)}to{transform:translateY(-14%)}}
+@media(prefers-reduced-motion:reduce){.sky-fx{animation:none}}
+
+/* ============================================================
+   READ PASS 2 — อ่านง่ายขึ้นแบบไม่ทิ้งธีม RPG
+   หลัก: คุมความกว้างบรรทัด · ลำดับหัวข้อชัด · ตารางกวาดตาง่าย ·
+   ลด noise ประดับ · เห็นโฟกัสคีย์บอร์ด
+   ============================================================ */
+/* 1. คุม measure — จอ ultrawide บรรทัดไม่ยืดสุดขอบ */
+body .wrap{max-width:1600px;margin:0 auto}
+/* 2. โปรสยาวๆ ไม่เกิน ~75 ตัวอักษรต่อบรรทัด */
+body .lead,body .note,body .persona p,body .zone p,body .formula p{max-width:75ch}
+/* 3. ลำดับหัวข้อ: h2 ย่อตามจอ, คำโปรยใต้หัวข้อเล็กลงและจางลง */
+body .shead h2{font-size:clamp(22px,2.2vw,28px);line-height:1.45}
+body .shead p{font-size:15px;color:#B7C1DB}
+/* 4. เนื้อใน item กระชับขึ้น ตัวรองอ่านชัด */
+body .item{line-height:1.8}
+body .item .txt small{font-size:15px;line-height:1.8}
+/* 5. ตัวเลขลำดับประดับหัว section (ไม่ใช่ลำดับจริง) — จางลง */
+body .sections section.card .shead::after{font-size:30px;opacity:.14}
+/* 6. ตาราง: หัวข้อใหญ่ขึ้นนิด แถวสลับสี โฮเวอร์เห็นแถวที่อ่าน */
+body .port-table thead th,body .stock-table thead th{font-size:11px;padding:12px 10px}
+body .port-table tbody tr:nth-child(even),body .stock-table tbody tr:nth-child(even){background:rgba(255,255,255,.028)}
+body .port-table tbody tr:hover,body .stock-table tbody tr:hover{background:rgba(74,222,128,.07)}
+body .port-table td,body .stock-table td{border-top:1px solid rgba(255,255,255,.06)}
+/* 7. โฟกัสคีย์บอร์ดมองเห็น */
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ===== COVER — ภาพปกบนหัวเว็บ ===== */
+.cover{position:relative;margin:18px 0 0;border-radius:20px;overflow:hidden;border:1px solid rgba(74,222,128,.4);box-shadow:0 18px 50px rgba(0,0,0,.55),0 0 26px rgba(74,222,128,.07)}
+.cover img{display:block;width:100%;height:auto}
+.cover::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,9,14,.55))}
+.cover-tag{position:absolute;left:16px;bottom:12px;z-index:2;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;color:#fff;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.3);padding:5px 14px;border-radius:999px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+/* ===== RANK BADGES — ป้ายระดับในวิธีหาเงิน ===== */
+body .item .txt .badge{margin-left:12px}
+.b-shield{background:rgba(74,222,128,.08);color:#6EE7B7;border-color:var(--gold);box-shadow:0 0 10px rgba(74,222,128,.25)}
+/* ===== BUSK — รูปเปิดหมวกในวิธีหาเงิน ===== */
+.busk-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:6px}
+.busk-photo{margin:0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#0B0D14;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 22px rgba(0,0,0,.4)}
+.busk-photo img{display:block;width:100%;max-height:340px;object-fit:cover;object-position:center}
+.busk-photo figcaption{padding:10px 14px;font-size:14px;font-weight:600;color:#DDE3F5;line-height:1.8}
+@media(max-width:700px){.busk-grid{grid-template-columns:1fr}.busk-photo img{max-height:300px}}
+/* ===== PHOTO BREAK — รูปคั่นระหว่าง section ===== */
+.photo-break{position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 28px rgba(0,0,0,.45)}
+.photo-break img{display:block;width:100%;max-height:540px;object-fit:cover;object-position:center 20%}
+.photo-break::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(8,9,14,.5))}
+.photo-tag{position:absolute;left:16px;bottom:12px;z-index:2;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;color:#fff;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.3);padding:5px 14px;border-radius:999px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+@media(max-width:700px){.photo-break img{max-height:380px}}

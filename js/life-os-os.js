@@ -54,12 +54,12 @@ function seed() {
       BODY:    { pts: 28, xp: 1400 }, MIND: { pts: 32, xp: 1600 },
       LIFE:    { pts: 24, xp: 1200 }, CONTENT: { pts: 36, xp: 1800 }
     },
-    mainQuest: { name: 'PROJECT 1M', current: 651420, target: 1000000,
+    mainQuest: { name: 'PROJECT 1M', current: 665420, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { savings: 409000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 },
+      vaults: { savings: 619000, kasikorn: 25820, ktb: 0, dime: 7000, cash: 200, stocks: 13000, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
-      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 651420 } ]
+      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 665420 } ]
     },
     projects: [
       { id: 'p-himori', name: 'HIMORIYACORE', goal: '10 SONG ALBUM', pct: 60, next: 'Finish Track 04', xp: 500, tracks: [1,1,1,0,0,0,0,0,0,0] },
@@ -747,7 +747,7 @@ var PROJ_TASKS = {
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
 var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
 var SAVE_VAULTS = ['savings'];
-var DEF_VAULTS = { savings: 409000, kasikorn: 225820, ktb: 0, dime: 3000, cash: 200, stocks: 13000, btc: 400 };
+var DEF_VAULTS = { savings: 619000, kasikorn: 25820, ktb: 0, dime: 7000, cash: 200, stocks: 13000, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
@@ -764,20 +764,25 @@ function migrate() {
   Object.keys(OLD_VAULTS).forEach(function (k) {
     if (S.money.vaults[k] === OLD_VAULTS[k]) S.money.vaults[k] = DEF_VAULTS[k];
   });
-  // ซิงก์ยอดทางการครั้งเดียว (v3 = Kept 409K + กสิกร 225,820 + KTB 0 + DIME 3K + สด 200 + US 13K + BTC 400)
-  // แก้เองหลังเวอร์ชันนี้จะไม่โดนทับ
-  if (S.money.vaultVer !== 3) {
-    S.money.vaults = Object.assign({}, DEF_VAULTS);
-    S.money.vaultVer = 3;
+  // ซิงก์ยอดทางการครั้งเดียว (v4 = Kept Grow 619,000 ที่เหลือตาม DEF_VAULTS)
+  // อัปแค่ช่องที่ยังเป็นยอดทางการเก่า — ช่องที่แก้เองไม่โดนทับ
+  if (S.money.vaultVer !== 4) {
+    if (S.money.vaults.savings === 409000 || S.money.vaults.savings === 644920) S.money.vaults.savings = 619000; // Kept Grow ทางการใหม่
+    S.money.vaultVer = 4;
   }
-  if (S.money.vaults.dime === 1000) S.money.vaults.dime = 3000; // ยอด seed รอบก่อน
-  if (S.money.vaults.kasikorn === 157420) S.money.vaults.kasikorn = 225820; // ยอด seed รอบก่อน
+  if (S.money.vaults.dime === 1000 || S.money.vaults.dime === 3000) S.money.vaults.dime = 7000; // DIME Save ทางการใหม่
+  if (S.money.vaults.kasikorn === 157420) S.money.vaults.kasikorn = 25820; // ยอด seed รอบก่อน (หักโอน 200K ไป Grow แล้ว)
   delete S.money.vaults.keptKrungsri; delete S.money.vaults.growKrungsri; // รวม Krungsri กลับเป็น Kept Grow
-  if (S.money.vaults.savings === 200000) S.money.vaults.savings = 409000; // ยอด seed เก่า
+  if (S.money.vaults.savings === 200000) S.money.vaults.savings = 619000; // ยอด seed เก่า
+  // v5: โอน 200K กสิกร e-Save → Grow (กสิกรเหลือ 25,820) — อัปแค่ช่องที่ยังเป็นยอดก่อนโอน
+  if (S.money.vaultVer !== 5) {
+    if (S.money.vaults.kasikorn === 225820) S.money.vaults.kasikorn = 25820;
+    S.money.vaultVer = 5;
+  }
   if (S.mainQuest) S.mainQuest.current = netWorth();
   if (Array.isArray(S.money.history) && S.money.history.length) {
     var last = S.money.history[S.money.history.length - 1];
-    if (last && (last.v === 639420 || last.v === 783020 || last.v === 583020) && netWorth() !== last.v) last.v = netWorth();
+    if (last && (last.v === 639420 || last.v === 783020 || last.v === 583020 || last.v === 651420 || last.v === 651400 || last.v === 887340 || last.v === 687340 || last.v === 661420) && netWorth() !== last.v) last.v = netWorth();
   }
   S.projects.forEach(function (p) {
     if (!p.tasks) p.tasks = (PROJ_TASKS[p.id] || ['Next action']).map(function (t) { return { t: t, done: false }; });

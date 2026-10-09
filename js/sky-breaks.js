@@ -20,15 +20,23 @@
       // กันแทรกซ้ำ (เช่น สคริปต์รันสองรอบ)
       if (document.querySelector('.sections > .sky-break')) return;
       for (var i = 1; i < secs.length; i++) {
-        var sc = SCENES[(i - 1) % SCENES.length];
-        var d = document.createElement('div');
-        d.className = 'sky-break';
-        d.setAttribute('data-scene', sc.s);
-        d.setAttribute('aria-hidden', 'true');
-        var cap = document.createElement('span');
-        cap.textContent = sc.t;
-        d.appendChild(cap);
-        secs[i].parentNode.insertBefore(d, secs[i]);
+        try {
+          var prev = secs[i].previousElementSibling;
+          if (prev && prev.classList && prev.classList.contains('photo-break')) continue; /* มีรูปคั่นแล้ว ไม่ซ้อนแถบท้องฟ้า */
+          var sc = SCENES[(i - 1) % SCENES.length];
+          var d = document.createElement('div');
+          d.className = 'sky-break';
+          d.setAttribute('data-scene', sc.s);
+          d.setAttribute('aria-hidden', 'true');
+          var cap = document.createElement('span');
+          cap.textContent = sc.t;
+          d.appendChild(cap);
+          var fx = document.createElement('i');
+          fx.className = 'sky-fx';
+          fx.setAttribute('aria-hidden', 'true');
+          d.appendChild(fx);
+          secs[i].parentNode.insertBefore(d, secs[i]);
+        } catch (e2) { /* ชิ้นไหนพังข้ามไป ไม่ลามทั้งแถบ */ }
       }
     } catch (e) { /* แถบประดับพังได้ แต่ต้องไม่ลามไปส่วนอื่น */ }
   }
