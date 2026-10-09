@@ -342,3 +342,18 @@ body.os-neon .shead h2{text-shadow:0 0 26px rgba(74,222,128,.55)}
 .diary-list{max-height:560px;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-right:4px}
 .diary-entry{margin:0!important}
 @media(max-width:1100px){.diary-grid{grid-template-columns:1fr}.diary-list{max-height:420px}}
+
+/* ============================================================
+   SKY BREAKS — แถบภาพธรรมชาติ/ท้องฟ้าคั่นระหว่าง section
+   (วาดด้วย gradient + SVG ล้วน ไม่ต้องโหลดรูปนอกเว็บ)
+   ============================================================ */
+.sky-break{position:relative;border-radius:12px;border:1px solid rgba(255,255,255,.2);min-height:40px;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 4px 12px rgba(0,0,0,.4)}
+.sky-break::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 220' preserveAspectRatio='none'%3E%3Cpath d='M0 220 L0 150 L120 90 L240 140 L360 60 L480 130 L600 70 L720 140 L840 80 L960 150 L1080 100 L1200 140 L1200 220 Z' fill='%2308111f' opacity='.72'/%3E%3Cpath d='M0 220 L0 180 L180 130 L360 175 L540 120 L720 170 L900 130 L1080 175 L1200 150 L1200 220 Z' fill='%23050b16' opacity='.9'/%3E%3C/svg%3E") no-repeat center bottom;background-size:100% 62%}
+.sky-break span{position:relative;z-index:2;font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;color:#fff;background:rgba(0,0,0,.38);border:1px solid rgba(255,255,255,.25);padding:3px 11px;border-radius:999px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.sky-break[data-scene="sunrise"]{background:radial-gradient(circle at 72% 22%,#fef3c7 0%,rgba(253,224,71,.55) 12%,transparent 42%),linear-gradient(180deg,#312e81 0%,#9d2470 48%,#f59e0b 100%)}
+.sky-break[data-scene="day"]{background:radial-gradient(circle at 18% 18%,#fff 0%,rgba(255,255,255,.7) 8%,transparent 26%),radial-gradient(circle at 82% 30%,rgba(255,255,255,.8) 0%,transparent 22%),linear-gradient(180deg,#0284c7 0%,#7dd3fc 70%,#bbf7d0 100%)}
+.sky-break[data-scene="day"]::before{opacity:.85}
+.sky-break[data-scene="sunset"]{background:radial-gradient(circle at 50% 88%,#fdba74 0%,rgba(251,146,60,.6) 22%,transparent 55%),linear-gradient(180deg,#2e1065 0%,#9a3412 60%,#fbbf24 100%)}
+.sky-break[data-scene="night"]{background:radial-gradient(circle at 80% 18%,#f1f5f9 0%,rgba(226,232,240,.5) 6%,transparent 20%),radial-gradient(circle at 15% 65%,rgba(165,180,252,.5) 0%,transparent 18%),radial-gradient(circle at 60% 40%,rgba(255,255,255,.7) 0 1.5px,transparent 2px),radial-gradient(circle at 30% 25%,rgba(255,255,255,.7) 0 1.5px,transparent 2px),radial-gradient(circle at 45% 70%,rgba(255,255,255,.6) 0 1.5px,transparent 2px),linear-gradient(180deg,#020617 0%,#1e3a8a 100%)}
+.sky-break[data-scene="forest"]{background:radial-gradient(ellipse at 50% 110%,rgba(167,243,208,.55) 0%,transparent 55%),linear-gradient(180deg,#022c22 0%,#065f46 55%,#6ee7b7 100%)}
+@media(max-width:700px){.sky-break{min-height:32px}.sky-break span{font-size:10px;padding:2px 9px}}

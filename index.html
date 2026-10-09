@@ -1165,14 +1165,11 @@ function apply(){
 <script>
 /* ===== QUEST TRACKER — ดึงเควสค้างมาโชว์ขวาจอ ===== */
 (function(){
+  function init(){
   var box=document.getElementById('qtracker');
   var list=document.getElementById('qtrackerList');
   var minBtn=document.getElementById('qtrackerMin');
   if(!box||!list) return;
-  try{
-    var pref=localStorage.getItem('et1cruel-qtracker-min');
-    if(pref==='1'||(pref===null&&window.innerWidth<1280)){box.classList.add('min');minBtn.textContent='+';}
-  }catch(e){}
   function build(){
     // ตัวปักหมุดโชว์เสมอ (แม้ตอนค้นหา) → แล้วค่อยตามด้วยเควสค้างอื่นที่เห็นอยู่
     var pins=document.querySelectorAll('#quests .item.todo[data-pin="1"] .txt');
@@ -1180,7 +1177,8 @@ function apply(){
     list.innerHTML='';
     function addRow(t,pinned){
       var clone=t.cloneNode(true);
-      clone.querySelectorAll('.badge').forEach(function(b){b.remove()});
+      var _bl=clone.querySelectorAll('.badge'),_bi,_bn;
+      for(_bi=0;_bi<_bl.length;_bi++){_bn=_bl[_bi];if(_bn&&_bn.parentNode)_bn.parentNode.removeChild(_bn);}
       var main=(clone.childNodes[0]&&clone.childNodes[0].textContent||'').trim();
       var subEl=clone.querySelector('small');
       var sub=subEl?subEl.textContent.trim():'';
@@ -1208,47 +1206,62 @@ function apply(){
     var cc=document.getElementById('qtrackerCount');
     if(cc) cc.textContent='· '+(pins.length+others.length);
     if(!pins.length&&!others.length){list.innerHTML='<li class="qempty">✔ เคลียร์หมดแล้ว!</li>';return}
-    pins.forEach(function(t){addRow(t,true)});
-    others.forEach(function(t){addRow(t,false)});
+    var _pi;for(_pi=0;_pi<pins.length;_pi++){addRow(pins[_pi],true);}
+    var _oi;for(_oi=0;_oi<others.length;_oi++){addRow(others[_oi],false);}
   }
   function safeBuild(){ try{build();}catch(err){ try{list.innerHTML='<li class="qempty">โหลดเควสไม่สำเร็จ — ปุ่มเปิด/ปิดยังใช้ได้ปกติ</li>';}catch(e2){} } }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',safeBuild);
   var qbox=document.getElementById('q');
   if(qbox) qbox.addEventListener('input',safeBuild);
-  function toggleMin(){
-    var min=box.classList.toggle('min');
-    minBtn.textContent=min?'+':'–';
-    try{localStorage.setItem('et1cruel-qtracker-min',min?'1':'0')}catch(e){}
+  safeBuild(); /* เหลือแค่โหลดรายชื่อ — ปุ่มผูกในบล็อก TOGGLE ด้านล่าง */
   }
-  if(minBtn) minBtn.addEventListener('click',function(ev){ev.stopPropagation();toggleMin()});
-  var head=document.getElementById('qtrackerHead');
-  if(head) head.addEventListener('click',function(ev){if(ev.target!==minBtn&&ev.target.id!=='qtrackerHide')toggleMin()});
-  // เปิด/ปิดทั้งแถบ (fade + จำสถานะ)
-  var fab2=document.getElementById('qtrackerFab');
-  var hideBtn=document.getElementById('qtrackerHide');
-  var QT_ANIM=220, qtTimer=null;
-  function qtShowFab(show){ if(fab2){ if(show) fab2.classList.add('show'); else fab2.classList.remove('show'); } }
-  function setHidden(hide){
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
+})();
+</script>
+<script>
+/* ===== QUEST TRACKER TOGGLE — ปุ่มเปิด/ซ่อนแผง (standalone: ไม่พึ่งโค้ดอื่น, ES5 ล้วน) ===== */
+(function(){
+  function init(){
+  try{
+    var box=document.getElementById('qtracker');
+    var minBtn=document.getElementById('qtrackerMin');
+    var hideBtn=document.getElementById('qtrackerHide');
+    var head=document.getElementById('qtrackerHead');
+    var fab=document.getElementById('qtrackerFab');
     if(!box) return;
-    if(qtTimer){clearTimeout(qtTimer);qtTimer=null;}
-    if(hide){
-      box.classList.add('closing');
-      qtTimer=setTimeout(function(){ box.classList.add('hidden'); box.classList.remove('closing'); qtShowFab(true); },QT_ANIM);
-    }else{
-      box.classList.remove('hidden');
-      box.classList.add('closing');
-      void box.offsetWidth; /* reflow เพื่อให้ fade-in เล่น */
-      box.classList.remove('closing');
-      qtShowFab(false);
+    var ANIM=220, timer=null;
+    function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+    function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+    function isHidden(){return box.className.indexOf('hidden')>=0;}
+    function setHidden(hide){
+      if(timer){clearTimeout(timer);timer=null;}
+      if(hide){
+        box.classList.add('closing');
+        timer=setTimeout(function(){box.classList.add('hidden');box.classList.remove('closing');if(fab)fab.classList.add('show');},ANIM);
+      }else{
+        box.classList.remove('hidden');
+        box.classList.add('closing');
+        void box.offsetWidth;
+        box.classList.remove('closing');
+        if(fab)fab.classList.remove('show');
+      }
+      lsSet('et1cruel-qtracker-hidden',hide?'1':'0');
     }
-    try{localStorage.setItem('et1cruel-qtracker-hidden',hide?'1':'0')}catch(e){}
+    function toggleMin(){
+      var min=box.classList.toggle('min');
+      if(minBtn)minBtn.textContent=min?'+':'–';
+      lsSet('et1cruel-qtracker-min',min?'1':'0');
+    }
+    if(lsGet('et1cruel-qtracker-min')==='1'||(lsGet('et1cruel-qtracker-min')===null&&window.innerWidth<1280)){box.classList.add('min');if(minBtn)minBtn.textContent='+';}
+    if(lsGet('et1cruel-qtracker-hidden')==='1'){box.classList.add('hidden');if(fab)fab.classList.add('show');}
+    if(minBtn)minBtn.onclick=function(ev){if(ev&&ev.stopPropagation)ev.stopPropagation();toggleMin();return false;};
+    if(hideBtn)hideBtn.onclick=function(ev){if(ev){if(ev.preventDefault)ev.preventDefault();if(ev.stopPropagation)ev.stopPropagation();}setHidden(true);return false;};
+    if(head)head.onclick=function(ev){ev=ev||window.event;var t=ev?(ev.target||ev.srcElement):null;if(t===minBtn||(t&&t.id==='qtrackerHide'))return;toggleMin();};
+    if(fab)fab.onclick=function(){setHidden(false);return false;};
+    window.ET1QT={open:function(){setHidden(false);},close:function(){setHidden(true);},toggle:function(){setHidden(!isHidden());},isHidden:isHidden,min:toggleMin};
+  }catch(e){}
   }
-  function isHidden(){ return !!(box && box.classList.contains('hidden')); }
-  try{ if(localStorage.getItem('et1cruel-qtracker-hidden')==='1'){box.classList.add('hidden');qtShowFab(true);} }catch(e){}
-  if(hideBtn) hideBtn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();setHidden(true)});
-  if(fab2) fab2.addEventListener('click',function(ev){ev.preventDefault();setHidden(false)});
-  window.ET1QT={open:function(){setHidden(false)},close:function(){setHidden(true)},toggle:function(){setHidden(!isHidden())},isHidden:isHidden};
-  safeBuild(); /* โหลดรายชื่อทีหลังสุด — ปุ่มผูกเสร็จก่อนแล้ว พังก็ไม่ลาม */
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
 <script>
@@ -1359,6 +1372,7 @@ function apply(){
 })();
 </script>
 <script src="js/life-os-os.js"></script>
+<script src="js/sky-breaks.js"></script>
 <script src="js/diary.js"></script>
 <script src="js/stock-talk.js"></script>
 <script src="js/port.js"></script>

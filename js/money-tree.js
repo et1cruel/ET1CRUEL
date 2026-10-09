@@ -1,6 +1,7 @@
 /* ===== MONEY TREE — ต้นไม้การเงิน เขย่าแล้วเหรียญร่วง + เสียง ===== */
 (function () {
   'use strict';
+  function init() {
   var fab = document.getElementById('treeFab');
   var pop = document.getElementById('treePop');
   if (!fab || !pop) return;
@@ -105,4 +106,7 @@
     stage.style.cursor = 'pointer';
   }
   refresh();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
