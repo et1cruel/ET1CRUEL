@@ -437,11 +437,11 @@ body .item .txt .badge{margin-left:12px}
 #passive .item::before{background:linear-gradient(180deg,var(--gold),#15803d);box-shadow:0 0 10px rgba(74,222,128,.7)}
 #passive .item:hover{border-color:var(--gold);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(0,0,0,.45),0 0 0 1px rgba(74,222,128,.3),0 0 28px rgba(74,222,128,.35),0 10px 26px rgba(0,0,0,.5)}
 /* ===== BUSK — รูปเปิดหมวกในวิธีหาเงิน ===== */
-.busk-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:6px}
-.busk-photo{margin:0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#0B0D14;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 22px rgba(0,0,0,.4)}
-.busk-photo img{display:block;width:100%;max-height:340px;object-fit:cover;object-position:center}
-.busk-photo figcaption{padding:10px 14px;font-size:14px;font-weight:600;color:#DDE3F5;line-height:1.8}
-@media(max-width:700px){.busk-grid{grid-template-columns:1fr}.busk-photo img{max-height:300px}}
+.busk-grid,.joy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:6px;align-items:stretch}
+.busk-photo,.joy-photo{margin:0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#0B0D14;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 8px 22px rgba(0,0,0,.4)}
+.busk-photo img,.joy-photo img{display:block;width:100%;max-height:340px;object-fit:cover;object-position:center}
+.busk-photo figcaption,.joy-photo figcaption{padding:10px 14px;font-size:14px;font-weight:600;color:#DDE3F5;line-height:1.8}
+@media(max-width:700px){.busk-grid,.joy-grid{grid-template-columns:1fr}.busk-photo img,.joy-photo img{max-height:300px}}
 /* ===== PHOTO BREAK — รูปคั่นระหว่าง section ===== */
 .photo-break{position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 28px rgba(0,0,0,.45)}
 .photo-break img{display:block;width:100%;max-height:540px;object-fit:cover;object-position:center 20%}
