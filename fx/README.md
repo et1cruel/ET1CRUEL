@@ -30,6 +30,16 @@
 - **พาเลตต์ crossfade**: ผสมสีตามเวลาจริง (dawn/day/dusk/night) คีย์ปัดเป็นขั้นกัน rebuild บ่อย
 - ทั้งหมดปิดเมื่อ `prefers-reduced-motion`
 
+## Phase 4 — หนูลัคกี้ (`mouse.js`)
+
+- วาด vector บน canvas เต็มจอใบเดียว (`#mouse-layer` z:45, โปร่งใสทั้งชั้น)
+- **ไม่บังของเดิม**: รับคลิกด้วย hit-test ระดับ document (รัศมี 48px รอบตัวหนู) ไม่ใช่ overlay
+- เดินบนพื้นจอ + ขอบบนการ์ด (`section.card/.treasury/.hero/.cover` ผ่าน getBoundingClientRect, เก็บใหม่ตอน scroll/resize/ทุก 5 วิ)
+- state: walk/run/curious/sit/sniff/groom/look/dig/sleep/hide/fall/jump + หนี/สนใจเคอร์เซอร์
+- คลิก = จี๊ด (Web Audio เบามาก) + กระโดด + หัวใจ · ดับเบิลคลิก = ถือเหรียญ 5 วิ (ไม่แตะยอดเหรียญต้นไม้)
+- จำชื่อ/เปิด-ปิด/ขนาด (`et1_mouse_v1`, ชื่อเริ่มต้น "ลัคกี้ไมซ์") · reduced-motion = นั่งนิ่ง
+- ปรับ: ความเร็วเดิน `walkTo` (52/150), ขนาด `S.size` (0.8/1/1.3), รัศมีสนใจ 120px
+
 ## หมายเหตุ
 
 - canvas `z-index:0` เท่า galaxy เดิม (ไม่ใช้ -1 เพราะ body ทึบบังหาย) อยู่ใต้ `.wrap:1`
