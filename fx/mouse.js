@@ -77,9 +77,9 @@
     }
     return best;
   }
-  function setState(st, dur) {
+  function setState(st, dur, keepTarget) {
     M.state = st; M.t = 0; M.dur = dur || rnd(2, 4);
-    M.target = null;
+    if (!keepTarget) M.target = null;
   }
   function nextIdle() {
     var roll = Math.random();
@@ -106,17 +106,17 @@
     // กระโดดถ้าต่างระดับเกิน 40px
     if (Math.abs(M.target.y - M.y) > 40) {
       M.from = { x: M.x, y: M.y };
-      setState('jump', clamp(Math.abs(M.target.x - M.x) / 160 + 0.4, 0.45, 1.1));
+      setState('jump', clamp(Math.abs(M.target.x - M.x) / 160 + 0.4, 0.45, 1.1), true);
     } else {
-      setState(run ? 'run' : 'walk', 12);
+      setState(run ? 'run' : 'walk', 12, true);
     }
   }
   function goHome() {
     M.target = { x: W * 0.15, y: floorY(), surf: null };
     if (Math.abs(M.y - floorY()) > 40) {
       M.from = { x: M.x, y: M.y };
-      setState('jump', 0.8);
-    } else setState('walk', 12);
+      setState('jump', 0.8, true);
+    } else setState('walk', 12, true);
   }
 
   /* ---------------- update ---------------- */
@@ -143,11 +143,11 @@
       if (PM.x > -9000 && dx * dx + dy * dy < 120 * 120) {
         if (Math.random() < 0.5) {
           M.target = { x: clamp(PM.x + (dx > 0 ? -70 : 70), 30, W - 30), y: M.surf ? M.surf.y : floorY(), surf: M.surf || null };
-          setState('curious', 3);
+          setState('curious', 3, true);
         } else {
           M.face = dx > 0 ? -1 : 1;
           M.target = { x: clamp(M.x + (dx > 0 ? -220 : 220), 30, W - 30), y: M.surf ? M.surf.y : floorY(), surf: M.surf || null };
-          setState('run', 2.5);
+          setState('run', 2.5, true);
         }
       }
     }

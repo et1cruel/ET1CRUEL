@@ -201,6 +201,7 @@
     if (close) close.addEventListener('click', function () { pop.classList.remove('open'); });
     var grid = $('ambientGrid');
     if (grid) grid.addEventListener('click', function (e) {
+      if (window.ET1SOUND_V2) return; // Sound Garden (fx/audio.js) รับช่วงต่อแล้ว
       var b = e.target && e.target.closest ? e.target.closest('[data-snd]') : null;
       if (b) toggleSound(b.getAttribute('data-snd'));
     });
@@ -208,6 +209,7 @@
     if (v) {
       v.value = S.vol;
       v.addEventListener('input', function () {
+        if (window.ET1SOUND_V2) return; // Sound Garden รับช่วงต่อแล้ว
         S.vol = parseInt(v.value, 10) || 0;
         applyVol(); save(S); paint();
       });

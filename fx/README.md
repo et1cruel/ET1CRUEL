@@ -40,6 +40,17 @@
 - จำชื่อ/เปิด-ปิด/ขนาด (`et1_mouse_v1`, ชื่อเริ่มต้น "ลัคกี้ไมซ์") · reduced-motion = นั่งนิ่ง
 - ปรับ: ความเร็วเดิน `walkTo` (52/150), ขนาด `S.size` (0.8/1/1.3), รัศมีสนใจ 120px
 
+## Phase 5 — Sound Garden (`audio.js`)
+
+- อัปเกรดแผง 🌧️ เดิม (ID เดิมครบ) · `js/ambient.js` หลีกทางให้เมื่อ `ET1SOUND_V2` ขึ้น (guard 2 จุด)
+- 12 ชั้น: rain/waves/forest/night/wind/fire/stream/thunder + pad/flute/bowl/pluck
+- ดนตรีสเกลเพนทาโทนิก A เดียวกัน จูนอิง A4=432Hz (สเปกเสียง ไม่ใช่สรรพคุณรักษา)
+- master + per-layer slider + fade (setTargetAtTime) · preset 6 แบบ · sleep timer 15/30/60 (fade 9 วิ)
+- ย้ายค่าเก่าจาก `et1cruel-ambient-v1` ครั้งเดียว (ไม่ลบ key เก่า) → จำใหม่ `et1_sound_v1`
+- เปิดฝน/ลมแล้วสั่ง `ET1FOREST.setWeather` ให้ป่าตอบสนอง (guard ถ้าไม่มีป่า)
+- ปิดหมดแล้ว suspend AudioContext ประหยัดเครื่อง · ไม่ autoplay
+- ปรับ: `TUNE` (สเกล/จูน), `PRESETS`, ความถี่ฟิลเตอร์ใน builder แต่ละตัว
+
 ## หมายเหตุ
 
 - canvas `z-index:0` เท่า galaxy เดิม (ไม่ใช้ -1 เพราะ body ทึบบังหาย) อยู่ใต้ `.wrap:1`
