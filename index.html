@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/life-os-os.css">
 <link rel="stylesheet" href="css/stock-os.css">
+<link rel="stylesheet" href="fx/fx.css">
 <script>document.documentElement.classList.add('js');</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
@@ -246,6 +247,9 @@ body .topbar{flex-wrap:wrap}
 </head>
 <body>
 <canvas id="bg3d"></canvas>
+<canvas id="forest-bg" aria-hidden="true"></canvas>
+<div id="forest-veil" aria-hidden="true"></div>
+<div id="mouse-layer" aria-hidden="true"><canvas id="mouse-cv"></canvas></div>
 <div class="wrap">
 
 <div class="topbar">
@@ -1425,6 +1429,8 @@ function apply(){
 <script src="js/money-tree.js"></script>
 <script src="js/ambient.js"></script>
 <script src="js/tv-widgets.js"></script>
+<script defer src="fx/forest.js"></script>
+<script defer src="fx/mouse.js"></script>
 <div id="os-toasts"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
 <button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆ QUEST</button>
@@ -1452,8 +1458,47 @@ function apply(){
     <button type="button" data-snd="forest">🌲 ป่า·นก</button>
     <button type="button" data-snd="night">🦗 กลางคืน</button>
   </div>
-  <label class="ambient-vol">🔊 <input type="range" id="ambientVol" min="0" max="100" value="60" aria-label="ความดัง"></label>
-  <div class="chat-note">เปิดผสมกันได้หลายเสียง · เล่นต่อเนื่องจนกว่าจะปิด · กดปุ่มซ้ำเพื่อปิดเสียงนั้น</div>
+  <label class="ambient-vol">🔊 <input type="range" id="ambientVol" min="0" max="100" value="60" aria-label="ความดังรวม"></label>
+  <div class="snd-now" id="sndNow">ยังไม่เปิดเสียง</div>
+  <div class="snd-kind">🎧 พรีเซ็ต</div>
+  <div class="snd-presets" id="sndPresets"></div>
+  <div class="snd-kind">🎚 ผสมเอง (กดชื่อ = เปิด/ปิด · ลาก = ดังเบา)</div>
+  <div class="snd-layers" id="sndLayers"></div>
+  <div class="snd-kind">⏱ ปิดเองอัตโนมัติ</div>
+  <div class="snd-timer" id="sndTimer">
+    <button type="button" data-min="15">15 นาที</button>
+    <button type="button" data-min="30">30 นาที</button>
+    <button type="button" data-min="60">60 นาที</button>
+    <button type="button" data-min="0">ยกเลิก</button>
+  </div>
+  <div class="snd-now" id="sndTimerNote"></div>
+  <div class="chat-note">ดนตรีจูนอิง A=432Hz สเกลเพนทาโทนิกเดียวกันทุกชิ้น · เปิดฝน/ลมแล้วป่าในจอตอบสนองด้วย</div>
+</div>
+<!-- ป่าจำชีวิต -->
+<button type="button" id="forestFab" aria-label="ป่าแห่งความทรงจำ">🌲</button>
+<div id="forestPop" role="dialog" aria-label="ป่าแห่งความทรงจำ">
+  <div id="forestHead">🌲 ป่าแห่งความทรงจำ
+    <span class="forest-headbtns"><button type="button" id="forestClose">ปิด</button></span>
+  </div>
+  <div id="forestStatus"></div>
+  <div class="forest-row">
+    <button type="button" id="forestToggle">🌲 ป่า: เปิด</button>
+    <select id="forestQuality" aria-label="คุณภาพป่า">
+      <option value="low">คุณภาพ: ต่ำ</option>
+      <option value="medium">คุณภาพ: กลาง</option>
+      <option value="high">คุณภาพ: สูง</option>
+    </select>
+  </div>
+  <div class="forest-row forest-sub">🐭 หนูลัคกี้ <input id="mouseName" maxlength="24" aria-label="ชื่อหนู"></div>
+  <div class="forest-row">
+    <button type="button" id="mouseToggle">🐭 หนู: เปิด</button>
+    <select id="mouseSize" aria-label="ขนาดหนู">
+      <option value="0.8">ตัวเล็ก</option>
+      <option value="1">ตัวปกติ</option>
+      <option value="1.3">ตัวใหญ่</option>
+    </select>
+  </div>
+  <div class="chat-note">ป่าโตตามวันไดอารี่ + XP · ไดอารี่ 1 วัน = ต้นเรืองแสง 1 ต้น</div>
 </div>
 <!-- ปุ่มแชทหุ้นลอย -->
 <button type="button" id="stockFab" aria-label="คุยเรื่องหุ้น">💹<span class="ping"></span></button>
