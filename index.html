@@ -1211,10 +1211,10 @@ function apply(){
     pins.forEach(function(t){addRow(t,true)});
     others.forEach(function(t){addRow(t,false)});
   }
-  build();
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build);
+  function safeBuild(){ try{build();}catch(err){ try{list.innerHTML='<li class="qempty">โหลดเควสไม่สำเร็จ — ปุ่มเปิด/ปิดยังใช้ได้ปกติ</li>';}catch(e2){} } }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',safeBuild);
   var qbox=document.getElementById('q');
-  if(qbox) qbox.addEventListener('input',build);
+  if(qbox) qbox.addEventListener('input',safeBuild);
   function toggleMin(){
     var min=box.classList.toggle('min');
     minBtn.textContent=min?'+':'–';
@@ -1248,6 +1248,7 @@ function apply(){
   if(hideBtn) hideBtn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();setHidden(true)});
   if(fab2) fab2.addEventListener('click',function(ev){ev.preventDefault();setHidden(false)});
   window.ET1QT={open:function(){setHidden(false)},close:function(){setHidden(true)},toggle:function(){setHidden(!isHidden())},isHidden:isHidden};
+  safeBuild(); /* โหลดรายชื่อทีหลังสุด — ปุ่มผูกเสร็จก่อนแล้ว พังก็ไม่ลาม */
 })();
 </script>
 <script>
