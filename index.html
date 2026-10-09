@@ -231,9 +231,9 @@ body .topbar{flex-wrap:wrap}
 #qtracker.min ul{display:none}
 #qtracker .qempty{font-size:13px;color:var(--muted)}
 #qtracker.hidden{display:none}
-#qtrackerFab{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:40;width:48px;height:48px;border-radius:14px;border:1.5px solid var(--amber);background:rgba(11,13,20,.93);color:var(--amber);font-size:22px;font-weight:800;cursor:pointer;display:none;box-shadow:var(--shadow)}
+#qtrackerFab{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:40;width:34px;padding:14px 0;border-radius:12px 0 0 12px;border:1.5px solid var(--amber);border-right:none;background:rgba(11,13,20,.93);color:var(--amber);font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;cursor:pointer;display:none;box-shadow:var(--shadow);writing-mode:vertical-rl;text-orientation:mixed}
+#qtrackerFab:hover{background:#222946}
 #qtrackerFab.show{display:block}
-@media(max-width:1280px){#qtrackerFab{top:auto;bottom:92px;right:12px;transform:none}}
   #qtracker h4 .qcount{color:var(--muted);font-size:11px;letter-spacing:.06em}
 @media(max-width:1280px){
   /* จอเล็ก: ย้ายลงมุมขวาล่าง (เหนือปุ่มแชท) เริ่มแบบพับไว้ */
@@ -1349,7 +1349,7 @@ function apply(){
 <script src="js/tv-widgets.js"></script>
 <div id="os-toasts"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
-<button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆</button>
+<button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆ QUEST</button>
 <nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button class="qmin" id="qtrackerMin" aria-label="พับ/กาง">–</button><button class="qmin" id="qtrackerHide" aria-label="ปิดแถบ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
 <!-- ต้นไม้การเงิน -->
 <button type="button" id="treeFab" aria-label="ต้นไม้การเงิน">🌳</button>
