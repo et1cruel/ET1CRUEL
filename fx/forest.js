@@ -103,7 +103,7 @@
         seed: S.seed, bornAt: S.bornAt, updatedAt: S.updatedAt,
         quality: S.quality, enabled: S.enabled,
         trees: S.trees.map(function (t) {
-          return { x: +t.x.toFixed(4), layer: t.layer, type: t.type, g: +t.g.toFixed(3), phase: +t.phase.toFixed(3), glow: !!t.glow, h: Math.round(t.h) };
+          return { x: +t.x.toFixed(4), layer: t.layer, type: t.type, g: +t.g.toFixed(3), phase: +t.phase.toFixed(3), glow: (t.glow === 'gold' ? 'gold' : (t.glow ? 'leaf' : false)), blossom: !!t.blossom, h: Math.round(t.h), mem: (t.mem && t.mem.kind && t.mem.id ? { kind: t.mem.kind, id: String(t.mem.id), name: String(t.mem.name || ''), date: t.mem.date ? String(t.mem.date) : '', icon: t.mem.icon ? String(t.mem.icon) : '' } : null) };
         })
       }));
     } catch (e) {}
@@ -132,7 +132,8 @@
           x: clamp(t.x, 0, 1), layer: t.layer === 2 ? 2 : 1,
           type: t.type, phase: (typeof t.phase === 'number' ? t.phase : Math.random()),
           g: clamp((typeof t.g === 'number' ? t.g : 0.4) + elapsedH / 336, 0, 1),
-          glow: !!t.glow, h: t.h || 0, shrink: false, sprite: null
+          glow: (t.glow === 'gold' ? 'gold' : (t.glow ? 'leaf' : false)), blossom: !!t.blossom, h: t.h || 0, shrink: false, sprite: null,
+          mem: (t.mem && t.mem.kind && t.mem.id ? { kind: String(t.mem.kind), id: String(t.mem.id), name: String(t.mem.name || ''), date: t.mem.date ? String(t.mem.date) : '', icon: t.mem.icon ? String(t.mem.icon) : '' } : null)
         });
       }
     }
@@ -140,18 +141,37 @@
 
   /* ---------------- ข้อมูลจริงจาก Life OS ---------------- */
   function realData() {
-    var diaryDays = 0, xp = 0;
+    var diaryDays = 0, diaryDates = [], xp = 0, ach = [], doneProjs = [];
     try {
       var d = JSON.parse(localStorage.getItem('et1cruel_diary_v1') || 'null');
-      if (d && d.entries) diaryDays = Object.keys(d.entries).length;
+      if (d && d.entries) {
+        diaryDates = Object.keys(d.entries).sort();
+        diaryDays = diaryDates.length;
+      }
     } catch (e) {}
     try {
       var l = JSON.parse(localStorage.getItem('et1cruel_lifeos_v1') || 'null');
-      if (l && l.character && isFinite(+l.character.xp)) xp = +l.character.xp;
+      if (l) {
+        if (l.character && isFinite(+l.character.xp)) xp = +l.character.xp;
+        if (Array.isArray(l.achievements)) {
+          var i;
+          for (i = 0; i < l.achievements.length; i++) {
+            var a = l.achievements[i];
+            if (a && a.unlocked) ach.push({ id: a.id, icon: a.icon || '🏆', name: a.name || a.id, date: a.unlocked });
+          }
+        }
+        if (Array.isArray(l.projects)) {
+          var j;
+          for (j = 0; j < l.projects.length; j++) {
+            var p = l.projects[j];
+            if (p && p.pct >= 100) doneProjs.push({ id: p.id, name: p.name || p.id });
+          }
+        }
+      }
     } catch (e2) {}
     var ageDays = 0;
     try { ageDays = Math.max(0, (Date.now() - Date.parse(S.bornAt)) / 86400000); } catch (e3) {}
-    return { diaryDays: diaryDays, xp: xp, ageDays: ageDays };
+    return { diaryDays: diaryDays, diaryDates: diaryDates, xp: xp, ageDays: ageDays, ach: ach, doneProjs: doneProjs };
   }
   function growthOf(r) {
     return clamp(0.1 + Math.min(r.diaryDays, 15) * 0.03 + (r.xp / 100000) * 0.3 + Math.min(r.ageDays, 30) * 0.005, 0, 1);
@@ -290,15 +310,90 @@
     buildSprite(t);
     S.trees.push(t);
   }
-  function syncGlow() {
-    // ไดอารี่ 1 วัน = ต้นเรืองแสง 1 ต้น (สูงสุด 14)
-    var r = realData();
-    var want = Math.min(r.diaryDays, 14), have = 0, i;
-    for (i = 0; i < S.trees.length; i++) { if (S.trees[i].glow) have++; }
-    if (have >= want) return;
-    var cands = S.trees.filter(function (t) { return !t.glow && !t.shrink && t.layer === 1; });
-    cands.sort(function (a, b) { return b.g - a.g; });
-    for (i = 0; i < cands.length && have < want; i++) { cands[i].glow = true; have++; }
+  function treeByMem(kind, id) {
+    var i;
+    for (i = 0; i < S.trees.length; i++) {
+      var m = S.trees[i].mem;
+      if (m && m.kind === kind && m.id === id) return S.trees[i];
+    }
+    return null;
+  }
+  function syncMemory() {
+    // Phase 6: ผูกต้นไม้กับข้อมูลจริง (ย้อนกลับได้ถ้าแก้ข้อมูล)
+    var r = realData(), i, t;
+    // 1) ไดอารี่ 1 วัน = ต้นเรืองแสงเขียว 1 ต้น + จำวันที่ (สูงสุด 14)
+    var wantD = Math.min(r.diaryDates.length, 14);
+    var haveDates = {};
+    for (i = 0; i < S.trees.length; i++) {
+      t = S.trees[i];
+      if (t.mem && t.mem.kind === 'diary') {
+        if (r.diaryDates.indexOf(t.mem.id) < 0 || t.shrink) { t.mem = null; if (t.glow === 'leaf') t.glow = false; }
+        else haveDates[t.mem.id] = true;
+      }
+    }
+    var needDates = [];
+    for (i = 0; i < wantD; i++) { if (!haveDates[r.diaryDates[i]]) needDates.push(r.diaryDates[i]); }
+    if (needDates.length) {
+      var cands = S.trees.filter(function (x) { return !x.mem && !x.shrink && x.layer === 1; });
+      cands.sort(function (a, b) { return b.g - a.g; });
+      for (i = 0; i < cands.length && needDates.length; i++) {
+        cands[i].glow = 'leaf';
+        cands[i].mem = { kind: 'diary', id: needDates.shift(), name: 'ไดอารี่' };
+      }
+    }
+    // 2) achievement ที่ปลดล็อก = ต้นโบราณทอง (สูงสุด 10)
+    var wantA = r.ach.slice(0, 10), haveA = 0;
+    for (i = 0; i < S.trees.length; i++) {
+      t = S.trees[i];
+      if (t.mem && t.mem.kind === 'ach') {
+        var still = false, k;
+        for (k = 0; k < wantA.length; k++) { if (wantA[k].id === t.mem.id) { still = true; break; } }
+        if (!still || t.shrink) { t.mem = null; t.glow = false; t.blossom = false; }
+        else haveA++;
+      }
+    }
+    for (i = 0; i < wantA.length; i++) {
+      if (treeByMem('ach', wantA[i].id)) continue;
+      var big = null, q;
+      var olds = S.trees.filter(function (x) { return !x.mem && !x.shrink && x.layer === 2 && x.g > 0.7; });
+      if (olds.length) {
+        olds.sort(function (a, b) { return b.g - a.g; });
+        big = olds[0];
+      }
+      if (big) {
+        big.glow = 'gold'; big.g = Math.max(big.g, 0.9);
+        big.mem = { kind: 'ach', id: wantA[i].id, name: wantA[i].name, date: wantA[i].date, icon: wantA[i].icon };
+      } else if (S.trees.length < targetCount() + 4) {
+        var nt = {
+          x: Math.random(), layer: 2, type: Math.random() < 0.5 ? 'broad' : 'pine',
+          phase: Math.random(), g: 0.85, glow: 'gold', blossom: false, h: 0,
+          shrink: false, sprite: null,
+          mem: { kind: 'ach', id: wantA[i].id, name: wantA[i].name, date: wantA[i].date, icon: wantA[i].icon }
+        };
+        buildSprite(nt);
+        S.trees.push(nt);
+      }
+      haveA++;
+    }
+    // 3) โปรเจกต์เสร็จ 100% = ต้นผลิดอกชมพู (สูงสุด 5)
+    var wantP = r.doneProjs.slice(0, 5);
+    for (i = 0; i < S.trees.length; i++) {
+      t = S.trees[i];
+      if (t.mem && t.mem.kind === 'proj') {
+        var ok = false, k2;
+        for (k2 = 0; k2 < wantP.length; k2++) { if (wantP[k2].id === t.mem.id) { ok = true; break; } }
+        if (!ok || t.shrink) { t.mem = null; t.blossom = false; if (t.glow === 'leaf') t.glow = false; }
+      }
+    }
+    for (i = 0; i < wantP.length; i++) {
+      if (treeByMem('proj', wantP[i].id)) continue;
+      var c2 = S.trees.filter(function (x) { return !x.mem && !x.shrink; });
+      if (!c2.length) break;
+      c2.sort(function (a, b) { return b.g - a.g; });
+      c2[0].blossom = true;
+      if (!c2[0].glow) c2[0].glow = 'leaf';
+      c2[0].mem = { kind: 'proj', id: wantP[i].id, name: wantP[i].name };
+    }
   }
 
   /* ---------------- เลเยอร์ไกล (cache) ---------------- */
@@ -369,8 +464,22 @@
       cx.translate(bx, by);
       cx.rotate(sway);
       cx.globalAlpha = clamp(t.g * 3, 0, 1);
-      if (t.glow && !reduced) { cx.shadowColor = 'rgba(255,230,150,.85)'; cx.shadowBlur = 22; }
+      if (t.glow && !reduced) {
+        cx.shadowColor = t.glow === 'gold' ? 'rgba(255,200,90,.9)' : 'rgba(150,255,180,.8)';
+        cx.shadowBlur = t.glow === 'gold' ? 26 : 18;
+      }
       cx.drawImage(t.sprite, (-t.sw * sc) / 2, -t.sh * sc, t.sw * sc, t.sh * sc);
+      if (t.blossom && !reduced) {
+        // ดอกชมพูบนเรือนยอด (โปรเจกต์เสร็จ)
+        cx.fillStyle = 'rgba(249,168,212,.75)';
+        var bi;
+        for (bi = 0; bi < 5; bi++) {
+          var bang = t.phase * 6.28 + bi * 1.256 + time * 0.3;
+          cx.beginPath();
+          cx.arc(Math.cos(bang) * t.sw * sc * 0.28, -t.sh * sc * (0.55 + 0.3 * ((bi * 37) % 10) / 10), 2.4 * sc + 1, 0, 6.2832);
+          cx.fill();
+        }
+      }
       cx.restore();
       cx.globalAlpha = 1;
       cx.shadowBlur = 0;
@@ -538,18 +647,81 @@
     gustBoost = Math.min(1.2, gustBoost + 0.7);
   }
 
+  /* ---------------- Phase 6: คลิกต้นไม้เปิดข้อมูลจริง ---------------- */
+  function toast(msg) {
+    var box = $('os-toasts');
+    if (!box) return;
+    try {
+      var t = document.createElement('div');
+      t.className = 'os-toast xp'; t.textContent = msg;
+      box.appendChild(t);
+      setTimeout(function () { t.style.opacity = '0'; }, 2400);
+      setTimeout(function () { t.remove(); }, 2900);
+    } catch (e) {}
+  }
+  function treeScreenPos(t) {
+    var depth = t.layer === 2 ? 1 : 0.45;
+    var e = easeOutCubic(t.g);
+    var sc = 0.25 + 0.75 * e;
+    var bx = t.x * W + mx * 14 * depth;
+    var by = H * (t.layer === 2 ? 0.97 : 0.99);
+    return { x: bx, y: by - (t.sh || 120) * sc * 0.55 };
+  }
+  function topIsGap(x, y) {
+    // ตอบสนองเฉพาะเมื่อคลิกโดนช่องว่าง (ไม่แย่งคลิกการ์ด/ปุ่มเดิม)
+    try {
+      if (typeof document.elementFromPoint !== 'function') return false;
+      var el = document.elementFromPoint(x, y);
+      if (!el) return false;
+      if (el === cv || el === document.body) return true;
+      if (el.id === 'forest-veil' || el.id === 'forest-bg') return true;
+      if (el.classList && (el.classList.contains('sky-break') || el.classList.contains('sky-fx'))) return true;
+      return false;
+    } catch (e) { return false; }
+  }
+  function onTreeClick(e) {
+    if (!S.enabled || !e || e.clientX == null) return;
+    if (!topIsGap(e.clientX, e.clientY)) return;
+    var best = null, bestD = 40 * 40, i, t, p, dx, dy, dd;
+    for (i = 0; i < S.trees.length; i++) {
+      t = S.trees[i];
+      if (!t.mem || t.shrink || t.g < 0.4) continue;
+      p = treeScreenPos(t);
+      dx = p.x - e.clientX; dy = p.y - e.clientY;
+      dd = dx * dx + dy * dy;
+      if (dd < bestD) { bestD = dd; best = t; }
+    }
+    if (!best) return;
+    var m = best.mem;
+    if (m.kind === 'diary') {
+      try {
+        var opened = false;
+        if (window.ET1DIARY && window.ET1DIARY.open) { window.ET1DIARY.open(m.id); opened = true; }
+        var sec = document.getElementById('diary');
+        if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        toast('📓 ไดอารี่ ' + m.id + (opened ? ' — เปิดให้อ่านแล้ว' : ''));
+      } catch (e2) {}
+    } else if (m.kind === 'ach') {
+      toast((m.icon || '🏆') + ' ' + m.name + (m.date ? ' · ' + m.date : ''));
+    } else if (m.kind === 'proj') {
+      toast('🌸 โปรเจกต์เสร็จ: ' + m.name);
+    }
+    celebrate(6);
+  }
+
   /* ---------------- สถานะป่า (แผง) ---------------- */
   function status() {
     var r = realData(), g = growthOf(r), st = stageOf(g);
     var tc = targetCount();
-    var next = null, i;
+    var next = null, i, memTrees = 0;
     for (i = 0; i < STAGES.length; i++) {
       if (g < STAGES[i].at) { next = STAGES[i]; break; }
     }
+    for (i = 0; i < S.trees.length; i++) { if (S.trees[i].mem && !S.trees[i].shrink) memTrees++; }
     return {
       growth: Math.round(g * 100), stage: st.name, icon: st.icon,
-      trees: S.trees.length, target: tc,
-      memories: r.diaryDays, xp: r.xp,
+      trees: S.trees.length, target: tc, memTrees: memTrees,
+      memories: r.diaryDays, ach: r.ach, projs: r.doneProjs, xp: r.xp,
       next: next ? (next.icon + ' ' + next.name + ' ที่ ' + Math.round(next.at * 100) + '%') : 'ถึงขีดสุดแล้ว ✨'
     };
   }
@@ -562,8 +734,35 @@
         '<span class="fstat-pct">' + s.growth + '%</span></div>' +
         '<div class="fstat-bar"><i style="width:' + s.growth + '%"></i></div>' +
         '<div class="fstat-meta">🌱 ต้นไม้ ' + s.trees + '/' + s.target + ' · 📓 ความทรงจำ ' + s.memories +
-        ' วัน<br>→ ต่อไป: ' + s.next + '</div>';
+        ' วัน · 🏆 ' + s.ach.length + '<br>→ ต่อไป: ' + s.next + '</div>';
+      paintMem(s);
     } catch (e) {}
+  }
+  function escH(str) {
+    return String(str == null ? '' : str).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  }
+  function paintMem(s) {
+    var el = $('forestMem');
+    if (!el) return;
+    try {
+      var html = '', i;
+      if (s.ach.length) {
+        html += '<div class="fmem-kind">🏆 ความสำเร็จ — แตะต้นทองในป่าเพื่อดู</div><div class="fmem-chips">';
+        for (i = 0; i < Math.min(s.ach.length, 12); i++) {
+          html += '<span class="fmem-chip">🎖 ' + escH(s.ach[i].name) + '</span>';
+        }
+        html += '</div>';
+      }
+      if (s.projs.length) {
+        html += '<div class="fmem-kind">🌸 โปรเจกต์เสร็จ (ต้นผลิดอก)</div><div class="fmem-chips">';
+        for (i = 0; i < Math.min(s.projs.length, 8); i++) {
+          html += '<span class="fmem-chip pink">🌸 ' + escH(s.projs[i].name) + '</span>';
+        }
+        html += '</div>';
+      }
+      if (!html) html = '<div class="fmem-kind">🌱 เขียนไดอารี่ / ปลดล็อกความสำเร็จ ความทรงจำจะงอกเป็นต้นไม้ตรงนี้</div>';
+      el.innerHTML = html;
+    } catch (e2) {}
   }
 
   /* ---------------- ควบคุม ---------------- */
@@ -625,7 +824,7 @@
     } catch (e2) {}
     resize();
     seedMotes();
-    syncGlow();
+    syncMemory();
     // ปุ่ม/แผง
     var fab = $('forestFab'), pop = $('forestPop');
     if (fab && pop) fab.addEventListener('click', function () { pop.classList.toggle('open'); paintStatus(); });
@@ -639,10 +838,10 @@
       sel.addEventListener('change', function () { setQuality(sel.value); });
     }
     paintToggle(); paintStatus();
-    setInterval(function () { syncGlow(); paintStatus(); saveState(); }, 60000);
+    setInterval(function () { syncMemory(); paintStatus(); saveState(); }, 60000);
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) { stopLoop(); saveState(); }
-      else { syncGlow(); startLoop(); }
+      else { syncMemory(); startLoop(); }
     });
     window.addEventListener('resize', function () {
       if (window.__forestRz) clearTimeout(window.__forestRz);
@@ -655,6 +854,8 @@
         PM.x = e.clientX; PM.y = e.clientY;
       } catch (e2) {}
     }, { passive: true });
+    // Phase 6: คลิกต้นความทรงจำ (hit-test เอง ไม่แย่งคลิกของเดิม)
+    document.addEventListener('click', onTreeClick);
     // Phase 3: toast ใหม่ = ฉลองในป่า (observer อย่างเดียว ไม่แตะโค้ดเดิม)
     try {
       if (typeof MutationObserver !== 'undefined') {
@@ -678,7 +879,7 @@
     else startLoop();
     window.ET1FOREST = {
       status: status,
-      refresh: function () { syncGlow(); paintStatus(); saveState(); },
+      refresh: function () { syncMemory(); paintStatus(); saveState(); },
       celebrate: celebrate,
       setEnabled: setEnabled, setQuality: setQuality,
       setWeather: function (w) {

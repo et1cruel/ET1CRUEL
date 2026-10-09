@@ -52,6 +52,15 @@
 - ปิดหมดแล้ว suspend AudioContext ประหยัดเครื่อง · ไม่ autoplay
 - ปรับ: `TUNE` (สเกล/จูน), `PRESETS`, ความถี่ฟิลเตอร์ใน builder แต่ละตัว
 
+## Phase 6 — Memory Garden (ผูกข้อมูลจริง)
+
+- อ่าน `et1cruel_diary_v1` (วัน+วันที่) + `et1cruel_lifeos_v1` (achievements ปลดล็อก + projects 100%) แบบกันพัง ไม่แตะ key เดิม
+- ไดอารี่ 1 วัน = ต้นเรืองแสงเขียวจำวันที่ (14) · achievement = ต้นโบราณทองจำชื่อ/วัน (10) · โปรเจกต์เสร็จ = ต้นผลิดอกชมพู (5)
+- แก้/ลบข้อมูล = ต้นคืนสถานะปกติ (ย้อนกลับได้) · เก็บ memo ลง `et1_forest_v1`
+- คลิกต้นความทรงจำ: hit-test เอง + ตอบเฉพาะคลิกโดนช่องว่าง (body/canvas/veil/sky-break) ไม่แย่งคลิกการ์ด — ไดอารี่เปิดใน editor ผ่าน `ET1DIARY.open(date)` + เลื่อนไป section, achievement แสดง toast
+- แผงป่ามี memory list (ชิปทอง/ชมพู) — achievements ไม่มีที่แสดงที่อื่น นี่คือที่แรก
+- ปรับ: cap จำนวนใน `syncMemory()`, รัศมีคลิก 40px ใน `onTreeClick`
+
 ## หมายเหตุ
 
 - canvas `z-index:0` เท่า galaxy เดิม (ไม่ใช้ -1 เพราะ body ทึบบังหาย) อยู่ใต้ `.wrap:1`
