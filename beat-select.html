@@ -8,6 +8,9 @@
 <link rel="apple-touch-icon" href="logo.svg">
 <meta name="theme-color" content="#0b0b12">
 <meta property="og:image" content="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   body { margin:0; font-family: 'Segoe UI', system-ui, sans-serif; color:#eee; min-height:100vh;
@@ -84,8 +87,10 @@
   .hidden { display:none !important; }
   @media(prefers-reduced-motion:reduce){ .cloud,.stars,header h1,.eq i{animation:none !important} }
 </style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
 </head>
-<body>
+<body class="site-polish">
 <div class="sky" aria-hidden="true"><div class="stars"></div><div class="moon"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
 <header>
   <h1>☁️ BEAT <span>SELECT</span></h1>
@@ -127,7 +132,25 @@
 </div>
 
 <script>
-const BEAT_BASE = 'https://raw.githubusercontent.com/et1cruel/BEAT-SELECT/main/beats/';
+const BEAT_BASE_MAIN = 'https://raw.githubusercontent.com/et1cruel/BEAT-SELECT/main/beats/';
+// 14 ไฟล์ถูกลบออกจาก main (ดู commit 556a3ee) — ปักหมุดไปอ่านจาก commit เก่าที่ยังมีไฟล์อยู่
+const BEAT_BASE_LEGACY = 'https://raw.githubusercontent.com/et1cruel/BEAT-SELECT/d899a4398c4506a37756cdfc4c0dce64be86e69c/beats/';
+const LEGACY_BEATS = new Set([
+  "A 18 Maoricore ✅.mp3",
+  "A 23 Regalia Himoriya ✅.mp3",
+  "A 34 something ✅.mp3",
+  "A 42 🌌wavelove ✅.mp3",
+  "A 43 🌌ambientworld ✅.mp3",
+  "A 47 🌌hizoe ✅.mp3",
+  "A 50 🌌spiritual ✅.mp3",
+  "A 52 Turntfxx ✅.mp3",
+  "A 53 electronic giude ✅.mp3",
+  "A 62 🌌hizoka ✅.mp3",
+  "A 63 stairway to heart ✅.mp3",
+  "A 77 🌌swag lack ✅.mp3",
+  "A 80 🌌swamp ✅.mp3",
+  "A 91 🌌havenheart ✅.mp3"
+]);
 const beats = [
   "A 18 Maoricore ✅.mp3",
   "A 23 Regalia Himoriya ✅.mp3",
@@ -166,7 +189,13 @@ function fileType(f){
   return f.toLowerCase().endsWith('.wav') ? 'wav' : 'mp3';
 }
 function fileUrl(f){
-  return BEAT_BASE + encodeURIComponent(f);
+  const base = LEGACY_BEATS.has(f) ? BEAT_BASE_LEGACY : BEAT_BASE_MAIN;
+  return base + encodeURIComponent(f);
+}
+function fallbackUrl(f){
+  // ถ้า main พังให้ลอง legacy และกลับกัน (กันไฟล์ย้าย/ลบรอบหน้า)
+  const base = LEGACY_BEATS.has(f) ? BEAT_BASE_MAIN : BEAT_BASE_LEGACY;
+  return base + encodeURIComponent(f);
 }
 
 function render(){
@@ -200,6 +229,13 @@ function render(){
     });
     ['pause','ended'].forEach(ev => audio.addEventListener(ev, () => card.classList.remove('playing')));
     audio.addEventListener('error', () => {
+      // ลอง fallback URL อีกฝั่งอัตโนมัติ 1 ครั้ง (กันไฟล์ย้าย/ลบ)
+      if (!audio.dataset.retried) {
+        audio.dataset.retried = '1';
+        audio.src = fallbackUrl(f);
+        audio.load();
+        return;
+      }
       card.classList.add('audio-error');
       const e = card.querySelector('.load-err'); if (e) e.hidden = false;
     });
