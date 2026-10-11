@@ -87,6 +87,7 @@ td button{background:none;border:1px solid #3d4666;color:var(--muted);border-rad
 td button:hover{border-color:var(--red);color:var(--red)}
 .type-tag{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 11px;border:1.5px solid;margin-right:4px;white-space:nowrap}
 .t-beat{color:#6EE7B7;border-color:#4ADE80;background:rgba(74,222,128,.1)}
+.t-com{color:#5EEAD4;border-color:#2DD4BF;background:rgba(45,212,191,.1)}
 .t-teach{color:#93C5FD;border-color:#3B82F6;background:rgba(59,130,246,.1)}
 .t-setup{color:#FDE68A;border-color:#FBBF24;background:rgba(251,191,36,.1)}
 .t-mix{color:#C4B5FD;border-color:#A78BFA;background:rgba(139,92,246,.12)}
@@ -156,6 +157,7 @@ footer a{color:var(--gold);text-decoration:none;font-weight:700}
 <label>วันที่<input id="inDate" type="date"></label>
 <label>ประเภท<select id="inType">
 <option value="beat">🎵 ขายบีท</option>
+<option value="com">🎹 รับทำบีท</option>
 <option value="teach">🎓 สอนทำบีท</option>
 <option value="setup">💻 รับลงโปรแกรม</option>
 <option value="mix">🎚 มิกซ์/มาสเตอร์</option>
@@ -187,13 +189,46 @@ footer a{color:var(--gold);text-decoration:none;font-weight:700}
 'use strict';
 var $ = function(id){ return document.getElementById(id); };
 var STAGES = ['💡 ไอเดีย','🔨 กำลังทำ','🎚 รอมิกซ์','✅ พร้อมขาย','💰 ขายแล้ว/ปล่อยแล้ว'];
-var TYPES = {beat:['🎵 ขายบีท','t-beat'],teach:['🎓 สอนทำบีท','t-teach'],setup:['💻 รับลงโปรแกรม','t-setup'],mix:['🎚 มิกซ์/มาสเตอร์','t-mix'],other:['📦 อื่นๆ','t-other']};
+var TYPES = {beat:['🎵 ขายบีท','t-beat'],com:['🎹 รับทำบีท','t-com'],teach:['🎓 สอนทำบีท','t-teach'],setup:['💻 รับลงโปรแกรม','t-setup'],mix:['🎚 มิกซ์/มาสเตอร์','t-mix'],other:['📦 อื่นๆ','t-other']};
 function load(k, fb){ try{ var v = JSON.parse(localStorage.getItem(k)); return v == null ? fb : v; }catch(e){ return fb; } }
 function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
 var projects = load('prod-projects', []);
 var incomes = load('prod-income', []);
 var goals = load('prod-goals', []);
 var goalTarget = load('prod-goal-target', 20000);
+/* ---- SEED: ยอดจริงจากแชท (ก.ย. 2025 – ก.ย. 2026) · ยอดลอยไม่มีชื่อ = รับทำบีท ---- */
+var SEED = [
+['2025-09-23','com','รับทำบีท',700],['2025-09-30','com','รับทำบีท',700],
+['2025-10-02','com','รับทำบีท',700],['2025-10-02','com','รับทำบีท',700],
+['2025-10-06','com','รับทำบีท',600],['2025-10-06','com','รับทำบีท',500],
+['2025-10-14','com','รับทำบีท',150],['2025-10-15','com','รับทำบีท',100],
+['2025-10-23','com','รับทำบีท',700],
+['2025-10-24','com','รับทำบีท',600],['2025-10-24','com','รับทำบีท',700],
+['2025-10-30','teach','สอนทำเพลง',1000],['2025-11-04','com','รับทำบีท',500],
+['2025-12-01','com','รับทำบีท',800],['2025-12-10','com','รับทำบีท',700],
+['2025-12-15','com','รับทำบีท',200],['2025-12-15','com','รับทำบีท',250],
+['2026-01-10','com','รับทำบีท',200],['2026-01-10','setup','program plugin preset',200],
+['2026-02-09','mix','mix and master',500],['2026-02-10','com','beat lil peep lill tracy',800],
+['2026-02-16','teach','beat teaching',1000],['2026-02-16','com','beat et1cruel',1100],
+['2026-02-28','teach','mixing teaching',1000],
+['2026-05-03','com','beat 3',700],['2026-05-03','setup','programplugin',200],
+['2026-05-10','com','beat น้อง',500],['2026-05-10','com','มัดจำ',350],['2026-05-10','com','มัดจำ',300],
+['2026-05-13','com','บีท kaneki',350],
+['2026-05-28','teach','มหาลัย',300],['2026-05-28','teach','มหาลัย',300],['2026-05-28','teach','มหาลัย',300],
+['2026-05-28','com','มัดจำทำบีท',450],['2026-05-29','com','รับทำบีท',700],
+['2026-05-30','teach','มหาลัย',300],['2026-06-01','teach','มหาลัย',300],['2026-06-02','teach','มหาลัย',300],
+['2026-07-28','teach','สอนทำเพลง',1270],
+['2026-08-17','com','รับทำบีท',800],['2026-09-04','com','รับทำบีท',800],['2026-09-08','com','รับทำบีท',900],
+['2026-09-09','teach','สอนทำบีท',2500],
+['2026-09-30','teach','สอนทำบีท',1000],['2026-09-30','com','ทำบีท',800]
+];
+if (!load('prod-seeded-v1', null)) {
+  if (!incomes.length) {
+    incomes = SEED.map(function(s, i){ return {id:'s' + i, date:s[0], type:s[1], desc:s[2], amt:s[3]}; });
+    save('prod-income', incomes);
+  }
+  save('prod-seeded-v1', 1);
+}
 function fmt(n){ return Number(n||0).toLocaleString('en-US') + ' ฿'; }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function monthKey(d){ return (d||'').slice(0,7); }
