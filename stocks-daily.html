@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STOCK ROOM — ห้องดูหุ้นรายวัน 📈</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC;
+  --gold:#4ADE80; --gold-dim:#166534; --amber:#FBBF24; --pink:#F472B6;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:
+  radial-gradient(900px 400px at 15% -5%,rgba(74,222,128,.14),transparent 60%),
+  radial-gradient(900px 500px at 90% 0%,rgba(124,58,237,.18),transparent 55%),
+  var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:18px;line-height:1.9}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 22px 90px}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);
+  border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.topbar a{color:var(--gold);text-decoration:none;font-weight:700;font-size:15px;border:1px solid #3d4666;border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar a:hover{border-color:var(--gold)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff}
+header.hero{margin:26px 0 8px;text-align:center}
+header.hero h1{font-size:40px;line-height:1.3;color:#fff}
+header.hero h1 span{color:var(--gold);text-shadow:0 0 14px rgba(74,222,128,.4)}
+header.hero p{color:#E2E8FA;font-size:17.5px;margin:12px auto 0;max-width:70ch}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.stat{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:14px;text-align:center}
+.stat small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:26px;color:var(--gold);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted)}
+.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;box-shadow:var(--shadow);margin:22px 0;padding:24px 24px 22px;scroll-margin-top:90px}
+.card h2{font-size:24px;color:#fff;display:flex;align-items:center;gap:10px}
+.card h2 .em{background:linear-gradient(180deg,#BBF7D0,#4ADE80);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;flex:0 0 44px}
+.card .sub{color:var(--muted);font-size:15px;margin:4px 0 14px}
+form.add{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+form.add .full{grid-column:1/-1}
+form.add label{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+form.add input,form.add textarea{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:11px 13px;font-family:inherit;font-size:15.5px;font-weight:600;outline:none;width:100%}
+form.add input:focus,form.add textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(74,222,128,.2)}
+form.add input[type="date"]{color-scheme:dark}
+form.add input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.75);opacity:.9;cursor:pointer}
+.dateprev{grid-column:1/-1;background:rgba(74,222,128,.07);border:1px solid var(--gold-dim);border-radius:10px;padding:9px 14px;font-size:14.5px;color:#fff}
+.dateprev b{color:var(--gold)}
+.dateprev .num{color:var(--muted);font-size:12.5px}
+.drop{grid-column:1/-1;border:2px dashed #3d4666;border-radius:14px;padding:18px;text-align:center;background:#080A10;cursor:pointer;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--gold);background:rgba(74,222,128,.06)}
+.drop b{color:#fff}
+.drop small{display:block;color:var(--muted);font-size:13.5px;margin-top:4px}
+.drop img{max-width:100%;max-height:220px;border-radius:10px;margin-top:10px;border:1px solid #3d4666}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;border-radius:12px;padding:12px 22px;cursor:pointer;border:1.5px solid var(--gold);
+  background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16}
+.btn:active{transform:translateY(2px)}
+.btn.ghost{background:#0B0D14;color:var(--gold)}
+.btn.small{padding:8px 14px;font-size:13px}
+.btn.danger{border-color:#F87171;background:#0B0D14;color:#F87171}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 14px}
+.toolbar input{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 13px;font-family:inherit;font-size:14.5px;font-weight:600;outline:none}
+.toolbar input{min-width:200px;flex:1}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.scard{background:#0B0D14;border:2px solid #3d4666;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.scard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold);z-index:1}
+.scard .dhead{display:flex;align-items:center;gap:10px;padding:14px 16px 10px}
+.scard .dhead .dico{width:46px;height:46px;flex:0 0 46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;background:linear-gradient(180deg,#222839,#151927);border:1.5px solid var(--gold-dim)}
+.scard .dhead b{color:#fff;font-size:18px;line-height:1.4;display:block}
+.scard .dhead small{color:var(--gold);font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em}
+.scard .dhead .cnt{margin-left:auto;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;color:var(--muted);border:1px solid #3d4666;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.scard img.shot{width:100%;display:block;background:#000;border-top:1px solid #2B3248;border-bottom:1px solid #2B3248;cursor:zoom-in;max-height:520px;object-fit:contain}
+.scard .notebox{padding:12px 16px;font-size:14.5px;color:#DDE3F5;line-height:1.8}
+.scard .notebox:empty{display:none}
+.scard .row{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 16px;margin-top:auto}
+.scard .row a,.scard .row button{flex:1 1 auto;text-align:center;text-decoration:none}
+.empty{text-align:center;color:var(--muted);padding:26px;border:1.5px dashed #3d4666;border-radius:14px}
+.note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;padding:16px 18px;font-size:15.5px;color:#fff;margin-top:14px;line-height:1.9}
+.note b{color:var(--gold)}
+#lightbox{position:fixed;inset:0;z-index:99;display:none;background:rgba(0,0,0,.9);align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:12px}
+#lightbox.open{display:flex}
+#lightbox img{max-width:min(1000px,94vw);max-height:82vh;border-radius:12px;border:2px solid var(--gold)}
+#lightbox .cap{color:#fff;font-weight:700;font-size:16px;text-align:center}
+#lightbox button{font-family:'Chakra Petch',sans-serif;font-weight:700;border-radius:999px;padding:8px 18px;cursor:pointer;border:1.5px solid var(--gold);background:#0B0D14;color:var(--gold)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr 1fr}.grid{grid-template-columns:1fr}form.add{grid-template-columns:1fr}header.hero h1{font-size:30px}}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.card{padding:18px}}
+</style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
+</head>
+<body class="site-polish">
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← LIFE OS</a>
+  <a href="./index.html#stocks">📈 ห้องเทรด</a>
+  <span class="t">📈 STOCK ROOM · ห้องดูหุ้นรายวัน</span>
+</div>
+
+<header class="hero">
+  <h1>📈 STOCK ROOM <span>— ห้องดูหุ้นรายวัน</span></h1>
+  <p>อัปโหลด<b>รูปหุ้นรายวัน</b>เก็บไว้ดูย้อนหลัง · รูปแรกกำกับไว้แล้วว่าเป็น<b>วันที่ 10 ตุลาคม 2569</b> · เก็บในเครื่อง (localStorage) + ไฟล์ในโฟลเดอร์ <b class="num">stocks/</b></p>
+</header>
+
+<div class="stats">
+  <div class="stat"><small>🗓️ TOTAL DAYS</small><strong class="num" id="stTotal">0</strong><span>วันที่มีรูป</span></div>
+  <div class="stat"><small>🖼️ TOTAL IMAGES</small><strong class="num" id="stImgs">0</strong><span>รูปทั้งหมด</span></div>
+  <div class="stat"><small>⚡ LATEST</small><strong class="num" id="stLatest" style="font-size:19px">–</strong><span>วันที่ล่าสุด</span></div>
+</div>
+
+<section class="card" id="add">
+  <h2><span class="em">📤</span> อัปโหลดรูปหุ้นรายวัน</h2>
+  <p class="sub">เลือกวันที่ + เลือกรูป (jpg/png) + เขียนโน้ตสั้นๆ ได้ · กดบันทึกแล้วจะขึ้นในการ์ดด้านล่างทันที</p>
+  <form class="add" id="addForm">
+    <label>🗓️ วันที่ของรูป *
+      <input id="fDate" type="date" value="2026-10-10" min="2020-01-01" max="2030-12-31" required>
+    </label>
+    <label>📝 โน้ตสั้นๆ (ไม่บังคับ)
+      <input id="fNote" maxlength="120" placeholder="เช่น SET ปิดบวก / NVDA ลงแรง">
+    </label>
+    <div class="full dateprev" id="datePrev">จะบันทึกเป็นวันที่: <b>10 ตุลาคม 2569</b></div>
+    <div class="drop" id="drop">
+      <div><b>📁 กดเพื่อเลือกรูป หรือลากรูปมาวางที่นี่</b></div>
+      <small>รองรับ JPG / PNG · รูปจะถูกย่อเก็บในเครื่องอัตโนมัติ</small>
+      <img id="preview" alt="" style="display:none">
+      <input id="fFile" type="file" accept="image/*" hidden>
+    </div>
+    <div class="full" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" type="submit" id="saveBtn">💾 บันทึกรูปประจำวัน</button>
+      <button class="btn ghost" type="button" id="clearBtn">ล้างฟอร์ม</button>
+    </div>
+  </form>
+  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 2 ใบ: <b>8 ตุลาคม 2569</b> กับ <b>10 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
+</section>
+
+<section class="card" id="list">
+  <h2><span class="em">🗂️</span> คลังรูปหุ้นรายวัน</h2>
+  <p class="sub">เรียงจากวันที่ล่าสุด → เก่าสุด · กดที่รูปเพื่อขยายดูเต็มๆ</p>
+  <div class="toolbar">
+    <input id="q" placeholder="ค้นหา… 10 ตุลาคม / NVDA / SET">
+    <button class="btn small ghost" id="exportBtn" type="button">⬇ สำรองข้อมูล</button>
+    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 ต.ค. 69)</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">ยังไม่มีรูปที่ค้นหา — ลองล้างคำค้นหรืออัปโหลดรูปใหม่ด้านบน</div>
+</section>
+
+<footer>STOCK ROOM · LIFE OS · เก็บรูปหุ้นรายวันไว้ดูย้อนหลัง 📈</footer>
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <img id="lbImg" alt="รูปหุ้นขยาย">
+  <div class="cap" id="lbCap"></div>
+  <button type="button" id="lbClose">✕ ปิด (กดที่พื้นหลังก็ได้)</button>
+</div>
+
+<script>
+var KEY = 'stocksDailyV1';
+var TH_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+function toThaiDate(iso){
+  // iso: YYYY-MM-DD -> 10 ตุลาคม 2569
+  try{
+    var p = iso.split('-');
+    var y = parseInt(p[0],10)+543;
+    var m = parseInt(p[1],10);
+    var d = parseInt(p[2],10);
+    return d + ' ' + TH_MONTHS[m-1] + ' ' + y;
+  }catch(e){ return iso; }
+}
+function todayISO(){
+  var d = new Date();
+  var m = ('0'+(d.getMonth()+1)).slice(-2);
+  var day = ('0'+d.getDate()).slice(-2);
+  return d.getFullYear()+'-'+m+'-'+day;
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){ var a = JSON.parse(raw); if(Array.isArray(a)) return a; }
+  }catch(e){}
+  return null;
+}
+function save(arr){
+  try{ localStorage.setItem(KEY, JSON.stringify(arr)); }catch(e){
+    alert('เมมเต็ม (localStorage) — รูปใหญ่มาก ลองใช้รูปเล็ก/แคปเฉพาะตาราง หรือลบวันเก่าออกบ้าง');
+  }
+}
+function seed(){
+  return [{
+    id: 'seed-2026-10-10',
+    dateISO: '2026-10-10',
+    dateLabel: '10 ตุลาคม 2569',
+    src: 'stocks/2026-10-10.png',
+    note: 'รูปแรก — หุ้นรายวัน ประจำวันที่ 10 ตุลาคม 2569',
+    createdAt: Date.now(),
+    seed: true
+  },{
+    id: 'seed-2026-10-08',
+    dateISO: '2026-10-08',
+    dateLabel: '8 ตุลาคม 2569',
+    src: 'stocks/2026-10-08.png',
+    note: 'หุ้นรายวัน ประจำวันที่ 8 ตุลาคม 2569',
+    createdAt: Date.now(),
+    seed: true
+  }];
+}
+var SEED_V = 2;
+var items = load();
+if(!items || !items.length){ items = seed(); }
+// เติมรูปตั้งต้นที่ยังขาด (เช่น เปิดครั้งแรกตอนมีแค่รูป 10 ต.ค. จะได้รูป 8 ต.ค. เพิ่มโดยไม่ทับรูปที่อัปโหลดเอง)
+var seedVer = 0;
+try{ seedVer = parseInt(localStorage.getItem(KEY + '_seedV') || '0', 10) || 0; }catch(e){}
+if(seedVer < SEED_V){
+  seed().forEach(function(s){
+    var dup = false;
+    items.forEach(function(x){ if(x.id === s.id) dup = true; });
+    if(!dup) items.push(s);
+  });
+  try{ localStorage.setItem(KEY + '_seedV', String(SEED_V)); }catch(e){}
+}
+save(items);
+// migrate: เติม dateLabel ไทยให้ครบ
+items.forEach(function(it){ if(!it.dateLabel) it.dateLabel = toThaiDate(it.dateISO); });
+
+var fDate = document.getElementById('fDate');
+var fNote = document.getElementById('fNote');
+var fFile = document.getElementById('fFile');
+var drop = document.getElementById('drop');
+var preview = document.getElementById('preview');
+var pendingDataURL = '';
+if(!fDate.value) fDate.value = '2026-10-10';
+// พรีวิววันที่ภาษาไทยใต้ช่องเลือกวันที่ — เห็นทันทีว่าเลือกวันไหนอยู่ (กันสับสน format 10/10/2026)
+var datePrev = document.getElementById('datePrev');
+function paintDate(){
+  var v = (fDate.value || '2026-10-10');
+  if(datePrev) datePrev.innerHTML = 'จะบันทึกเป็นวันที่: <b>' + toThaiDate(v) + '</b> <span class="num">(' + v + ')</span>';
+}
+fDate.addEventListener('input', paintDate);
+fDate.addEventListener('change', paintDate);
+paintDate();
+
+drop.addEventListener('click', function(e){ if(e.target.tagName!=='BUTTON') fFile.click(); });
+['dragover','dragenter'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
+['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev, function(e){ e.preventDefault(); drop.classList.remove('over'); }); });
+drop.addEventListener('drop', function(e){
+  var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if(f) readFile(f);
+});
+fFile.addEventListener('change', function(){
+  if(fFile.files && fFile.files[0]) readFile(fFile.files[0]);
+});
+function readFile(f){
+  if(!f.type || f.type.indexOf('image/')!==0){ alert('เลือกได้เฉพาะไฟล์รูปภาพ'); return; }
+  var r = new FileReader();
+  r.onload = function(){
+    // ย่อรูปก่อนเก็บกัน localStorage เต็ม
+    shrinkImage(r.result, 1100, function(out){
+      pendingDataURL = out;
+      preview.src = out;
+      preview.style.display = 'block';
+    });
+  };
+  r.readAsDataURL(f);
+}
+function shrinkImage(dataURL, maxW, cb){
+  var img = new Image();
+  img.onload = function(){
+    var w = img.width, h = img.height;
+    if(w <= maxW){ cb(dataURL); return; }
+    var ratio = maxW / w;
+    var c = document.createElement('canvas');
+    c.width = maxW; c.height = Math.round(h*ratio);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    cb(c.toDataURL('image/jpeg', 0.85));
+  };
+  img.onerror = function(){ cb(dataURL); };
+  img.src = dataURL;
+}
+document.getElementById('clearBtn').onclick = function(){
+  document.getElementById('addForm').reset();
+  fDate.value = '2026-10-10';
+  pendingDataURL = ''; preview.src=''; preview.style.display='none'; fFile.value='';
+};
+document.getElementById('addForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var d = fDate.value || '2026-10-10';
+  var note = (fNote.value||'').trim();
+  if(!pendingDataURL){ alert('เลือกรูปก่อน 1 รูป'); return; }
+  // ถ้ามีวันเดียวกันแล้ว ให้เพิ่มเป็นรูปที่ 2 ของวันนั้น (ไม่ทับ)
+  var id = 'u'+Date.now();
+  items.push({ id:id, dateISO:d, dateLabel: toThaiDate(d), src: pendingDataURL, note: note, createdAt: Date.now() });
+  save(items);
+  pendingDataURL=''; preview.src=''; preview.style.display='none'; fFile.value=''; fNote.value='';
+  render(document.getElementById('q').value);
+  document.getElementById('list').scrollIntoView({behavior:'smooth'});
+});
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+function render(filter){
+  var q = (filter||'').trim().toLowerCase();
+  var sorted = items.slice().sort(function(a,b){ return (b.dateISO||'').localeCompare(a.dateISO||'') || (b.createdAt-a.createdAt); });
+  var grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  var shown = 0, imgCount = items.length;
+  // นับวันไม่ซ้ำ
+  var days = {};
+  items.forEach(function(it){ days[it.dateISO]=1; });
+
+  sorted.forEach(function(it, idx){
+    var hay = ((it.dateLabel||'')+' '+(it.dateISO||'')+' '+(it.note||'')).toLowerCase();
+    if(q && hay.indexOf(q)===-1) return;
+    shown++;
+    var card = document.createElement('div');
+    card.className = 'scard';
+    card.innerHTML =
+      '<div class="dhead"><div class="dico">📈</div><div><b>หุ้นรายวัน — '+esc(it.dateLabel||toThaiDate(it.dateISO))+'</b><small class="num">'+esc(it.dateISO)+'</small></div><span class="cnt">รูปที่ '+(sorted.length-idx)+'</span></div>'+
+      '<img class="shot" loading="lazy" alt="หุ้นรายวัน '+esc(it.dateLabel||'')+'">'+
+      '<div class="notebox">'+esc(it.note||'')+'</div>'+
+      '<div class="row"><button class="btn small ghost" data-act="view" type="button">🔍 ขยาย</button><a class="btn small ghost" download="หุ้น-'+esc(it.dateISO)+'.png">⬇ โหลดรูป</a><button class="btn small danger" data-act="del" type="button">ลบ</button></div>';
+    var im = card.querySelector('img');
+    im.src = it.src;
+    im.addEventListener('click', function(){ openLB(it); });
+    card.querySelector('[data-act="view"]').onclick = function(){ openLB(it); };
+    var dl = card.querySelector('a');
+    dl.href = it.src;
+    card.querySelector('[data-act="del"]').onclick = function(){
+      if(!confirm('ลบรูปวันที่ '+it.dateLabel+' ใช่ไหม?')) return;
+      items = items.filter(function(x){ return x.id!==it.id; });
+      save(items); render(document.getElementById('q').value);
+    };
+    grid.appendChild(card);
+  });
+  document.getElementById('empty').style.display = shown? 'none':'block';
+  document.getElementById('stTotal').textContent = Object.keys(days).length;
+  document.getElementById('stImgs').textContent = imgCount;
+  var latest = sorted.length? (sorted[0].dateLabel||sorted[0].dateISO) : '–';
+  document.getElementById('stLatest').textContent = latest;
+}
+document.getElementById('q').addEventListener('input', function(e){ render(e.target.value); });
+document.getElementById('resetBtn').onclick = function(){
+  if(!confirm('รีเซ็ตกลับเหลือแค่รูปตั้งต้น (8 + 10 ตุลาคม 2569) ใช่ไหม?')) return;
+  items = seed(); save(items);
+  try{ localStorage.setItem(KEY + '_seedV', String(SEED_V)); }catch(e){}
+  render('');
+};
+document.getElementById('exportBtn').onclick = function(){
+  var blob = new Blob([JSON.stringify(items,null,2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'stocks-daily-backup.json';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+};
+
+// lightbox
+var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg'), lbCap = document.getElementById('lbCap');
+function openLB(it){ lbImg.src = it.src; lbCap.textContent = 'หุ้นรายวัน — ' + (it.dateLabel||toThaiDate(it.dateISO)) + (it.note? ' · '+it.note : ''); lb.classList.add('open'); }
+document.getElementById('lbClose').onclick = function(){ lb.classList.remove('open'); };
+lb.addEventListener('click', function(e){ if(e.target===lb) lb.classList.remove('open'); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') lb.classList.remove('open'); });
+
+render('');
+</script>
+</body>
+</html>

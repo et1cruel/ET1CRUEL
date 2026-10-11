@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ห้องอาหาร — สมุดบันทึกมื้อโปรด 🍜</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0B100D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Mitr:wght@600;700&family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1e9;--paper:#fffdf8;--ink:#202820;--muted:#667064;--line:#e4e2d8;--green:#315b45;--green-dark:#244634;--gold:#b8783d;--gold-soft:#f3e8d8;--red:#a84d3d;--shadow:0 12px 34px rgba(39,51,39,.07)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:96px}
+body{background:radial-gradient(ellipse at 90% 0%,#e7eddf 0,transparent 32rem),var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai','Sarabun',sans-serif;font-size:16px;line-height:1.7}
+::selection{background:#dce8d8;color:var(--ink)}
+:focus-visible{outline:3px solid #87a98a;outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:24px 28px 80px}
+.num,.stat strong{font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:10px;z-index:20;min-height:58px;display:flex;gap:14px;align-items:center;background:rgba(255,253,248,.91);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(214,219,206,.9);border-radius:16px;padding:8px 12px;box-shadow:0 6px 20px rgba(42,56,41,.06)}
+.topbar a{display:inline-flex;align-items:center;min-height:40px;padding:7px 13px;border:1px solid var(--line);border-radius:10px;color:var(--green-dark);text-decoration:none;font-size:14px;font-weight:700;background:white}
+.topbar a:hover{border-color:#a9bba7;background:#f7faf4}
+.topbar .t{font-size:13px;font-weight:600;color:var(--muted)}
+header.hero{position:relative;overflow:hidden;margin:28px 0 22px;padding:clamp(28px,5vw,52px);border:1px solid #dfe4d8;border-radius:24px;background:linear-gradient(125deg,rgba(255,253,248,.98),rgba(239,244,233,.96));box-shadow:var(--shadow)}
+header.hero::after{content:'🍜';position:absolute;right:5%;bottom:-28px;font-size:clamp(100px,19vw,210px);line-height:1;opacity:.08;transform:rotate(-14deg);pointer-events:none}
+header.hero .eyebrow{position:relative;z-index:1;display:flex;align-items:center;gap:9px;color:var(--green);font-size:12px;font-weight:700;letter-spacing:.08em}
+header.hero .eyebrow::before{content:'✦';color:var(--gold)}
+header.hero h1{position:relative;z-index:1;margin-top:10px;color:#193d2b;font-family:'Chakra Petch','Mitr',sans-serif;font-size:clamp(38px,6.2vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.2;text-wrap:balance;text-shadow:0 0 1px rgba(25,61,43,.5),0 0 16px rgba(67,123,84,.25)}
+header.hero h1::after{content:'';display:block;width:76px;height:5px;margin-top:13px;border-radius:99px;background:linear-gradient(90deg,#386a4c,#b47a44);box-shadow:0 0 8px rgba(56,106,76,.42),0 0 17px rgba(180,122,68,.2)}
+header.hero h1 .chop{display:inline-block;margin-left:8px;color:var(--gold);font:600 .31em 'IBM Plex Sans Thai',sans-serif;letter-spacing:0;vertical-align:middle}
+header.hero p{position:relative;z-index:1;max-width:56ch;margin-top:12px;color:var(--muted);font-size:16px;line-height:1.8}
+.hero-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.hero-actions a{text-decoration:none}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}
+.stat{min-width:0;padding:17px 18px;border:1px solid var(--line);border-radius:16px;background:var(--paper);box-shadow:0 5px 18px rgba(39,51,39,.035);transition:transform .22s ease,box-shadow .22s ease}
+.stat:nth-child(1){background:#edf4e8;border-color:#d7e3ce;border-top:3px solid #77966a}
+.stat:nth-child(2){background:#f3eff8;border-color:#e2d9ee;border-top:3px solid #8e78aa}
+.stat:nth-child(3){background:#fbf0e5;border-color:#ebdece;border-top:3px solid #c28a53}
+.stat:nth-child(4){background:#eaf3f3;border-color:#d1e2e1;border-top:3px solid #5b9290}
+.stat:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat small{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.045em;line-height:1.45}
+.stat strong{display:block;margin:7px 0 1px;color:var(--green-dark);font-family:'Mitr','IBM Plex Sans Thai',sans-serif;font-size:32px;font-weight:600;line-height:1.2}
+.stat span{color:var(--muted);font-size:13px}
+.rankbar{margin:0 0 28px;padding:15px 18px;border:1px solid #e3e7dc;border-radius:15px;background:rgba(255,253,248,.76)}
+.rankbar .lvl{font-size:14px;font-weight:700;color:var(--green-dark)}
+.rankbar .bar{height:7px;margin-top:10px;overflow:hidden;border-radius:99px;background:#e7e9df}
+.rankbar .bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#91a97c,#397455);transition:width .55s cubic-bezier(.2,.8,.2,1)}
+.rankbar .sub{margin-top:6px!important;color:var(--muted)!important;font-size:12px!important;line-height:1.5}
+.card{margin:30px 0;padding:clamp(19px,3vw,30px);scroll-margin-top:88px;border:1px solid var(--line);border-radius:20px;background:var(--paper);box-shadow:var(--shadow)}
+#random{background:#fbf5eb;border-color:#eadfce}
+#dex{background:#eff5eb;border-color:#dce6d7}
+#add{background:#f0f3f8;border-color:#dce2ec}
+#random h2 .em{background:#f3e5d1;border-color:#e7d4b9}
+#dex h2 .em{background:#dfeada;border-color:#cbdcc3}
+#add h2 .em{background:#e1e8f2;border-color:#d1dbea}
+.card h2{display:flex;align-items:center;gap:13px;padding-bottom:16px;border-bottom:2px solid #dfe5d9;color:#203f2d;font-family:'Chakra Petch','Mitr',sans-serif;font-size:clamp(23px,3.2vw,30px);font-weight:700;letter-spacing:-.015em;line-height:1.35;text-shadow:0 0 1px rgba(32,63,45,.45),0 0 13px rgba(67,123,84,.2)}
+.card h2 .em{display:grid;place-items:center;flex:0 0 46px;width:46px;height:46px;border:1px solid rgba(32,63,45,.08);border-radius:15px;background:#eef3e9;box-shadow:0 4px 10px rgba(39,51,39,.07),0 0 14px rgba(67,123,84,.16);font-size:22px;filter:none}
+.card .sub{max-width:70ch;margin:12px 0 20px;color:var(--muted);font-size:14.5px;line-height:1.7}
+.gacha{display:grid;grid-template-columns:90px minmax(0,1fr);column-gap:20px;align-items:center;padding:22px;border:1px solid #e9dfcf;border-radius:17px;background:linear-gradient(135deg,#fbf7ef,#f7f4eb)}
+.gacha .ball{grid-row:1/3;display:grid;place-items:center;width:82px;height:82px;margin:auto;border:1px solid #e7d8c2;border-radius:25px;background:linear-gradient(145deg,#fff,#f2e8d8);box-shadow:0 8px 18px rgba(109,84,50,.1);font-size:35px}
+.gacha .ball.shake{animation:shk .12s linear 6}
+@keyframes shk{0%{transform:translateX(-5px) rotate(-4deg)}50%{transform:translateX(5px) rotate(4deg)}100%{transform:translateX(-5px)}}
+.gacha .res{align-self:end;min-height:58px;padding:10px 0;color:var(--ink)}
+.gacha .res b{color:var(--green-dark);font-size:19px}
+.gacha .res small{display:block;color:var(--muted);font-size:13px;line-height:1.6}
+.gacha>div:last-child{justify-content:flex-start!important;margin-top:4px!important}
+.btn{display:inline-flex;justify-content:center;align-items:center;min-height:42px;padding:10px 18px;border:1px solid var(--green);border-radius:11px;background:var(--green);color:white;cursor:pointer;font:600 14px 'IBM Plex Sans Thai',sans-serif;letter-spacing:0;transition:transform .2s ease,background .2s ease,box-shadow .2s ease}
+.btn:hover{background:var(--green-dark);box-shadow:0 5px 14px rgba(49,91,69,.15)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{border-color:#d9ded3;background:transparent;color:var(--green-dark)}
+.btn.ghost:hover{border-color:#a9bba7;background:#f4f7f0;box-shadow:none}
+.btn.small{min-height:37px;padding:7px 12px;font-size:13px}
+.btn.danger{border-color:#edd7d1;background:#fff8f6;color:var(--red)}
+.btn.danger:hover{border-color:#d8a99e;background:#fff0ec}
+form.add{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:5px}
+form.add .full{grid-column:1/-1}
+form.add label{display:flex;flex-direction:column;gap:6px;color:#465347;font-size:13px;font-weight:600}
+form.add input,form.add select,form.add textarea,.toolbar input,.toolbar select{width:100%;min-height:45px;padding:10px 13px;border:1px solid #dfe2d8;border-radius:11px;background:#fff;color:var(--ink);font:400 15px 'IBM Plex Sans Thai',sans-serif;outline:none;color-scheme:light}
+form.add textarea{min-height:82px;resize:vertical}
+form.add input:focus,form.add select:focus,form.add textarea:focus,.toolbar input:focus,.toolbar select:focus{border-color:#87a98a;box-shadow:0 0 0 3px rgba(91,133,93,.12)}
+form.add input::placeholder,form.add textarea::placeholder,.toolbar input::placeholder{color:#939a8e}
+.toolbar{display:grid;grid-template-columns:minmax(180px,1fr) minmax(140px,.45fr) minmax(160px,.5fr);gap:9px;margin:6px 0 14px}
+.toolbar input{min-width:0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.chip{min-height:36px;padding:6px 12px;border:1px solid #e1e4da;border-radius:999px;background:#fff;color:#556354;cursor:pointer;font:500 12.5px 'IBM Plex Sans Thai',sans-serif;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.chip:hover{transform:translateY(-1px);border-color:#b5c5b1;background:#f5f8f2;color:var(--green-dark)}
+.chip.on{border-color:var(--green);background:#eaf1e8;color:var(--green-dark)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.fcard{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;padding:17px;border:1px solid var(--line);border-left:4px solid var(--dish-accent,#8aa37c);border-radius:16px;background:var(--dish-bg,#fff);box-shadow:0 4px 15px rgba(39,51,39,.04);transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.fcard:nth-child(6n + 1){--dish-accent:#72956b;--dish-bg:#f0f6ec}
+.fcard:nth-child(6n + 2){--dish-accent:#7e91ae;--dish-bg:#f0f4f9}
+.fcard:nth-child(6n + 3){--dish-accent:#c18a5c;--dish-bg:#fbf3e9}
+.fcard:nth-child(6n + 4){--dish-accent:#8c79a5;--dish-bg:#f5f1f8}
+.fcard:nth-child(6n + 5){--dish-accent:#6b9c96;--dish-bg:#edf6f3}
+.fcard:nth-child(6n){--dish-accent:#b47a70;--dish-bg:#fbf0ee}
+.fcard:hover{transform:translateY(-3px);border-color:#cbd6c6;box-shadow:0 12px 24px rgba(39,51,39,.09)}
+.fcard.fav{border-color:#e5cba9;border-left-color:var(--dish-accent);background:var(--dish-bg)}
+.fcard.fav::after{content:'★ ของโปรด';position:absolute;top:11px;right:12px;padding:3px 7px;border-radius:99px;background:#f7ebda;color:#9b6533;font-size:10px;font-weight:700}
+.fcard .top{display:flex;align-items:center;gap:11px;min-width:0;padding-bottom:12px;border-bottom:1px solid #eff0e9}
+.fcard .top>div:last-child{min-width:0}
+.fcard .emoji{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border:1px solid #edf0e7;border-radius:13px;background:#f5f7f0;font-size:23px}
+.fcard h3{overflow-wrap:anywhere;color:var(--ink);font-family:'Mitr','IBM Plex Sans Thai',sans-serif;font-size:17px;font-weight:500;line-height:1.4}
+.fcard .shop{margin-top:2px;color:var(--muted);font-size:12px;line-height:1.5}
+.fcard .stars{margin-top:11px;color:#bd843e;font-size:14px;letter-spacing:2px}
+.fcard .meta{display:flex;flex-wrap:wrap;align-items:center;gap:5px 9px;margin-top:7px}
+.fcard .meta .price{margin-left:auto}
+.tag{color:var(--muted);font-size:11.5px;font-weight:500;font-variant-numeric:tabular-nums}
+.tag.price{color:var(--green-dark);font-size:17px;font-weight:700}
+.tag.buff{color:#8a673d}
+.tag.count{width:100%;color:#7a8377;font-size:11px}
+.fcard .story{margin-top:11px;color:#687064;font-size:12.5px;line-height:1.65}
+.fcard .story::before{content:'“ '}
+.fcard .story::after{content:' ”'}
+.fcard .row{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:14px}
+.fcard .row button,.fcard .row a{flex:1 1 auto}
+.empty{text-align:center;padding:30px 20px;border:1px dashed #d6dccf;border-radius:14px;background:#fafbf7;color:var(--muted)}
+.note{margin-top:18px;padding:15px 17px;border:1px solid #e8e6dc;border-radius:13px;background:#faf9f4;color:var(--muted);font-size:13px;line-height:1.7}
+.note b{color:var(--green-dark);font-weight:600}
+footer{margin-top:30px;padding:18px;color:var(--muted);font-size:12px;text-align:center}
+footer a{color:var(--green)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.wrap{padding:12px 14px 55px}.topbar{top:6px;gap:8px;min-height:52px;padding:6px 8px;border-radius:13px}.topbar a{flex:0 0 auto;min-height:37px;padding:6px 10px;font-size:12px}.topbar .t{overflow:hidden;font-size:11px;white-space:nowrap;text-overflow:ellipsis}.hero{margin-top:16px!important}.hero::after{right:-10px;bottom:-12px}.hero p{max-width:34ch;font-size:14px!important}.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hero-actions .btn{min-width:0;min-height:40px;padding:8px 6px;font-size:12px;white-space:nowrap}.hero-actions .btn:nth-child(3){grid-column:1/-1}.stats{gap:8px}.stat{padding:12px;border-radius:13px}.stat small{font-size:9px}.stat strong{font-size:26px}.stat span{font-size:11px}.rankbar{margin-bottom:20px;padding:12px}.card{margin:18px 0;padding:17px 14px;border-radius:17px}.card .sub{font-size:13px}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.toolbar input,.toolbar select{font-size:13px;padding:9px}.grid{grid-template-columns:1fr;gap:10px}.fcard{padding:15px}.fcard h3{font-size:16px}.gacha{grid-template-columns:64px minmax(0,1fr);gap:12px;padding:15px}.gacha .ball{width:60px;height:60px;border-radius:18px;font-size:28px}.gacha .res{min-height:48px;padding:4px 0}.gacha .res b{font-size:16px}.gacha .res small{font-size:12px}.gacha .btn{min-height:39px;padding:8px 11px;font-size:12px}form.add{grid-template-columns:1fr;gap:12px}form.add .full{grid-column:auto}form.add>div.full{flex-wrap:wrap}form.add>div.full .btn{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.gacha .ball.shake{animation:none}.stat,.fcard,.btn,.chip{transition:none}}
+</style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
+</head>
+<body class="site-polish">
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← LIFE OS</a>
+  <span class="t">🍜 ห้องอาหาร · FOOD JOURNAL</span>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">สมุดบันทึกของอร่อย · YOUR FOOD JOURNAL</div>
+  <h1>สมุดมื้ออร่อย <span class="chop">เก็บไว้ให้นึกถึง</span></h1>
+  <p>เก็บเมนู ร้าน ราคา และความทรงจำของมื้อที่ชอบไว้ในที่เดียว ค้นหาเมนูเก่าได้ง่าย หรือให้สมุดช่วยเลือกมื้อต่อไป</p>
+  <nav class="hero-actions" aria-label="ทางลัดห้องอาหาร">
+    <a class="btn" href="#dex">📖 ดูเมนูที่บันทึก</a>
+    <a class="btn ghost" href="#add">＋ เพิ่มเมนูใหม่</a>
+    <a class="btn ghost" href="#random">🎲 สุ่มมื้อถัดไป</a>
+  </nav>
+</header>
+
+<div class="stats">
+  <div class="stat"><small>🍱 เมนูทั้งหมด</small><strong class="num" id="stTotal">0</strong><span>รายการในสมุด</span></div>
+  <div class="stat"><small>⭐ คะแนนเฉลี่ย</small><strong class="num" id="stAvg">–</strong><span>จากเมนูทั้งหมด</span></div>
+  <div class="stat"><small>💸 ราคาเฉลี่ย</small><strong class="num" id="stPrice">–</strong><span>ต่อหนึ่งมื้อ</span></div>
+  <div class="stat"><small>🔥 กินไปแล้ว</small><strong class="num" id="stEaten">0</strong><span>ครั้งที่บันทึกไว้</span></div>
+</div>
+
+<div class="rankbar">
+  <span class="lvl" id="rankTxt">🐣 RANK: มือใหม่หัดชิม</span>
+  <div class="bar"><i id="rankBar" style="width:5%"></i></div>
+  <div class="sub" style="margin-top:8px;color:var(--muted);font-size:14px">บันทึกทุกมื้อที่กิน แล้วดูระดับนักชิมของคุณเติบโตขึ้น</div>
+</div>
+
+<section class="card" id="random">
+  <h2><span class="em">🎲</span> สุ่มเมนู — มื้อนี้กินอะไรดี</h2>
+  <p class="sub">ให้สมุดสุ่มเมนูจากรายการที่บันทึกไว้ เลือกจำกัดเฉพาะเมนูโปรดที่ได้ 4 ดาวขึ้นไปก็ได้</p>
+  <div class="gacha">
+    <div class="ball" id="gBall">🥢</div>
+    <div class="res" id="gRes"><small>กดปุ่มเพื่อสุ่มหนึ่งเมนูจากสมุดของคุณ</small></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px">
+      <button class="btn" id="gBtn" type="button">🎲 สุ่มเมนูให้หน่อย</button>
+      <button class="btn ghost small" id="gFavBtn" type="button" aria-pressed="false">⭐ เฉพาะของโปรด 4★+</button>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="dex">
+  <h2><span class="em">📖</span> เมนูที่บันทึกไว้</h2>
+  <p class="sub">กด “+ กินอีก” ทุกครั้งที่กิน = เก็บแต้มนักชิม · กด ⭐ เพื่อปักของโปรด</p>
+  <div class="toolbar">
+    <input id="q" placeholder="🔍 ค้นหา… ข้าวมันไก่ / บางใหญ่ / 50">
+    <select id="catF"><option value="all">ทุกหมวด</option><option value="ข้าว">🍚 ข้าว</option><option value="เส้น">🍜 เส้น</option><option value="จานด่วน">⚡ จานด่วน</option><option value="หวาน">🍧 ของหวาน</option><option value="เครื่องดื่ม">🧋 เครื่องดื่ม</option><option value="บุฟเฟต์">🔥 บุฟเฟต์</option><option value="ทำเอง">🍳 ทำเอง</option><option value="fav">⭐ ของโปรด</option></select>
+    <select id="sortF"><option value="rate">เรียง: ดาวสูงสุด</option><option value="count">เรียง: กินบ่อยสุด</option><option value="priceAsc">เรียง: ถูกสุด</option><option value="priceDesc">เรียง: แพงสุด</option><option value="new">เรียง: ใหม่สุด</option></select>
+  </div>
+  <div class="chips" id="quickAdd">
+    <button class="chip" type="button" data-q="ข้าวมันไก่">🍗 ข้าวมันไก่</button>
+    <button class="chip" type="button" data-q="ก๋วยเตี๋ยว">🍜 ก๋วยเตี๋ยว</button>
+    <button class="chip" type="button" data-q="กระเพรา">🌶️ กระเพรา</button>
+    <button class="chip" type="button" data-q="ชานม">🧋 ชานม</button>
+  </div>
+  <div style="height:12px"></div>
+  <div class="grid" id="grid"></div>
+  <div class="note">🎬 <b>ไอเดีย Food Cinematic:</b> ถ่ายร้านข้าวมันไก่บางใหญ่ให้เหมือนฉากหนัง — ใส่เสียง ambient เล่าเรื่องเจ้าของร้านแบบเหงาๆ · สโลแกนจำง่าย <b>“FOOD IS KING — รีวิวแลกข้าว 1 จาน”</b></div>
+</section>
+
+<section class="card" id="add">
+  <h2><span class="em">📝</span> เพิ่มเมนูใหม่เข้า Dex</h2>
+  <p class="sub">ใส่ข้อมูลเท่าที่จำได้ก็พอ ช่องเรื่องเล่าเอาไว้จดบรรยากาศหรือความทรงจำสั้น ๆ ของมื้อนั้น</p>
+  <form class="add" id="addForm">
+    <label class="full">🍱 ชื่อเมนู *<input id="fName" required maxlength="60" placeholder="เช่น ข้าวมันไก่พิเศษ"></label>
+    <label>🏠 ร้าน / พิกัด<input id="fShop" maxlength="60" placeholder="เช่น ร้านป้าตรงบางใหญ่"></label>
+    <label>💸 ราคา (฿)<input id="fPrice" type="number" min="0" max="9999" placeholder="เช่น 50"></label>
+    <label>🍳 หมวด<select id="fCat">
+      <option value="ข้าว">🍚 ข้าว</option>
+      <option value="เส้น">🍜 เส้น</option>
+      <option value="จานด่วน">⚡ จานด่วน</option>
+      <option value="หวาน">🍧 ของหวาน</option>
+      <option value="เครื่องดื่ม">🧋 เครื่องดื่ม</option>
+      <option value="บุฟเฟต์">🔥 บุฟเฟต์/ปิ้งย่าง</option>
+      <option value="ทำเอง">🍳 ทำเอง</option>
+    </select></label>
+    <label>⭐ คะแนน<select id="fRate">
+      <option value="5">★★★★★ (5) โคตรชอบ</option>
+      <option value="4">★★★★ (4) ชอบมาก</option>
+      <option value="3" selected>★★★ (3) โอเค</option>
+      <option value="2">★★ (2) เฉยๆ</option>
+      <option value="1">★ (1) ครั้งเดียวพอ</option>
+    </select></label>
+    <label>😋 อิโมจิ<input id="fEmoji" maxlength="4" placeholder="เช่น 🍗 (ว่างไว้ = สุ่มให้)"></label>
+    <label>🔗 ลิงก์แผนที่ (optional)<input id="fMap" placeholder="วางลิงก์ Google Maps ได้"></label>
+    <label class="full">💭 ความทรงจำของมื้อนี้<textarea id="fStory" rows="2" maxlength="200" placeholder="เช่น ซดร้อน ๆ หลังเลิกงาน เหนื่อยมาทั้งวันแล้วรู้สึกดีขึ้น"></textarea></label>
+    <div class="full" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" type="submit">+ บันทึกเข้า Dex</button>
+      <button class="btn ghost small" type="button" id="expBtn">📤 Export</button>
+      <button class="btn ghost small" type="button" id="resetBtn">♻️ รีเซ็ตตัวอย่าง</button>
+    </div>
+  </form>
+</section>
+
+<footer>ET1CRUEL · FOOD TAVERN 🍜 — กินอร่อย = เติม HP · <a href="./index.html" style="color:var(--gold)">กลับ LIFE OS</a></footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var KEY='et1cruel_food_v1';
+var BUFF={'ข้าว':'+30 HP','เส้น':'+20 MP','จานด่วน':'+15 EXP','หวาน':'+10 CHARM','เครื่องดื่ม':'+10 MP','บุฟเฟต์':'+50 HP','ทำเอง':'+25 EXP'};
+function seed(){return {items:[
+ {id:'s1',name:'ข้าวมันไก่บางใหญ่',shop:'ร้านป้าหน้าปากซอย',price:50,rate:5,cat:'ข้าว',emoji:'🍗',story:'ไก่ฉ่ำนุ่มเหมือนฉากหนังตอนเย็น — น้ำจิ้มเด็ดจนต้องขอเพิ่ม',map:'',fav:true,count:12,ts:Date.now()-86400000*9},
+ {id:'s2',name:'เตี๋ยวเรือเข้มข้น',shop:'ข้างตึก',price:45,rate:5,cat:'เส้น',emoji:'🍜',story:'ซดร้อนๆ ตอนตี 2 เหนื่อยมาทั้งวันหายไปครึ่งนึง',map:'',fav:true,count:9,ts:Date.now()-86400000*7},
+ {id:'s3',name:'กระเพราหมูกรอบไข่ดาว',shop:'ตามสั่งน้าแดง',price:60,rate:4,cat:'จานด่วน',emoji:'🌶️',story:'เผ็ดแบบตื่น — กินเสร็จมีแรงทำบีทต่ออีก 2 ชม.',map:'',fav:false,count:6,ts:Date.now()-86400000*5},
+ {id:'s4',name:'ชานมไข่มุกหวานน้อย',shop:'ร้านหน้าสตู',price:45,rate:4,cat:'เครื่องดื่ม',emoji:'🧋',story:'ฮีลใจยามบ่าย — ดูดแล้วไอเดียโฟลว์',map:'',fav:true,count:15,ts:Date.now()-86400000*3},
+ {id:'s5',name:'มาม่าต้มยำทำเอง',shop:'ครัวที่บ้าน',price:25,rate:3,cat:'ทำเอง',emoji:'🍲',story:'เมนูกันตายสิ้นเดือน แต่อร่อยแบบภูมิใจ',map:'',fav:false,count:4,ts:Date.now()-86400000*2},
+ {id:'s6',name:'หมูกระทะกับเพื่อน',shop:'บุฟเฟต์บางใหญ่',price:199,rate:5,cat:'บุฟเฟต์',emoji:'🥓',story:'ปาร์ตี้หลังปิดจ๊อบ — ย่างไปคุยไปคือที่สุด',map:'',fav:true,count:3,ts:Date.now()-86400000}
+],favOnly:false};}
+function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return seed();}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
+var S=load();
+var $=function(id){return document.getElementById(id);};
+var grid=$('grid'),q=$('q'),catF=$('catF'),sortF=$('sortF');
+
+function stars(n){var s='';for(var i=1;i<=5;i++)s+=i<=n?'★':'☆';return s;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+function render(){
+  var term=(q.value||'').trim().toLowerCase();
+  var cf=catF.value, sf=sortF.value;
+  var list=S.items.slice();
+  if(cf==='fav')list=list.filter(function(x){return x.fav;});
+  else if(cf!=='all')list=list.filter(function(x){return x.cat===cf;});
+  if(term)list=list.filter(function(x){return (x.name+' '+x.shop+' '+x.price+' '+x.cat+' '+(x.story||'')).toLowerCase().indexOf(term)>-1;});
+  list.sort(function(a,b){
+    if(sf==='rate')return b.rate-a.rate||b.count-a.count;
+    if(sf==='count')return b.count-a.count;
+    if(sf==='priceAsc')return (a.price||9999)-(b.price||9999);
+    if(sf==='priceDesc')return (b.price||0)-(a.price||0);
+    return b.ts-a.ts;
+  });
+  if(!list.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">ยังไม่มีเมนูนี้ — เพิ่มเมนูแรกด้านบนได้เลย 🍱</div>';}
+  else grid.innerHTML=list.map(function(x){
+    return '<div class="fcard'+(x.fav?' fav':'')+'">'
+    +'<div class="top"><div class="emoji">'+esc(x.emoji||'🍱')+'</div><div><h3>'+esc(x.name)+'</h3><div class="shop">'+esc(x.shop||'ไม่ระบุร้าน')+' · '+esc(x.cat)+'</div></div></div>'
+    +'<div class="stars">'+stars(x.rate)+' <span style="color:var(--muted);font-size:13px">'+x.rate+'.0</span></div>'
+    +'<div class="meta"><span class="tag price">฿'+(x.price==null||x.price===''?'–':esc(x.price))+'</span>'
+    +'<span class="tag buff">'+esc(BUFF[x.cat]||'+10 HP')+'</span>'
+    +'<span class="tag count">กินแล้ว '+x.count+' ครั้ง</span></div>'
+    +(x.story?'<div class="story">🎬 '+esc(x.story)+'</div>':'')
+    +'<div class="row"><button class="btn small" data-eat="'+x.id+'" type="button">+ กินอีก</button>'
+    +'<button class="btn ghost small" data-fav="'+x.id+'" type="button">'+(x.fav?'☆ เอาออก':'⭐ โปรด')+'</button>'
+    +(x.map?'<a class="btn ghost small" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="'+esc(x.map)+'">📍 แมพ</a>':'')
+    +'<button class="btn danger small" data-del="'+x.id+'" type="button">ลบ</button></div></div>';
+  }).join('');
+  // stats
+  var n=S.items.length;
+  var avg=n?(S.items.reduce(function(a,b){return a+ (+b.rate||0);},0)/n):0;
+  var prices=S.items.filter(function(x){return x.price!==''&&x.price!=null;}).map(function(x){return +x.price;});
+  var avgP=prices.length?Math.round(prices.reduce(function(a,b){return a+b;},0)/prices.length):null;
+  var eaten=S.items.reduce(function(a,b){return a+(+b.count||0);},0);
+  $('stTotal').textContent=n;
+  $('stAvg').textContent=n?avg.toFixed(1)+'★':'–';
+  $('stPrice').textContent=avgP==null?'–':'฿'+avgP;
+  $('stEaten').textContent=eaten;
+  var rank=eaten>=30?'👑 RANK: นักชิมประจำ Tavern':eaten>=10?'⚔️ RANK: นักล่าของอร่อย':eaten>=3?'🔥 RANK: นักชิมฝึกหัด':'🐣 RANK: มือใหม่หัดชิม';
+  $('rankTxt').textContent=rank+' · '+eaten+' ครั้ง';
+  $('rankBar').style.width=Math.min(100,5+eaten*3)+'%';
+}
+
+grid.addEventListener('click',function(e){
+  var t=e.target;
+  var eat=t.getAttribute&&t.getAttribute('data-eat');
+  var fav=t.getAttribute&&t.getAttribute('data-fav');
+  var del=t.getAttribute&&t.getAttribute('data-del');
+  if(eat){var a=S.items.find(function(x){return x.id===eat;});if(a){a.count++;save(S);render();}}
+  if(fav){var b=S.items.find(function(x){return x.id===fav;});if(b){b.fav=!b.fav;save(S);render();}}
+  if(del){if(confirm('ลบเมนูนี้ออกจาก Dex?')){S.items=S.items.filter(function(x){return x.id!==del;});save(S);render();}}
+});
+q.addEventListener('input',render);catF.addEventListener('change',render);sortF.addEventListener('change',render);
+document.getElementById('quickAdd').addEventListener('click',function(e){
+  var b=e.target.closest('[data-q]');if(!b)return;
+  q.value=b.getAttribute('data-q');render();q.focus();
+});
+$('addForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var name=$('fName').value.trim();if(!name)return;
+  var emo=$('fEmoji').value.trim()||['🍚','🍜','🍗','🍲','🧋','🍧','🥓','🍳'][Math.floor(Math.random()*8)];
+  S.items.unshift({id:'u'+Date.now(),name:name,shop:$('fShop').value.trim(),price:$('fPrice').value===''? '':+$('fPrice').value,
+    rate:+$('fRate').value,cat:$('fCat').value,emoji:emo,story:$('fStory').value.trim(),map:$('fMap').value.trim(),fav:+$('fRate').value>=5,count:1,ts:Date.now()});
+  save(S);render();e.target.reset();$('fRate').value='3';
+  document.getElementById('dex').scrollIntoView({behavior:'smooth'});
+});
+// gacha
+var favOnly=false;
+$('gFavBtn').addEventListener('click',function(){
+  favOnly=!favOnly;
+  this.classList.toggle('on',favOnly);
+  this.setAttribute('aria-pressed',favOnly);
+  this.textContent=favOnly?'⭐ เฉพาะของโปรด: เปิดอยู่':'⭐ เฉพาะของโปรด 4★+';
+});
+$('gBtn').addEventListener('click',function(){
+  var pool=S.items.filter(function(x){return !favOnly||(x.fav&&x.rate>=4);});
+  if(!pool.length){$('gRes').innerHTML='<small>ยังไม่มีเมนูในเงื่อนไขนี้ — เพิ่มเมนูก่อน 🍱</small>';return;}
+  var ball=$('gBall');ball.classList.remove('shake');void ball.offsetWidth;ball.classList.add('shake');
+  $('gRes').innerHTML='<small>🎲 กำลังเขย่าติ้ว…</small>';
+  setTimeout(function(){
+    var p=pool[Math.floor(Math.random()*pool.length)];
+    ball.textContent=p.emoji||'🍱';
+    $('gRes').innerHTML='<b>'+esc(p.emoji+' '+p.name)+'</b><small>'+esc((p.shop||'')+' · ฿'+(p.price==null||p.price===''?'–':p.price)+' · '+stars(p.rate)+' · กินมาแล้ว '+p.count+' ครั้ง')+'</small>'
+    +'<div style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><button class="btn small" id="gEat" type="button">+ กินอันนี้!</button></div>';
+    document.getElementById('gEat').addEventListener('click',function(){p.count++;save(S);render();$('gRes').querySelector('small').textContent+=' · +1 แล้ว!';});
+  },420);
+});
+$('expBtn').addEventListener('click',function(){
+  var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='food-tavern.json';a.click();
+});
+$('resetBtn').addEventListener('click',function(){
+  if(!confirm('รีเซ็ตกลับเป็นเมนูตัวอย่าง?'))return;
+  S=seed();save(S);render();
+});
+render();
+})();
+</script>
+</body>
+</html>

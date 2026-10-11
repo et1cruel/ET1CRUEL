@@ -57,7 +57,7 @@ function seed() {
     mainQuest: { name: 'PROJECT 1M', current: 665420, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { savings: 619000, kasikorn: 25820, ktb: 0, dime: 7000, cash: 200, stocks: 13000, btc: 400 },
+      vaults: { savings: 619000, kasikorn: 0, ktb: 25820, dime: 7000, cash: 200, stocks: 13000, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
       history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 665420 } ]
     },
@@ -745,9 +745,9 @@ var PROJ_TASKS = {
   'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
 };
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
-var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Sav', ktb: '🏦 KTB e-Sav', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
+var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Savings', ktb: '🏦 KTB e-Savings', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
 var SAVE_VAULTS = ['savings'];
-var DEF_VAULTS = { savings: 619000, kasikorn: 25820, ktb: 0, dime: 7000, cash: 200, stocks: 13000, btc: 400 };
+var DEF_VAULTS = { savings: 619000, kasikorn: 0, ktb: 25820, dime: 7000, cash: 200, stocks: 13000, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
@@ -778,6 +778,12 @@ function migrate() {
   if (S.money.vaultVer !== 5) {
     if (S.money.vaults.kasikorn === 225820) S.money.vaults.kasikorn = 25820;
     S.money.vaultVer = 5;
+  }
+  // v6: ย้าย 25,820 จากกสิกร e-Sav → KTB e-Sav (กสิกร=0, KTB=25,820) — อัปแค่ช่องที่ยังเป็นยอดเดิม
+  if (S.money.vaultVer !== 6) {
+    if (S.money.vaults.kasikorn === 25820) S.money.vaults.kasikorn = 0;
+    if (S.money.vaults.ktb === 0) S.money.vaults.ktb = 25820;
+    S.money.vaultVer = 6;
   }
   if (S.mainQuest) S.mainQuest.current = netWorth();
   if (Array.isArray(S.money.history) && S.money.history.length) {

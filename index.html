@@ -9,20 +9,29 @@
 <meta name="theme-color" content="#08090E">
 <meta property="og:image" content="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://s3.tradingview.com">
+<link rel="dns-prefetch" href="https://api.coingecko.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="banner.webp" imagesrcset="banner-960.webp 960w, banner.webp 1920w" imagesizes="100vw" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="css/life-os-os.css">
 <link rel="stylesheet" href="css/stock-os.css">
 <link rel="stylesheet" href="fx/fx.css">
 <script>document.documentElement.classList.add('js');</script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// โหลด three.js แบบมีเงื่อนไข — ประหยัด ~600KB บนมือถือ/เน็ตช้า/reduced-motion
+(function(){try{var r=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;var s=navigator.connection&&navigator.connection.saveData;if(r||s||window.innerWidth<768)return;var sc=document.createElement('script');sc.defer=true;sc.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';document.head.appendChild(sc);}catch(e){}})();
+</script>
 <style>
 :root{
-  --bg:#08090E; --card:#12141D; --card2:#1A1E2B; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --bg:#07070B; --card:#12141D; --card2:#1A1E2B; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
   --gold:#4ADE80; --gold-dim:#166534; --hp:#FF4D5E; --mp:#4DA6FF; --xp:#6EE7B7;
   --amber:#FBBF24; --pink:#F472B6; --indigo:#A5B4FC;
   --shadow:0 20px 60px rgba(0,0,0,.65);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 body{background:
   radial-gradient(1000px 420px at 15% -5%,rgba(74,222,128,.12) 0%,transparent 60%),
   radial-gradient(900px 500px at 90% 0%,rgba(124,58,237,.22) 0%,transparent 55%),
@@ -33,6 +42,9 @@ body strong,body b{font-weight:700}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
   background-size:36px 36px;mask-image:radial-gradient(ellipse at 50% 0%,black 30%,transparent 85%)}
+/* LIMINAL: film grain — นิ่ง ไม่ขยับ ไม่กินเครื่อง เคารพ reduced-motion โดยธรรมชาติ */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:70;opacity:.05;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/></filter><rect width="160" height="160" filter="url(%23n)" opacity="0.6"/></svg>')}
 .wrap{max-width:none;width:100%;margin:0;padding:20px 28px 80px;position:relative;z-index:1}
 .num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
 /* ===== TOP HUD ===== */
@@ -45,9 +57,9 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .hudbars{display:flex;flex-direction:column;gap:5px;margin-left:8px;min-width:170px;flex:0 1 220px}
 .hbar{height:12px;background:#080A10;border:1px solid #343c58;border-radius:6px;overflow:hidden;position:relative}
 .hbar i{display:block;height:100%;border-radius:5px}
-.hbar.hp i{background:linear-gradient(180deg,#ff7a86,#e11d2e);width:82%;box-shadow:0 0 10px rgba(255,77,94,.7)}
-.hbar.mp i{background:linear-gradient(180deg,#8ec5ff,#2563eb);width:64%;box-shadow:0 0 10px rgba(77,166,255,.7)}
-.hbar.xp i{background:linear-gradient(180deg,#a7f3d0,#059669);width:96.5%;box-shadow:0 0 10px rgba(61,255,136,.6)}
+.hbar.hp i{background:linear-gradient(180deg,#ff7a86,#e11d2e);width:82%}
+.hbar.mp i{background:linear-gradient(180deg,#8ec5ff,#2563eb);width:64%}
+.hbar.xp i{background:linear-gradient(180deg,#a7f3d0,#059669);width:96.5%}
 .hbar em{position:absolute;inset:0;font-style:normal;font-family:'Chakra Petch',sans-serif;font-size:9px;font-weight:700;color:#fff;text-align:center;line-height:11px;letter-spacing:.1em;text-shadow:0 1px 2px #000}
 .search{margin-left:auto;display:flex;gap:8px;align-items:center}
 .search input{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:14px;font-weight:600;width:200px;outline:none}
@@ -55,7 +67,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .search input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(74,222,128,.25)}
 .filters{display:flex;gap:6px}
 .fbtn{border:1px solid #3d4666;background:#0B0D14;color:var(--muted);border-radius:10px;padding:9px 13px;font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;letter-spacing:.03em}
-.fbtn.on{background:var(--gold);color:#111;border-color:var(--gold);box-shadow:0 0 14px rgba(74,222,128,.45)}
+.fbtn.on{background:var(--gold);color:#111;border-color:var(--gold)}
 /* ===== HERO = CHARACTER CARD ===== */
 .hero{background:linear-gradient(180deg,#1B2032 0%,#12141D 60%,#10131c 100%);border:1px solid #454f76;border-radius:20px;box-shadow:var(--shadow);padding:0;margin:18px 0;display:grid;grid-template-columns:1.15fr .85fr;gap:0;overflow:hidden;position:relative}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
@@ -64,8 +76,14 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.18em;color:var(--gold);font-weight:700;font-family:'Chakra Petch',sans-serif}
 .eyebrow i{width:9px;height:9px;background:var(--xp);display:inline-block;transform:rotate(45deg);box-shadow:0 0 8px var(--xp);animation:blink 1.6s infinite}
 @keyframes blink{50%{opacity:.4}}
-h1{font-size:44px;line-height:1.15;margin:10px 0 6px;color:#fff;font-weight:700}
-h1 span{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--gold);text-shadow:0 0 12px rgba(74,222,128,.25)}
+h1{font-size:clamp(40px,5.2vw,72px);line-height:1.25;margin:10px 0 6px;color:#fff;font-weight:700;text-wrap:balance}
+.hero-ghost{position:absolute;right:-12px;bottom:-30px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:clamp(90px,13vw,200px);line-height:1;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(244,246,251,.1);pointer-events:none;user-select:none;white-space:nowrap;z-index:0}
+.hero-left{position:relative;z-index:1}
+.hero-left h1{overflow-wrap:normal;word-break:normal;text-align:center}
+.hero-left h1 .ph{display:inline-block}
+@media(max-width:900px){.h1br{display:none}}
+h1 span.et{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--gold);text-shadow:0 0 12px rgba(74,222,128,.25);animation:etGlow 3.2s ease-in-out infinite}
+.hero-left h1 .ph{color:#fff}
 .class-line{display:inline-block;margin:6px 0 10px;font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.1em;color:#0B0D14;background:linear-gradient(90deg,var(--gold),#DCFCE7);border-radius:6px;padding:4px 12px}
 .lead{color:#E2E8FA;font-size:18px;font-weight:500;max-width:60ch;line-height:1.95}
 .lead b{color:#fff}
@@ -94,6 +112,7 @@ h1 span{font-family:'Chakra Petch',sans-serif;font-weight:700;color:var(--gold);
 .nav a{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:#fff;font-size:15.5px;font-weight:700;padding:12px;border-radius:10px;border:1px solid transparent}
 .nav a:hover{background:#222946;color:#fff;border-color:#3d4666}
 .nav a span.n{font-size:13px;background:#0B0D14;border:1px solid #3d4666;border-radius:6px;padding:2px 9px;color:var(--gold);font-family:'Chakra Petch',sans-serif;font-weight:700}
+#nav a[href="./growth.html"]{white-space:nowrap}
 .sections{display:flex;flex-direction:column;gap:22px;min-width:0;counter-reset:board}
 .sections section.card{min-width:0;counter-increment:board}
 .sections section.card .shead{position:relative}
@@ -117,7 +136,7 @@ section.card::before{content:'';position:absolute;top:0;left:24px;right:24px;hei
 .shead h2{font-size:27px;line-height:1.4;color:#fff;font-weight:700;letter-spacing:.01em}
 .shead h2::after{content:' ⚔';color:var(--gold);font-size:17px}
 .shead p{color:#C9D2E8;font-size:15.5px;margin-top:4px;font-weight:600}
-.count{margin-left:auto;flex:0 0 auto;font-size:14px;font-weight:700;border-radius:8px;padding:8px 15px;background:linear-gradient(180deg,var(--gold),#16a34a);color:#111;font-family:'Chakra Petch',sans-serif;box-shadow:0 0 12px rgba(74,222,128,.35);white-space:nowrap}
+.count{margin-left:auto;flex:0 0 auto;font-size:14px;font-weight:700;border-radius:8px;padding:8px 15px;background:linear-gradient(180deg,var(--gold),#16a34a);color:#111;font-family:'Chakra Petch',sans-serif;white-space:nowrap}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 /* PC fullscreen: ใช้จอกว้างให้คุ้ม + อ่านง่าย */
@@ -159,7 +178,7 @@ section.card::before{content:'';position:absolute;top:0;left:24px;right:24px;hei
 .b-money::before{content:'◉ '}
 .b-indigo{background:rgba(165,180,252,.13);color:#C7D2FE;border-color:#A5B4FC}
 .progress{height:14px;background:#080A10;border:1px solid #3d4666;border-radius:8px;overflow:hidden;margin:12px 0 6px}
-.progress i{display:block;height:100%;background:repeating-linear-gradient(-55deg,var(--gold) 0 10px,#15803d 10px 20px);box-shadow:0 0 14px rgba(74,222,128,.5);animation:slide 1s linear infinite}
+.progress i{display:block;height:100%;background:repeating-linear-gradient(-55deg,var(--gold) 0 10px,#15803d 10px 20px);animation:slide 1s linear infinite}
 .persona{border:2px solid #4a557e;border-radius:16px;padding:22px;background:linear-gradient(180deg,#222839,#151927);position:relative}
 .persona::after{content:'RANK ' attr(data-rank);position:absolute;top:12px;right:12px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--gold);border:1.5px solid var(--gold-dim);border-radius:6px;padding:3px 10px;background:rgba(0,0,0,.4)}
 .persona h4{font-size:19px;color:#fff;font-weight:700;padding-right:80px;line-height:1.6;text-wrap:balance}
@@ -171,40 +190,53 @@ section.card::before{content:'';position:absolute;top:0;left:24px;right:24px;hei
 .zone p,.zone ul{font-size:16px;color:#DDE3F5;line-height:1.9}
 .zone ul{margin:10px 0 0 20px}
 .skill{display:inline-flex;align-items:center;gap:6px;border:1.5px solid #4a557e;border-radius:8px;padding:8px 14px;font-size:14.5px;font-weight:700;background:#141824;color:#fff;margin:0 8px 8px 0;font-family:'Chakra Petch',sans-serif}
-.skill.hot{background:linear-gradient(180deg,#BBF7D0,var(--gold));color:#052e16;border-color:#fff3;box-shadow:0 0 10px rgba(74,222,128,.3)}
+.skill.hot{background:linear-gradient(180deg,#BBF7D0,var(--gold));color:#052e16;border-color:#fff3}
 .note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;padding:18px;font-size:16.5px;color:#fff;margin-top:14px;line-height:1.95}
 .note b{color:var(--gold)}
 .note::before{content:'📜 NPC TIP — ';font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--gold)}
 footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;font-family:'Chakra Petch',sans-serif;letter-spacing:.06em}
+.explore{margin-top:26px;border-top:1px solid var(--line);padding-top:18px;text-align:center}
+.explore small{display:block;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--muted);margin-bottom:12px}
+.explore nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.explore a{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;color:var(--ink);text-decoration:none;border:1px solid #3d4666;border-radius:999px;padding:8px 18px;background:#0B0D14}
+.explore a:hover{border-color:var(--gold);color:var(--gold)}
 /* ===== TREASURY RPG ===== */
-.treasury{margin:0 0 18px;background:linear-gradient(180deg,#1C2135,#0E1119);border:1px solid #4a557e;border-top:3px solid var(--gold);border-radius:18px;box-shadow:var(--shadow),0 0 30px rgba(74,222,128,.12);padding:24px;position:relative;overflow:hidden}
-.treasury::before{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(74,222,128,.6),transparent)}
+.treasury{margin:0 0 18px;background:#0E1119;border:1px solid #3d4666;border-top:3px solid var(--gold);border-radius:14px;box-shadow:var(--shadow);padding:24px;position:relative;overflow:hidden}
+.treasury::before{content:'';position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(74,222,128,.4),transparent)}
 .treas-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.treas-head .ticon{width:46px;height:46px;flex:0 0 46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:23px;background:linear-gradient(180deg,#BBF7D0,var(--gold));border:1px solid #fff6;box-shadow:0 0 18px rgba(74,222,128,.45)}
+.treas-head .ticon{width:46px;height:46px;flex:0 0 46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:23px;background:#0B0D14;border:1.5px solid var(--gold-dim)}
 .treas-head h2{font-size:20px;color:#fff}
 .treas-head h2 span{color:var(--gold);font-family:'Chakra Petch',sans-serif;letter-spacing:.08em;font-size:12px;display:block}
 .treas-total{margin-left:auto;text-align:right}
 .treas-total small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.12em;color:var(--muted);font-weight:700}
-.treas-total strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;color:var(--gold);line-height:1.1;text-shadow:0 0 10px rgba(74,222,128,.3)}
+.treas-total strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:32px;color:var(--gold);line-height:1.1;font-variant-numeric:tabular-nums}
 .treas-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.vault{border:1px solid #3d4666;border-radius:14px;padding:15px 16px;background:#0B0E16;position:relative;overflow:hidden}
+.vault{border:1px solid #3d4666;border-top:2px solid #4a557e;border-radius:10px;padding:15px 16px;background:transparent;position:relative;overflow:hidden}
 .vault::after{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
-.vault.save::after{background:var(--mp);box-shadow:0 0 10px var(--mp)}
-.vault.spend::after{background:var(--amber);box-shadow:0 0 10px var(--amber)}
-.vault.boss{background:linear-gradient(180deg,#2a2410,#14110a);border-color:var(--gold)}
-.vault.boss::after{background:var(--gold);box-shadow:0 0 12px var(--gold)}
+.vault.save::after{background:var(--mp)}
+.vault.spend::after{background:var(--amber)}
+.vault.boss{background:rgba(74,222,128,.04);border-color:var(--gold-dim)}
+.vault.boss::after{background:var(--gold)}
 .vault small{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted)}
-.vault .vamt{font-family:'Chakra Petch',sans-serif;font-size:23px;font-weight:700;color:#fff;margin:4px 0 2px}
-.vault.boss .vamt{color:var(--gold);font-size:26px;text-shadow:0 0 8px rgba(74,222,128,.3)}
+.vault .vamt{font-family:'Chakra Petch',sans-serif;font-size:23px;font-weight:700;color:#fff;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.vault.boss .vamt{color:var(--gold);font-size:26px}
 .vault .vrow{display:flex;justify-content:space-between;font-size:16px;font-weight:600;color:#fff;padding:7px 0;border-top:1px dashed #2B3248}
 .vault .vrow b{font-family:'Chakra Petch',sans-serif;color:#fff}
 .vault .vbar{height:9px;background:#1e2436;border:1px solid #343c58;border-radius:6px;overflow:hidden;margin-top:9px}
 .vault .vbar i{display:block;height:100%}
 @media(max-width:900px){.hero{grid-template-columns:1fr}.hero-right{border-left:none;border-top:1px dashed #3d4666}.board{grid-template-columns:1fr}.treas-grid{grid-template-columns:1fr!important}.nav{position:static}.nav::before{display:none}.grid2,.grid3{grid-template-columns:1fr}h1{font-size:30px}.search input{width:130px}.hudbars{display:none}}
+@media(max-width:700px){#nav a[href="./growth.html"]{grid-column:1/-1;justify-self:start;width:max-content;max-width:100%}}
+@media(max-width:600px){.topbar{gap:10px;padding:10px}.topbar .search{width:100%;margin-left:0;flex-wrap:wrap}.topbar .search .filters{flex-wrap:wrap}.topbar .search input{width:auto;min-width:0;flex:1 1 160px}.money-hud{margin-left:auto}}
+/* ===== PERF: ข้ามการเรนเดอร์การ์ดนอกจอ + กัน CLS ของปก ===== */
+section.card,.treasury{content-visibility:auto;contain-intrinsic-size:auto 600px}
+.cover img{aspect-ratio:16/5;width:100%;height:auto;display:block;object-fit:cover;object-position:center}
+.cover picture,.busk-photo picture,.joy-photo picture,.photo-break picture{display:block;width:100%}
+.cover picture img,.busk-photo picture img,.joy-photo picture img,.photo-break picture img{width:100%}
+@media(max-width:700px){.cover img{aspect-ratio:16/9}}
 /* ===== FLAT LAYER (เอา 3D tilt ออก — เรียบง่าย) ===== */
 #bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
 .wrap{position:relative;z-index:1}
-.topbar,.hero,.treasury,section.card{will-change:transform}
+/* PERF: ลบ will-change ออกจากการ์ดทั้งหมด — เดิมจอง GPU ทุกใบทั้งที่อยู่นอกจอ (content-visibility จัดการให้แล้ว) */
 html.js .hero,html.js .treasury,html.js section.card{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
 html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transform:translateY(0)}
 .item,.persona,.zone,.vault,.kpi{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
@@ -212,12 +244,13 @@ html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transfor
 /* icon flat — ไม่ใช้ translateZ แล้ว */
 /* flat — ไม่ใช้ translateZ แล้ว */
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes etGlow{50%{text-shadow:0 0 26px rgba(74,222,128,.65)}}
 .hero-left h1{animation:floaty 7s ease-in-out infinite}
 .float-coin{position:fixed;bottom:-70px;z-index:1;pointer-events:none;animation:rise linear infinite;opacity:0;text-shadow:0 0 12px rgba(74,222,128,.8)}
 @keyframes rise{0%{transform:translateY(0) rotateY(0deg);opacity:0}8%{opacity:.9}88%{opacity:.65}100%{transform:translateY(-115vh) rotateY(720deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 /* ===== MONEY HUD — ยอดเงินรวมมุมขวาบนสไตล์ GTA ===== */
-.money-hud{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:23px;color:var(--gold);background:#0B0D14;border:1.5px solid var(--gold-dim);border-radius:12px;padding:8px 18px;white-space:nowrap;text-shadow:0 0 8px rgba(74,222,128,.3);margin-left:4px}
+.money-hud{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:23px;color:var(--gold);background:#0B0D14;border:1.5px solid var(--gold-dim);border-radius:12px;padding:8px 18px;white-space:nowrap;margin-left:4px}
 .money-hud b{font-weight:700}
 body .topbar{flex-wrap:wrap}
 @media(max-width:900px){.money-hud{font-size:17px;padding:6px 12px}}
@@ -243,9 +276,375 @@ body .topbar{flex-wrap:wrap}
 @media(max-width:1280px){
   /* จอเล็ก: ย้ายลงมุมขวาล่าง (เหนือปุ่มแชท) เริ่มแบบพับไว้ */
   #qtracker{top:auto;bottom:92px;right:12px;transform:none;width:242px}
-}</style>
+}
+/* ===== QUOTE GARDEN — สวนกำลังใจพาสเทลน่ารัก 💌 ===== */
+body section.card#quotes{
+  background:
+    radial-gradient(220px 120px at 12% 8%,rgba(249,168,212,.35),transparent 70%),
+    radial-gradient(260px 140px at 88% 12%,rgba(147,197,253,.35),transparent 70%),
+    radial-gradient(300px 160px at 50% 110%,rgba(253,224,71,.28),transparent 70%),
+    linear-gradient(180deg,#FFF7ED 0%,#FCE7F3 55%,#E0E7FF 100%);
+  border:2px solid #F9A8D4;
+  box-shadow:0 18px 50px rgba(0,0,0,.45),0 0 30px rgba(249,168,212,.25),inset 0 1px 0 #fff;
+}
+body section.card#quotes .shead{border-bottom:1.5px dashed #F9A8D4}
+body section.card#quotes .shead h2{color:#831843}
+body section.card#quotes .shead h2::after{content:' ♡';color:#EC4899}
+body section.card#quotes .shead p{color:#9D174D}
+body section.card#quotes .shead::after{color:rgba(131,24,67,.12)!important;opacity:1!important}
+body section.card#quotes .icon{background:linear-gradient(180deg,#FDE68A,#F9A8D4)!important;border-color:#fff;box-shadow:0 4px 14px rgba(236,72,153,.35)}
+body section.card#quotes .count{background:linear-gradient(180deg,#F9A8D4,#EC4899);color:#fff;border:1px solid #fff;box-shadow:0 0 14px rgba(236,72,153,.5)}
+.quote-daily{
+  position:relative;background:rgba(255,255,255,.92);border:2.5px solid #F9A8D4;border-radius:24px;
+  padding:26px 24px 20px;text-align:center;overflow:hidden;
+  box-shadow:0 10px 28px rgba(236,72,153,.18),inset 0 1px 0 #fff;
+}
+.quote-daily::before{
+  content:'﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏';position:absolute;top:6px;left:0;right:0;text-align:center;
+  color:#F9A8D4;font-size:14px;letter-spacing:4px;
+}
+.quote-daily .qd-label{
+  display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.14em;
+  color:#fff;background:linear-gradient(90deg,#EC4899,#8B5CF6);border-radius:999px;padding:5px 16px;margin-bottom:12px;
+  box-shadow:0 4px 12px rgba(236,72,153,.4);
+}
+.quote-daily .qd-text{font-size:23px;font-weight:700;color:#831843;line-height:1.8;max-width:38ch;margin:0 auto;text-wrap:balance}
+.quote-daily .qd-sub{font-size:14.5px;color:#9D174D;margin-top:8px;font-weight:600}
+.quote-daily .qd-hearts span{position:absolute;font-size:20px;opacity:.7;animation:qdFloat 4s ease-in-out infinite;pointer-events:none}
+.quote-daily .qd-hearts span:nth-child(1){left:8%;top:18%}.quote-daily .qd-hearts span:nth-child(2){right:9%;top:26%;animation-delay:.8s}
+.quote-daily .qd-hearts span:nth-child(3){left:14%;bottom:14%;animation-delay:1.6s}.quote-daily .qd-hearts span:nth-child(4){right:13%;bottom:18%;animation-delay:2.2s}
+@keyframes qdFloat{50%{transform:translateY(-10px) rotate(8deg)}}
+.quote-daily.pop .qd-text{animation:qdPop .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes qdPop{0%{transform:scale(.85);opacity:0}100%{transform:scale(1);opacity:1}}
+.qd-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.qbtn{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;cursor:pointer;
+  border-radius:999px;padding:10px 22px;border:2px solid #EC4899;transition:.18s;
+}
+.qbtn.primary{background:linear-gradient(180deg,#F9A8D4,#EC4899);color:#fff;box-shadow:0 6px 16px rgba(236,72,153,.4);border-bottom-width:4px}
+.qbtn.primary:active{transform:translateY(2px);border-bottom-width:2px}
+.qbtn.ghost{background:#fff;color:#BE185D}
+.qbtn.ghost:hover{background:#FDF2F8;box-shadow:0 0 12px rgba(236,72,153,.3)}
+.qchips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:18px 0 6px}
+.qchip{
+  font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer;
+  border:2px solid #F9A8D4;background:#fff;color:#9D174D;border-radius:999px;padding:8px 18px;transition:.15s;
+}
+.qchip:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(236,72,153,.25)}
+.qchip.on{background:linear-gradient(180deg,#F9A8D4,#EC4899);color:#fff;border-color:#EC4899;box-shadow:0 4px 14px rgba(236,72,153,.45)}
+.quote-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
+#quotes .item.quote-card{
+  background:rgba(255,255,255,.94);border:2.5px solid #FBCFE8;border-radius:22px;
+  box-shadow:0 8px 20px rgba(236,72,153,.12);color:#831843;
+  flex-direction:column;align-items:center;text-align:center;padding:22px 18px;gap:10px;
+}
+#quotes .item.quote-card::before{display:none}
+#quotes .item.quote-card:nth-child(3n+1){transform:rotate(-.8deg);border-color:#F9A8D4}
+#quotes .item.quote-card:nth-child(3n+2){transform:rotate(.8deg);border-color:#93C5FD;background:#EFF6FF}
+#quotes .item.quote-card:nth-child(3n+2) .qtext{color:#1E3A8A}
+#quotes .item.quote-card:nth-child(3n){transform:rotate(-.5deg);border-color:#FDE68A;background:#FFFBEB}
+#quotes .item.quote-card:nth-child(3n) .qtext{color:#78350F}
+#quotes .item.quote-card:hover{transform:rotate(0) translateY(-4px)!important;border-color:#EC4899;box-shadow:0 14px 30px rgba(236,72,153,.28)}
+#quotes .item.quote-card .qemoji{
+  width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;
+  background:linear-gradient(180deg,#FDE68A,#F9A8D4);border:2px solid #fff;box-shadow:0 4px 12px rgba(236,72,153,.3);
+}
+#quotes .item.quote-card:nth-child(3n+2) .qemoji{background:linear-gradient(180deg,#BFDBFE,#A5B4FC)}
+#quotes .item.quote-card:nth-child(3n) .qemoji{background:linear-gradient(180deg,#FEF3C7,#FCD34D)}
+#quotes .item.quote-card .qtext{font-size:16.5px;font-weight:700;line-height:1.85;color:#831843}
+#quotes .item.quote-card small{display:block;font-size:13.5px;color:#9D174D;font-weight:600;margin-top:2px}
+#quotes .item.quote-card:nth-child(3n+2) small{color:#4338CA}
+#quotes .item.quote-card:nth-child(3n) small{color:#92400E}
+.qtag{
+  display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  background:#FDF2F8;color:#BE185D;border:1.5px solid #F9A8D4;border-radius:999px;padding:3px 12px;margin-top:8px;
+}
+#quotes .item.quote-card:nth-child(3n+2) .qtag{background:#EFF6FF;color:#4338CA;border-color:#93C5FD}
+#quotes .item.quote-card:nth-child(3n) .qtag{background:#FFFBEB;color:#92400E;border-color:#FCD34D}
+.qcopy{
+  margin-top:6px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;
+  background:none;border:1.5px dashed #F9A8D4;color:#BE185D;border-radius:999px;padding:5px 14px;transition:.15s;
+}
+.qcopy:hover{background:#FDF2F8;border-style:solid}
+/* สายเกม — การ์ดธีมเกมมืดๆ ตัดกับพาสเทล วางหลังกฎ nth-child เพื่อให้ชนะ */
+#quotes .item.quote-card[data-cat="rpg"]{
+  background:linear-gradient(180deg,#1B2032,#10131c);border:2.5px solid #4ADE80;
+  box-shadow:0 8px 20px rgba(74,222,128,.18),inset 0 1px 0 rgba(255,255,255,.12);
+  transform:rotate(.6deg);
+}
+#quotes .item.quote-card[data-cat="rpg"]:hover{transform:rotate(0) translateY(-4px)!important;border-color:#6EE7B7;box-shadow:0 14px 30px rgba(74,222,128,.35)}
+#quotes .item.quote-card[data-cat="rpg"] .qemoji{background:linear-gradient(180deg,#4ADE80,#15803d)}
+#quotes .item.quote-card[data-cat="rpg"] .qtext{color:#F4F6FB}
+#quotes .item.quote-card[data-cat="rpg"] small{color:#AAB4CC}
+#quotes .item.quote-card[data-cat="rpg"] .qtag{background:rgba(74,222,128,.12);color:#6EE7B7;border-color:#4ADE80}
+#quotes .item.quote-card[data-cat="rpg"] .qcopy{border-color:#4ADE80;color:#6EE7B7}
+#quotes .item.quote-card[data-cat="rpg"] .qcopy:hover{background:rgba(74,222,128,.12)}
+/* สายอาร์ต — การ์ดธีมม่วงสายครีเอเตอร์ วางหลังกฎ nth-child เพื่อให้ชนะ */
+#quotes .item.quote-card[data-cat="art"]{
+  background:linear-gradient(180deg,#2E1065,#1E1B4B 60%,#0E0B26);border:2.5px solid #A78BFA;
+  box-shadow:0 8px 20px rgba(139,92,246,.22),inset 0 1px 0 rgba(255,255,255,.12);
+  transform:rotate(-.6deg);
+}
+#quotes .item.quote-card[data-cat="art"]:hover{transform:rotate(0) translateY(-4px)!important;border-color:#C4B5FD;box-shadow:0 14px 30px rgba(139,92,246,.4)}
+#quotes .item.quote-card[data-cat="art"] .qemoji{background:linear-gradient(180deg,#C4B5FD,#7C3AED)}
+#quotes .item.quote-card[data-cat="art"] .qtext{color:#F5F3FF}
+#quotes .item.quote-card[data-cat="art"] small{color:#C4B5FD}
+#quotes .item.quote-card[data-cat="art"] .qtag{background:rgba(139,92,246,.16);color:#DDD6FE;border-color:#A78BFA}
+#quotes .item.quote-card[data-cat="art"] .qcopy{border-color:#A78BFA;color:#DDD6FE}
+#quotes .item.quote-card[data-cat="art"] .qcopy:hover{background:rgba(139,92,246,.16)}
+/* สายเงิน — การ์ดธีมทองสายฟาร์มเงิน วางหลังกฎ nth-child เพื่อให้ชนะ */
+#quotes .item.quote-card[data-cat="money"]{
+  background:linear-gradient(180deg,#2A2410,#14110A);border:2.5px solid #FBBF24;
+  box-shadow:0 8px 20px rgba(251,191,36,.22),inset 0 1px 0 rgba(255,255,255,.12);
+  transform:rotate(.6deg);
+}
+#quotes .item.quote-card[data-cat="money"]:hover{transform:rotate(0) translateY(-4px)!important;border-color:#FDE68A;box-shadow:0 14px 30px rgba(251,191,36,.4)}
+#quotes .item.quote-card[data-cat="money"] .qemoji{background:linear-gradient(180deg,#FDE68A,#D97706)}
+#quotes .item.quote-card[data-cat="money"] .qtext{color:#FEF3C7}
+#quotes .item.quote-card[data-cat="money"] small{color:#FCD34D}
+#quotes .item.quote-card[data-cat="money"] .qtag{background:rgba(251,191,36,.14);color:#FDE68A;border-color:#FBBF24}
+#quotes .item.quote-card[data-cat="money"] .qcopy{border-color:#FBBF24;color:#FDE68A}
+#quotes .item.quote-card[data-cat="money"] .qcopy:hover{background:rgba(251,191,36,.14)}
+/* สายเช้า — การ์ดธีมส้มยามเช้า วางหลังกฎ nth-child เพื่อให้ชนะ */
+#quotes .item.quote-card[data-cat="morning"]{
+  background:linear-gradient(180deg,#FFFBEB,#FFEDD5);border:2.5px solid #FB923C;
+  box-shadow:0 8px 20px rgba(251,146,60,.2),inset 0 1px 0 #fff;
+  transform:rotate(-.6deg);
+}
+#quotes .item.quote-card[data-cat="morning"]:hover{transform:rotate(0) translateY(-4px)!important;border-color:#F97316;box-shadow:0 14px 30px rgba(251,146,60,.35)}
+#quotes .item.quote-card[data-cat="morning"] .qemoji{background:linear-gradient(180deg,#FDBA74,#EA580C)}
+#quotes .item.quote-card[data-cat="morning"] .qtext{color:#7C2D12}
+#quotes .item.quote-card[data-cat="morning"] small{color:#C2410C}
+#quotes .item.quote-card[data-cat="morning"] .qtag{background:#FFF7ED;color:#C2410C;border-color:#FB923C}
+#quotes .item.quote-card[data-cat="morning"] .qcopy{border-color:#FB923C;color:#C2410C}
+#quotes .item.quote-card[data-cat="morning"] .qcopy:hover{background:#FFEDD5}
+/* สายวินัย — การ์ดธีมแดงสายโหด วางหลังกฎ nth-child เพื่อให้ชนะ */
+#quotes .item.quote-card[data-cat="grit"]{
+  background:linear-gradient(180deg,#3F0A1A,#1A0810);border:2.5px solid #FB7185;
+  box-shadow:0 8px 20px rgba(251,113,133,.22),inset 0 1px 0 rgba(255,255,255,.12);
+  transform:rotate(.6deg);
+}
+#quotes .item.quote-card[data-cat="grit"]:hover{transform:rotate(0) translateY(-4px)!important;border-color:#FDA4AF;box-shadow:0 14px 30px rgba(251,113,133,.4)}
+#quotes .item.quote-card[data-cat="grit"] .qemoji{background:linear-gradient(180deg,#FDA4AF,#E11D48)}
+#quotes .item.quote-card[data-cat="grit"] .qtext{color:#FFF1F2}
+#quotes .item.quote-card[data-cat="grit"] small{color:#FDA4AF}
+#quotes .item.quote-card[data-cat="grit"] .qtag{background:rgba(251,113,133,.14);color:#FECDD3;border-color:#FB7185}
+#quotes .item.quote-card[data-cat="grit"] .qcopy{border-color:#FB7185;color:#FECDD3}
+#quotes .item.quote-card[data-cat="grit"] .qcopy:hover{background:rgba(251,113,133,.14)}
+/* ปรัชญา — การ์ดธีมเขียวมิ้นต์สายเซน วางหลังกฎ nth-child เพื่อให้ชนะ */
+#quotes .item.quote-card[data-cat="zen"]{
+  background:linear-gradient(180deg,#0B2B2B,#071A1A);border:2.5px solid #5EEAD4;
+  box-shadow:0 8px 20px rgba(94,234,212,.2),inset 0 1px 0 rgba(255,255,255,.12);
+  transform:rotate(-.6deg);
+}
+#quotes .item.quote-card[data-cat="zen"]:hover{transform:rotate(0) translateY(-4px)!important;border-color:#99F6E4;box-shadow:0 14px 30px rgba(94,234,212,.35)}
+#quotes .item.quote-card[data-cat="zen"] .qemoji{background:linear-gradient(180deg,#99F6E4,#0D9488)}
+#quotes .item.quote-card[data-cat="zen"] .qtext{color:#F0FDFD}
+#quotes .item.quote-card[data-cat="zen"] small{color:#5EEAD4}
+#quotes .item.quote-card[data-cat="zen"] .qtag{background:rgba(94,234,212,.12);color:#CCFBF1;border-color:#5EEAD4}
+#quotes .item.quote-card[data-cat="zen"] .qcopy{border-color:#5EEAD4;color:#CCFBF1}
+#quotes .item.quote-card[data-cat="zen"] .qcopy:hover{background:rgba(94,234,212,.12)}
+/* ===== GACHA — ตู้กาชาสุ่มเควส 🎰 ===== */
+body section.card#gacha{
+  background:
+    radial-gradient(220px 120px at 12% 8%,rgba(251,191,36,.18),transparent 70%),
+    radial-gradient(260px 140px at 88% 12%,rgba(236,72,153,.18),transparent 70%),
+    linear-gradient(180deg,#1B2032,#10131c);
+  border:2px solid #FBBF24;
+  box-shadow:0 18px 50px rgba(0,0,0,.45),0 0 30px rgba(251,191,36,.15),inset 0 1px 0 rgba(255,255,255,.12);
+}
+body section.card#gacha .shead{border-bottom:1.5px dashed #FBBF24}
+body section.card#gacha .shead h2{color:#FDE68A}
+body section.card#gacha .shead h2::after{content:' 🎰';color:#FBBF24}
+body section.card#gacha .shead p{color:#D6A94C}
+body section.card#gacha .icon{background:linear-gradient(180deg,#FDE68A,#D97706)!important;border-color:#fff;box-shadow:0 4px 14px rgba(251,191,36,.4)}
+body section.card#gacha .count{background:linear-gradient(180deg,#FDE68A,#F59E0B);color:#451a03;border:1px solid #fff;box-shadow:0 0 14px rgba(251,191,36,.5)}
+.gacha-top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.gacha-stat{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:12px;text-align:center}
+.gacha-stat small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.gacha-stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:24px;color:#FDE68A}
+.gacha-machine{
+  position:relative;background:rgba(255,255,255,.06);border:2px solid #FBBF24;border-radius:24px;
+  padding:26px 20px 20px;text-align:center;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 28px rgba(0,0,0,.4);
+}
+.gacha-machine.shaking{animation:gShake .12s linear 7}
+@keyframes gShake{0%{transform:translateX(-6px) rotate(-1deg)}50%{transform:translateX(6px) rotate(1deg)}100%{transform:translateX(-6px) rotate(-1deg)}}
+.gacha-balls{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.gacha-balls span{width:34px;height:34px;border-radius:50%;border:2px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.5)}
+.gacha-ball{
+  width:110px;height:110px;margin:0 auto;border-radius:50%;border:4px solid #fff;
+  display:flex;align-items:center;justify-content:center;font-size:52px;
+  box-shadow:0 10px 26px rgba(0,0,0,.5),inset -8px -10px 0 rgba(0,0,0,.25),inset 8px 10px 0 rgba(255,255,255,.35);
+}
+.gacha-ball.r-common{background:linear-gradient(180deg,#CBD5E1,#64748B)}
+.gacha-ball.r-rare{background:linear-gradient(180deg,#93C5FD,#2563EB)}
+.gacha-ball.r-epic{background:linear-gradient(180deg,#C4B5FD,#7C3AED)}
+.gacha-ball.r-legendary{background:linear-gradient(180deg,#FDE68A,#D97706);box-shadow:0 0 34px rgba(251,191,36,.8),inset -8px -10px 0 rgba(0,0,0,.25),inset 8px 10px 0 rgba(255,255,255,.35)}
+.gacha-result{min-height:118px;margin-top:14px}
+.gacha-result .gr-card{
+  background:#0B0D14;border:2.5px solid #64748B;border-radius:18px;padding:18px;
+  animation:grPop .45s cubic-bezier(.2,1.6,.4,1);
+}
+@keyframes grPop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.gacha-result .gr-card.r-rare{border-color:#3B82F6;box-shadow:0 0 18px rgba(59,130,246,.35)}
+.gacha-result .gr-card.r-epic{border-color:#A78BFA;box-shadow:0 0 22px rgba(139,92,246,.5)}
+.gacha-result .gr-card.r-legendary{border-color:#FBBF24;box-shadow:0 0 30px rgba(251,191,36,.65)}
+.gr-name{font-size:19px;font-weight:700;color:#fff;line-height:1.8}
+.gr-sub{font-size:14.5px;color:var(--muted);margin-top:4px;font-weight:600}
+.gr-tag{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.06em;border-radius:999px;padding:4px 14px;margin-top:10px;border:1.5px solid}
+.gr-tag.r-common{color:#CBD5E1;border-color:#64748B}
+.gr-tag.r-rare{color:#93C5FD;border-color:#3B82F6;background:rgba(59,130,246,.12)}
+.gr-tag.r-epic{color:#C4B5FD;border-color:#A78BFA;background:rgba(139,92,246,.12)}
+.gr-tag.r-legendary{color:#FDE68A;border-color:#FBBF24;background:rgba(251,191,36,.12);box-shadow:0 0 12px rgba(251,191,36,.4)}
+.gr-link{display:inline-block;margin-top:10px;font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;color:var(--gold);text-decoration:none;border:1.5px dashed var(--gold-dim);border-radius:999px;padding:6px 16px}
+.gr-link:hover{border-color:var(--gold)}
+.gacha-actions{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.gacha-pity{margin-top:12px;font-size:13.5px;color:#D6A94C;font-weight:700;text-align:center}
+.gacha-pity .pbar{height:10px;background:#080A10;border:1px solid #3d4666;border-radius:999px;overflow:hidden;margin-top:8px}
+.gacha-pity .pbar i{display:block;height:100%;background:linear-gradient(90deg,#F59E0B,#FDE68A);border-radius:999px;transition:width .4s}
+.gacha-hist{margin-top:16px}
+.gacha-hist h5{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:.12em;color:#D6A94C;margin-bottom:8px}
+.gacha-hist ul{list-style:none;display:flex;flex-direction:column;gap:6px;margin:0;padding:0;max-height:220px;overflow:auto}
+.gacha-hist li{font-size:14px;font-weight:600;color:#fff;background:#0B0D14;border:1px solid #3d4666;border-radius:10px;padding:8px 12px;border-left-width:4px}
+.gacha-hist li.r-common{border-left-color:#64748B}
+.gacha-hist li.r-rare{border-left-color:#3B82F6}
+.gacha-hist li.r-epic{border-left-color:#A78BFA}
+.gacha-hist li.r-legendary{border-left-color:#FBBF24;background:rgba(251,191,36,.07)}
+.gacha-hist li small{color:var(--muted);font-weight:500;margin-left:8px}
+@media(max-width:700px){.gacha-top{grid-template-columns:1fr 1fr 1fr;gap:8px}.gacha-stat strong{font-size:19px}.gacha-ball{width:88px;height:88px;font-size:42px}}
+@media(prefers-reduced-motion:reduce){.gacha-machine.shaking{animation:none}.gacha-result .gr-card{animation:none}}
+/* ===== MEMENTO MORI — ปฏิทินชีวิต ⏳ ===== */
+body section.card#memento{
+  background:
+    radial-gradient(300px 160px at 50% 0%,rgba(251,191,36,.12),transparent 70%),
+    linear-gradient(180deg,#14110A,#0B0D14);
+  border:2px solid #78716C;
+  box-shadow:0 18px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.1);
+}
+body section.card#memento .shead{border-bottom:1.5px dashed #57534E}
+body section.card#memento .shead h2{color:#E7E5E4}
+body section.card#memento .shead h2::after{content:' ⏳';color:#FBBF24}
+body section.card#memento .shead p{color:#A8A29E}
+body section.card#memento .icon{background:linear-gradient(180deg,#44403C,#1C1917)!important;border-color:#FBBF24;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+body section.card#memento .count{background:linear-gradient(180deg,#E7E5E4,#A8A29E);color:#1C1917;border:1px solid #fff}
+.mem-setup{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:center;margin-bottom:16px}
+.mem-field{display:flex;flex-direction:column;gap:6px;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;color:#A8A29E}
+.mem-field input,.mem-field select{border:1.5px solid #57534E;background:#0B0D14;color:#fff;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:15px;font-weight:700;outline:none;color-scheme:dark}
+.mem-field input:focus{border-color:#FBBF24;box-shadow:0 0 0 2px rgba(251,191,36,.25)}
+.mem-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.mem-stat{background:#0B0D14;border:1.5px solid #44403C;border-radius:14px;padding:14px;text-align:center}
+.mem-stat small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.1em;color:#A8A29E;font-weight:700}
+.mem-stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:26px;color:#FDE68A;line-height:1.3}
+.mem-stat span{font-size:12.5px;color:#78716C;font-weight:600}
+.mem-grid-wrap{background:#080A10;border:1.5px solid #292524;border-radius:16px;padding:22px 18px}
+.mem-grid{display:grid;grid-template-columns:repeat(12,14px);gap:4px;justify-content:center;align-content:start}
+.mem-cell{width:14px;height:14px;border-radius:3px;background:#292524;border:1px solid #1C1917}
+.mem-cell.decade{margin-top:12px}
+.mem-cell.lived{background:linear-gradient(180deg,#FDE68A,#B45309);box-shadow:0 0 4px rgba(251,191,36,.4)}
+.mem-cell.now{background:#fff;border-color:#FBBF24;box-shadow:0 0 10px rgba(251,191,36,.9);animation:memPulse 1.8s ease-in-out infinite}
+@keyframes memPulse{50%{box-shadow:0 0 18px rgba(251,191,36,1)}}
+.mem-legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-size:13px;font-weight:700;color:#A8A29E}
+.mem-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:baseline}
+.mem-quote{margin-top:16px;text-align:center;background:rgba(251,191,36,.06);border:1.5px dashed #57534E;border-radius:14px;padding:16px}
+.mem-quote p{font-size:18px;font-weight:700;color:#E7E5E4;line-height:1.9;max-width:60ch;margin:0 auto}
+.mem-quote small{display:block;margin-top:6px;font-size:13.5px;color:#A8A29E;font-weight:600}
+/* ===== NPC — เพื่อนประจำเว็บ 🧠 ===== */
+#npcFab{position:fixed;left:146px;bottom:18px;z-index:90;width:54px;height:54px;border-radius:50%;border:1px solid rgba(196,181,253,.7);background:linear-gradient(180deg,#2E1065,#0B0D14);font-size:26px;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 18px rgba(139,92,246,.4)}
+#npcFab:hover{box-shadow:0 8px 22px rgba(0,0,0,.6),0 0 26px rgba(139,92,246,.65)}
+#npcFab .ping{position:absolute;top:-2px;right:-2px;width:14px;height:14px;border-radius:50%;background:#F472B6;border:2px solid #0B0D14;display:none}
+#npcFab.has-news .ping{display:block;animation:blink 1.2s infinite}
+#npcPop{position:fixed;left:18px;bottom:82px;z-index:93;width:min(330px,calc(100vw - 28px));display:none;background:linear-gradient(180deg,#1B2032,#10131c);border:2px solid #A78BFA;border-radius:18px;padding:0;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.65),0 0 26px rgba(139,92,246,.25)}
+#npcPop.open{display:block;animation:qdPop .35s cubic-bezier(.2,1.6,.4,1)}
+#npcHead{display:flex;align-items:center;gap:10px;padding:12px 14px;background:rgba(139,92,246,.12);border-bottom:1px solid #3d4666}
+#npcFace{width:44px;height:44px;flex:0 0 44px;border-radius:50%;background:linear-gradient(180deg,#C4B5FD,#7C3AED);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 12px rgba(139,92,246,.5)}
+#npcHead b{color:#fff;font-size:15px;display:block}
+#npcHead small{color:#C4B5FD;font-size:12px;font-weight:600}
+#npcHead button{margin-left:auto;background:transparent;border:1px solid #3d4666;color:var(--muted);border-radius:8px;cursor:pointer;font-size:12px;padding:3px 10px;font-family:inherit}
+#npcHead button:hover{border-color:#A78BFA;color:#fff}
+#npcBody{padding:14px;max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.npc-msg{max-width:92%;font-size:14.5px;font-weight:600;line-height:1.85;border-radius:12px;padding:10px 13px}
+.npc-msg.npc{background:#222839;border:1px solid #3d4666;color:#fff;border-bottom-left-radius:4px;align-self:flex-start}
+.npc-msg.me{background:linear-gradient(180deg,#7C3AED,#5B21B6);color:#fff;border:1px solid #A78BFA;border-bottom-right-radius:4px;align-self:flex-end}
+.npc-msg.npc .cursor{display:inline-block;width:8px;animation:blink 1s infinite;color:#A78BFA}
+#npcQuest{background:rgba(251,191,36,.08);border:1.5px dashed #FBBF24;border-radius:12px;padding:10px 13px;font-size:14px;font-weight:700;color:#FDE68A}
+#npcQuest small{display:block;color:#D6A94C;font-weight:600;font-size:12.5px;margin-top:2px}
+#npcBtns{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 14px}
+#npcBtns button{flex:1 1 auto;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border-radius:999px;padding:8px 10px;border:1.5px solid #A78BFA;background:#0B0D14;color:#DDD6FE;transition:.15s;white-space:nowrap}
+#npcBtns button:hover{background:rgba(139,92,246,.2);box-shadow:0 0 10px rgba(139,92,246,.35)}
+#npcBtns button:disabled{opacity:.4;cursor:default;box-shadow:none}
+@media(max-width:700px){#npcFab{left:auto;right:82px;bottom:18px}#npcPop{left:12px;bottom:82px}.mem-stats{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){#npcPop.open{animation:none}.mem-cell.now{animation:none}}
+.quote-foot{
+  margin-top:16px;text-align:center;font-size:14.5px;font-weight:700;color:#831843;
+  background:rgba(255,255,255,.7);border:1.5px dashed #F9A8D4;border-radius:14px;padding:12px 16px;line-height:1.9;
+}
+@media(max-width:1100px){.quote-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){
+  .quote-grid{grid-template-columns:1fr}
+  #quotes .item.quote-card{transform:none!important}
+  .quote-daily .qd-text{font-size:19px}
+}
+/* Quote garden — keep its warmth while bringing it into the site's night palette. */
+body section.card#quotes{
+  background:
+    radial-gradient(320px 180px at 12% 0%,rgba(74,222,128,.10),transparent 72%),
+    radial-gradient(300px 200px at 90% 100%,rgba(165,180,252,.08),transparent 70%),
+    linear-gradient(180deg,#161B27,#0D1119);
+  border:1px solid #345243;
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.08);
+}
+body section.card#quotes .shead{border-bottom:1px solid #2B3248}
+body section.card#quotes .shead h2{color:var(--ink)}
+body section.card#quotes .shead h2::after{content:' ♡';color:var(--gold)}
+body section.card#quotes .shead p{color:var(--muted)}
+body section.card#quotes .icon{background:#11171D!important;border-color:var(--gold-dim);box-shadow:none}
+body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px solid var(--gold);box-shadow:none}
+.quote-daily{
+  background:linear-gradient(135deg,rgba(74,222,128,.09),rgba(165,180,252,.07) 55%,#0B0F16);
+  border:1px solid #405244;border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.quote-daily::before{color:rgba(110,231,183,.45)}
+.quote-daily .qd-label{color:#07110B;background:var(--gold);box-shadow:none}
+.quote-daily .qd-text{color:var(--ink)}
+.quote-daily .qd-sub{color:var(--muted)}
+.qbtn,.qchip{border:1px solid #45614E;background:#10171B;color:#D9FBE8;box-shadow:none}
+.qbtn.primary,.qchip.on{background:var(--gold);border-color:var(--gold);color:#07110B;box-shadow:none}
+.qbtn.ghost{background:#10171B;color:#D9FBE8}
+.qbtn:hover,.qchip:hover,.qbtn.ghost:hover{background:rgba(74,222,128,.12);border-color:var(--gold);color:#fff;box-shadow:none;transform:none}
+#quotes .item.quote-card[data-cat]{
+  --quote-accent:#6EE7B7;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025));
+  border:1px solid color-mix(in srgb,var(--quote-accent) 45%,#303747);
+  border-radius:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+  color:var(--ink);transform:none;
+}
+#quotes .item.quote-card[data-cat="art"]{--quote-accent:#A5B4FC}
+#quotes .item.quote-card[data-cat="money"],#quotes .item.quote-card[data-cat="morning"]{--quote-accent:#FBBF24}
+#quotes .item.quote-card[data-cat="grit"]{--quote-accent:#FB7185}
+#quotes .item.quote-card[data-cat="night"]{--quote-accent:#A5B4FC}
+#quotes .item.quote-card[data-cat="love"]{--quote-accent:#F9A8D4}
+#quotes .item.quote-card[data-cat="zen"],#quotes .item.quote-card[data-cat="heal"]{--quote-accent:#5EEAD4}
+#quotes .item.quote-card[data-cat="grow"]{--quote-accent:#4ADE80}
+#quotes .item.quote-card[data-cat] .qemoji{background:color-mix(in srgb,var(--quote-accent) 28%,#11171D);border:1px solid var(--quote-accent);box-shadow:none}
+#quotes .item.quote-card[data-cat] .qtext{color:var(--ink)}
+#quotes .item.quote-card[data-cat] small{color:#B7C1D4}
+#quotes .item.quote-card[data-cat] .qtag{background:color-mix(in srgb,var(--quote-accent) 12%,transparent);color:var(--quote-accent);border:1px solid color-mix(in srgb,var(--quote-accent) 55%,transparent)}
+#quotes .item.quote-card[data-cat] .qcopy{border:1px solid var(--quote-accent);color:var(--quote-accent)}
+#quotes .item.quote-card[data-cat] .qcopy:hover{background:color-mix(in srgb,var(--quote-accent) 14%,transparent)}
+#quotes .item.quote-card[data-cat]:hover{transform:translateY(-2px);border-color:var(--quote-accent);box-shadow:0 10px 24px rgba(0,0,0,.26)}
+.quote-foot{color:#D9FBE8;background:rgba(74,222,128,.07);border:1px dashed #45614E}
+@media(prefers-reduced-motion:reduce){.quote-daily .qd-hearts span{animation:none}}
+</style>
+<link rel="stylesheet" href="css/home-responsive.css">
+<link rel="stylesheet" href="css/site-polish.css">
+<link rel="stylesheet" href="css/command-deck.css?v=10">
+<script defer src="js/hero-clock.js"></script>
+<script defer src="js/command-console.js?v=6"></script>
+<script defer src="js/reactive-lens.js"></script>
+<script defer src="js/site-polish.js?v=3"></script>
 </head>
-<body>
+<body class="site-polish">
 <canvas id="bg3d"></canvas>
 <canvas id="forest-bg" aria-hidden="true"></canvas>
 <div id="forest-veil" aria-hidden="true"></div>
@@ -260,29 +659,32 @@ body .topbar{flex-wrap:wrap}
     <div class="hbar mp"><i></i><em>MP 64/100</em></div>
     <div class="hbar xp"><i></i><em>EXP 96.5% · 96,500G</em></div>
   </div>
-  <div class="search">
+  <div class="search" role="search" aria-label="ค้นหาบันทึกในเว็บไซต์">
     <div class="filters">
-      <button class="fbtn on" data-f="all">ALL</button>
-      <button class="fbtn" data-f="done">✔ CLEAR</button>
-      <button class="fbtn" data-f="todo">◆ QUEST</button>
+      <button class="fbtn on" data-f="all" aria-pressed="true">ALL</button>
+      <button class="fbtn" data-f="done" aria-pressed="false">✔ CLEAR</button>
+      <button class="fbtn" data-f="todo" aria-pressed="false">◆ QUEST</button>
     </div>
-    <input id="q" placeholder="ค้นหาเควส… บีท / สัก / ลัคกี้">
+    <input id="q" type="search" aria-label="ค้นหาเควส งาน และบันทึก" placeholder="ค้นหาเควส… บีท / สัก / ลัคกี้">
   </div>
   <div class="money-hud" id="moneyHud" title="เงินรวมทั้งหมด">฿ <b id="moneyHudAmt">…</b></div>
 </div>
 
-<div class="cover"><img src="banner.jpg" alt="ET1CRUEL — ปก" fetchpriority="high"><span class="cover-tag">ET1CRUEL · LIFE OS</span></div>
+<div class="cover"><picture><source type="image/webp" srcset="banner-960.webp 960w, banner.webp 1920w" sizes="100vw"><img src="banner.jpg" alt="ET1CRUEL — ปก" fetchpriority="high" decoding="async" width="1920" height="576"></picture><span class="cover-tag">ET1CRUEL · LIFE OS</span></div>
 
 <div class="hero">
+  <span class="hero-ghost" aria-hidden="true">ET1CRUEL</span>
   <div class="hero-left">
+    <div class="hero-sysbar" aria-label="เวลาท้องถิ่นของอุปกรณ์"><span class="node-state">LOCAL NODE</span><span class="node-divider" aria-hidden="true">/</span><time id="localNodeClock" aria-live="off">--:--</time><button class="command-open" id="commandOpen" type="button" aria-haspopup="dialog" aria-controls="commandConsole"><span aria-hidden="true">⌘</span> เปิดคอนโซล <kbd>CTRL K</kbd></button></div>
     <div class="eyebrow"><i></i>PERSONAL LIFE UNIVERSE · แผนที่ชีวิตที่ยังเขียนต่อ</div>
-    <h1><span>ET1CRUEL</span> — กำลังสร้างชีวิตที่เทคโนโลยี<br>ความคิดสร้างสรรค์ และอิสรภาพ เดินไปด้วยกัน</h1>
+    <h1><span class="et">ET1CRUEL</span> <span class="ph">กำลังสร้างชีวิต</span> <span class="ph">ที่เทคโนโลยี</span><br class="h1br"><span class="ph">ความคิดสร้างสรรค์</span> <span class="ph">และอิสรภาพ</span> <span class="ph">เดินไปด้วยกัน</span></h1>
     <div class="class-line">⚔ CLASS: BEATMAKER × TATTOO × DIRECTOR · บางใหญ่</div>
     <p class="lead">ออมสิน — โปรดิวเซอร์ที่หันมาเขียนโค้ด ปั้น AI ของตัวเอง และ DCA สู่พอร์ต 1M · ตอนนี้โฟกัส <b>ทำเพลง + สร้างระบบและเว็บ + เก็บเงินล้าน</b></p>
     <div class="hero-cta">
       <a href="./beat-select.html">🎧 ฟังบีท 22 เพลง</a>
       <a href="./timeline.html">📜 Timeline ชีวิต</a>
       <a href="./poker.html">🃏 บันทึกโป๊กเกอร์</a>
+      <a href="./food.html">🍜 ห้องอาหารที่ชอบ</a>
     </div>
     <div class="kpis">
       <div class="kpi"><small>✔ CLEAR · จ่ายแล้ว</small><strong class="num">58 QUESTS</strong><div class="bar"><i style="width:86%"></i></div></div>
@@ -317,6 +719,7 @@ body .topbar{flex-wrap:wrap}
   <a href="#money-os">💵 Money OS <span class="n">EDIT</span></a>
   <a href="#masterplan">🎯 แผนหลัก <span class="n">300K</span></a>
   <a href="#stocks">📈 หุ้น US+คริปโต <span class="n">LIVE</span></a>
+  <a href="./stocks-daily.html">🗓️ หุ้นรายวัน <span class="n">10 ต.ค. ↗</span></a>
   <a href="#charts">📊 กราฟเทคนิค <span class="n">TV</span></a>
   <a href="#port-snap">💼 พอร์ตสแนป <span class="n">10</span></a>
   <a href="#watch17">👁 Watch 17 <span class="n">AI</span></a>
@@ -335,14 +738,20 @@ body .topbar{flex-wrap:wrap}
   <a href="#channels">📡 ช่อง <span class="n">7</span></a>
   <div class="nav-group">📓 ไดอารี่</div>
   <a href="#diary">📓 ไดอารี่รายวัน <span class="n" id="navDiary">NEW</span></a>
+  <a href="./growth.html">🌱 การเติบโต <span class="n">LOG ↗</span></a>
+  <a href="./food.html">🍜 ห้องอาหาร <span class="n">DEX ↗</span></a>
   <div class="nav-group">🧬 ตัวตน + แผน</div>
   <a href="#skills">⚔️ สกิล <span class="n">S++</span></a>
+  <a href="./upgrade.html">🧬 อัพเกรดตัวละคร <span class="n">UP ↗</span></a>
   <a href="#passive">💰 วิธีหาเงิน <span class="n">11+</span></a>
   <a href="#base">🏠 Base GEN.1 <span class="n">5 โซน</span></a>
   <a href="#plan">🧭 แผนรอด <span class="n">2 ระยะ</span></a>
   <a href="#vision">📜 วิสัยทัศน์ <span class="n">FULL</span></a>
   <a href="#verse">🌌 5 ร่าง <span class="n">verse</span></a>
   <a href="#joy">🥁 กิจกรรมที่ชอบ <span class="n">NEW</span></a>
+  <a href="#quotes">💌 สวนกำลังใจ <span class="n">BUFF</span></a>
+  <a href="#gacha">🎰 กาชาเควส <span class="n">ROLL</span></a>
+  <a href="#memento">⏳ Memento <span class="n">LIFE</span></a>
   <a href="./timeline.html">🕰 Timeline ชีวิต <span class="n">12 ↗</span></a>
 </nav>
 
@@ -448,7 +857,7 @@ body .topbar{flex-wrap:wrap}
     </details>
     <div class="chat-note">พอร์ต DIME จริง 8/10 ตัว · อีก 2 ตัวเพิ่มเองได้ · ไม่ใช่คำแนะนำการลงทุน</div>
   </div>
-  <div class="note">⚔ <b>กฎห้องเทรด:</b> เงินเย็นเท่านั้น · ไม่เกิน 5–10% ต่อตัวสำหรับหุ้นซิ่ง/คริปโต · แบ่งไม้ DCA อย่าหมดแม็กไม้เดียว</div>
+  <div class="note">⚔ <b>กฎห้องเทรด:</b> เงินเย็นเท่านั้น · ไม่เกิน 5–10% ต่อตัวสำหรับหุ้นซิ่ง/คริปโต · แบ่งไม้ DCA อย่าหมดแม็กไม้เดียว · 📸 เก็บรูปหุ้นทุกวันได้ที่ <a href="./stocks-daily.html" style="color:var(--gold);font-weight:700">🗓️ ห้องดูหุ้นรายวัน ↗</a> (มีรูป 10 ตุลาคม 2569 แล้ว)</div>
 </section>
 
 <!-- CHARTS (TradingView — แนวเดียวกับ OpenStock) -->
@@ -967,8 +1376,8 @@ body .topbar{flex-wrap:wrap}
   <div><h2>วิธีหาเงิน — รายได้ 11+ ทาง</h2><p>ทำครั้งเดียว → เก็บยาว · Active ที่กลายพันธุ์เป็น Passive คือของดีสุด</p></div><span class="count">11+ ทาง</span></div>
   <div class="group-title"><span class="gnum">🎸</span> ฉันเปิดหมวกได้ — หลักฐานจากถนนจริง</div>
   <div class="busk-grid">
-    <figure class="busk-photo"><img src="busk-guitar.jpg" alt="กีตาร์เปิดหมวก — 27 ม.ค." loading="lazy"><figcaption>🎸 กีตาร์เปิดหมวก · 27 ม.ค. — วางเคสรับทิปจริง</figcaption></figure>
-    <figure class="busk-photo"><img src="busk-cash.jpg" alt="เงินทิปเปิดหมวก" loading="lazy"><figcaption>💵 ทิปที่ได้ — เปิดหมวกได้จริง ไม่ใช่แค่ไอเดีย</figcaption></figure>
+    <figure class="busk-photo"><picture><source type="image/webp" srcset="busk-guitar.webp"><img src="busk-guitar.jpg" alt="กีตาร์เปิดหมวก — 27 ม.ค." loading="lazy" decoding="async" width="261" height="462"></picture><figcaption>🎸 กีตาร์เปิดหมวก · 27 ม.ค. — วางเคสรับทิปจริง</figcaption></figure>
+    <figure class="busk-photo"><picture><source type="image/webp" srcset="busk-cash.webp"><img src="busk-cash.jpg" alt="เงินทิปเปิดหมวก" loading="lazy" decoding="async" width="270" height="469"></picture><figcaption>💵 ทิปที่ได้ — เปิดหมวกได้จริง ไม่ใช่แค่ไอเดีย</figcaption></figure>
   </div>
   <div class="group-title"><span class="gnum">💰</span> เสาหลักหาเงิน 3 ทาง — ภาพรวม</div>
   <div class="grid3" style="margin-bottom:6px">
@@ -1028,7 +1437,7 @@ body .topbar{flex-wrap:wrap}
   <div class="zone" style="margin-top:10px"><h4>🌌 COMMAND CENTER — ศูนย์บัญชาการ</h4><p style="font-size:13px;color:#555">จอใหญ่ + WiFi แรง · vision board · โต๊ะคุมไฟ/กล้อง · SSD + Drive — ที่นั่งวางกลยุทธ์สร้างโลกใหม่ + อยากสร้างบ้าน/เฟอร์นิเจอร์เอง + เก้าอี้มีลำโพงในตัว</p></div>
 </section>
 
-<div class="photo-break"><img src="soul.jpg" alt="Himoriyacore — ตัวตน" loading="lazy"><span class="photo-tag">🌙 HIMORIYACORE · ตัวตน</span></div>
+<div class="photo-break"><picture><source type="image/webp" srcset="soul.webp"><img src="soul.jpg" alt="Himoriyacore — ตัวตน" loading="lazy" decoding="async" width="1080" height="1080"></picture><span class="photo-tag">🌙 HIMORIYACORE · ตัวตน</span></div>
 
 <!-- 11 -->
 <section class="card" id="plan">
@@ -1079,13 +1488,239 @@ body .topbar{flex-wrap:wrap}
   <div class="shead"><div class="icon">🥁</div>
   <div><h2>บันทึกกิจกรรมที่ฉันชอบทำ</h2><p>จดไว้กันลืม — สิ่งที่ทำแล้วมีความสุข</p></div><span class="count">1 อย่าง</span></div>
   <div class="joy-grid">
-    <figure class="joy-photo"><img src="drums.jpg" alt="ฉันกำลังตีกลอง" loading="lazy"><figcaption>🥁 ตีกลอง — มีกลองชุดและกีตาร์เป็นของตัวเองแล้ว</figcaption></figure>
+    <figure class="joy-photo"><picture><source type="image/webp" srcset="drums.webp"><img src="drums.jpg" alt="ฉันกำลังตีกลอง" loading="lazy" decoding="async" width="1080" height="1317"></picture><figcaption>🥁 ตีกลอง — มีกลองชุดและกีตาร์เป็นของตัวเองแล้ว</figcaption></figure>
     <div class="item"><div class="txt">🥁 ฉันชอบเล่นกลอง<small>จดไว้กันลืม — ตีกลองแล้วมีความสุข · ตอนนี้สกิลระดับ A ปั้นต่อให้เป็น S</small><span class="badge b-shield">🛡 A → S</span></div></div>
   </div>
   <div class="note">🌱 ชอบทำอะไรอีกส่งรูปมาได้เลย — section นี้ขยายเพิ่มได้เรื่อยๆ</div>
 </section>
 
+<!-- QUOTES: สวนกำลังใจ -->
+<section class="card" id="quotes">
+  <div class="shead"><div class="icon">💌</div>
+  <div><h2>สวนกำลังใจ — Quote Garden</h2><p>คำดีๆ เติม HP ใจ · พัฒนาตัวเองวันละนิด · เหนื่อยก็แวะมานะ</p></div><span class="count">125 BUFFS ☯️</span></div>
+
+  <div class="quote-daily" id="quoteDaily">
+    <div class="qd-hearts" aria-hidden="true"><span>💗</span><span>✨</span><span>🌸</span><span>💫</span></div>
+    <span class="qd-label">🌷 คำของวันนี้ · DAILY BUFF</span>
+    <p class="qd-text" id="qdText">วันนี้ไม่ต้องเก่งกว่าใครเลย แค่เก่งกว่าเมื่อวานนิดเดียวก็เก่งมากแล้วนะ ♡</p>
+    <p class="qd-sub" id="qdSub">— บัฟเติมใจจากสวนกำลังใจ 🌱 +10 HP</p>
+    <div class="qd-actions">
+      <button type="button" class="qbtn primary" id="qdRandom">🎲 สุ่มกำลังใจใหม่</button>
+      <button type="button" class="qbtn ghost" id="qdCopy">📋 คัดลอกคำนี้</button>
+    </div>
+  </div>
+
+  <div class="qchips" id="qchips" role="group" aria-label="หมวดคำคม">
+    <button type="button" class="qchip on" data-qf="all">🌷 ทั้งหมด</button>
+    <button type="button" class="qchip" data-qf="heal">🌱 ฮีลใจ</button>
+    <button type="button" class="qchip" data-qf="grow">🚀 พัฒนาตัวเอง</button>
+    <button type="button" class="qchip" data-qf="love">☀️ คำดีๆ</button>
+    <button type="button" class="qchip" data-qf="night">🌙 ก่อนนอน</button>
+    <button type="button" class="qchip" data-qf="rpg">⚔️ สายเกม</button>
+    <button type="button" class="qchip" data-qf="art">🎧 สายอาร์ต</button>
+    <button type="button" class="qchip" data-qf="money">💰 สายเงิน</button>
+    <button type="button" class="qchip" data-qf="morning">🌅 สายเช้า</button>
+    <button type="button" class="qchip" data-qf="grit">💪 สายวินัย</button>
+    <button type="button" class="qchip" data-qf="zen">☯️ ปรัชญา</button>
+  </div>
+
+  <div class="quote-grid" id="quoteGrid">
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🌱</div><div class="qtext">วันนี้ไม่ต้องเก่งกว่าใครเลย แค่เก่งกว่าเมื่อวานนิดเดียวก็เก่งมากแล้วนะ</div><small>ค่อยๆ โตแบบต้นไม้ของมึงเอง 🌿</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🍀</div><div class="qtext">พักได้เลยนะ ไม่ผิดเลย คนเก่งก็ต้องชาร์จแบตเหมือนกัน</div><small>อย่ารู้สึกผิดที่เหนื่อย มันแปลว่ามึงพยายามอยู่ 💤</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🚀</div><div class="qtext">วันละ 1% ก็พอ อีก 1 ปีมึงจะห่างจากจุดเดิมไปไกลมาก</div><small>สม่ำเสมอชนะพรสวรรค์เสมอ 📈</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">📚</div><div class="qtext">ไม่ต้องรีบเป็นเพชร ขอแค่ไม่หยุดขัดตัวเองทุกวันก็พอ</div><small>ทำบีทวันละนิด วาดวันละหน่อย โค้ดวันละบรรทัด 💎</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">☀️</div><div class="qtext">พูดดีกับตัวเองบ่อยๆ นะ มึงอยู่กับมึงไปทั้งชีวิตเลย</div><small>เสียงในหัวควรเป็นเพื่อน ไม่ใช่บอสที่ด่า 💛</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">🌸</div><div class="qtext">ใจดีกับตัวเองเหมือนที่มึงใจดีกับคนอื่นบ้างนะ</div><small>มึงก็สมควรได้รับดอกไม้เหมือนกัน 🌷</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🧸</div><div class="qtext">วันที่แย่ก็แค่ 1 วัน ไม่ใช่ทั้งชีวิต เดี๋ยวพรุ่งนี้ก็รีเซ็ตใหม่</div><small>กดนอน = กดเซฟ เดี๋ยวตื่นมาเลือดเต็ม 🛌</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🎯</div><div class="qtext">โฟกัสทีละเควส อย่าแบกทั้งแมพไว้บนบ่าคนเดียว</div><small>จบทีละอย่าง = เคลียร์ทั้งบอร์ดในที่สุด 🗺️</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">🌈</div><div class="qtext">มึงคู่ควรกับเรื่องดีๆ เสมอ อย่าลืมอ้าแขนรับมันไว้ล่ะ</div><small>อย่าปัดความสุขทิ้งเพราะคิดว่ามึงไม่ดีพอ 💝</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="night"><div class="qemoji">🌙</div><div class="qtext">วันนี้มึงทำดีที่สุดแล้ว วางโทรศัพท์แล้วนอนนะ พรุ่งนี้ค่อยลุยต่อ</div><small>ฝันดีนะนักผจญภัย ดาวกำลังเฝ้ามึงอยู่ ⭐</small><span class="qtag">🌙 ก่อนนอน · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🔥</div><div class="qtext">ล้มได้ ร้องได้ แต่ห้ามลบเซฟตัวเองทิ้งนะ</div><small> checkpoint อยู่ตรงนี้เสมอ เริ่มใหม่ได้ตลอด 💾</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">💌</div><div class="qtext">ถ้าวันนี้ไม่มีใครบอก — เราภูมิใจในตัวมึงมากเลยนะ</div><small>จากสวนกำลังใจ ถึงคนเก่งที่สุดในเซิร์ฟ 💗</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🧋</div><div class="qtext">เหนื่อยก็พักกินของอร่อยก่อนนะ ใจอิ่มแล้วค่อยไปต่อ</div><small>ชานมไข่มุกฮีลได้ทุกอย่างจริงๆ 🧋</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🌧️</div><div class="qtext">ร้องไห้ได้ ไม่ได้แปลว่าอ่อนแอ แปลว่ามึงเป็นมนุษย์ที่มีหัวใจ</div><small>น้ำตามีไว้ล้างตาให้มองพรุ่งนี้ชัดขึ้น 💧</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🐢</div><div class="qtext">ช้ากว่าคนอื่นไม่เป็นไรเลย ขอแค่มึงไม่หยุดเดินก็พอ</div><small>เต่าก็เข้าเส้นชัยได้ถ้าไม่หยุดเดิน 🐢</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🛟</div><div class="qtext">ไม่ต้องเข้มแข็งตลอดเวลาหรอก วันนี้อ่อนแอบ้างก็ได้</div><small>ซูเปอร์ฮีโร่ยังมีตอนพักเลย 🦸</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🌻</div><div class="qtext">มึงผ่านวันที่แย่ที่สุดมาแล้วตั้งหลายวัน วันนี้ก็จะผ่านไปได้เหมือนกัน</div><small>สถิติรอด 100% มาตลอดเลยนะ 🏆</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="heal"><div class="qemoji">🍞</div><div class="qtext">แค่ตื่นมาใช้ชีวิตวันนี้ได้ ก็เก่งมากแล้วนะ รู้ตัวมั้ย</div><small>บางวันแค่หายใจต่อก็คือชัยชนะแล้ว 🍞</small><span class="qtag">🌱 ฮีลใจ · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">💪</div><div class="qtext">วินัยวันละนิด ชนะแรงบันดาลใจที่มาๆ หายๆ เสมอ</div><small>ไฟหมดได้ แต่อย่าหยุดเดิน 🔥</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🧠</div><div class="qtext">ผิดพลาดได้ แต่ต้องได้บทเรียนกลับมาด้วยทุกครั้ง</div><small>ล้มครั้งนึง = ได้ XP ฟรี อย่าล้มฟรีๆ 🧠</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🪜</div><div class="qtext">บันไดสูงแค่ไหนก็ขึ้นได้ ถ้าก้าวทีละขั้นไม่หยุด</div><small>อย่ามองยอด มองขั้นต่อไปขั้นเดียวพอ 🪜</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🎧</div><div class="qtext">เทียบมึงวันนี้กับมึงเมื่อวานพอ อย่าเอามึงไปเทียบกับใคร</div><small>เซิร์ฟใครเซิร์ฟมัน เล่นเกมของตัวเอง 🎮</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">🌱</div><div class="qtext">เมล็ดที่ดีต้องใช้เวลา อย่าขุดมันขึ้นมาดูทุกวันเลย</div><small>รดน้ำทุกวันแล้วรอ เดี๋ยวดอกก็บานเอง 🌷</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grow"><div class="qemoji">⚡</div><div class="qtext">เริ่มห่วยยังดีกว่าไม่เริ่มเลย 10 เท่า</div><small>เวอร์ชันแรกห่วยได้ แค่ต้องมีเวอร์ชันแรกก่อน ⚡</small><span class="qtag">🚀 พัฒนาตัวเอง · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">💖</div><div class="qtext">มึงเป็นที่รักของใครหลายคน มากกว่าที่มึงคิดนะ</div><small>มีคนแอบยิ้มเพราะมึงอยู่เสมอเลย 💖</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">🍓</div><div class="qtext">รอยยิ้มของมึงฮีลคนอื่นได้เยอะเลยนะรู้มั้ย ยิ้มบ่อยๆ นะ</div><small>ยิ้มทีโลกสว่างขึ้น 1 เปอร์เซ็นต์ 🍓</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">🌷</div><div class="qtext">ขอบคุณนะที่ยังอยู่ตรงนี้ ที่ยังไม่ยอมแพ้</div><small>การยังอยู่ต่อคือความกล้าหาญที่สุดแล้ว 🌷</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">🫶</div><div class="qtext">มึงไม่ต้องสมบูรณ์แบบก็มีคนรักมึงได้</div><small>รอยแผลก็เป็นส่วนหนึ่งของความน่ารักนะ 🫶</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">✨</div><div class="qtext">ตัวตนของมึงมีค่าพอแล้ว ไม่ต้องพิสูจน์ให้ใครดู</div><small>มึงคือลิมิเต็ดเอดิชัน มีชิ้นเดียวในโลก ✨</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="love"><div class="qemoji">🍯</div><div class="qtext">ทำดีต่อไปนะ โลกนี้ต้องการความอ่อนโยนแบบมึง</div><small>ความใจดีไม่เคยสูญเปล่า มันวนกลับมาเสมอ 🍯</small><span class="qtag">☀️ คำดีๆ · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="night"><div class="qemoji">💤</div><div class="qtext">ปิดไฟ ปิดใจจากเรื่องวุ่นวาย วันนี้จบแค่นี้พอ</div><small>เรื่องค้างไว้พรุ่งนี้ค่อยเคลียร์ ไม่หนีไปไหนหรอก 💤</small><span class="qtag">🌙 ก่อนนอน · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="night"><div class="qemoji">🌟</div><div class="qtext">ดาวยังส่องแสงแม้ไม่มีใครมอง มึงก็เหมือนกันนะ</div><small>คุณค่ามึงไม่หายไปไหนแม้วันที่ไม่มีใครเห็น 🌟</small><span class="qtag">🌙 ก่อนนอน · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="night"><div class="qemoji">🛌</div><div class="qtext">นอนคือสกิลเติมเลือดที่ดีที่สุด ใช้มันซะ</div><small>นอน 8 ชม. = กดยา HP ขวดใหญ่ 🧪</small><span class="qtag">🌙 ก่อนนอน · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="night"><div class="qemoji">🌜</div><div class="qtext">พรุ่งนี้ค่อยว่ากัน คืนนี้กอดหมอนแน่นๆ แล้วฝันดีนะ</div><small>พระจันทร์เข้าเวรกะดึกเฝ้ามึงอยู่ 🌜</small><span class="qtag">🌙 ก่อนนอน · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="night"><div class="qemoji">🕯️</div><div class="qtext">วางทุกอย่างลงก่อนนอน พรุ่งนี้เช้าค่อยหยิบขึ้นมาใหม่</div><small>แบกไว้ทั้งคืนเมื่อยเปล่าๆ วางลงเถอะนะ 🕯️</small><span class="qtag">🌙 ก่อนนอน · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">⚔️</div><div class="qtext">บอสใหญ่แค่ไหนก็มี HP จำกัด ตีมันทุกวันเดี๋ยวก็ล้ม</div><small>ปัญหา = บอสด่านนี้ ตีไปเรื่อยๆ อย่าหนีดันเจี้ยน 🐲</small><span class="qtag">⚔ สายเกม · +10 ATK</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🧪</div><div class="qtext">MP หมดอย่าฝืนร่ายเวท พักเติมมานาก่อนค่อยกลับมาลุย</div><small>นักเวทเก่งๆ รู้จักจังหวะถอยไปเติมยา 🧪</small><span class="qtag">⚔ สายเกม · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">💾</div><div class="qtext">ทุกครั้งที่มึงไม่ยอมแพ้ = กดเซฟเกมไว้แล้ว</div><small>เซฟถี่ๆ ล้มตรงไหนก็เริ่มตรงนั้นได้เลย 💾</small><span class="qtag">⚔ สายเกม · +15 DEF</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🗺️</div><div class="qtext">หลงทางในดันเจี้ยนไม่เป็นไร ขอแค่อย่าปล่อยจอย</div><small>ทางอ้อมก็ยังเป็นทาง แค่ยังไม่เจอห้องบอส 🗺️</small><span class="qtag">⚔ สายเกม · +10 DEF</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">📜</div><div class="qtext">เควสยากให้ EXP เยอะ งานหินวันนี้คือเวลตันในวันหน้า</div><small>เควสหลักไม่มีเควสไหนง่าย แต่รางวัลคุ้มทุกเควส 📜</small><span class="qtag">⚔ สายเกม · +25 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🛡️</div><div class="qtext">เกราะที่ดีที่สุดไม่ใช่เหล็ก คือใจที่ไม่ยอมแพ้</div><small>ดาเมจชีวิตกันไม่ได้ แต่กันใจแตกได้ด้วยสติ 🛡️</small><span class="qtag">⚔ สายเกม · +15 DEF</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">👥</div><div class="qtext">ปาร์ตี้ดีมีชัยไปกว่าครึ่ง เลือกคนที่อยู่ข้างมึงตอนเลือดเหลือ 1</div><small>เพื่อนแท้ดูตอนมึง HP แดง ไม่ใช่ตอนมึงฟูลบัฟ 👥</small><span class="qtag">⚔ สายเกม · +5 CHARM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🐉</div><div class="qtext">มังกรตัวแรกที่ต้องปราบ คือความขี้เกียจในตัวมึงเอง</div><small>ชนะบอสตัวนี้ได้ ด่านอื่นก็ง่ายหมดแล้ว 🐉</small><span class="qtag">⚔ สายเกม · +10 ATK</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🏰</div><div class="qtext">ปราสาทสร้างวันเดียวไม่ได้ แต่ก่ออิฐวันละก้อนได้</div><small>ความฝันหลังใหญ่แค่ไหนก็เริ่มจากอิฐก้อนแรก 🏰</small><span class="qtag">⚔ สายเกม · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">✨</div><div class="qtext">สกิลอัลติต้องชาร์จก่อนใช้ คนเก่งก็ต้องใช้เวลาเหมือนกัน</div><small>อย่ากดอันติตอนเวล 1 รอเวลาฟาร์มก่อน ✨</small><span class="qtag">⚔ สายเกม · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🎲</div><div class="qtext">ดรอปเรทความสำเร็จมันต่ำ แต่คนที่ฟาร์มทุกวันได้ของแน่</div><small>สุ่ม 1 ครั้งอาจเกลือ แต่สุ่ม 365 ครั้งยังไงก็ได้ SSR 🎲</small><span class="qtag">⚔ สายเกม · +25 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🎮</div><div class="qtext">Game Over ไม่มีจริง ตราบใดที่มึงยังกด Continue</div><small>มีเหรียญเหลือ = มีโอกาสเสมอ อย่าโยนจอยทิ้ง 🎮</small><span class="qtag">⚔ สายเกม · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🗡️</div><div class="qtext">อาวุธที่ดีที่สุดคือความสม่ำเสมอ ฟันทุกวันบอสก็ตาย</div><small>ดาบธรรมดาฟันพันครั้ง คมกว่าดาบเทพที่เก็บไว้เฉยๆ 🗡️</small><span class="qtag">⚔ สายเกม · +10 ATK</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">🧙</div><div class="qtext">NPC ทุกตัวเคยเป็นผู้เล่นใหม่ ปรมาจารย์ทุกคนเคยเป็นมือใหม่</div><small>เวล 100 ของวันนี้ คือเวล 1 ของเมื่อก่อน 🧙</small><span class="qtag">⚔ สายเกม · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="rpg"><div class="qemoji">💰</div><div class="qtext">ฟาร์มทีละนิด กระเป๋าตังค์มึงคือ inventory ที่โตทุกวัน</div><small>DCA คือสกิลฟาร์มเงินของสายเล่นยาว 💰</small><span class="qtag">⚔ สายเกม · +100 GOLD</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🎧</div><div class="qtext">บีทแรกห่วยทุกคน แต่บีทที่ 100 จะไม่ห่วยแน่</div><small>ทำต่อไป อย่าหยุดที่บีทแรก 🎧</small><span class="qtag">🎧 สายอาร์ต · +15 FLOW</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🎹</div><div class="qtext">วันที่ไม่มีไอเดียก็เปิด DAW ทิ้งไว้ก่อน เดี๋ยวมือมันพาไปเอง</div><small>ไอเดียชอบมาตอนลงมือ ไม่ใช่ตอนนั่งรอ 🎹</small><span class="qtag">🎧 สายอาร์ต · +10 FLOW</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🎤</div><div class="qtext">เสียงของมึงไม่ต้องเหมือนใคร ฟังแล้วรู้ว่าเป็นมึงคือชนะแล้ว</div><small>ลายเซ็นเสียงมึงมีชิ้นเดียวในโลก 🎤</small><span class="qtag">🎧 สายอาร์ต · +15 STYLE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🖋️</div><div class="qtext">เส้นแรกอาจสั่น แต่เส้นที่พันยังไงก็นิ่ง</div><small>ทุกปรมาจารย์เคยมือสั่นมาก่อนทั้งนั้น 🖋️</small><span class="qtag">🎧 สายอาร์ต · +15 STYLE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🎬</div><div class="qtext">ฟุตเทจห่วยตัดให้ดีได้ แต่ฟุตเทจที่ไม่มีถ่ายซ่อมไม่ได้</div><small>ออกไปถ่ายก่อน ที่เหลือค่อยว่ากันในห้องตัด 🎬</small><span class="qtag">🎧 สายอาร์ต · +10 FLOW</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🎨</div><div class="qtext">งานที่มึงอายวันนี้ คือพอร์ตที่มึงภูมิใจปีหน้า</div><small>เก็บทุกงานไว้ มันคือบันไดของมึง 🎨</small><span class="qtag">🎧 สายอาร์ต · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🔁</div><div class="qtext">ลงมือทำชนะรอเพอร์เฟกต์ ของดองไม่มีวันดัง</div><small>ปล่อยเวอร์ชัน 1.0 ก่อน ค่อยอัปเดตทีหลัง 🔁</small><span class="qtag">🎧 สายอาร์ต · +10 FLOW</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🥁</div><div class="qtext">ซ้อมวันละนิด นิ้วมันจำเอง สมองไม่ต้องจำ</div><small>กล้ามเนื้อมือซื่อสัตย์กว่าความรู้สึกเสมอ 🥁</small><span class="qtag">🎧 สายอาร์ต · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">📱</div><div class="qtext">คลิปแรกยอด 0 วิวเป็นเรื่องปกติ ทุกช่องใหญ่เริ่มจาก 0 หมด</div><small>ยอดวิวคลิปที่ 100 เริ่มจากคลิปที่ 1 📱</small><span class="qtag">🎧 สายอาร์ต · +100 VIEWS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🌊</div><div class="qtext">ศิลปินก็มีวันน้ำแห้ง พักเติมน้ำแล้วกลับมาไหลต่อ</div><small>ตันได้ แต่อย่าเลิก แค่พักก่อน 🌊</small><span class="qtag">🎧 สายอาร์ต · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🏷️</div><div class="qtext">สไตล์มึงไม่ต้องแมส ขอแค่ชัด คนจำได้ก็พอ</div><small>ดังแบบมีตัวตน ดีกว่าดังแบบใครก็ได้ 🏷️</small><span class="qtag">🎧 สายอาร์ต · +15 STYLE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">💿</div><div class="qtext">เพลงที่มึงทำวันนี้ อาจเป็นเพลงที่ฮีลใครสักคนในอีก 5 ปี</div><small>งานมึงมีอายุยาวกว่าที่มึงคิด 💿</small><span class="qtag">🎧 สายอาร์ต · +100 FANS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🧪</div><div class="qtext">ทดลองเยอะๆ ห้องแล็บไม่มีคำว่าล้มเหลว มีแต่สูตรใหม่</div><small>ซาวด์ใหม่ๆ เกิดจากการลองผิดทั้งนั้น 🧪</small><span class="qtag">🎧 สายอาร์ต · +20 VIBE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🌅</div><div class="qtext">วันที่ท้อให้จำวันที่เริ่ม จำไฟวันแรกที่อยากทำมัน</div><small>ไฟวันแรกยังอยู่ แค่ลมพัดแรงไปหน่อย 🌅</small><span class="qtag">🎧 สายอาร์ต · +20 VIBE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="art"><div class="qemoji">🎪</div><div class="qtext">อย่าเก็บงานไว้ดูคนเดียว ปล่อยออกไปให้โลกตัดสิน</div><small>งานในลิ้นชักไม่มีวันมีแฟนคลับ 🎪</small><span class="qtag">🎧 สายอาร์ต · +100 VIEWS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">💰</div><div class="qtext">เงินล้านเริ่มจากบาทแรกที่เก็บ ไม่ใช่รอให้พร้อมก่อน</div><small>ไม่มีใครพร้อมตั้งแต่บาทแรกหรอก เริ่มเลย 💰</small><span class="qtag">💰 สายเงิน · +100 GOLD</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">📈</div><div class="qtext">DCA คือเวทมนตร์ของคนใจเย็น รวยช้าแต่รวยชัวร์</div><small>หยอดทุกเดือนเหมือนรดน้ำต้นไม้ เดี๋ยวก็โต 📈</small><span class="qtag">💰 สายเงิน · +50 SAVINGS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🐜</div><div class="qtext">มดขนทีละเม็ดยังเต็มรัง เก็บทีละนิดยังไงก็ถึงล้าน</div><small>อย่าดูถูกยอดเล็ก มันรวมกันเป็นยอดใหญ่ 🐜</small><span class="qtag">💰 สายเงิน · +50 SAVINGS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">💸</div><div class="qtext">อย่าดูถูกเงิน 100 ที่เก็บได้ มันคือทหารตัวแรกของกองทัพ</div><small>กองทัพใหญ่เริ่มจากทหารตัวแรกเสมอ 💸</small><span class="qtag">💰 สายเงิน · +100 GOLD</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">📊</div><div class="qtext">กราฟชีวิตก็เหมือนกราฟหุ้น มีขึ้นมีลง แต่เทรนด์ยาวต้องขึ้น</div><small>อย่าขายชีวิตทิ้งตอนกราฟตก 📊</small><span class="qtag">💰 สายเงิน · +10 WEALTH</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🛒</div><div class="qtext">ก่อนซื้อถามตัวเองก่อน: อยากได้จริง หรือแค่เห็นแล้วอยากได้</div><small>รอ 3 วันแล้วยังอยากได้ค่อยซื้อ 🛒</small><span class="qtag">💰 สายเงิน · +50 SAVINGS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🏦</div><div class="qtext">จ่ายให้ตัวเองก่อน 10% ที่เหลือค่อยใช้ ชีวิตง่ายขึ้นเยอะ</div><small>เหลือค่อยเก็บ = ไม่เหลือ เก็บก่อนค่อยใช้ = เหลือ 🏦</small><span class="qtag">💰 สายเงิน · +50 SAVINGS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🌱</div><div class="qtext">เงินที่ปลูกลงทุนวันนี้ คือร่มเงาของปีหน้า</div><small>ต้นไม้เงินโตช้า แต่ร่มมันเย็นนาน 🌱</small><span class="qtag">💰 สายเงิน · +10 WEALTH</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🎰</div><div class="qtext">อย่าเล่นเกมที่มึงไม่เข้าใจ เหมือนอย่าซื้อหุ้นที่มึงไม่รู้จัก</div><small>เงินเย็นเท่านั้น เงินร้อนห้ามลงสนาม 🎰</small><span class="qtag">💰 สายเงิน · +10 WEALTH</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">📉</div><div class="qtext">วันที่พอร์ตแดงคือวันที่ตลาดลดราคา ไม่ใช่วันสิ้นโลก</div><small>ของดีลดราคา คนใจนิ่งได้ของถูก 📉</small><span class="qtag">💰 สายเงิน · +10 WEALTH</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🍜</div><div class="qtext">ประหยัดวันนี้ไม่ใช่จน แต่คือกำลังซื้ออนาคตให้ตัวเอง</div><small>มาม่าวันนี้แลกอิสรภาพวันหน้า 🍜</small><span class="qtag">💰 สายเงิน · +50 SAVINGS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">⏳</div><div class="qtext">ดอกเบี้ยทบต้นคือเพื่อนที่ดีที่สุดของคนเริ่มเร็ว</div><small>เวลา + วินัย = สูตรโกงที่ถูกกฎหมาย ⏳</small><span class="qtag">💰 สายเงิน · +10 WEALTH</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🧾</div><div class="qtext">จดทุกบาทที่ใช้ รู้ตัวอีกทีเงินรั่วหยุดเอง</div><small>เห็นตัวเลขแล้วมือจะหยุดสั่นเอง 🧾</small><span class="qtag">💰 สายเงิน · +50 SAVINGS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">🎯</div><div class="qtext">เป้าหมายชัด เงินมันหาทางมาเอง ตั้งเป้า 1M แล้วลุย</div><small>เป้าไม่ชัด เงินก็ไม่รู้จะเดินไปไหน 🎯</small><span class="qtag">💰 สายเงิน · +100 GOLD</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="money"><div class="qemoji">💎</div><div class="qtext">มือเพชรถือยาวไม่ขายตอนตกใจ กำไรเป็นของคนใจนิ่ง</div><small>ตกใจขาย = แจกตังค์ให้คนใจนิ่ง 💎</small><span class="qtag">💰 สายเงิน · +10 WEALTH</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🌅</div><div class="qtext">ตื่นมาวันนี้ = ได้เหรียญ Continue ฟรีอีก 1 เหรียญ</div><small>ใช้เหรียญนี้ให้คุ้ม อย่าปล่อยหมดวันไปเฉยๆ 🌅</small><span class="qtag">🌅 สายเช้า · +10 ENERGY</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">☕</div><div class="qtext">กาแฟแก้วแรกคือยา MP ยามเช้า ดื่มแล้วลุย</div><small>เติมมานาเสร็จค่อยร่ายงานชิ้นแรก ☕</small><span class="qtag">🌅 สายเช้า · +20 MP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🛏️</div><div class="qtext">เก็บที่นอน = เคลียร์เควสแรกของวัน โมเมนตัมมาเอง</div><small>ชนะเรื่องเล็กตอนเช้า เรื่องใหญ่จะง่ายขึ้น 🛏️</small><span class="qtag">🌅 สายเช้า · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">📋</div><div class="qtext">เขียน 3 สิ่งที่ต้องทำวันนี้ ที่เหลือคือโบนัส</div><small>เควสหลัก 3 เควสพอ อย่ายัดทั้งแมพใส่เช้าเดียว 📋</small><span class="qtag">🌅 สายเช้า · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🏃</div><div class="qtext">ขยับตัว 10 นาทีตอนเช้า ดีกว่านอนไถจอ 1 ชม.</div><small>เลือดลมเดิน สมองก็เดินตาม 🏃</small><span class="qtag">🌅 สายเช้า · +10 ENERGY</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">📣</div><div class="qtext">บอกคนในกระจกตอนเช้า: วันนี้มึงทำได้</div><small>บัฟเสียงตัวเองก่อนออกจากบ้าน แรงกว่ากาแฟอีก 📣</small><span class="qtag">🌅 สายเช้า · +10 MORALE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">📵</div><div class="qtext">1 ชม.แรกอย่าให้มือถือขโมยเช้าของมึงไป</div><small>ฟีดคนอื่นรอได้ เช้าของมึงรอไม่ได้ 📵</small><span class="qtag">🌅 สายเช้า · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🌤️</div><div class="qtext">เมื่อวานแย่แค่ไหน เช้านี้ก็รีเซ็ตใหม่หมดแล้ว</div><small>ทุกเช้าคือเซฟใหม่ ไม่มีคำว่าแต้มติดลบข้ามวัน 🌤️</small><span class="qtag">🌅 สายเช้า · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🎯</div><div class="qtext">เช้าที่ดีไม่ต้องตื่นตี 5 แค่ตื่นแล้วรู้ว่าจะทำอะไร</div><small>ตื่นสายแต่มีเป้า ดีกว่าตื่นเช้าแล้วลอย 🎯</small><span class="qtag">🌅 สายเช้า · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">💧</div><div class="qtext">น้ำ 1 แก้วหลังตื่น = กดยา HP ให้ร่างกาย</div><small>เครื่องยนต์ต้องมีน้ำหล่อเลี้ยงก่อนสตาร์ท 💧</small><span class="qtag">🌅 สายเช้า · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">📖</div><div class="qtext">อ่าน 5 หน้าตอนเช้า ปีนึงมึงอ่านไป 10 กว่าเล่ม</div><small>หนังสือไม่เคยหักหลังคนอ่าน 📖</small><span class="qtag">🌅 สายเช้า · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🎵</div><div class="qtext">เปิดเพลงที่ชอบตอนเช้า อารมณ์ดีมีชัยไปกว่าครึ่งวัน</div><small>ซาวด์แทร็กดี เช้าก็เป็นหนังดีเรื่องนึง 🎵</small><span class="qtag">🌅 สายเช้า · +20 VIBE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🌬️</div><div class="qtext">หายใจลึกๆ 3 ครั้งก่อนลุก ตั้งสติแล้วค่อยเริ่มเกม</div><small>3 ลมหายใจ = สกิลกันตายตอนเช้า 🌬️</small><span class="qtag">🌅 สายเช้า · +10 MORALE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">🍳</div><div class="qtext">กินข้าวเช้าดีๆ สมองจะได้ไม่แลคตอนบ่าย</div><small>ตัวละครต้องกินข้าวก่อนออกฟาร์ม 🍳</small><span class="qtag">🌅 สายเช้า · +10 ENERGY</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="morning"><div class="qemoji">✅</div><div class="qtext">เริ่มจากงานเล็กสุดก่อน ชนะเล็กๆ สะสมเป็นชนะใหญ่</div><small>เควสง่ายก่อน เควสยากจะกลัวมึงเอง ✅</small><span class="qtag">🌅 สายเช้า · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">💪</div><div class="qtext">วินัยคือเวอร์ชันผู้ใหญ่ของแรงบันดาลใจ</div><small>ไฟหมดได้ แต่วินัยต้องอยู่ 💪</small><span class="qtag">💪 สายวินัย · +15 GRIT</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🏋️</div><div class="qtext">วันที่ขี้เกียจที่สุด คือวันที่ต้องไปยิมที่สุด</div><small>วันที่ไม่อยากไปนั่นแหละ วันที่ได้กำไรเยอะสุด 🏋️</small><span class="qtag">💪 สายวินัย · +10 STAMINA</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">📅</div><div class="qtext">ทำติดกัน 30 วัน สิ่งที่ยากจะกลายเป็นนิสัย</div><small>อย่าขาด 2 วันติด นั่นกฎเหล็กข้อเดียว 📅</small><span class="qtag">💪 สายวินัย · +15 GRIT</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">⏰</div><div class="qtext">5 นาทีแรกยากที่สุด เริ่มไปแล้วที่เหลือไหลเอง</div><small>หลอกสมองว่าเอาแค่ 5 นาที แล้วมันจะไปต่อเอง ⏰</small><span class="qtag">💪 สายวินัย · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🚫</div><div class="qtext">ปฏิเสธสิ่งเล็กๆ วันนี้ เพื่อตอบตกลงสิ่งใหญ่ๆ วันหน้า</div><small>ทุกการปฏิเสธคือการเลือกอนาคตตัวเอง 🚫</small><span class="qtag">💪 สายวินัย · +15 GRIT</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🍅</div><div class="qtext">โฟกัส 25 นาที จริงจังครั้งเดียว ดีกว่าไถจอ 2 ชม.</div><small>ตั้งเวลา ปิดแจ้งเตือน แล้วจมกับงานชิ้นเดียว 🍅</small><span class="qtag">💪 สายวินัย · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🍎</div><div class="qtext">ร่างกายคือตัวละครหลัก เลี้ยงมันดีๆ หน่อย</div><small>ตัวหลักพัง เควสไหนก็ไปต่อไม่ได้ 🍎</small><span class="qtag">💪 สายวินัย · +10 HP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">📓</div><div class="qtext">จดวันนี้ว่าทำอะไรไปบ้าง พรุ่งนี้จะรู้ว่าต้องแก้ตรงไหน</div><small>ไม่จด = เดา จด = เห็นความจริง 📓</small><span class="qtag">💪 สายวินัย · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🔂</div><div class="qtext">ซ้ำๆ ทุกวันจนน่าเบื่อ นั่นแหละทางลัดที่คนมองไม่เห็น</div><small>ความน่าเบื่อคือราคาของความเก่ง 🔂</small><span class="qtag">💪 สายวินัย · +15 GRIT</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🧊</div><div class="qtext">วินัยคือทำในวันที่ไม่อยากทำ ไม่ใช่ทำเฉพาะวันที่อยาก</div><small>อารมณ์มาๆ ไปๆ แต่วินัยอยู่กับมึงทุกวัน 🧊</small><span class="qtag">💪 สายวินัย · +15 GRIT</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">✂️</div><div class="qtext">ตัดสิ่งรบกวนออก 1 อย่าง เท่ากับเพิ่มพลังโฟกัส 2 เท่า</div><small>ลบแอปนึงออก ดีกว่าตั้งใจเพิ่มสิบเท่า ✂️</small><span class="qtag">💪 สายวินัย · +15 FOCUS</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">📊</div><div class="qtext">วัดผลทุกอาทิตย์ ตัวเลขไม่โกหก ความรู้สึกโกหกเก่ง</div><small>รู้สึกว่าไม่ไปไหน? เปิดตัวเลขดูแล้วจะตกใจ 📊</small><span class="qtag">💪 สายวินัย · +15 EXP</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🏆</div><div class="qtext">คนที่ชนะไม่ใช่คนเก่งสุด แต่คือคนเลิกช้าสุด</div><small>อยู่ให้นานกว่าคนอื่น นั่นแหละสูตรชนะ 🏆</small><span class="qtag">💪 สายวินัย · +100 MORALE</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">💤</div><div class="qtext">พักคือส่วนหนึ่งของวินัย ไม่ใช่ข้อยกเว้นของมัน</div><small>ตารางพักก็คือตาราง อย่ารู้สึกผิดที่พักตามแผน 💤</small><span class="qtag">💪 สายวินัย · +10 STAMINA</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="grit"><div class="qemoji">🔥</div><div class="qtext">ใบที่ 110 แล้ว มึงอ่านมาถึงนี่แปลว่าวินัยมึงของจริง</div><small>คนมีวินัยอ่านจบ คนไม่มีวินัยเลิกตั้งแต่ใบที่ 10 🔥</small><span class="qtag">💪 สายวินัย · +110 GRIT</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🍂</div><div class="qtext">ทุกข์มาแล้วก็ไป ไม่มีอะไรอยู่กับมึงตลอดไป แม้แต่ความสุข</div><small>อนิจจัง = ทุกอย่างชั่วคราว รวมถึงวันที่แย่ด้วย 🍂</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🧘</div><div class="qtext">ควบคุมได้แค่การกระทำของมึง ผลลัพธ์ปล่อยให้โลกจัดการ</div><small>ทำเต็มที่แล้ววาง ที่เหลือไม่ใช่หน้าที่มึง 🧘</small><span class="qtag">☯️ ปรัชญา · +10 CALM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🌊</div><div class="qtext">น้ำไม่เคยชนหินตรงๆ แต่มันไปถึงทะเลทุกครั้ง</div><small>อ่อนไม่ได้แปลว่าแพ้ อ้อมได้ก็ถึงเหมือนกัน 🌊</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">☠️</div><div class="qtext">โกรธคนอื่นเหมือนดื่มยาพิษเอง แล้วหวังให้เขาตาย</div><small>วางความโกรธลง คนที่เบาคือมึงเอง ☠️</small><span class="qtag">☯️ ปรัชญา · +10 CALM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🎒</div><div class="qtext">ยิ่งแบกน้อย ยิ่งไปได้ไกล วางบ้างก็ได้</div><small>กระเป๋าชีวิตหนักเพราะมึงไม่ยอมเอาอะไรออก 🎒</small><span class="qtag">☯️ ปรัชญา · +10 CALM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🌸</div><div class="qtext">ดอกไม้ไม่บานพร้อมกันทุกดอก จังหวะมึงก็มีของมันเอง</div><small>เลิกเทียบดอกตูมของมึงกับดอกบานของคนอื่น 🌸</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🕊️</div><div class="qtext">ให้อภัยไม่ใช่เพื่อเขา แต่เพื่อปล่อยมือมึงออกจากเรื่องนั้น</div><small>กำเรื่องเก่าไว้ มือก็ไม่มีที่ว่างรับเรื่องใหม่ 🕊️</small><span class="qtag">☯️ ปรัชญา · +20 ZEN</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🌑</div><div class="qtext">ยอมรับความมืดในใจได้ ไม่ต้องรีบเปิดไฟก็ได้</div><small>ความรู้สึกแย่ก็เป็นแขก มาแล้วเดี๋ยวก็กลับ 🌑</small><span class="qtag">☯️ ปรัชญา · +10 CALM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🏺</div><div class="qtext">แจกันแตกซ่อมด้วยทอง แผลมึงก็มีค่าเหมือนกัน</div><small>รอยร้าวที่ซ่อมแล้ว แข็งแกร่งกว่าเดิมเสมอ 🏺</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🍵</div><div class="qtext">ชาร้อนต้องค่อยๆ จิบ ชีวิตดีๆ ก็ต้องค่อยๆ ใช้</div><small>รีบดื่มลวกปาก รีบใช้ชีวิตลวกใจ 🍵</small><span class="qtag">☯️ ปรัชญา · +20 ZEN</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">⛰️</div><div class="qtext">เลิกถามว่าทำไมต้องเป็นมึง แล้วถามว่าจะทำไงต่อ</div><small>คำถามแรกมีแต่ทุกข์ คำถามหลังมีแต่ทางออก ⛰️</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🌾</div><div class="qtext">ข้าวยิ่งเต็มรวงยิ่งโน้มลง คนยิ่งรู้มากยิ่งถ่อมตัว</div><small>เก่งจริงไม่ต้องเสียงดัง คนดูออกเอง 🌾</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🔥</div><div class="qtext">ไฟที่เผามึงวันนี้ อาจเป็นแสงนำทางมึงพรุ่งนี้</div><small>แผลวันนี้คือตะเกียงวันหน้า 🔥</small><span class="qtag">☯️ ปรัชญา · +15 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">👀</div><div class="qtext">เปลี่ยนมุมมองไม่ได้เปลี่ยนโลก แต่เปลี่ยนโลกทั้งใบของมึงได้</div><small>หน้าต่างบานเดิม วิวใหม่ได้ถ้ามึงขยับ 👀</small><span class="qtag">☯️ ปรัชญา · +20 ZEN</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+    <div class="item quote-card" data-cat="zen"><div class="qemoji">🏛️</div><div class="qtext">ใบที่ 125 — ยิ่งรู้มากยิ่งรู้ว่าตัวเองรู้น้อย นั่นแหละฉลาดแล้ว</div><small>โสกราตีสไม่ได้เก่งสุด แต่แกกล้ายอมรับว่าไม่รู้ 🏛️</small><span class="qtag">☯️ ปรัชญา · +125 WISDOM</span><button type="button" class="qcopy">♡ คัดลอก</button></div>
+  </div>
+
+  <div class="quote-foot">🌷 เหนื่อยเมื่อไหร่ก็กลับมาอ่านใหม่นะ · กด 🎲 สุ่มกำลังใจได้ทุกวัน · ⚔️ 🎧 💰 🌅 💪 ☯️ กดฟิลเตอร์ตามสายได้เลย · สวนนี้จะโตไปพร้อมกับมึง 🌱✨</div>
+</section>
+
+<!-- GACHA: ตู้สุ่มเควส -->
+<section class="card" id="gacha">
+  <div class="shead"><div class="icon">🎰</div>
+  <div><h2>ตู้กาชาเควส — GACHA</h2><p>ขี้เกียจคิดว่าจะทำอะไร? ให้ตู้สุ่มให้ · มีการันตี EPIC+ ทุก 10 โรล</p></div><span class="count">GACHA 🎰</span></div>
+
+  <div class="gacha-top">
+    <div class="gacha-stat"><small>🎲 โรลทั้งหมด</small><strong class="num" id="gTotal">0</strong></div>
+    <div class="gacha-stat"><small>💜 EPIC+ ที่ได้</small><strong class="num" id="gEpic">0</strong></div>
+    <div class="gacha-stat"><small>🌟 LEGENDARY</small><strong class="num" id="gLeg">0</strong></div>
+  </div>
+
+  <div class="gacha-machine" id="gMachine">
+    <div class="gacha-balls" aria-hidden="true">
+      <span style="background:linear-gradient(180deg,#CBD5E1,#64748B)"></span>
+      <span style="background:linear-gradient(180deg,#93C5FD,#2563EB)"></span>
+      <span style="background:linear-gradient(180deg,#C4B5FD,#7C3AED)"></span>
+      <span style="background:linear-gradient(180deg,#FDE68A,#D97706)"></span>
+      <span style="background:linear-gradient(180deg,#93C5FD,#2563EB)"></span>
+      <span style="background:linear-gradient(180deg,#CBD5E1,#64748B)"></span>
+    </div>
+    <div class="gacha-ball r-common" id="gBall">🎰</div>
+    <div class="gacha-result" id="gResult">
+      <div class="gr-card r-common">
+        <div class="gr-name">กดปุ่มด้านล่างเพื่อหมุน 1 โรล 🎲</div>
+        <div class="gr-sub">ตู้จะสุ่มเควสให้มึงไปทำ · ได้แล้วต้องทำจริงนะ 😤</div>
+      </div>
+    </div>
+    <div class="gacha-actions">
+      <button type="button" class="qbtn primary" id="gPull">🎲 หมุน 1 โรล</button>
+      <button type="button" class="qbtn ghost" id="gClear">🗑 ล้างประวัติ</button>
+    </div>
+    <div class="gacha-pity" id="gPity">อีก 10 โรลการันตี EPIC+ 💜<div class="pbar"><i id="gPityBar" style="width:0%"></i></div></div>
+  </div>
+
+  <div class="gacha-hist">
+    <h5>📜 ประวัติการสุ่มล่าสุด</h5>
+    <ul id="gHist"><li class="r-common">ยังไม่เคยหมุนเลย — โรลแรกมารออยู่ 🎰</li></ul>
+  </div>
+  <div class="note">🎰 <b>เรทตู้:</b> COMMON 55% · RARE 27% · EPIC 13% · LEGENDARY 5% · โรลครบ 10 ครั้งโดยไม่ได้ EPIC+ ขึ้นไป ครั้งที่ 10 การันตีให้เลย · สุ่มได้แล้วไปทำจริงล่ะ!</div>
+</section>
+
+<!-- MEMENTO MORI: ปฏิทินชีวิต -->
+<section class="card" id="memento">
+  <div class="shead"><div class="icon">⏳</div>
+  <div><h2>Memento Mori — ปฏิทินชีวิต</h2><p>จำไว้ว่ามึงต้องตาย · เลยต้องใช้ทุกวันที่เหลือให้คุ้ม</p></div><span class="count" id="memCount">LIFE MAP</span></div>
+  <div class="mem-setup">
+    <label class="mem-field">🎂 วันเกิด<input type="date" id="memBirth"></label>
+    <label class="mem-field">🎯 อยู่ถึงอายุ<select id="memTarget"><option value="70">70 ปี</option><option value="80" selected>80 ปี</option><option value="90">90 ปี</option><option value="100">100 ปี</option></select></label>
+    <button type="button" class="qbtn primary" id="memSave">⏳ ดูปฏิทินชีวิต</button>
+  </div>
+  <div class="mem-stats">
+    <div class="mem-stat"><small>🔥 ใช้ไปแล้ว</small><strong class="num" id="memLived">—</strong><span>วัน</span></div>
+    <div class="mem-stat"><small>⏳ เหลืออีก</small><strong class="num" id="memLeft">—</strong><span>วัน</span></div>
+    <div class="mem-stat"><small>📊 ใช้ชีวิตไป</small><strong class="num" id="memPct">—</strong><span>ของทั้งหมด</span></div>
+    <div class="mem-stat"><small>☀️ เวลาตื่นที่เหลือ*</small><strong class="num" id="memAwake">—</strong><span>วัน (*หักนอน 8 ชม.)</span></div>
+  </div>
+  <div class="mem-grid-wrap"><div class="mem-grid" id="memGrid"></div></div>
+  <div class="mem-legend"><span><i style="background:linear-gradient(180deg,#FDE68A,#B45309)"></i>ใช้ไปแล้ว</span><span><i style="background:#fff;box-shadow:0 0 6px #FBBF24"></i>เดือนนี้ · มึงอยู่ตรงนี้</span><span><i style="background:#292524;border:1px solid #44403C"></i>ยังมาไม่ถึง</span></div>
+  <div class="mem-quote"><p id="memQuote">“มึงไม่มีเวลามากพอที่จะรอให้พร้อม”</p><small>— 1 ช่อง = 1 เดือน · ทุก 10 แถว = 10 ปี · ปฏิทินเปลี่ยนทุกวัน</small></div>
+  <div class="note">⏳ <b>Memento Mori</b> แปลว่า “จำไว้ว่ามึงต้องตาย” — ไม่ได้แช่ง แต่เตือนให้เลิกผลัดวันประกันพรุ่ง · ตัวเลขนี้คือค่าประมาณ ไม่ใช่คำทำนาย</div>
+</section>
+
 <footer>⚔ ET1CRUEL · QUEST LOG RPG v2 — CLEAR 60 · ACTIVE 8 · GOLD 96,500 · ม้าเหล็กได้แล้ว 🏍 NEXT BOSS: ที่ดิน 🌾</footer>
+<div class="explore"><small>EXPLORE THE WORLD</small><nav aria-label="ห้องทั้งหมด">
+<a href="./beat-select.html">🎧 ฟังบีท</a><a href="./timeline.html">📜 Timeline</a><a href="./growth.html">🌱 เติบโต</a><a href="./poker.html">🃏 โป๊กเกอร์</a><a href="./food.html">🍜 ห้องอาหาร</a><a href="./stocks-daily.html">🗓️ หุ้นรายวัน</a><a href="./upgrade.html">🧬 อัพเกรด</a>
+</nav></div>
 
 </div>
 </div>
@@ -1100,8 +1735,8 @@ document.querySelectorAll('.persona:not([data-rank]),.zone:not([data-rank])').fo
 const q=document.getElementById('q');
 let mode='all';
 document.querySelectorAll('.fbtn').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on'); mode=b.dataset.f; apply();
+  document.querySelectorAll('.fbtn').forEach(x=>{x.classList.remove('on');x.setAttribute('aria-pressed','false')});
+  b.classList.add('on'); b.setAttribute('aria-pressed','true'); mode=b.dataset.f; apply();
 });
 q.oninput=apply;
 function apply(){
@@ -1122,7 +1757,7 @@ function apply(){
 /* ===== COLLAPSE — กดหัวข้อแล้วค่อยกางเนื้อหา (progressive disclosure) ===== */
 (function(){
   var KEY='et1cruel-collapsed-v1';
-  var OPEN_BY_DEFAULT=['masterplan','diary']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
+  var OPEN_BY_DEFAULT=['masterplan','diary','quotes','gacha']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
   function load(){try{var s=JSON.parse(localStorage.getItem(KEY));return Array.isArray(s)?s:null}catch(e){return null}}
   function save(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
   var saved=load();
@@ -1409,8 +2044,10 @@ function apply(){
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
     var t = 0;
-    (function anim(){
-      requestAnimationFrame(anim);
+    var galaxyFrame = 0;
+    function anim(){
+      if (document.hidden) { galaxyFrame = 0; return; }
+      galaxyFrame = requestAnimationFrame(anim);
       t += .0016;
       stars.rotation.y = t + mx*.35;
       stars.rotation.x = my*.25;
@@ -1418,24 +2055,421 @@ function apply(){
       camera.position.y += ((-my*1.0) - camera.position.y)*.04;
       camera.lookAt(scene.position);
       renderer.render(scene, camera);
-    })();
+    }
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden) {
+        if (galaxyFrame) cancelAnimationFrame(galaxyFrame);
+        galaxyFrame = 0;
+      } else if (!galaxyFrame) {
+        anim();
+      }
+    });
+    anim();
   } catch (err) { /* 2D fallback stays — page still fully readable */ }
 })();
 </script>
-<script src="js/life-os-os.js"></script>
-<script src="js/sky-breaks.js"></script>
-<script src="js/diary.js"></script>
-<script src="js/stock-talk.js"></script>
-<script src="js/port.js"></script>
-<script src="js/watch.js"></script>
-<script src="js/shield.js"></script>
-<script src="js/sp500.js"></script>
-<script src="js/money-tree.js"></script>
-<script src="js/ambient.js"></script>
-<script src="js/tv-widgets.js"></script>
+<script>
+/* ===== QUOTE GARDEN — คำประจำวัน + สุ่ม + ฟิลเตอร์ + ก๊อปปี้ 💌 ===== */
+(function(){
+  var grid=document.getElementById('quoteGrid');
+  if(!grid) return;
+  var cards=Array.prototype.slice.call(grid.querySelectorAll('.quote-card'));
+  var qd=document.getElementById('quoteDaily');
+  var qdText=document.getElementById('qdText');
+  var qdSub=document.getElementById('qdSub');
+  var btnRandom=document.getElementById('qdRandom');
+  var btnCopy=document.getElementById('qdCopy');
+  var chips=document.querySelectorAll('#qchips .qchip');
+  function cardData(card){
+    var t=card.querySelector('.qtext');
+    var s=card.querySelector('small');
+    return {text:t?t.textContent.trim():'',sub:s?s.textContent.trim():''};
+  }
+  function showQuote(d,sub){
+    if(!qdText) return;
+    qdText.textContent='“'+d+'” ♡';
+    if(qdSub&&sub) qdSub.textContent='— '+sub;
+    if(qd){qd.classList.remove('pop');void qd.offsetWidth;qd.classList.add('pop');}
+  }
+  // คำประจำวันจากวันที่ (เปลี่ยนทุกวันอัตโนมัติ)
+  try{
+    var now=new Date();
+    var dayIdx=Math.floor(now.getTime()/86400000);
+    var daily=cards[dayIdx%cards.length];
+    if(daily){var dd=cardData(daily);qdText.textContent='“'+dd.text+'” ♡';if(qdSub&&dd.sub)qdSub.textContent='— '+dd.sub;}
+  }catch(e){}
+  var last=-1;
+  function randomQuote(){
+    if(!cards.length) return;
+    var i;do{i=Math.floor(Math.random()*cards.length);}while(cards.length>1&&i===last);
+    last=i;
+    var d=cardData(cards[i]);
+    showQuote(d.text,d.sub);
+  }
+  if(btnRandom)btnRandom.addEventListener('click',randomQuote);
+  function copyText(txt,btn){
+    function done(){if(!btn)return;var o=btn.textContent;btn.textContent='คัดลอกแล้ว! ♡';setTimeout(function(){btn.textContent=o;},1400);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(function(){fallback();});}
+    else fallback();
+    function fallback(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  }
+  if(btnCopy)btnCopy.addEventListener('click',function(){copyText(qdText.textContent.replace(/[“”]/g,''),btnCopy);});
+  grid.addEventListener('click',function(ev){
+    var b=ev.target&&ev.target.closest?ev.target.closest('.qcopy'):null;
+    if(!b) return;
+    var card=b.closest?b.closest('.quote-card'):null;
+    if(!card) return;
+    var d=cardData(card);
+    copyText(d.text+(d.sub?' — '+d.sub:''),b);
+  });
+  // ฟิลเตอร์หมวด (ใช้ .hide เดิมให้เข้ากับระบบค้นหาหลัก)
+  chips.forEach(function(ch){
+    ch.addEventListener('click',function(){
+      chips.forEach(function(c){c.classList.remove('on');});
+      ch.classList.add('on');
+      var f=ch.getAttribute('data-qf');
+      cards.forEach(function(card){
+        var show=(f==='all'||card.getAttribute('data-cat')===f);
+        card.classList.toggle('hide',!show);
+      });
+    });
+  });
+})();
+</script>
+<script>
+/* ===== GACHA — ตู้สุ่มเควส + pity การันตี EPIC+ ทุก 10 โรล 🎰 ===== */
+(function(){
+  var ball=document.getElementById('gBall');
+  var result=document.getElementById('gResult');
+  var machine=document.getElementById('gMachine');
+  var btn=document.getElementById('gPull');
+  var btnClear=document.getElementById('gClear');
+  var elTotal=document.getElementById('gTotal');
+  var elEpic=document.getElementById('gEpic');
+  var elLeg=document.getElementById('gLeg');
+  var elPity=document.getElementById('gPity');
+  var elPityBar=document.getElementById('gPityBar');
+  var elHist=document.getElementById('gHist');
+  if(!ball||!btn) return;
+  var RNAME={common:'COMMON',rare:'RARE ★',epic:'EPIC ★★',legendary:'LEGENDARY ★★★'};
+  var POOL=[
+    {r:'common',e:'💪',t:'วิดพื้น 20 ครั้ง',s:'เดี๋ยวนี้เลย ไม่ต้องเปลี่ยนชุด'},
+    {r:'common',e:'💧',t:'ดื่มน้ำ 2 แก้วใหญ่',s:'ตัวละครต้องเติม HP ก่อน'},
+    {r:'common',e:'🛏️',t:'เก็บที่นอน + จัดโต๊ะ 5 นาที',s:'เควสเล็กแต่โมเมนตัมใหญ่'},
+    {r:'common',e:'🧾',t:'จดรายจ่ายวันนี้ให้ครบ',s:'รู้ตัวอีกทีเงินรั่วหยุดเอง'},
+    {r:'common',e:'📖',t:'อ่านหนังสือ 5 หน้า',s:'5 หน้าวันนี้ 10 เล่มปีหน้า'},
+    {r:'common',e:'🌤️',t:'เดินออกไปรับแดด 10 นาที',s:'ชาร์จวิตามินดีฟรีๆ'},
+    {r:'rare',e:'🎧',t:'ทำบีทดราฟ 1 อัน',s:'ไม่ต้องเพอร์เฟกต์ ขอแค่มีไฟล์'},
+    {r:'rare',e:'🎨',t:'วาดรูป / สเก็ตช์ 1 รูป',s:'ฝึกเส้นวันละรูป'},
+    {r:'rare',e:'💰',t:'ออมเงิน 100 บาท',s:'ทหารตัวแรกของกองทัพ'},
+    {r:'rare',e:'💬',t:'ทักหาเพื่อนที่ไม่ได้คุยนาน 1 คน',s:'ความสัมพันธ์ก็ต้อง DCA'},
+    {r:'rare',e:'📱',t:'ตัดคลิปสั้น / ลงสตอรี่ 1 อัน',s:'คอนเทนต์ดองไม่มีวันดัง'},
+    {r:'rare',e:'🎵',t:'สุ่มฟังบีท 3 เพลง',s:'เปิดห้องบีทแล้วกดสุ่มเลย',link:'./beat-select.html'},
+    {r:'epic',e:'💿',t:'ปล่อยบีทลงร้าน 1 อัน',s:'ของเสร็จดีกว่าของเพอร์เฟกต์ที่ไม่มี'},
+    {r:'epic',e:'🚀',t:'ลงคอนเทนต์ 1 โพสต์',s:'วันนี้ต้องมีอะไรออกสู่โลก 1 อย่าง'},
+    {r:'epic',e:'🎸',t:'ออกไปเปิดหมวก 1 ชม.',s:'เงินสด + คอนเทนต์ + ประสบการณ์'},
+    {r:'epic',e:'🎚️',t:'มิกซ์เพลงค้างให้จบ 1 เพลง',s:'ปิดจ๊อบค้างให้ได้ 1 งาน'},
+    {r:'legendary',e:'🌟',t:'ปล่อยเพลงเต็ม 1 เพลง',s:'SSR ของตู้ กล้าปล่อยมั้ยล่ะ'},
+    {r:'legendary',e:'🖋️',t:'รับงานสัก 1 ลาย',s:'เงินก้อน high-ticket รออยู่'},
+    {r:'legendary',e:'📡',t:'ไลฟ์คุยกับคนดู 1 ชม.',s:'เปิดกล้องแล้วเป็นตัวเอง'},
+    {r:'legendary',e:'📈',t:'DCA หุ้นตามแผน 1 ไม้',s:'วินัยการเงิน = วินัยชีวิต'}
+  ];
+  var KEY='et1cruel-gacha-v1';
+  var S={total:0,epic:0,leg:0,since:0,hist:[]};
+  function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s.total==='number')S=s;}catch(e){}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function rollRarity(){
+    if(S.since>=9) return Math.random()<0.72?'epic':'legendary';
+    var x=Math.random()*100;
+    if(x<55) return 'common';
+    if(x<82) return 'rare';
+    if(x<95) return 'epic';
+    return 'legendary';
+  }
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function renderStats(){
+    if(elTotal)elTotal.textContent=S.total;
+    if(elEpic)elEpic.textContent=S.epic;
+    if(elLeg)elLeg.textContent=S.leg;
+    var left=10-S.since;
+    if(elPity&&elPity.firstChild)elPity.firstChild.textContent='อีก '+left+' โรลการันตี EPIC+ 💜';
+    if(elPityBar)elPityBar.style.width=(S.since*10)+'%';
+  }
+  function renderHist(){
+    if(!elHist) return;
+    if(!S.hist.length){elHist.innerHTML='<li class="r-common">ยังไม่เคยหมุนเลย — โรลแรกมารออยู่ 🎰</li>';return;}
+    elHist.innerHTML=S.hist.map(function(h){
+      return '<li class="'+h.r+'">'+h.e+' '+esc(h.t)+'<small>'+RNAME[h.r]+'</small></li>';
+    }).join('');
+  }
+  function showDrop(d){
+    ball.className='gacha-ball r-'+d.r;
+    ball.textContent=d.e;
+    var link=d.link?'<br><a class="gr-link" href="'+d.link+'">→ ไปห้องบีท 🎧</a>':'';
+    result.innerHTML='<div class="gr-card r-'+d.r+'">'
+      +'<div class="gr-name">'+d.e+' '+esc(d.t)+'</div>'
+      +'<div class="gr-sub">'+esc(d.s)+'</div>'
+      +'<span class="gr-tag r-'+d.r+'">'+RNAME[d.r]+'</span>'+link+'</div>';
+  }
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  btn.addEventListener('click',function(){
+    btn.disabled=true;
+    machine.classList.remove('shaking');void machine.offsetWidth;machine.classList.add('shaking');
+    setTimeout(function(){
+      var rar=rollRarity();
+      var cands=POOL.filter(function(p){return p.r===rar;});
+      var d=cands[Math.floor(Math.random()*cands.length)];
+      S.total++;
+      if(rar==='epic'||rar==='legendary'){S.epic++;S.since=0;}else{S.since++;}
+      if(rar==='legendary')S.leg++;
+      S.hist.unshift({r:rar,e:d.e,t:d.t});
+      if(S.hist.length>10)S.hist.length=10;
+      save();renderStats();renderHist();showDrop(d);
+      machine.classList.remove('shaking');
+      btn.disabled=false;
+    },reduce?60:850);
+  });
+  if(btnClear)btnClear.addEventListener('click',function(){
+    S={total:0,epic:0,leg:0,since:0,hist:[]};
+    save();renderStats();renderHist();
+  });
+  load();renderStats();renderHist();
+})();
+</script>
+<script>
+/* ===== MEMENTO MORI — ปฏิทินชีวิต ⏳ ===== */
+(function(){
+  var birth=document.getElementById('memBirth');
+  var target=document.getElementById('memTarget');
+  var btn=document.getElementById('memSave');
+  var grid=document.getElementById('memGrid');
+  if(!grid||!btn) return;
+  var elLived=document.getElementById('memLived');
+  var elLeft=document.getElementById('memLeft');
+  var elPct=document.getElementById('memPct');
+  var elAwake=document.getElementById('memAwake');
+  var elQuote=document.getElementById('memQuote');
+  var elCount=document.getElementById('memCount');
+  var KEY='et1cruel-memento-v1';
+  var QUOTES=[
+    '“มึงไม่มีเวลามากพอที่จะรอให้พร้อม”',
+    '“จำไว้ว่ามึงต้องตาย — แล้วมึงจะรู้ว่าต้องทำอะไรวันนี้”',
+    '“เวลาผ่านไปไม่เคยขอโทษ อย่าปล่อยให้มันผ่านไปเฉยๆ”',
+    '“ชีวิตสั้น ศิลปะยืนยาว — ทำสิ่งที่อยู่ต่อหลังมึงตาย”'
+  ];
+  function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+  function render(){
+    var T=parseInt(target.value,10)||80;
+    var now=new Date();
+    var start=birth.value?new Date(birth.value+'T00:00:00'):null;
+    if(start&&isNaN(start.getTime()))start=null;
+    grid.innerHTML='';
+    for(var y=0;y<T;y++){
+      for(var m=0;m<12;m++){
+        var c=document.createElement('div');
+        c.className='mem-cell'+((y%10===0&&m===0)?' decade':'');
+        if(start){
+          var d=new Date(start.getFullYear()+y,start.getMonth()+m,1);
+          var nx=new Date(d.getFullYear(),d.getMonth()+1,1);
+          if(nx<=now){c.className+=' lived';}
+          else if(d<=now){c.className+=' now';c.title='มึงอยู่ตรงนี้ — อายุ '+y+' ปี '+(m+1)+' เดือน';}
+        }
+        grid.appendChild(c);
+      }
+    }
+    if(start){
+      var livedD=Math.max(0,Math.floor((now-start)/86400000));
+      var totalD=Math.round(T*365.25);
+      var leftD=Math.max(0,totalD-livedD);
+      elLived.textContent=fmt(livedD);
+      elLeft.textContent=fmt(leftD);
+      elPct.textContent=(livedD/totalD*100).toFixed(1)+'%';
+      elAwake.textContent=fmt(Math.floor(leftD*2/3));
+      if(elCount)elCount.textContent=fmt(T*52)+' WEEKS';
+    }else{
+      elLived.textContent='—';elLeft.textContent='—';elPct.textContent='—';elAwake.textContent='—';
+      if(elCount)elCount.textContent='LIFE MAP';
+    }
+    var dayIdx=Math.floor(now.getTime()/86400000);
+    if(elQuote)elQuote.textContent=QUOTES[dayIdx%QUOTES.length];
+    try{localStorage.setItem(KEY,JSON.stringify({b:birth.value,t:target.value}));}catch(e){}
+  }
+  btn.addEventListener('click',render);
+  try{
+    var s=JSON.parse(localStorage.getItem(KEY));
+    if(s){if(s.b)birth.value=s.b;if(s.t)target.value=s.t;}
+  }catch(e){}
+  render();
+})();
+</script>
+<script>
+/* ===== NPC มอร์ตี้ — เพื่อนประจำเว็บ 🧠 ===== */
+(function(){
+  // รอ DOM เกิดครบก่อน (ปุ่ม #npcFab อยู่ท้าย body หลังสคริปต์นี้) — ไม่งั้น getElementById เจอ null แล้วออกเงียบๆ
+  function boot(){
+  var fab=document.getElementById('npcFab');
+  var pop=document.getElementById('npcPop');
+  var body=document.getElementById('npcBody');
+  var face=document.getElementById('npcFace');
+  var status=document.getElementById('npcStatus');
+  var closeBtn=document.getElementById('npcClose');
+  if(!fab||!pop||!body) return;
+  var KEY='et1cruel-npc-v1';
+  var S={streak:0,lastDone:'',accepted:''};
+  function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s.streak==='number')S=s;}catch(e){}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function dayStr(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+  function today(){return dayStr(new Date());}
+  function yesterday(){var d=new Date();d.setDate(d.getDate()-1);return dayStr(d);}
+  var DQUESTS=[
+    {e:'📝',t:'ทบทวนสัปดาห์ + เขียนแผนสัปดาห์หน้า 3 ข้อ',s:'วันอาทิตย์ = วันวางแผนบอส'},
+    {e:'🎧',t:'ทำบีทดราฟ 1 อัน ไม่ต้องเพอร์เฟกต์',s:'วันจันทร์เปิดสัปดาห์ด้วยบีท'},
+    {e:'🏃',t:'ออกกำลังกาย 20 นาที',s:'วันอังคาร = วันเลี้ยงตัวละครหลัก'},
+    {e:'🎨',t:'วาดรูป / สเก็ตช์ 1 รูป',s:'วันพุธฝึกเส้น'},
+    {e:'💰',t:'จดรายจ่าย + ออม 100 บาท',s:'วันพฤหัส = วันเงิน'},
+    {e:'🚀',t:'ลงคอนเทนต์ 1 โพสต์',s:'วันศุกร์ปล่อยของสู่โลก'},
+    {e:'🎸',t:'ทำเพลง / เปิดหมวก 1 ชม.',s:'วันเสาร์ลุยของจริง'}
+  ];
+  var CHATS=[
+    'เควสค้างในหน้านี้เพียบนะ ไปเคลียร์ซะบ้างล่ะ 📋',
+    'ลองไปหมุนตู้กาชามั้ย ตู้มันเหงา 🎰',
+    'สวนคำคมมี 125 ใบแล้ว อ่านครบยัง 💌',
+    'พอร์ตหุ้นวันนี้เป็นไง แวะไปดูหน่อย 📈',
+    'ไดอารี่วันนี้เขียนยัง 1 บรรทัดก็ได้ 📓',
+    'น้ำดื่มรึยัง ตัวละครหลักขาดน้ำไม่ได้นะ 💧',
+    'ปฏิทินชีวิตดูรึยัง เวลาไม่รอใครนะ ⏳'
+  ];
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function scrollDown(){body.scrollTop=body.scrollHeight;}
+  function say(text,who){
+    who=who||'npc';
+    var div=document.createElement('div');
+    div.className='npc-msg '+who;
+    body.appendChild(div);
+    if(who==='me'||reduce){div.textContent=text;scrollDown();return;}
+    var chars=Array.from(text);var i=0;
+    div.innerHTML='<span class="txt"></span><span class="cursor">▌</span>';
+    var txt=div.querySelector('.txt');
+    var timer=setInterval(function(){
+      i+=2;
+      txt.textContent=chars.slice(0,i).join('');
+      scrollDown();
+      if(i>=chars.length){clearInterval(timer);var cur=div.querySelector('.cursor');if(cur)cur.parentNode.removeChild(cur);}
+    },18);
+  }
+  function faceByTime(){
+    var h=new Date().getHours();
+    if(h>=5&&h<12)return '☀️';
+    if(h>=22||h<5)return '🌙';
+    return '🧠';
+  }
+  function greet(){
+    face.textContent=faceByTime();
+    var h=new Date().getHours();
+    var t=h>=5&&h<12?'เช้า':(h>=12&&h<17?'บ่าย':(h>=17&&h<22?'เย็น':'ดึก'));
+    say('โอ้ย ตื่น'+t+'แล้วเรอะนักผจญภัย! ข้าคือมอร์ตี้ NPC ประจำเว็บนี้ มีอะไรก็จิ้มปุ่มข้างล่างได้เลย 🧠');
+  }
+  function ping(){fab.classList.toggle('has-news',S.accepted!==today());}
+  function questBox(){
+    var old=document.getElementById('npcQuest');
+    if(old)old.parentNode.removeChild(old);
+    var q=DQUESTS[new Date().getDay()];
+    var box=document.createElement('div');
+    box.id='npcQuest';
+    var t=today();
+    if(S.accepted===t&&S.lastDone===t){
+      box.innerHTML='✅ เควสวันนี้เสร็จแล้ว! '+q.e+' '+q.t+'<small>🔥 สตรีค: '+S.streak+' วัน — พรุ่งนี้มาใหม่นะ</small>';
+    }else if(S.accepted===t){
+      box.innerHTML=q.e+' '+q.t+'<small>'+q.s+' · รับมาแล้ว เหลือแค่ไปทำ!</small>';
+      var done=document.createElement('button');
+      done.type='button';done.className='qbtn primary';done.style.marginTop='8px';done.textContent='✅ ทำเสร็จแล้ว!';
+      done.addEventListener('click',function(){
+        var prev=S.lastDone;
+        S.lastDone=t;
+        S.streak=(prev===yesterday())?S.streak+1:1;
+        save();
+        face.textContent='🎉';
+        if(status)status.textContent='🔥 สตรีค '+S.streak+' วัน!';
+        say('เย้! เควสเคลียร์! สตรีค '+S.streak+' วันแล้ว เก่งมาก 🎉');
+        questBox();
+        ping();
+      });
+      box.appendChild(done);
+    }else{
+      box.innerHTML='🎲 เควสประจำวันนี้: '+q.e+' '+q.t+'<small>'+q.s+'</small>';
+      var take=document.createElement('button');
+      take.type='button';take.className='qbtn primary';take.style.marginTop='8px';take.textContent='🙋 รับเควส!';
+      take.addEventListener('click',function(){
+        S.accepted=t;save();
+        say('รับเควสแล้ว! อย่าเบี้ยวนะ ข้าจับตาดูอยู่ 👀');
+        questBox();
+        ping();
+      });
+      box.appendChild(take);
+    }
+    body.appendChild(box);
+    scrollDown();
+  }
+  function giveQuote(){
+    var cards=document.querySelectorAll('#quoteGrid .quote-card .qtext');
+    var subs=document.querySelectorAll('#quoteGrid .quote-card small');
+    if(cards.length){
+      var i=Math.floor(Math.random()*cards.length);
+      var t=cards[i].textContent.trim();
+      var s=subs[i]?subs[i].textContent.trim():'';
+      say('“'+t+'” ♡'+(s?' — '+s:''));
+    }else{
+      say('“วันนี้ไม่ต้องเก่งกว่าใคร แค่เก่งกว่าเมื่อวานนิดเดียวก็พอ” ♡');
+    }
+  }
+  fab.addEventListener('click',function(){
+    var willOpen=!pop.classList.contains('open');
+    pop.classList.toggle('open');
+    if(willOpen&&!body.hasChildNodes()){greet();if(S.accepted!==today())questBox();}
+  });
+  if(closeBtn)closeBtn.addEventListener('click',function(){pop.classList.remove('open');});
+  document.querySelectorAll('#npcBtns button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var k=b.getAttribute('data-npc');
+      if(k==='quest'){say('เควสวันนี้สินะ ได้เลย! 🎲','me');questBox();}
+      else if(k==='quote'){say('ขอคำคมหน่อย','me');giveQuote();}
+      else if(k==='chat'){say('คุยเล่นหน่อย','me');say(CHATS[Math.floor(Math.random()*CHATS.length)]);}
+      else if(k==='who'){say('มึงคือใครวะ','me');say('ข้าคือมอร์ตี้ ย่อมาจาก Memento Mori — เกิดมาเตือนมึงว่าเวลามีจำกัด เลยต้องใช้ทุกวันให้คุ้ม ⏳ ข้าเฝ้าเว็บนี้ 24 ชม. ไม่ต้องนอน ไม่บ่น แถมจำสตรีคมึงได้ด้วย 😤');}
+    });
+  });
+  load();
+  ping();
+  if(status)status.textContent=S.streak>0?('🔥 สตรีค '+S.streak+' วัน!'):'เฝ้าเว็บอยู่ · รู้ทุกซอกทุกมุม';
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}else{boot();}
+})();
+</script>
+<script defer src="js/life-os-os.js"></script>
+<script defer src="js/sky-breaks.js"></script>
+<script defer src="js/diary.js"></script>
+<script defer src="js/stock-talk.js"></script>
+<script defer src="js/port.js"></script>
+<script defer src="js/watch.js"></script>
+<script defer src="js/shield.js"></script>
+<script defer src="js/sp500.js"></script>
+<script defer src="js/money-tree.js"></script>
+<script defer src="js/ambient.js"></script>
+<script defer src="js/tv-widgets.js"></script>
 <script defer src="fx/forest.js"></script>
 <script defer src="fx/mouse.js"></script>
 <script defer src="fx/audio.js"></script>
+<!-- NPC ประจำเว็บ -->
+<button type="button" id="npcFab" aria-label="คุยกับมอร์ตี้">🧠<span class="ping"></span></button>
+<div id="npcPop" role="dialog" aria-label="คุยกับมอร์ตี้">
+  <div id="npcHead"><span id="npcFace">🧠</span><div><b>มอร์ตี้ · NPC ประจำเว็บ</b><small id="npcStatus">เฝ้าเว็บอยู่ · รู้ทุกซอกทุกมุม</small></div><button type="button" id="npcClose">ปิด</button></div>
+  <div id="npcBody"></div>
+  <div id="npcBtns">
+    <button type="button" data-npc="quest">🎲 เควสวันนี้</button>
+    <button type="button" data-npc="quote">💌 ขอคำคม</button>
+    <button type="button" data-npc="chat">💬 คุยเล่น</button>
+    <button type="button" data-npc="who">❓ มึงคือใคร</button>
+  </div>
+</div>
 <div id="os-toasts"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
 <button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆ QUEST</button>
@@ -1519,5 +2553,23 @@ function apply(){
   <form class="chat-form" id="popForm"><input id="popInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง">↑</button></form>
   <div class="chat-note">ราคาสด: หุ้น TradingView · คริปโต CoinGecko · ไม่ใช่คำแนะนำการลงทุน</div>
 </div>
+<div class="command-console" id="commandConsole" hidden>
+  <div class="command-backdrop" data-command-close></div>
+  <section class="command-panel" role="dialog" aria-modal="true" aria-labelledby="commandTitle" aria-describedby="commandHelp">
+    <header class="command-head"><div><span class="command-kicker">ET1CRUEL · NAVIGATION CORE</span><h2 id="commandTitle">Command Console</h2></div><button type="button" class="command-close" data-command-close aria-label="ปิดคอนโซล">ESC</button></header>
+    <label class="command-search"><span aria-hidden="true">⌕</span><input id="commandInput" type="search" role="combobox" aria-expanded="false" autocomplete="off" placeholder="ค้นหาห้องหรือหมวดข้อมูล..." aria-label="ค้นหาห้องและหมวดต่าง ๆ" aria-controls="commandResults" aria-autocomplete="list"><kbd>↵</kbd></label>
+    <div class="command-meta"><span>QUICK JUMP</span><span id="commandCount">กำลังเชื่อมต่อแผนที่...</span></div>
+    <div class="command-results" id="commandResults" role="listbox" aria-label="ผลการค้นหา"></div>
+    <div class="command-help" id="commandHelp"><span><kbd>↑</kbd><kbd>↓</kbd> เลือก</span><span><kbd>ENTER</kbd> ไปยังห้อง</span><span><kbd>ESC</kbd> ปิด</span></div>
+  </section>
+</div>
+<script>
+// ลงทะเบียน service worker แบบกันพัง — มีแล้วเปิดซ้ำไวขึ้น ไม่มีก็ใช้งานได้ปกติ
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

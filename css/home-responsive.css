@@ -1,0 +1,175 @@
+/* Home page touch layout. Keep the desktop RPG HUD unchanged. */
+@media (max-width: 700px) {
+  html,
+  body { overflow-x: clip; }
+
+  body .wrap {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 12px calc(82px + env(safe-area-inset-bottom));
+  }
+
+  body .topbar {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    grid-template-areas: "logo identity money" "search search search";
+    align-items: center;
+    gap: 9px 8px;
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  body .topbar > .logo {
+    grid-area: logo;
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  body .topbar > div:nth-child(2) {
+    grid-area: identity;
+    min-width: 0;
+  }
+
+  body .topbar .lv {
+    display: inline-block;
+    margin-bottom: 2px;
+    padding: 2px 7px;
+    font-size: 9px;
+  }
+
+  body .topbar b {
+    display: block;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body .topbar small {
+    overflow: hidden;
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body .topbar .hudbars { display: none; }
+
+  body .topbar .money-hud {
+    grid-area: money;
+    margin: 0;
+    padding: 6px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  body .topbar .search {
+    grid-area: search;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+  }
+
+  body .topbar .search .filters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body .topbar .search .fbtn {
+    min-width: 0;
+    padding: 7px 4px;
+    font-size: 11px;
+  }
+
+  body .topbar .search input {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    padding: 8px 11px;
+    font-size: 13px;
+  }
+
+  body .hero-left { padding: 25px 18px 22px; }
+  body .hero-right { padding: 20px 17px; }
+  body .hero-left h1 {
+    font-size: clamp(31px, 8vw, 40px);
+    line-height: 1.35;
+    animation: none;
+  }
+  body .lead { font-size: 15px; line-height: 1.8; }
+  body .hero-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  body .hero-cta a { padding: 9px 6px; font-size: 12px; text-align: center; }
+  body .kpis { gap: 8px; }
+  body .kpi { min-width: 0; padding: 12px; }
+  body .kpi small { font-size: 11px; }
+  body .kpi strong { font-size: 21px; }
+
+  #qtracker {
+    right: 8px;
+    bottom: calc(62px + env(safe-area-inset-bottom));
+    width: min(224px, calc(100vw - 16px));
+    max-height: 32vh;
+    overflow: auto;
+    padding: 10px 10px 8px;
+  }
+
+  #qtracker h4 { gap: 5px; margin-bottom: 6px; font-size: 10px; }
+  #qtracker h4 .qmin { min-width: 32px; height: 32px; }
+  #qtracker li a { font-size: 12px; }
+  #qtracker li a small { font-size: 10px; }
+
+  body #treeFab,
+  body #ambientFab,
+  body #npcFab,
+  body #forestFab,
+  body #stockFab {
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  body #treeFab { left: calc(50% - 130px); right: auto; }
+  body #ambientFab { left: calc(50% - 76px); right: auto; }
+  body #npcFab { left: calc(50% - 22px); right: auto; }
+  body #forestFab { left: calc(50% + 32px); right: auto; }
+  body #stockFab { left: calc(50% + 86px); right: auto; }
+
+  #treePop,
+  #ambientPop,
+  #npcPop,
+  #forestPop,
+  #stockPop {
+    bottom: calc(62px + env(safe-area-inset-bottom));
+    max-height: min(68vh, 560px);
+    overflow: auto;
+  }
+
+  #treePop,
+  #ambientPop,
+  #npcPop { left: 10px; }
+  #forestPop,
+  #stockPop { right: 10px; }
+}
+
+@media (max-width: 360px) {
+  body .wrap { padding-right: 9px; padding-left: 9px; }
+  body .topbar { grid-template-columns: 38px minmax(0, 1fr) auto; padding: 8px; }
+  body .topbar > .logo { width: 38px; height: 38px; flex-basis: 38px; }
+  body .topbar .money-hud { padding: 5px 6px; font-size: 11px; }
+  body .hero-left { padding-right: 14px; padding-left: 14px; }
+  body #treeFab { left: calc(50% - 130px); }
+  body #ambientFab { left: calc(50% - 76px); }
+  body #npcFab { left: calc(50% - 22px); }
+  body #forestFab { left: calc(50% + 32px); }
+  body #stockFab { left: calc(50% + 86px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .hero-left h1 { animation: none !important; }
+}

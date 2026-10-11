@@ -1,0 +1,55 @@
+/* ET1CRUEL service worker — แคชไฟล์ต้นทาง (same-origin) อย่างเดียว
+ *  progressive enhancement: ไม่มี SW เว็บก็ทำงานปกติทุกอย่าง
+ *  HTML = network-first (กันติดหน้าเก่า) · JS/CSS/รูป/ฟอนต์ = cache-first */
+var CACHE = 'et1cruel-v15';
+var CORE = ['index.html', 'css/life-os-os.css', 'css/stock-os.css', 'fx/fx.css', 'css/home-responsive.css', 'css/site-polish.css', 'css/command-deck.css', 'js/hero-clock.js', 'js/command-console.js', 'js/reactive-lens.js', 'js/site-polish.js'];
+
+self.addEventListener('install', function (e) {
+  e.waitUntil(
+    caches.open(CACHE).then(function (c) { return c.addAll(CORE); })
+      .then(function () { return self.skipWaiting(); })
+      .catch(function () {})
+  );
+});
+
+self.addEventListener('activate', function (e) {
+  e.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(keys.map(function (k) {
+        if (k !== CACHE) return caches.delete(k);
+      }));
+    }).then(function () { return self.clients.claim(); })
+  );
+});
+
+self.addEventListener('fetch', function (e) {
+  var req = e.request;
+  if (req.method !== 'GET') return;
+  var url;
+  try { url = new URL(req.url); } catch (err) { return; }
+  if (url.origin !== self.location.origin) return; // ข้าม CDN/API/ฟอนต์
+  // หน้า HTML: เน็ตกอน แคชสำรอง
+  if (req.mode === 'navigate' || (req.headers.get('accept') || '').indexOf('text/html') !== -1) {
+    e.respondWith(
+      fetch(req).then(function (res) {
+        var copy = res.clone();
+        caches.open(CACHE).then(function (c) { c.put(req, copy); });
+        return res;
+      }).catch(function () { return caches.match(req).then(function (r) { return r || caches.match('index.html'); }); })
+    );
+    return;
+  }
+  // ไฟล์ static: แคชก่อน เน็ตเติมทีหลัง
+  e.respondWith(
+    caches.match(req).then(function (hit) {
+      if (hit) return hit;
+      return fetch(req).then(function (res) {
+        if (res && (res.status === 200 || res.type === 'opaque')) {
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(req, copy); });
+        }
+        return res;
+      });
+    })
+  );
+});

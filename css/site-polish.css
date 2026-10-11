@@ -1,0 +1,84 @@
+/* ET1CRUEL shared interaction and typography layer.
+   Individual rooms keep their own atmosphere; this layer makes them feel related. */
+body.site-polish {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.site-polish :where(h1, h2, h3) { text-wrap: balance; }
+body.site-polish :where(section[id], details[id]) { scroll-margin-top: 5rem; }
+body.site-polish ::selection { background: rgba(141, 240, 177, .28); color: inherit; }
+body.site-polish :where(button, input, select, textarea, a) { -webkit-tap-highlight-color: transparent; }
+body.site-polish :where(button, input, select, textarea) { font-family: inherit; }
+body.site-polish :where(input, select, textarea) {
+  transition: border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+body.site-polish :where(button, .btn, .tab, .chip, .fbtn, .toc a, .topbar a,
+  .backbar a, .nav a, .sidenav a, .explore a, .amb-btn, .select-btn, .quiet, .save) {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .18s ease, filter .18s ease, border-color .18s ease,
+    color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+body.site-polish :where(button, .btn, .tab, .chip, .fbtn, .toc a, .topbar a,
+  .backbar a, .nav a, .sidenav a, .explore a, .amb-btn, .select-btn, .quiet, .save):active {
+  transform: translateY(1px) scale(.99);
+}
+body.site-polish :where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--gold, #eacb78);
+  outline-offset: 3px;
+}
+body.site-polish { scrollbar-color: #52604f #0b0d12; }
+body.site-polish::-webkit-scrollbar { width: 11px; }
+body.site-polish::-webkit-scrollbar-track { background: #0b0d12; }
+body.site-polish::-webkit-scrollbar-thumb { background: #3c493e; border: 3px solid #0b0d12; border-radius: 99px; }
+body.site-polish::-webkit-scrollbar-thumb:hover { background: #71836e; }
+
+/* Portal jump between rooms: one short, GPU-friendly transition on real navigation. */
+.warp-transition { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; overflow: hidden; pointer-events: none; opacity: 0; visibility: hidden; background: radial-gradient(circle at center, rgba(7, 12, 20, .96), rgba(4, 7, 12, .99) 58%); }
+.warp-transition::before { position: absolute; inset: -40%; content: ''; opacity: 0; background: repeating-conic-gradient(from 0deg at center, transparent 0deg 7deg, rgba(141, 240, 177, .13) 7.3deg 7.6deg, transparent 8deg 15deg); transform: scale(.1) rotate(-18deg); }
+.warp-ring { position: absolute; width: min(34vw, 280px); aspect-ratio: 1; border: 1px solid rgba(141, 240, 177, .65); border-radius: 50%; box-shadow: 0 0 32px rgba(141, 240, 177, .12), inset 0 0 32px rgba(141, 240, 177, .12); opacity: 0; transform: scale(.2) rotate(-28deg); }
+.warp-ring-a { border-style: dashed; }
+.warp-ring-b { width: min(23vw, 190px); border-color: rgba(156, 185, 255, .7); transform: scale(.2) rotate(32deg); }
+.warp-core { width: 9px; aspect-ratio: 1; border-radius: 50%; background: #d9ffe6; box-shadow: 0 0 12px 5px #8df0b1, 0 0 54px 22px rgba(76, 167, 255, .48); transform: scale(.2); opacity: 0; }
+.warp-label { position: absolute; top: calc(50% + min(20vw, 170px)); color: #bbf7d0; font: 600 10px/1.4 'Chakra Petch', sans-serif; letter-spacing: .2em; opacity: 0; transform: translateY(5px); }
+body.is-warping .warp-transition { opacity: 1; visibility: visible; }
+body.is-warping .warp-transition::before { animation: warp-tunnel .36s ease-in both; }
+body.is-warping .warp-ring-a { animation: warp-ring .36s cubic-bezier(.16,.72,.25,1) both; }
+body.is-warping .warp-ring-b { animation: warp-ring .36s cubic-bezier(.16,.72,.25,1) .025s both; }
+body.is-warping .warp-core { animation: warp-core .36s ease-in both; }
+body.is-warping .warp-label { animation: warp-label .36s ease-out both; }
+@keyframes warp-tunnel { 0% { opacity: 0; transform: scale(.1) rotate(-18deg); } 28% { opacity: .75; } 100% { opacity: 0; transform: scale(1.1) rotate(0); } }
+@keyframes warp-ring { 0% { opacity: 0; transform: scale(.18) rotate(-28deg); } 24% { opacity: .95; } 100% { opacity: 0; transform: scale(2.8) rotate(12deg); } }
+@keyframes warp-core { 0% { opacity: 0; transform: scale(.2); } 38% { opacity: 1; transform: scale(1.3); } 100% { opacity: 0; transform: scale(18); } }
+@keyframes warp-label { 0%, 18% { opacity: 0; transform: translateY(5px); } 45% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-3px); } }
+@media (max-width: 420px) {
+  body.site-polish .shell > .top { flex-wrap: wrap; align-items: center; }
+  body.site-polish .shell > .top .brand,
+  body.site-polish .shell > .top .back { white-space: nowrap; }
+  body.site-polish .shell > .top .back { font-size: 12px; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.site-polish :where(button, .btn, .tab, .chip, .fbtn, .toc a,
+    .amb-btn, .select-btn, .quiet, .save):hover { filter: brightness(1.08); }
+}
+
+/* The script adds this class only after confirming motion is allowed. */
+body.site-polish .site-reveal {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity .55s cubic-bezier(.22, 1, .36, 1),
+    transform .65s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+body.site-polish .site-reveal.is-visible { opacity: 1; transform: translate3d(0, 0, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  body.site-polish .site-reveal { opacity: 1; transform: none; transition: none; }
+  body.site-polish :where(button, .btn, .tab, .chip, .fbtn, .toc a,
+    .topbar a, .backbar a, .nav a, .sidenav a, .explore a, .amb-btn,
+    .select-btn, .quiet, .save) { transition: none; }
+  .warp-transition { display: none; }
+}
