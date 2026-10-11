@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://et1cruel.github.io/ET1CRUEL/sitemap.xml

@@ -1,0 +1,15 @@
+{
+  "name": "ET1CRUEL · QUEST LOG RPG — ระบบชีวิตสายเกม",
+  "short_name": "ET1CRUEL",
+  "description": "บีท 22 เพลง · แผนสู่พอร์ต 1M · เควสชีวิต · ไดอารี่รายวัน — ระบบชีวิตสายเกมของ ET1CRUEL",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08090E",
+  "theme_color": "#08090E",
+  "lang": "th",
+  "icons": [
+    { "src": "logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
