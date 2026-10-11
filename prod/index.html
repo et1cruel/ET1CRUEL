@@ -201,13 +201,13 @@ var SEED = [
 ['2025-09-23','com','รับทำบีท',700],['2025-09-30','com','รับทำบีท',700],
 ['2025-10-02','com','รับทำบีท',700],['2025-10-02','com','รับทำบีท',700],
 ['2025-10-06','com','รับทำบีท',600],['2025-10-06','com','รับทำบีท',500],
-['2025-10-14','com','รับทำบีท',150],['2025-10-15','com','รับทำบีท',100],
+['2025-10-14','setup','รับลงโปรแกรม',150],['2025-10-15','com','รับทำบีท',100],
 ['2025-10-23','com','รับทำบีท',700],
 ['2025-10-24','com','รับทำบีท',600],['2025-10-24','com','รับทำบีท',700],
 ['2025-10-30','teach','สอนทำเพลง',1000],['2025-11-04','com','รับทำบีท',500],
 ['2025-12-01','com','รับทำบีท',800],['2025-12-10','com','รับทำบีท',700],
-['2025-12-15','com','รับทำบีท',200],['2025-12-15','com','รับทำบีท',250],
-['2026-01-10','com','รับทำบีท',200],['2026-01-10','setup','program plugin preset',200],
+['2025-12-15','setup','รับลงโปรแกรม',200],['2025-12-15','com','รับทำบีท',250],
+['2026-01-10','setup','รับลงโปรแกรม',200],['2026-01-10','setup','program plugin preset',200],
 ['2026-02-09','mix','mix and master',500],['2026-02-10','com','beat lil peep lill tracy',800],
 ['2026-02-16','teach','beat teaching',1000],['2026-02-16','com','beat et1cruel',1100],
 ['2026-02-28','teach','mixing teaching',1000],
@@ -228,6 +228,20 @@ if (!load('prod-seeded-v1', null)) {
     save('prod-income', incomes);
   }
   save('prod-seeded-v1', 1);
+}
+if (!load('prod-seeded-v2', null)) {
+  var seedType = {};
+  SEED.forEach(function(s, i){ seedType['s' + i] = s[1]; });
+  var changed = false;
+  incomes.forEach(function(r){
+    if (seedType[r.id] && r.type !== seedType[r.id]) {
+      r.type = seedType[r.id];
+      if (r.desc === 'รับทำบีท' && r.type === 'setup') r.desc = 'รับลงโปรแกรม';
+      changed = true;
+    }
+  });
+  if (changed) save('prod-income', incomes);
+  save('prod-seeded-v2', 1);
 }
 function fmt(n){ return Number(n||0).toLocaleString('en-US') + ' ฿'; }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
