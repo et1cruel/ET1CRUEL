@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8 หลัก · 4 งานหลัก + 4 งานอดิเรก | ET1CRUEL</title>
+<meta name="description" content="8 หลัก ET1CRUEL — งานบีท งานวีดีโอ งานเพลง งานสัก + งานคอนเท้น งานเสื้อผ้า งานเอไอ งานทำเว็บ งานไหนใช้อุปกรณ์อะไร มีอะไรแล้ว ขาดอะไร เช็กได้ในหน้าเดียว">
+<meta property="og:type" content="website">
+<meta property="og:title" content="8 หลัก · 4 งานหลัก + 4 งานอดิเรก | ET1CRUEL">
+<meta property="og:description" content="แผนที่อุปกรณ์ทั้ง 8 หลัก — งานไหนใช้อะไร มีแล้วกี่ชิ้น ขาดกี่ชิ้น">
+<meta property="og:image" content="https://et1cruel.github.io/ET1CRUEL/banner.webp">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --gold:#4ADE80; --gold-dim:#166534; --amber:#FBBF24; --red:#F87171;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(1000px 420px at 15% -5%,rgba(74,222,128,.12),transparent 60%),var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:18px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 22px 90px}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);
+  border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.topbar a{color:var(--gold);text-decoration:none;font-weight:700;font-size:15px;border:1px solid #3d4666;border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar a:hover{border-color:var(--gold)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff}
+header.hero{margin:26px 0 8px}
+header.hero h1{font-size:38px;line-height:1.35;color:#fff}
+header.hero h1 span{color:var(--gold)}
+header.hero p{color:#E2E8FA;font-size:18px;margin-top:12px;max-width:72ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 6px}
+.toc a{font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid #3d4666;border-radius:20px;padding:6px 14px;background:#0B0D14}
+.toc a:hover{color:var(--gold);border-color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 4px}
+.stat{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:14px;text-align:center}
+.stat small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:28px;color:var(--gold);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted);font-weight:600}
+.stat .bar{height:8px;background:#1e2436;border:1px solid #343c58;border-radius:6px;overflow:hidden;margin-top:8px}
+.stat .bar i{display:block;height:100%;background:linear-gradient(90deg,#16a34a,var(--gold));transition:width .3s}
+details.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;
+  box-shadow:var(--shadow);margin:22px 0;overflow:hidden;scroll-margin-top:90px}
+details.card summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;padding:24px 26px}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary:hover{background:rgba(74,222,128,.04)}
+details.card summary .n{flex:0 0 46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#111;background:linear-gradient(180deg,var(--gold),#16a34a)}
+details.card summary h2{font-size:25px;color:#fff;flex:1;line-height:1.4}
+details.card summary h2 small{display:block;font-size:14px;color:var(--muted);font-weight:600}
+details.card summary .chev{color:var(--gold);font-size:20px;font-weight:800}
+details.card[open] summary .chev{transform:rotate(180deg)}
+.cbody{padding:0 26px 28px}
+/* ===== PILLAR CARDS ===== */
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pillar{border:2px solid #4a557e;border-radius:16px;padding:18px;background:linear-gradient(180deg,#222839,#151927);position:relative;overflow:hidden}
+.pillar::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--pc,#4ADE80)}
+.ptop{display:flex;gap:12px;align-items:center}
+.picon{flex:0 0 52px;width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;
+  background:linear-gradient(135deg,var(--pc,#4ADE80),var(--pc2,#166534));border:1px solid rgba(255,255,255,.25);
+  box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.ptop h3{font-size:19px;color:#fff;line-height:1.45}
+.ptop small{display:block;font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.pnum{margin-left:auto;flex:0 0 auto;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;color:var(--gold);
+  border:1px solid var(--gold-dim);border-radius:8px;padding:3px 10px;background:rgba(74,222,128,.07)}
+.pbar{height:9px;background:#080A10;border:1px solid #343c58;border-radius:6px;overflow:hidden;margin:12px 0 4px}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#16a34a,var(--gold));transition:width .3s}
+.pcount{font-size:13px;color:var(--muted);font-weight:700}
+.equip{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.eq{display:flex;gap:10px;align-items:center;background:#0B0D14;border:1.5px solid #3d4666;border-radius:12px;padding:10px 12px;cursor:pointer;user-select:none}
+.eq:hover{border-color:var(--gold)}
+.eq input{width:20px;height:20px;flex:0 0 20px;accent-color:#4ADE80;cursor:pointer}
+.eq span{flex:1;font-size:15.5px;font-weight:600;color:#fff;line-height:1.7}
+.eq.have{border-color:var(--gold-dim);background:rgba(74,222,128,.06)}
+.eq.have span{color:var(--gold);text-decoration:line-through;text-decoration-thickness:1.5px}
+.eq .tag{flex:0 0 auto;font-family:'Chakra Petch',sans-serif;font-size:10.5px;font-weight:700;border-radius:6px;padding:2px 9px;letter-spacing:.04em}
+.eq.have .tag{background:rgba(74,222,128,.14);color:#6EE7B7;border:1px solid var(--gold-dim)}
+.eq:not(.have) .tag{background:rgba(251,191,36,.1);color:var(--amber);border:1px solid #92600e}
+.eq .del{flex:0 0 auto;border:none;background:none;color:var(--muted);font-size:16px;cursor:pointer;padding:2px 6px;border-radius:6px}
+.eq .del:hover{color:var(--red);background:rgba(248,113,113,.1)}
+.addrow{display:flex;gap:8px;margin-top:10px}
+.addrow input{flex:1;min-width:0;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;
+  padding:10px 12px;font-family:inherit;font-size:14px;font-weight:600;outline:none}
+.addrow input:focus{border-color:var(--gold)}
+.addrow input::placeholder{color:#5d6785}
+.addrow button{flex:0 0 auto;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13.5px;border-radius:10px;padding:10px 16px;cursor:pointer;
+  border:1.5px solid var(--gold);background:linear-gradient(180deg,var(--gold),#16a34a);color:#111}
+/* ===== SHARED ===== */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 4px}
+.chip{font-size:14px;font-weight:700;border:1.5px solid #3A435C;border-radius:10px;padding:7px 15px;background:#0C0F18;color:#fff;font-family:'Chakra Petch',sans-serif}
+.chip b{color:var(--gold)}
+table.tl{width:100%;border-collapse:collapse;margin:14px 0;font-size:16.5px}
+table.tl th{text-align:left;font-family:'Chakra Petch',sans-serif;font-size:12.5px;letter-spacing:.08em;color:var(--gold);
+  padding:10px 8px;border-bottom:1px solid rgba(74,222,128,.3)}
+table.tl td{padding:11px 8px;border-bottom:1px solid #1c2130;color:#E2E8FA;vertical-align:top}
+.note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;
+  padding:18px 20px;font-size:16.5px;color:#fff;margin-top:16px;line-height:1.9}
+.note b{color:var(--gold)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
+footer a{color:var(--gold);text-decoration:none;font-weight:700}
+@media(max-width:900px){.pillars{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){
+  header.hero h1{font-size:28px}
+  body{font-size:17px}
+  details.card summary{padding:18px}
+  details.card summary h2{font-size:21px}
+  .cbody{padding:0 18px 22px}
+  .stat strong{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
+</head>
+<body class="site-polish">
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← หน้าแรก LIFE OS</a>
+  <span class="t">🧭 8 หลัก · งานหลัก + งานอดิเรก</span>
+</div>
+
+<header class="hero">
+  <h1>🧭 8 หลัก <span>— งานไหนใช้อะไร มีอะไรแล้ว</span></h1>
+  <p>แผนที่อุปกรณ์ทั้ง 8 หลัก — <b>หลัก 4</b> งานทำเงิน (บีท · วีดีโอ · เพลง · สัก) + <b>อดิเรก 4</b> (คอนเท้น · เสื้อผ้า · เอไอ · ทำเว็บ) · ติ๊กว่ามีแล้ว ของชิ้นไหนใช้ซ้ำหลายงานจะติ๊กให้ทุกงานเอง</p>
+  <nav class="toc">
+    <a href="#main">1 หลัก 4</a><a href="#hobby">2 อดิเรก 4</a><a href="#shared">3 อาวุธคุ้มสุด</a>
+  </nav>
+  <div class="stats">
+    <div class="stat"><small>◆ หลัก</small><strong class="num">4</strong><span>งานทำเงิน</span></div>
+    <div class="stat"><small>◆ อดิเรก</small><strong class="num">4</strong><span>งานรัก</span></div>
+    <div class="stat"><small>◆ อุปกรณ์</small><strong class="num" id="stTotal">…</strong><span>ชิ้นทั้งหมด</span></div>
+    <div class="stat"><small>◆ มีแล้ว</small><strong class="num" id="stHave">…</strong><span>พร้อมรบ</span><div class="bar"><i id="stBar" style="width:0%"></i></div></div>
+  </div>
+</header>
+
+<!-- 1 -->
+<details class="card" id="main" open>
+<summary><span class="n">⚔️</span><h2>หลัก 4 — งานทำเงิน<small>งานไหนใช้อุปกรณ์อะไร · ติ๊กเมื่อมีแล้ว</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="pillars" id="gridMain"></div>
+  <div class="note">⚔️ <b>กฎหลัก 4:</b> อุปกรณ์ของงานทำเงินต้อง <b>พร้อมใช้เสมอ</b> — พัง = ซ่อม/เช่าทันที ห้ามให้งานหยุดเพราะของ</div>
+</div>
+</details>
+
+<!-- 2 -->
+<details class="card" id="hobby" open>
+<summary><span class="n">🌱</span><h2>อดิเรก 4 — งานรัก<small>ทำเพราะชอบ วันไหนเป็นเงินคือโบนัส</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="pillars" id="gridHobby"></div>
+  <div class="note">🌱 <b>กฎอดิเรก:</b> ห้ามดึงเงินงานหลักมาลงอดิเรกเกินตัว — โตตามของที่มี <b>ใช้ของร่วมกับงานหลักให้คุ้ม</b> (คอม · กล้อง · ไมค์ ใช้ซ้ำได้)</div>
+</div>
+</details>
+
+<!-- 3 -->
+<details class="card" id="shared" open>
+<summary><span class="n">💎</span><h2>อาวุธคุ้มสุด — ชิ้นเดียวใช้หลายงาน<small>ซื้อ/ดูแลชิ้นพวกนี้ก่อน คุ้มสุด</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="chips">
+    <span class="chip">💻 คอม × <b>5 งาน</b> — บีท · เพลง · คอนเท้น · เอไอ · ทำเว็บ</span>
+    <span class="chip">📷 กล้อง × <b>2 งาน</b> — วีดีโอ · คอนเท้น</span>
+    <span class="chip">🎙️ ไมค์ × <b>2 งาน</b> — เพลง · คอนเท้น</span>
+  </div>
+  <table class="tl">
+    <thead><tr><th>อุปกรณ์</th><th>ใช้ในงาน</th><th>สถานะ</th></tr></thead>
+    <tbody id="sharedRows"></tbody>
+  </table>
+  <div class="note">💎 <b>NPC TIP —</b> งบก้อนแรกทุ่ม <b>คอมก่อน</b> ชิ้นเดียวปลดล็อก 5 งาน · ชิ้นที่สองคือ <b>ไมค์</b> (เพลง+คอนเท้น) · กล้องค่อยตามเมื่อเริ่มงานวีดีโอจริงจัง</div>
+</div>
+</details>
+
+<footer>⚔ ET1CRUEL · 8 หลัก — 4 งานหลัก + 4 งานอดิเรก · <a href="./index.html">← กลับหน้าแผนที่ชีวิต</a></footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY = 'et1cruel-pillars-v1';
+  // k = คีย์กลาง (ของชิ้นเดียวกันใช้ซ้ำหลายงาน ติ๊กครั้งเดียวมีผลทุกงาน)
+  var PILLARS = [
+    {id:'beat',  sec:'main',  n:'01', icon:'🎹', c1:'#4ADE80', c2:'#166534', name:'งานบีท', en:'BEATMAKING', items:[
+      {t:'คอมพิวเตอร์ (เครื่องทำบีท)', k:'คอม'}]},
+    {id:'video', sec:'main',  n:'02', icon:'🎬', c1:'#F472B6', c2:'#831843', name:'งานวีดีโอ', en:'VIDEO', items:[
+      {t:'กล้อง', k:'กล้อง'}]},
+    {id:'music', sec:'main',  n:'03', icon:'🎵', c1:'#A5B4FC', c2:'#4338CA', name:'งานเพลง', en:'MUSIC', items:[
+      {t:'คอมพิวเตอร์', k:'คอม'}, {t:'หูฟัง', k:'หูฟัง'}, {t:'ไมค์', k:'ไมค์'},
+      {t:'ออดิโออินเตอร์เฟส', k:'ออดิโออินเตอร์เฟส'}, {t:'กีต้าร์', k:'กีต้าร์'}]},
+    {id:'tattoo', sec:'main', n:'04', icon:'🖋️', c1:'#F87171', c2:'#7F1D1D', name:'งานสัก', en:'TATTOO', items:[
+      {t:'อุปกรณ์สัก (เครื่อง · เข็ม · หมึก)', k:'อุปกรณ์สัก'}]},
+    {id:'content', sec:'hobby', n:'05', icon:'📱', c1:'#FBBF24', c2:'#92600e', name:'งานคอนเท้น', en:'CONTENT', items:[
+      {t:'โทรศัพท์', k:'โทรศัพท์'}, {t:'กล้อง', k:'กล้อง'}, {t:'ไมค์', k:'ไมค์'}, {t:'คอมพิวเตอร์', k:'คอม'}]},
+    {id:'cloth', sec:'hobby', n:'06', icon:'👕', c1:'#67E8F9', c2:'#0E7490', name:'งานเสื้อผ้า', en:'CLOTHING', items:[
+      {t:'จักรเย็บผ้า', k:'จักรเย็บผ้า'}, {t:'หุ่น (หุ่นตัดเสื้อ/โชว์)', k:'หุ่น'}]},
+    {id:'ai',    sec:'hobby', n:'07', icon:'🤖', c1:'#C4B5FD', c2:'#6D28D9', name:'งานเอไอ', en:'AI LAB', items:[
+      {t:'คอมพิวเตอร์', k:'คอม'}]},
+    {id:'web',   sec:'hobby', n:'08', icon:'🌐', c1:'#FB923C', c2:'#9A3412', name:'งานทำเว็บ', en:'WEB DEV', items:[
+      {t:'คอมพิวเตอร์', k:'คอม'}]}
+  ];
+  function norm(s){ return (s||'').trim().toLowerCase(); }
+  function load(){ try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') return s; } catch(e){} return {}; }
+  function save(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
+  var store = load();
+  if (!store.have) store.have = {'คอม': true}; // คอมงานบีท = มีแล้วตามที่เจ้าของบอก
+  if (!store.custom) store.custom = {};
+  // ย้ายของเก่าจากช่องหลักที่ 8 (ตอนยังล็อก) มารวมที่งานทำเว็บ
+  if (store.custom.eight && store.custom.eight.length) {
+    store.custom.web = store.custom.web || [];
+    store.custom.eight.forEach(function(t){ if (store.custom.web.indexOf(t) < 0) store.custom.web.push(t); });
+    delete store.custom.eight;
+  }
+  delete store.eightName;
+
+  function haveOf(k){ return !!store.have[k]; }
+  function allItems(p){
+    var base = p.items.map(function(it){ return {t:it.t, k:it.k, custom:false}; });
+    (store.custom[p.id] || []).forEach(function(c){ base.push({t:c, k:norm(c), custom:true}); });
+    return base;
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function cardHTML(p){
+    return '<div class="pillar" style="--pc:' + p.c1 + ';--pc2:' + p.c2 + '">' +
+      '<div class="ptop"><span class="picon">' + p.icon + '</span><div><h3>' + p.n.slice(1) + ' · ' + esc(p.name) + '</h3><small>' + p.en + '</small></div><span class="pnum">' + p.n + '</span></div>' +
+      '<div class="pbar"><i id="bar-' + p.id + '"></i></div><div class="pcount" id="count-' + p.id + '"></div>' +
+      '<div class="equip" id="eq-' + p.id + '"></div>' +
+      '<div class="addrow"><input id="add-' + p.id + '" maxlength="60" placeholder="+ เพิ่มอุปกรณ์' + esc(p.name) + '…"><button data-add="' + p.id + '" type="button">เพิ่ม</button></div></div>';
+  }
+  document.getElementById('gridMain').innerHTML = PILLARS.filter(function(p){return p.sec==='main';}).map(cardHTML).join('');
+  document.getElementById('gridHobby').innerHTML = PILLARS.filter(function(p){return p.sec==='hobby';}).map(cardHTML).join('');
+
+  function renderPillar(p){
+    var box = document.getElementById('eq-' + p.id);
+    if (!box) return;
+    var items = allItems(p);
+    box.innerHTML = items.map(function(it){
+      var h = haveOf(it.k);
+      return '<div class="eq' + (h ? ' have' : '') + '" data-p="' + p.id + '" data-k="' + esc(it.k) + '" role="checkbox" aria-checked="' + h + '" tabindex="0">' +
+        '<input type="checkbox" ' + (h ? 'checked' : '') + ' tabindex="-1" aria-hidden="true">' +
+        '<span>' + esc(it.t) + '</span><span class="tag">' + (h ? '✔ มีแล้ว' : '◆ ยังไม่มี') + '</span>' +
+        (it.custom ? '<button class="del" data-del="' + esc(it.t) + '" data-p="' + p.id + '" type="button" aria-label="ลบ">✕</button>' : '') + '</div>';
+    }).join('');
+    var total = items.length, got = items.filter(function(it){return haveOf(it.k);}).length;
+    document.getElementById('bar-' + p.id).style.width = (total ? Math.round(got/total*100) : 0) + '%';
+    document.getElementById('count-' + p.id).textContent = 'มีแล้ว ' + got + ' / ' + total + ' ชิ้น';
+  }
+  function renderStats(){
+    var total = 0, got = 0;
+    PILLARS.forEach(function(p){ allItems(p).forEach(function(it){ total++; if (haveOf(it.k)) got++; }); });
+    document.getElementById('stTotal').textContent = total;
+    document.getElementById('stHave').textContent = got;
+    document.getElementById('stBar').style.width = (total ? Math.round(got/total*100) : 0) + '%';
+  }
+  function renderAll(){ PILLARS.forEach(renderPillar); renderShared(); renderStats(); }
+  var SHARED = [
+    {t:'💻 คอมพิวเตอร์', k:'คอม', w:'บีท · เพลง · คอนเท้น · เอไอ · ทำเว็บ'},
+    {t:'📷 กล้อง', k:'กล้อง', w:'วีดีโอ · คอนเท้น'},
+    {t:'🎙️ ไมค์', k:'ไมค์', w:'เพลง · คอนเท้น'}
+  ];
+  function renderShared(){
+    document.getElementById('sharedRows').innerHTML = SHARED.map(function(s){
+      var h = haveOf(s.k);
+      return '<tr><td><b>' + s.t + '</b></td><td>' + s.w + '</td><td style="color:' + (h ? '#4ADE80' : '#FBBF24') + ';font-weight:700">' + (h ? '✔ มีแล้ว' : '◆ ยังไม่มี') + '</td></tr>';
+    }).join('');
+  }
+
+  document.addEventListener('click', function(e){
+    var del = e.target.closest('[data-del]');
+    if (del) {
+      e.stopPropagation();
+      var pid = del.getAttribute('data-p'), nm = del.getAttribute('data-del');
+      store.custom[pid] = (store.custom[pid] || []).filter(function(t){ return t !== nm; });
+      save(store); renderAll(); return;
+    }
+    var add = e.target.closest('[data-add]');
+    if (add) {
+      var id = add.getAttribute('data-add');
+      var inp = document.getElementById('add-' + id);
+      var v = (inp.value || '').trim();
+      if (!v) { inp.focus(); return; }
+      store.custom[id] = store.custom[id] || [];
+      if (store.custom[id].indexOf(v) < 0) store.custom[id].push(v);
+      inp.value = '';
+      save(store); renderAll(); return;
+    }
+    var row = e.target.closest('.eq[data-k]');
+    if (row) {
+      var k = row.getAttribute('data-k');
+      store.have[k] = !store.have[k];
+      if (!store.have[k]) delete store.have[k];
+      save(store); renderAll();
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('eq')) {
+      e.preventDefault();
+      var k = e.target.getAttribute('data-k');
+      store.have[k] = !store.have[k];
+      if (!store.have[k]) delete store.have[k];
+      save(store); renderAll();
+    }
+    if (e.key === 'Enter' && e.target.id && e.target.id.indexOf('add-') === 0) {
+      var btn = document.querySelector('[data-add="' + e.target.id.slice(4) + '"]');
+      if (btn) btn.click();
+    }
+  });
+  renderAll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บัญชีธนาคาร · 11 บัญชี + 3 บัตรเดบิต | ET1CRUEL</title>
+<meta name="description" content="รวมบัญชีธนาคาร ET1CRUEL — กรุงไทย NEXT Savings, กสิกร E-Savings, กรุงเทพ, ไทยพาณิชย์ E-Savings, PayPal, TrueMoney, TTB Me Save, Dime Save, Webull, ShopeePay, Kept & Grow กรุงศรี + บัตรเดบิต 3 ใบ">
+<meta property="og:type" content="website">
+<meta property="og:title" content="บัญชีธนาคาร · 10 บัญชี + 3 บัตรเดบิต | ET1CRUEL">
+<meta property="og:description" content="แผนที่บัญชีทั้งหมด — ธนาคาร E-Savings E-Wallet โบรกเกอร์ + บัตรเดบิต Mastercard 3 ใบ · รวม Kept & Grow กรุงศรี">
+<meta property="og:image" content="https://et1cruel.github.io/ET1CRUEL/banner.webp">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --gold:#4ADE80; --gold-dim:#166534; --amber:#FBBF24; --red:#F87171;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(1000px 420px at 15% -5%,rgba(74,222,128,.12),transparent 60%),var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:18px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 22px 90px}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);
+  border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.topbar a{color:var(--gold);text-decoration:none;font-weight:700;font-size:15px;border:1px solid #3d4666;border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar a:hover{border-color:var(--gold)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff}
+header.hero{margin:26px 0 8px}
+header.hero h1{font-size:38px;line-height:1.35;color:#fff}
+header.hero h1 span{color:var(--gold)}
+header.hero p{color:#E2E8FA;font-size:18px;margin-top:12px;max-width:72ch}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 6px}
+.toc a{font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;border:1px solid #3d4666;border-radius:20px;padding:6px 14px;background:#0B0D14}
+.toc a:hover{color:var(--gold);border-color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 4px}
+.stat{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:14px;text-align:center}
+.stat small{font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700}
+.stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:28px;color:var(--gold);line-height:1.3}
+.stat span{font-size:13px;color:var(--muted);font-weight:600}
+details.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;
+  box-shadow:var(--shadow);margin:22px 0;overflow:hidden;scroll-margin-top:90px}
+details.card summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;padding:24px 26px}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary:hover{background:rgba(74,222,128,.04)}
+details.card summary .n{flex:0 0 46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#111;background:linear-gradient(180deg,var(--gold),#16a34a)}
+details.card summary h2{font-size:25px;color:#fff;flex:1;line-height:1.4}
+details.card summary h2 small{display:block;font-size:14px;color:var(--muted);font-weight:600}
+details.card summary .chev{color:var(--gold);font-size:20px;font-weight:800}
+details.card[open] summary .chev{transform:rotate(180deg)}
+.cbody{padding:0 26px 28px}
+.searchrow{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 16px}
+.searchrow input{flex:1;min-width:200px;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;
+  padding:12px 14px;font-family:inherit;font-size:15px;font-weight:600;outline:none}
+.searchrow input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(74,222,128,.25)}
+.searchrow input::placeholder{color:#5d6785}
+/* ===== BANK GRID ===== */
+.bank-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bank{border:2px solid #4a557e;border-radius:16px;padding:18px;background:linear-gradient(180deg,#222839,#151927);position:relative;overflow:hidden}
+.bank::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--bc,#4ADE80)}
+.bank:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.bank.hide{display:none}
+.btop{display:flex;gap:12px;align-items:center}
+.blogo{flex:0 0 56px;width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 4px 14px rgba(0,0,0,.4);overflow:hidden}
+.blogo img{width:100%;height:100%;object-fit:cover;display:block;background:#fff}
+.blogo img.sv{object-fit:contain;padding:7px}
+.blogo.dark{background:linear-gradient(135deg,var(--bc,#4ADE80),var(--bc2,#166534))}
+.blogo.dark img{background:transparent}
+.blogo.dark img.sv{width:92%;height:92%;padding:4px}
+.btop h3{font-size:18px;color:#fff;line-height:1.45}
+.btop small{display:block;font-family:'Chakra Petch',sans-serif;font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.bnum{margin-left:auto;flex:0 0 auto;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;color:var(--gold);
+  border:1px solid var(--gold-dim);border-radius:8px;padding:3px 10px;background:rgba(74,222,128,.07)}
+.btype{display:inline-block;margin-top:10px;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.05em;
+  border-radius:999px;padding:4px 13px;border:1.5px solid}
+.btype.save{color:#6EE7B7;border-color:#4ADE80;background:rgba(74,222,128,.1)}
+.btype.wallet{color:#FDE68A;border-color:#FBBF24;background:rgba(251,191,36,.1)}
+.btype.broker{color:#93C5FD;border-color:#3B82F6;background:rgba(59,130,246,.12)}
+.btype.bank{color:#C7D2FE;border-color:#A5B4FC;background:rgba(165,180,252,.1)}
+.buse{font-size:15.5px;color:#E2E8FA;margin-top:10px;line-height:1.85}
+.buse b{color:#fff}
+.bfeat{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.8}
+.bnote{margin-top:12px;border-top:1px dashed #2B3248;padding-top:10px}
+.bnote label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.bnote input{width:100%;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;
+  padding:10px 12px;font-family:inherit;font-size:14px;font-weight:600;outline:none}
+.bnote input:focus{border-color:var(--gold)}
+.bnote input::placeholder{color:#5d6785}
+/* ===== DEBIT ===== */
+.debit-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:6px}
+.debit{border-radius:18px;padding:20px 18px;color:#fff;position:relative;overflow:hidden;min-height:230px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:linear-gradient(135deg,var(--dc1,#4C2C92),var(--dc2,#1A1033));
+  border:1.5px solid rgba(255,255,255,.25);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.debit::after{content:'';position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;
+  background:rgba(255,255,255,.09)}
+.debit .d-bank{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;opacity:.95}
+.debit .d-chip{font-size:26px;margin:10px 0 2px}
+.debit .d-num{font-family:'Chakra Petch',sans-serif;font-size:17px;letter-spacing:.12em;font-weight:700}
+.debit .d-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px}
+.debit .d-row small{display:block;font-size:10px;letter-spacing:.14em;opacity:.75;font-family:'Chakra Petch',sans-serif}
+.debit .d-row b{font-size:14px;font-family:'Chakra Petch',sans-serif}
+.mc{display:flex;align-items:center}
+.mc i{width:30px;height:30px;border-radius:50%;display:block;opacity:.9}
+.mc i:first-child{background:#EB001B;margin-right:-10px}
+.mc i:last-child{background:#F79E1B;opacity:.9}
+.mc em{font-style:normal;font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:700;margin-left:8px;letter-spacing:.06em}
+.debit-note{margin-top:10px;background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:14px}
+.debit-note h4{font-size:16px;color:#fff}
+.debit-note h4 small{color:var(--muted);font-weight:600}
+.debit-note label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:10px 0 5px}
+.debit-note input[type=text]{width:100%;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;
+  padding:10px 12px;font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;letter-spacing:.15em;outline:none}
+.debit-note input[type=text]:focus{border-color:var(--gold)}
+.debit-note .chk{display:flex;gap:8px;align-items:center;font-size:14px;color:#fff;font-weight:600;margin-top:10px;cursor:pointer}
+.debit-note .chk input{width:18px;height:18px;accent-color:#4ADE80}
+.off{opacity:.55;filter:grayscale(.4)}
+table.tl{width:100%;border-collapse:collapse;margin:14px 0;font-size:16.5px}
+table.tl th{text-align:left;font-family:'Chakra Petch',sans-serif;font-size:12.5px;letter-spacing:.08em;color:var(--gold);
+  padding:10px 8px;border-bottom:1px solid rgba(74,222,128,.3)}
+table.tl td{padding:11px 8px;border-bottom:1px solid #1c2130;color:#E2E8FA;vertical-align:top}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px}
+.chip{font-size:14px;font-weight:700;border:1.5px solid #3A435C;border-radius:10px;padding:7px 15px;background:#0C0F18;color:#fff;font-family:'Chakra Petch',sans-serif}
+.chip b{color:var(--gold)}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin-top:8px}
+.fbox{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:16px;text-align:center}
+.fbox h4{font-family:'Chakra Petch',sans-serif;font-size:13px;letter-spacing:.08em;color:var(--gold);margin-bottom:8px}
+.fbox p{font-size:14.5px;color:#fff;font-weight:600;line-height:1.8}
+.farrow{align-self:center;font-size:22px;color:var(--gold);font-weight:800}
+.note{background:#0C0F18;border:2px solid var(--gold-dim);border-left:5px solid var(--gold);border-radius:12px;
+  padding:18px 20px;font-size:16.5px;color:#fff;margin-top:16px;line-height:1.9}
+.note b{color:var(--gold)}
+.note.warn{border-color:#7f1d1d;border-left-color:var(--red)}
+.note.warn b{color:var(--red)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
+footer a{color:var(--gold);text-decoration:none;font-weight:700}
+@media(max-width:900px){.bank-grid{grid-template-columns:1fr}.debit-grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.farrow{transform:rotate(90deg);text-align:center}}
+@media(max-width:700px){
+  header.hero h1{font-size:28px}
+  body{font-size:17px}
+  details.card summary{padding:18px}
+  details.card summary h2{font-size:21px}
+  .cbody{padding:0 18px 22px}
+  .stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .stat strong{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
+</head>
+<body class="site-polish">
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← หน้าแรก LIFE OS</a>
+  <span class="t">🏦 BANKS · บัญชีธนาคาร + บัตรเดบิต</span>
+</div>
+
+<header class="hero">
+  <h1>🏦 บัญชีธนาคาร <span>— 11 บัญชี + 3 บัตรเดบิต</span></h1>
+  <p>แผนที่เงินทั้งหมดในที่เดียว — ธนาคาร E-Savings · E-Wallet · โบรกเกอร์ แยกกันชัดว่า <b>บัญชีไหนรับเข้า บัญชีไหนพักออม บัญชีไหนจ่ายออก</b> + บัตรเดบิต Mastercard ที่ผูกไว้แต่ละใบ</p>
+  <nav class="toc">
+    <a href="#banks">1 บัญชีทั้ง 11</a><a href="#debit">2 บัตรเดบิต 3 ใบ</a><a href="#flow">3 ผังใช้เงิน</a><a href="#safety">4 กฎปลอดภัย</a>
+  </nav>
+  <div class="stats">
+    <div class="stat"><small>◆ ACCOUNTS</small><strong class="num">11</strong><span>บัญชีทั้งหมด</span></div>
+    <div class="stat"><small>◆ DEBIT MASTERCARD</small><strong class="num">3</strong><span>บัตรเดบิตที่ผูกไว้</span></div>
+    <div class="stat"><small>◆ TYPES</small><strong class="num">7+3+1</strong><span>ธนาคาร · วอลเล็ต · โบรกเกอร์</span></div>
+  </div>
+</header>
+
+<!-- 1 -->
+<details class="card" id="banks" open>
+<summary><span class="n">🏦</span><h2>บัญชีทั้ง 11 — E-Savings · ออมทรัพย์ · วอลเล็ต · โบรกเกอร์<small>พิมพ์ค้นหาชื่อธนาคารได้ · โน้ตส่วนตัวเก็บในเครื่องนี้เท่านั้น</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="searchrow"><input id="bankSearch" type="search" placeholder="🔍 ค้นหา: กสิกร / TrueMoney / Webull …" autocomplete="off" aria-label="ค้นหาบัญชี"></div>
+  <div class="bank-grid" id="bankGrid">
+
+    <article class="bank" style="--bc:#00A6E6;--bc2:#004B8D" data-name="กรุงไทย next savings ktb krungthai">
+      <div class="btop"><span class="blogo"><img src="logos/ktb.png" alt="โลโก้ Krungthai NEXT" loading="lazy"></span><div><h3>1 · กรุงไทย NEXT Savings</h3><small>KRUNGTHAI · E-SAVINGS</small></div><span class="bnum">01</span></div>
+      <span class="btype save">E-SAVINGS · ดอกสูงถอนได้</span>
+      <p class="buse">🎯 <b>ใช้พักเงินออม</b> — บัญชีออนไลน์ดอกเบี้ยสูง ไม่มีสมุด เปิด–ปิดในแอป Krungthai NEXT ได้เลย</p>
+      <p class="bfeat">✦ เหมาะ: เงินสำรองฉุกเฉินก้อนแรก · แยกจากบัญชีใช้ประจำวันจะได้ไม่เผลอกด</p>
+      <div class="bnote"><label for="bn-ktb">📝 โน้ตส่วนตัว (เช่น เลขท้าย / วัตถุประสงค์)</label><input id="bn-ktb" data-key="bank-ktb" maxlength="60" placeholder="เช่น เงินสำรอง 3 เดือน …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#22C55E;--bc2:#0A5C1E" data-name="กสิกร e-savings kbank kasikorn">
+      <div class="btop"><span class="blogo"><img src="logos/kbank.png" alt="โลโก้ K PLUS กสิกรไทย" loading="lazy"></span><div><h3>2 · กสิกร E-Savings</h3><small>KASIKORN · E-SAVINGS</small></div><span class="bnum">02</span></div>
+      <span class="btype save">E-SAVINGS · ดอกสูงถอนได้</span>
+      <p class="buse">🎯 <b>ใช้ออมดอกสูง</b> — เปิดในแอป K PLUS ถอน–โอนฟรี ดอกดีกว่าออมทรัพย์ปกติ</p>
+      <p class="bfeat">✦ เหมาะ: กระปุกเก็บสั้น–กลาง · โอนไวข้ามธนาคารฟรี</p>
+      <div class="bnote"><label for="bn-kbank">📝 โน้ตส่วนตัว</label><input id="bn-kbank" data-key="bank-kbank" maxlength="60" placeholder="เช่น กระปุกค่าเช่า / ค่าเทอม …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#3B82F6;--bc2:#002D62" data-name="กรุงเทพ bbl bangkok bank ออมทรัพย์">
+      <div class="btop"><span class="blogo"><img src="logos/bbl.png" alt="โลโก้ธนาคารกรุงเทพ" loading="lazy"></span><div><h3>3 · กรุงเทพ</h3><small>BANGKOK BANK · ออมทรัพย์</small></div><span class="bnum">03</span></div>
+      <span class="btype bank">ออมทรัพย์ · บัญชีหลักระยะยาว</span>
+      <p class="buse">🎯 <b>ใช้เป็นฐานระยะยาว</b> — เสถียร สาขาเยอะ เหมาะถือเงินก้อนนิ่ง ๆ</p>
+      <p class="bfeat">✦ เหมาะ: บัญชีสำรองหลัก · รับโอนก้อนใหญ่ · ทำธุรกรรมที่ต้องใช้สาขา</p>
+      <div class="bnote"><label for="bn-bbl">📝 โน้ตส่วนตัว</label><input id="bn-bbl" data-key="bank-bbl" maxlength="60" placeholder="เช่น บัญชีนิ่งไม่แตะ …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#8B5CF6;--bc2:#2E1065" data-name="ไทยพาณิชย์ e-savings scb siam commercial">
+      <div class="btop"><span class="blogo dark"><img class="sv" src="logos/scb.svg" alt="โลโก้ SCB ไทยพาณิชย์" loading="lazy"></span><div><h3>4 · ไทยพาณิชย์ E-Savings</h3><small>SCB · E-SAVINGS</small></div><span class="bnum">04</span></div>
+      <span class="btype save">E-SAVINGS · ผูกบัตรเดบิตได้</span>
+      <p class="buse">🎯 <b>ใช้ออม + ผูกบัตรเดบิต Mastercard</b> — ใบหลักสำหรับรูดออนไลน์/ต่างประเทศ</p>
+      <p class="bfeat">✦ ผูกกับ: บัตรเดบิต SCB Mastercard ด้านล่าง · เปิด–ปิดช้อปออนไลน์ในแอป SCB EASY</p>
+      <div class="bnote"><label for="bn-scb">📝 โน้ตส่วนตัว</label><input id="bn-scb" data-key="bank-scb" maxlength="60" placeholder="เช่น ผูกบัตรเดบิตใบหลัก …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#009CDE;--bc2:#003087" data-name="paypal เพย์พาล รับเงินต่างประเทศ">
+      <div class="btop"><span class="blogo"><img src="logos/paypal.png" alt="โลโก้ PayPal" loading="lazy"></span><div><h3>5 · PayPal</h3><small>PAYPAL · E-WALLET สากล</small></div><span class="bnum">05</span></div>
+      <span class="btype wallet">E-WALLET · รับเงินต่างประเทศ</span>
+      <p class="buse">🎯 <b>ใช้รับเงินนอก</b> — Beatstore / ลูกค้าต่างชาติ / ฟรีแลนซ์ แล้วค่อยถอนเข้าธนาคารไทย</p>
+      <p class="bfeat">✦ จำไว้: มีค่าธรรมเนียมแปลงสกุล + ถอนเงิน · เช็กยอดก่อนถอนทุกครั้ง</p>
+      <div class="bnote"><label for="bn-pp">📝 โน้ตส่วนตัว (เช่น อีเมลรับเงิน)</label><input id="bn-pp" data-key="bank-pp" maxlength="60" placeholder="เช่น อีเมลรับเงิน Beatstore …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#FF5A5A;--bc2:#B91C1C" data-name="truemoney ทรูมันนี่ true money wallet">
+      <div class="btop"><span class="blogo"><img src="logos/truemoney.png" alt="โลโก้ TrueMoney" loading="lazy"></span><div><h3>6 · TrueMoney</h3><small>TRUEMONEY · E-WALLET</small></div><span class="bnum">06</span></div>
+      <span class="btype wallet">E-WALLET · จ่ายบิล + ช้อปออนไลน์</span>
+      <p class="buse">🎯 <b>ใช้จ่ายประจำวัน</b> — จ่ายบิล เติมเน็ต ซื้อของออนไลน์ ผูกบัตร TrueMoney Mastercard ได้</p>
+      <p class="bfeat">✦ ผูกกับ: บัตร TrueMoney Mastercard ด้านล่าง · ตั้งวงเงินใช้จ่ายรายวันกันเพลิน</p>
+      <div class="bnote"><label for="bn-tm">📝 โน้ตส่วนตัว</label><input id="bn-tm" data-key="bank-tm" maxlength="60" placeholder="เช่น วงเงินใช้ต่อวัน …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#38BDF8;--bc2:#C2410C" data-name="ttb me save ทีทีบี ทหารไทยธนชาต">
+      <div class="btop"><span class="blogo"><img class="sv" src="logos/ttb.svg" alt="โลโก้ ttb" loading="lazy"></span><div><h3>7 · TTB Me Save</h3><small>TTB · E-SAVINGS</small></div><span class="bnum">07</span></div>
+      <span class="btype save">E-SAVINGS · ดอกสูง</span>
+      <p class="buse">🎯 <b>ใช้ออมดอกสูง</b> — บัญชีออนไลน์ของ ttb ดอกดี ไม่มีขั้นต่ำ โอนเข้าออกฟรี</p>
+      <p class="bfeat">✦ เหมาะ: กระปุกเป้าหมายย่อย · แยกเป็นรายเป้าในแอป ttb touch</p>
+      <div class="bnote"><label for="bn-ttb">📝 โน้ตส่วนตัว</label><input id="bn-ttb" data-key="bank-ttb" maxlength="60" placeholder="เช่น กระปุกเป้าหมาย …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#00C389;--bc2:#00382B" data-name="dime save ไดม์ dime! เกียรตินาคิน">
+      <div class="btop"><span class="blogo"><img class="sv" src="logos/dime.svg" alt="โลโก้ Dime" loading="lazy"></span><div><h3>8 · Dime! Save</h3><small>DIME! · E-SAVINGS + ลงทุน</small></div><span class="bnum">08</span></div>
+      <span class="btype save">E-SAVINGS · ผูกบัตรเดบิต + กองทุน</span>
+      <p class="buse">🎯 <b>ใช้ออม + เริ่มลงทุน</b> — บัญชีออมดอกสูงของ Dime! (เกียรตินาคินภัทร) ซื้อกองทุน US ต่อได้ในแอปเดียว</p>
+      <p class="bfeat">✦ ผูกกับ: บัตรเดบิต Dime! Mastercard · สาย DCA กองทุน US เริ่มตรงนี้ได้</p>
+      <div class="bnote"><label for="bn-dime">📝 โน้ตส่วนตัว</label><input id="bn-dime" data-key="bank-dime" maxlength="60" placeholder="เช่น ออม + DCA กองทุน …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#232D36;--bc2:#05080C;--bt:#FACC15" data-name="webull วีบูล หุ้นอเมริกา us">
+      <div class="btop"><span class="blogo"><img src="logos/webull.png" alt="โลโก้ Webull" loading="lazy"></span><div><h3>9 · Webull</h3><small>WEBULL · โบรกเกอร์หุ้น US</small></div><span class="bnum">09</span></div>
+      <span class="btype broker">BROKER · เทรดหุ้นอเมริกา</span>
+      <p class="buse">🎯 <b>ใช้เทรดหุ้น US</b> — NVDA / AMD / MU / QQQI ตามแผน 300K ในหน้าแรก</p>
+      <p class="bfeat">✦ จำไว้: โอนเงินเข้าออกข้ามประเทศมีค่าธรรมเนียม + เวลาทำการ · ดูพอร์ตรวมที่ <a href="./stocks-daily.html" style="color:var(--gold);font-weight:700">หุ้นรายวัน ↗</a></p>
+      <div class="bnote"><label for="bn-wb">📝 โน้ตส่วนตัว</label><input id="bn-wb" data-key="bank-wb" maxlength="60" placeholder="เช่น พอร์ต Growth / AI Core …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#FB923C;--bc2:#9A3412" data-name="shopeepay ช้อปปี้เพย์ shopee wallet">
+      <div class="btop"><span class="blogo"><img src="logos/shopee.png" alt="โลโก้ ShopeePay" loading="lazy"></span><div><h3>10 · ShopeePay</h3><small>SHOPEEPAY · E-WALLET</small></div><span class="bnum">10</span></div>
+      <span class="btype wallet">E-WALLET · ช้อป + จ่ายออนไลน์</span>
+      <p class="buse">🎯 <b>ใช้ช้อป Shopee + จ่ายหน้าร้าน</b> — เก็บคอยน์/โค้ดส่งฟรี จ่ายไว ไม่ต้องควักบัตรหลัก</p>
+      <p class="bfeat">✦ ทริค: เติมเท่าที่จะใช้ต่อรอบ · ไม่พักเงินก้อนใหญ่ไว้ในวอลเล็ต</p>
+      <div class="bnote"><label for="bn-sp">📝 โน้ตส่วนตัว</label><input id="bn-sp" data-key="bank-sp" maxlength="60" placeholder="เช่น เติมรอบละ 500 …"></div>
+    </article>
+
+    <article class="bank" style="--bc:#FFD400;--bc2:#C79A00;--bt:#231F20" data-name="kept grow กรุงศรี krungsri kept grow fun ออมแยกกระปุก">
+      <div class="btop"><span class="blogo"><img src="logos/kept.png" alt="โลโก้ Kept by krungsri" loading="lazy"></span><div><h3>11 · Kept &amp; Grow กรุงศรี</h3><small>KRUNGSRI · E-SAVINGS แยกกระปุก</small></div><span class="bnum">11</span></div>
+      <span class="btype save">E-SAVINGS · KEPT + GROW + FUN</span>
+      <p class="buse">🎯 <b>ใช้ออมแบบแยกกระปุกอัตโนมัติ</b> — Kept ไว้ใช้ประจำวันโอนฟรี · Grow ล็อกออมดอกสูง · Fun ต่อยอดกองทุน ในแอปเดียว</p>
+      <p class="bfeat">✦ เหมาะ: สายเก็บทีละนิดแต่สม่ำเสมอ · ตั้งโอนอัตโนมัติ Kept → Grow ทุกสิ้นเดือนกันเผลอใช้</p>
+      <div class="bnote"><label for="bn-kept">📝 โน้ตส่วนตัว</label><input id="bn-kept" data-key="bank-kept" maxlength="60" placeholder="เช่น โอนเข้า Grow ทุกสิ้นเดือน …"></div>
+    </article>
+
+  </div>
+  <p class="note" style="font-size:14.5px">🔒 <b>โน้ตด้านบนเก็บในเบราว์เซอร์เครื่องนี้เท่านั้น</b> (localStorage) — อย่าพิมพ์เลขบัญชีเต็ม / รหัส / OTP ลงเว็บเด็ดขาด จำแค่ <b>เลขท้าย 4 ตัว + วัตถุประสงค์</b> พอ</p>
+</div>
+</details>
+
+<!-- 2 -->
+<details class="card" id="debit" open>
+<summary><span class="n">💳</span><h2>บัตรเดบิต 3 ใบ — Mastercard ทั้งหมด<small>บัตรไหนผูกบัญชีไหน · จำแค่เลขท้าย 4 ตัวพอ</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="debit-grid">
+
+    <div>
+      <div class="debit" id="dc-scb" style="--dc1:#5B3FBF;--dc2:#1A1033">
+        <div class="d-bank">SCB · ไทยพาณิชย์</div>
+        <div class="d-chip">◧</div>
+        <div class="d-num">•••• •••• •••• <span data-last4="scb">••••</span></div>
+        <div class="d-row"><div><small>CARD HOLDER</small><b>ET1CRUEL</b></div><div class="mc"><i></i><i></i><em>Mastercard<br>Debit</em></div></div>
+      </div>
+      <div class="debit-note">
+        <h4>1 · SCB Mastercard <small>— ผูกไทยพาณิชย์ E-Savings</small></h4>
+        <p style="font-size:14px;color:var(--muted)">บัตรหลัก · รูดออนไลน์ + ต่างประเทศ · เปิด–ปิดช้อปออนไลน์ในแอป SCB EASY</p>
+        <label for="dl-scb">เลขท้าย 4 ตัว (จำในเครื่องนี้)</label>
+        <input type="text" id="dl-scb" data-key="debit-scb-last4" inputmode="numeric" maxlength="4" placeholder="••••">
+        <label class="chk"><input type="checkbox" data-key="debit-scb-on" checked> เปิดใช้งานบัตรนี้อยู่</label>
+      </div>
+    </div>
+
+    <div>
+      <div class="debit" id="dc-dime" style="--dc1:#007A55;--dc2:#00231A">
+        <div class="d-bank">DIME! · ไดม์</div>
+        <div class="d-chip">◧</div>
+        <div class="d-num">•••• •••• •••• <span data-last4="dime">••••</span></div>
+        <div class="d-row"><div><small>CARD HOLDER</small><b>ET1CRUEL</b></div><div class="mc"><i></i><i></i><em>Mastercard<br>Debit</em></div></div>
+      </div>
+      <div class="debit-note">
+        <h4>2 · Dime! Mastercard <small>— ผูก Dime! Save</small></h4>
+        <p style="font-size:14px;color:var(--muted)">บัตรสายออม + ลงทุน · ใช้แตะจ่ายจากเงินออมโดยตรงโดยไม่ต้องโอนออก</p>
+        <label for="dl-dime">เลขท้าย 4 ตัว (จำในเครื่องนี้)</label>
+        <input type="text" id="dl-dime" data-key="debit-dime-last4" inputmode="numeric" maxlength="4" placeholder="••••">
+        <label class="chk"><input type="checkbox" data-key="debit-dime-on" checked> เปิดใช้งานบัตรนี้อยู่</label>
+      </div>
+    </div>
+
+    <div>
+      <div class="debit" id="dc-tm" style="--dc1:#E4252C;--dc2:#3B0A0A">
+        <div class="d-bank">TRUEMONEY · ทรูมันนี่</div>
+        <div class="d-chip">◧</div>
+        <div class="d-num">•••• •••• •••• <span data-last4="tm">••••</span></div>
+        <div class="d-row"><div><small>CARD HOLDER</small><b>ET1CRUEL</b></div><div class="mc"><i></i><i></i><em>Mastercard<br>Debit</em></div></div>
+      </div>
+      <div class="debit-note">
+        <h4>3 · TrueMoney Mastercard <small>— ผูกวอลเล็ต TrueMoney</small></h4>
+        <p style="font-size:14px;color:var(--muted)">บัตรใช้จ่ายออนไลน์วงเงินเล็ก · เติมเท่าที่ใช้ กันบัตรหลักโดนตัดผิด</p>
+        <label for="dl-tm">เลขท้าย 4 ตัว (จำในเครื่องนี้)</label>
+        <input type="text" id="dl-tm" data-key="debit-tm-last4" inputmode="numeric" maxlength="4" placeholder="••••">
+        <label class="chk"><input type="checkbox" data-key="debit-tm-on" checked> เปิดใช้งานบัตรนี้อยู่</label>
+      </div>
+    </div>
+
+  </div>
+
+  <table class="tl">
+    <thead><tr><th>บัตร</th><th>ผูกกับบัญชี</th><th>ใช้หลัก</th><th>สถานะ</th></tr></thead>
+    <tbody>
+      <tr><td><b>SCB Mastercard</b></td><td>ไทยพาณิชย์ E-Savings</td><td>รูดหลัก / ต่างประเทศ</td><td data-status="scb">✔ เปิดใช้</td></tr>
+      <tr><td><b>Dime! Mastercard</b></td><td>Dime! Save</td><td>แตะจ่ายจากเงินออม</td><td data-status="dime">✔ เปิดใช้</td></tr>
+      <tr><td><b>TrueMoney Mastercard</b></td><td>TrueMoney Wallet</td><td>ออนไลน์วงเงินเล็ก</td><td data-status="tm">✔ เปิดใช้</td></tr>
+    </tbody>
+  </table>
+  <div class="note warn">⚠️ <b>ห้ามใส่เลขบัตรเต็ม / วันหมดอายุ / CVV ลงเว็บนี้</b> — ช่องด้านบนรับแค่เลขท้าย 4 ตัวเพื่อกันลืมใบไหนเป็นใบไหน ทุกอย่างเก็บในเครื่องมึงเท่านั้น ไม่ส่งออกเน็ต</div>
+</div>
+</details>
+
+<!-- 3 -->
+<details class="card" id="flow">
+<summary><span class="n">🗺</span><h2>ผังใช้เงิน — รับเข้า → พัก → จ่ายออก<small>เห็นภาพเดียวจบว่าเงินวิ่งทางไหน</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <div class="flow">
+    <div class="fbox"><h4>📥 รับเข้า</h4><p>PayPal<br>Webull (กำไร)<br>ลูกค้าโอน → SCB / KBank</p></div>
+    <div class="farrow">→</div>
+    <div class="fbox"><h4>🏦 พัก · ออม</h4><p>KTB NEXT · KBank · Kept/Grow<br>BBL · SCB · TTB<br>Dime! Save</p></div>
+    <div class="farrow">→</div>
+    <div class="fbox"><h4>💸 จ่ายออก</h4><p>TrueMoney · ShopeePay<br>เดบิต 3 ใบ<br>โอนเข้า Webull (DCA)</p></div>
+  </div>
+  <div class="chips">
+    <span class="chip">กฎเหล็ก: <b>ใช้ ≠ เก็บ</b> — บัญชีจ่ายมีแค่ 1–2 ที่ ที่เหลือห้ามแตะ</span>
+    <span class="chip">วอลเล็ตเติม <b>เท่าที่ใช้</b> ไม่พักเงินก้อน</span>
+    <span class="chip">กำไร Webull/โป๊กเกอร์ <b>ถอนเก็บทันที</b></span>
+  </div>
+  <div class="note">🗺 <b>สูตรจำง่าย:</b> เงินเข้า → พักที่ <b>SCB/KBank</b> ก่อน 1 คืน → กระจายไปกระปุกออม (KTB/TTB/Dime!/Kept Grow) → เหลือไว้ใช้จ่ายใน <b>TrueMoney/ShopeePay</b> แค่รอบละนิด · สายหุ้นดูพอร์ตรวมที่ <a href="./stocks-daily.html" style="color:var(--gold);font-weight:700">หุ้นรายวัน ↗</a></div>
+</div>
+</details>
+
+<!-- 4 -->
+<details class="card" id="safety">
+<summary><span class="n">🛡</span><h2>กฎปลอดภัย — อ่านก่อน 30 วิ<small>บัญชีเยอะ = เป้าเยอะ · กันไว้ก่อน</small></h2><span class="chev">▾</span></summary>
+<div class="cbody">
+  <table class="tl">
+    <thead><tr><th>ข้อ</th><th>ทำ</th></tr></thead>
+    <tbody>
+      <tr><td><b>1</b></td><td>เปิด <b>2FA + สแกนหน้า</b> ทุกแอปธนาคาร/วอลเล็ต · ล็อกวงเงินโอนต่อวันให้ต่ำที่สุดที่ยังใช้ได้</td></tr>
+      <tr><td><b>2</b></td><td>แยก <b>บัญชีเก็บ vs บัญชีใช้</b> — บัตรเดบิตผูกเฉพาะบัญชีใช้ ไม่ผูกบัญชีเงินก้อน</td></tr>
+      <tr><td><b>3</b></td><td><b>ไม่ถ่ายรูปบัตรเต็ม / ไม่พิมพ์ CVV / OTP</b> ลงที่ไหนทั้งนั้น รวมถึงเว็บนี้</td></tr>
+      <tr><td><b>4</b></td><td>บัตรใบไหนไม่ใช้ → <b>กดปิดชั่วคราวในแอป</b> แล้วติ๊กช่อง “เปิดใช้” ด้านบนออก จะได้รู้ว่าเหลือกี่ใบที่เสี่ยง</td></tr>
+      <tr><td><b>5</b></td><td>เช็ก statement ทุกสิ้นเดือน — เงินออกผิดแม้ 1 บาท = อายัดบัตรทันที</td></tr>
+    </tbody>
+  </table>
+  <div class="note">🛡 <b>NPC TIP —</b> มิจจี้โทรมาอ้างธนาคาร = วางสายแล้วโทรกลับเบอร์หลังบัตรเอง · ธนาคารจริงไม่มีวันขอ OTP/Rหัสผ่านทางโทรศัพท์</div>
+</div>
+</details>
+
+<footer>⚔ ET1CRUEL · BANKS — 11 บัญชี + 3 เดบิต · <a href="./index.html">← กลับหน้าแผนที่ชีวิต</a></footer>
+
+</div>
+
+<script>
+(function(){
+  // ค้นหาธนาคาร
+  var s = document.getElementById('bankSearch');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#bankGrid .bank'));
+  if (s) s.addEventListener('input', function(){
+    var q = s.value.trim().toLowerCase();
+    cards.forEach(function(c){
+      var t = (c.getAttribute('data-name') + ' ' + c.innerText).toLowerCase();
+      c.classList.toggle('hide', q && t.indexOf(q) < 0);
+    });
+  });
+  // โน้ต + เลขท้าย + สถานะบัตร — localStorage ล้วน
+  function load(k, d){ try { var v = localStorage.getItem('et1cruel-' + k); return v === null ? d : v; } catch(e){ return d; } }
+  function save(k, v){ try { localStorage.setItem('et1cruel-' + k, v); } catch(e){} }
+  document.querySelectorAll('[data-key]').forEach(function(el){
+    var k = el.getAttribute('data-key');
+    if (el.type === 'checkbox') {
+      el.checked = load(k, '1') === '1';
+      syncStatus(k, el.checked);
+      el.addEventListener('change', function(){ save(k, el.checked ? '1' : '0'); syncStatus(k, el.checked); });
+    } else {
+      el.value = load(k, '');
+      if (el.hasAttribute('data-key') && el.id.indexOf('dl-') === 0) paintLast4(el);
+      el.addEventListener('input', function(){
+        if (el.id.indexOf('dl-') === 0) el.value = el.value.replace(/\D/g,'').slice(0,4);
+        save(k, el.value);
+        if (el.id.indexOf('dl-') === 0) paintLast4(el);
+      });
+    }
+  });
+  function paintLast4(input){
+    var map = { 'dl-scb':'scb', 'dl-dime':'dime', 'dl-tm':'tm' };
+    var slot = document.querySelector('[data-last4="' + map[input.id] + '"]');
+    if (slot) slot.textContent = (input.value || '••••').padEnd(4, '•');
+  }
+  function syncStatus(k, on){
+    var map = { 'debit-scb-on':'scb', 'debit-dime-on':'dime', 'debit-tm-on':'tm' };
+    var id = { 'debit-scb-on':'dc-scb', 'debit-dime-on':'dc-dime', 'debit-tm-on':'dc-tm' }[k];
+    var cell = document.querySelector('[data-status="' + map[k] + '"]');
+    if (cell) { cell.textContent = on ? '✔ เปิดใช้' : '✕ ปิดชั่วคราว'; cell.style.color = on ? '#4ADE80' : '#F87171'; }
+    var card = id && document.getElementById(id);
+    if (card) card.classList.toggle('off', !on);
+  }
+})();
+</script>
+</body>
+</html>
