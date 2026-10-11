@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROD.ET1CRUEL — แผนงาน + บัญชีโปรดิวเซอร์ 🎛️</title>
+<meta name="description" content="PROD.ET1CRUEL — แผนดำเนินงานและบัญชีรายได้สาย Music Producer: pipeline งาน 5 ช่อง เป้าเดือน และบันทึกขายบีท สอน ลงโปรแกรม มิกซ์มาสเตอร์">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PROD.ET1CRUEL — แผนงาน + บัญชีโปรดิวเซอร์">
+<meta property="og:description" content="pipeline งาน 5 ช่อง · เป้าเดือน · บัญชีขายบีท สอน ลงโปรแกรม มิกซ์มาสเตอร์">
+<meta property="og:image" content="https://et1cruel.github.io/ET1CRUEL/banner.webp">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
+  --gold:#4ADE80; --gold-dim:#166534; --amber:#FBBF24; --red:#F87171; --blue:#93C5FD;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:radial-gradient(900px 400px at 15% -5%,rgba(74,222,128,.12),transparent 60%),var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:17px;line-height:1.9;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 22px 80px}
+.num{font-family:'Chakra Petch',sans-serif;font-variant-numeric:tabular-nums}
+.topbar{position:sticky;top:10px;z-index:20;display:flex;gap:12px;align-items:center;background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);flex-wrap:wrap}
+.topbar a.back{color:var(--muted);text-decoration:none;font-weight:700;font-size:15px}
+.topbar a.back:hover{color:var(--gold)}
+.topbar b{font-size:16px}
+.topbar .month-hud{margin-left:auto;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;color:var(--gold);background:#0B0D14;border:1.5px solid var(--gold-dim);border-radius:10px;padding:5px 14px;white-space:nowrap}
+h1{font-size:clamp(30px,4.5vw,48px);line-height:1.3;margin:22px 0 4px}
+h1 .tag{font-family:'Chakra Petch',sans-serif;color:var(--gold);text-shadow:0 0 14px rgba(74,222,128,.3)}
+.sub{color:var(--muted);font-size:16px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{border:2px solid #4a557e;border-radius:14px;padding:14px 16px;background:#0C0F18;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold)}
+.kpi small{color:#D3DAEE;font-size:12.5px;font-weight:700;letter-spacing:.06em;font-family:'Chakra Petch',sans-serif}
+.kpi strong{font-size:24px;display:block;color:#fff;font-family:'Chakra Petch',sans-serif}
+.kpi.goal::after{background:var(--amber)}
+section.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;box-shadow:var(--shadow);padding:26px;margin-bottom:20px}
+.shead{display:flex;align-items:center;gap:12px;margin-bottom:6px;border-bottom:1px solid var(--line);padding-bottom:12px;flex-wrap:wrap}
+.shead h2{font-size:23px}
+.shead p{color:#C9D2E8;font-size:14.5px;width:100%}
+.icon{flex:0 0 44px;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;background:linear-gradient(180deg,#262c45,#12141d);border:1px solid var(--gold-dim)}
+.count{margin-left:auto;font-size:13px;font-weight:700;border-radius:8px;padding:6px 13px;background:linear-gradient(180deg,var(--gold),#16a34a);color:#111;font-family:'Chakra Petch',sans-serif;white-space:nowrap}
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}
+.col{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:12px;min-height:180px;display:flex;flex-direction:column;gap:8px}
+.col h3{font-family:'Chakra Petch',sans-serif;font-size:12.5px;letter-spacing:.06em;color:var(--gold);display:flex;justify-content:space-between;align-items:center}
+.col h3 .c{background:#1e2436;border-radius:6px;padding:0 8px;color:#fff}
+.col.done h3{color:var(--amber)}
+.pcard{background:#1A2033;border:1.5px solid #4a557e;border-radius:10px;padding:9px 10px;font-size:14.5px}
+.pcard b{display:block;color:#fff;line-height:1.6}
+.pcard small{color:var(--muted);display:block;line-height:1.7;margin-top:2px}
+.pcard .ops{display:flex;gap:6px;margin-top:8px}
+.pcard .ops button{flex:1;background:#0B0D14;border:1px solid #3d4666;color:#fff;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;padding:5px 0;font-family:inherit}
+.pcard .ops button:hover{border-color:var(--gold);color:var(--gold)}
+.pcard .ops button.del:hover{border-color:var(--red);color:var(--red)}
+.addrow{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+input,select,textarea{border:1.5px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 13px;font-family:inherit;font-size:15px;font-weight:600;outline:none;color-scheme:dark}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(74,222,128,.25)}
+button.btn{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;cursor:pointer;border-radius:10px;padding:10px 20px;border:1.5px solid var(--gold);background:rgba(74,222,128,.1);color:var(--gold)}
+button.btn:hover{box-shadow:0 0 12px rgba(74,222,128,.3)}
+button.btn.ghost{border-color:#3d4666;background:#0B0D14;color:var(--muted)}
+button.btn.ghost:hover{color:#fff;border-color:#fff}
+/* goals */
+.goal-item{display:flex;gap:10px;align-items:flex-start;background:#0B0D14;border:1.5px solid #3d4666;border-radius:10px;padding:10px 13px;margin-top:8px}
+.goal-item.done{border-color:var(--gold-dim)}
+.goal-item.done span{color:var(--muted);text-decoration:line-through}
+.goal-item input[type=checkbox]{width:20px;height:20px;margin-top:5px;accent-color:var(--gold);flex:0 0 20px}
+.goal-item span{flex:1}
+.goal-item button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px}
+.goal-item button:hover{color:var(--red)}
+.pbar{height:12px;background:#080A10;border:1px solid #3d4666;border-radius:8px;overflow:hidden;margin-top:12px}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,#16a34a,var(--gold));transition:width .4s}
+/* income */
+.iform{display:grid;grid-template-columns:150px 1fr 1fr 140px auto;gap:8px;margin:14px 0;align-items:end}
+.iform label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--muted);font-family:'Chakra Petch',sans-serif;letter-spacing:.04em}
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:15px}
+th{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--muted);text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px dashed var(--line);font-weight:600}
+td.amt{font-family:'Chakra Petch',sans-serif;color:var(--gold);text-align:right;white-space:nowrap}
+td button{background:none;border:1px solid #3d4666;color:var(--muted);border-radius:7px;cursor:pointer;padding:3px 10px;font-family:inherit;font-size:13px}
+td button:hover{border-color:var(--red);color:var(--red)}
+.type-tag{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 11px;border:1.5px solid;margin-right:4px;white-space:nowrap}
+.t-beat{color:#6EE7B7;border-color:#4ADE80;background:rgba(74,222,128,.1)}
+.t-teach{color:#93C5FD;border-color:#3B82F6;background:rgba(59,130,246,.1)}
+.t-setup{color:#FDE68A;border-color:#FBBF24;background:rgba(251,191,36,.1)}
+.t-mix{color:#C4B5FD;border-color:#A78BFA;background:rgba(139,92,246,.12)}
+.t-other{color:#AAB4CC;border-color:#4a557e;background:#0B0D14}
+.breakdown{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.bchip{background:#0B0D14;border:1.5px solid #3d4666;border-radius:10px;padding:8px 14px;font-size:14px;font-weight:700}
+.bchip b{font-family:'Chakra Petch',sans-serif;color:var(--gold)}
+.toolbar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.empty{color:var(--muted);font-size:14.5px;text-align:center;padding:18px;border:1.5px dashed #3d4666;border-radius:10px;margin-top:8px}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
+footer a{color:var(--gold);text-decoration:none;font-weight:700}
+@media(max-width:1000px){.pipe{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:1fr 1fr}.iform{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.pipe{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.iform{grid-template-columns:1fr}table{font-size:13.5px}}
+</style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
+</head>
+<body class="site-polish">
+<div class="wrap">
+
+<div class="topbar">
+<a class="back" href="./index.html">← LIFE OS</a>
+<b>🎛️ PROD.ET1CRUEL</b>
+<div class="month-hud num" id="monthHud">0 ฿</div>
+</div>
+
+<h1><span class="tag">PROD.</span>ET1CRUEL — ห้องโปรดิวเซอร์</h1>
+<p class="sub">แผนดำเนินงาน + บัญชีรายได้สาย Music Producer · ข้อมูลอยู่ในเครื่องนี้เท่านั้น (localStorage) · หมั่นกด Export สำรองไว้</p>
+
+<div class="kpis">
+<div class="kpi"><small>รายได้เดือนนี้</small><strong class="num" id="kMonth">0 ฿</strong></div>
+<div class="kpi"><small>รายได้รวมทั้งหมด</small><strong class="num" id="kTotal">0 ฿</strong></div>
+<div class="kpi"><small>งานค้างใน pipeline</small><strong class="num" id="kActive">0 งาน</strong></div>
+<div class="kpi goal"><small>เป้าเดือน / <span id="kPct">0%</span></small><strong class="num" id="kGoal">—</strong></div>
+</div>
+
+<section class="card" id="plan">
+<div class="shead"><div class="icon">🎯</div><h2>แผนดำเนินงาน</h2><span class="count" id="goalCount">0 / 0</span></div>
+<p>เป้ารายได้เดือน + เช็กลิสต์งานที่ต้องเดิน — ติ๊กเมื่อเสร็จ</p>
+<div class="addrow">
+<label style="display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:var(--muted);font-family:'Chakra Petch',sans-serif">เป้าเดือนนี้ (฿)<input id="goalInput" type="number" min="0" step="500" style="width:200px"></label>
+<button class="btn" id="goalSave">💾 ตั้งเป้า</button>
+</div>
+<div class="pbar"><i id="goalBar" style="width:0%"></i></div>
+<div id="goalList"></div>
+<div class="addrow">
+<input id="goalText" placeholder="เพิ่มแผนงาน… เช่น ลงบีท Beatstore 5 ตัว" style="flex:1;min-width:220px">
+<button class="btn" id="goalAdd">＋ เพิ่ม</button>
+</div>
+</section>
+
+<section class="card" id="pipeline">
+<div class="shead"><div class="icon">🔨</div><h2>Pipeline งาน — 5 ช่อง</h2><span class="count" id="pipeCount">0 งาน</span></div>
+<p>💡 ไอเดีย → 🔨 กำลังทำ → 🎚 รอมิกซ์ → ✅ พร้อมขาย → 💰 ขายแล้ว/ปล่อยแล้ว</p>
+<div class="pipe" id="pipe"></div>
+<div class="addrow">
+<input id="pjTitle" placeholder="ชื่องาน… เช่น Wavelove type beat" style="flex:1;min-width:200px">
+<input id="pjNote" placeholder="โน้ต… เช่น รอ verse ลูกค้า" style="flex:1;min-width:200px">
+<button class="btn" id="pjAdd">＋ ลงไอเดีย</button>
+</div>
+</section>
+
+<section class="card" id="income">
+<div class="shead"><div class="icon">💰</div><h2>บัญชีรายได้</h2><span class="count" id="incCount">0 รายการ</span></div>
+<p>ขายบีท · สอนทำบีท · รับลงโปรแกรม · มิกซ์/มาสเตอร์ — ลงทุกยอดที่เข้าจริง</p>
+<div class="iform">
+<label>วันที่<input id="inDate" type="date"></label>
+<label>ประเภท<select id="inType">
+<option value="beat">🎵 ขายบีท</option>
+<option value="teach">🎓 สอนทำบีท</option>
+<option value="setup">💻 รับลงโปรแกรม</option>
+<option value="mix">🎚 มิกซ์/มาสเตอร์</option>
+<option value="other">📦 อื่นๆ</option>
+</select></label>
+<label>รายละเอียด<input id="inDesc" placeholder="เช่น Exclusive — Wavelove"></label>
+<label>ยอด (฿)<input id="inAmt" type="number" min="0" step="50" placeholder="0"></label>
+<button class="btn" id="inAdd">＋ ลงยอด</button>
+</div>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>วันที่</th><th>ประเภท</th><th>รายละเอียด</th><th style="text-align:right">ยอด</th><th></th></tr></thead>
+<tbody id="incRows"></tbody>
+</table>
+</div>
+<div class="breakdown" id="breakdown"></div>
+<div class="toolbar">
+<button class="btn ghost" id="expBtn">⬇ Export JSON</button>
+<button class="btn ghost" id="impBtn">⬆ Import JSON</button>
+<input type="file" id="impFile" accept="application/json" hidden>
+</div>
+</section>
+
+<footer>ET1CRUEL · PROD ROOM 🎛️ — ทำเพลงวนไป · <a href="./index.html">กลับ LIFE OS</a></footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $ = function(id){ return document.getElementById(id); };
+var STAGES = ['💡 ไอเดีย','🔨 กำลังทำ','🎚 รอมิกซ์','✅ พร้อมขาย','💰 ขายแล้ว/ปล่อยแล้ว'];
+var TYPES = {beat:['🎵 ขายบีท','t-beat'],teach:['🎓 สอนทำบีท','t-teach'],setup:['💻 รับลงโปรแกรม','t-setup'],mix:['🎚 มิกซ์/มาสเตอร์','t-mix'],other:['📦 อื่นๆ','t-other']};
+function load(k, fb){ try{ var v = JSON.parse(localStorage.getItem(k)); return v == null ? fb : v; }catch(e){ return fb; } }
+function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+var projects = load('prod-projects', []);
+var incomes = load('prod-income', []);
+var goals = load('prod-goals', []);
+var goalTarget = load('prod-goal-target', 20000);
+function fmt(n){ return Number(n||0).toLocaleString('en-US') + ' ฿'; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function monthKey(d){ return (d||'').slice(0,7); }
+function thisMonth(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+
+/* ---- KPIs ---- */
+function renderKPIs(){
+  var mk = thisMonth();
+  var mSum = incomes.filter(function(r){ return monthKey(r.date) === mk; }).reduce(function(a,r){ return a + (+r.amt||0); }, 0);
+  var total = incomes.reduce(function(a,r){ return a + (+r.amt||0); }, 0);
+  var active = projects.filter(function(p){ return p.stage < 4; }).length;
+  $('monthHud').textContent = fmt(mSum);
+  $('kMonth').textContent = fmt(mSum);
+  $('kTotal').textContent = fmt(total);
+  $('kActive').textContent = active + ' งาน';
+  $('kGoal').textContent = goalTarget > 0 ? fmt(goalTarget) : '—';
+  var pct = goalTarget > 0 ? Math.min(100, Math.round(mSum / goalTarget * 100)) : 0;
+  $('kPct').textContent = pct + '%';
+  $('goalBar').style.width = pct + '%';
+}
+
+/* ---- goals ---- */
+function renderGoals(){
+  var box = $('goalList'); box.innerHTML = '';
+  var done = 0;
+  goals.forEach(function(g, i){
+    if (g.done) done++;
+    var div = document.createElement('div');
+    div.className = 'goal-item' + (g.done ? ' done' : '');
+    var cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = !!g.done; cb.setAttribute('aria-label', 'เสร็จ: ' + g.text);
+    cb.addEventListener('change', function(){ g.done = cb.checked; save('prod-goals', goals); renderGoals(); });
+    var sp = document.createElement('span'); sp.textContent = g.text;
+    var del = document.createElement('button'); del.textContent = '✕'; del.setAttribute('aria-label', 'ลบแผน');
+    del.addEventListener('click', function(){ goals.splice(i,1); save('prod-goals', goals); renderGoals(); });
+    div.appendChild(cb); div.appendChild(sp); div.appendChild(del);
+    box.appendChild(div);
+  });
+  if (!goals.length) box.innerHTML = '<div class="empty">ยังไม่มีแผนงาน — เพิ่มข้างล่างเลย</div>';
+  $('goalCount').textContent = done + ' / ' + goals.length;
+}
+$('goalAdd').addEventListener('click', function(){
+  var t = $('goalText').value.trim();
+  if (!t) return;
+  goals.push({text:t, done:false});
+  $('goalText').value = '';
+  save('prod-goals', goals); renderGoals();
+});
+$('goalText').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('goalAdd').click(); });
+$('goalInput').value = goalTarget;
+$('goalSave').addEventListener('click', function(){
+  goalTarget = Math.max(0, +$('goalInput').value || 0);
+  save('prod-goal-target', goalTarget); renderKPIs();
+});
+
+/* ---- pipeline ---- */
+function renderPipe(){
+  var pipe = $('pipe'); pipe.innerHTML = '';
+  STAGES.forEach(function(name, si){
+    var col = document.createElement('div');
+    col.className = 'col' + (si === 4 ? ' done' : '');
+    var items = projects.filter(function(p){ return p.stage === si; });
+    col.innerHTML = '<h3>' + esc(name) + ' <span class="c">' + items.length + '</span></h3>';
+    items.forEach(function(p){
+      var card = document.createElement('div');
+      card.className = 'pcard';
+      var b = document.createElement('b'); b.textContent = p.title;
+      card.appendChild(b);
+      if (p.note){ var sm = document.createElement('small'); sm.textContent = p.note; card.appendChild(sm); }
+      var ops = document.createElement('div'); ops.className = 'ops';
+      function mkBtn(label, title, fn, cls){
+        var btn = document.createElement('button');
+        btn.textContent = label; btn.title = title; if (cls) btn.className = cls;
+        btn.addEventListener('click', fn); return btn;
+      }
+      if (si > 0) ops.appendChild(mkBtn('←', 'ย้อนกลับ', function(){ p.stage--; save('prod-projects', projects); renderPipe(); renderKPIs(); }));
+      if (si < 4) ops.appendChild(mkBtn(si === 3 ? '💰 ขายแล้ว' : '→', 'เดินหน้า', function(){ p.stage++; p.updated = Date.now(); save('prod-projects', projects); renderPipe(); renderKPIs(); }));
+      ops.appendChild(mkBtn('✕', 'ลบงาน', function(){ if (confirm('ลบงานนี้?')){ projects = projects.filter(function(x){ return x.id !== p.id; }); save('prod-projects', projects); renderPipe(); renderKPIs(); } }, 'del'));
+      card.appendChild(ops);
+      col.appendChild(card);
+    });
+    pipe.appendChild(col);
+  });
+  $('pipeCount').textContent = projects.length + ' งาน';
+}
+$('pjAdd').addEventListener('click', function(){
+  var t = $('pjTitle').value.trim();
+  if (!t) return;
+  projects.push({id:'p' + Date.now(), title:t, note:$('pjNote').value.trim(), stage:0, updated:Date.now()});
+  $('pjTitle').value = ''; $('pjNote').value = '';
+  save('prod-projects', projects); renderPipe(); renderKPIs();
+});
+
+/* ---- income ---- */
+$('inDate').value = new Date().toISOString().slice(0,10);
+function renderIncome(){
+  var tb = $('incRows'); tb.innerHTML = '';
+  var rows = incomes.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+  rows.forEach(function(r){
+    var tr = document.createElement('tr');
+    var t = TYPES[r.type] || TYPES.other;
+    tr.innerHTML = '<td class="num">' + esc(r.date||'-') + '</td>' +
+      '<td><span class="type-tag ' + t[1] + '">' + t[0] + '</span></td>' +
+      '<td></td><td class="amt num">' + fmt(r.amt) + '</td><td></td>';
+    tr.children[2].textContent = r.desc || '-';
+    var del = document.createElement('button'); del.textContent = 'ลบ';
+    del.addEventListener('click', function(){
+      if (confirm('ลบยอด ' + fmt(r.amt) + ' ?')){
+        incomes = incomes.filter(function(x){ return x.id !== r.id; });
+        save('prod-income', incomes); renderIncome(); renderKPIs();
+      }
+    });
+    tr.children[4].appendChild(del);
+    tb.appendChild(tr);
+  });
+  if (!rows.length) tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">ยังไม่มียอด — ลงยอดแรกข้างบนเลย</td></tr>';
+  $('incCount').textContent = incomes.length + ' รายการ';
+  var bd = $('breakdown'); bd.innerHTML = '';
+  Object.keys(TYPES).forEach(function(k){
+    var s = incomes.filter(function(r){ return (r.type||'other') === k; }).reduce(function(a,r){ return a + (+r.amt||0); }, 0);
+    if (s > 0){ var d = document.createElement('div'); d.className = 'bchip'; d.innerHTML = TYPES[k][0] + ' <b class="num">' + fmt(s) + '</b>'; bd.appendChild(d); }
+  });
+}
+$('inAdd').addEventListener('click', function(){
+  var amt = +$('inAmt').value || 0;
+  if (amt <= 0){ alert('ใส่ยอดเงินก่อน'); return; }
+  incomes.push({id:'i' + Date.now(), date:$('inDate').value || new Date().toISOString().slice(0,10), type:$('inType').value, desc:$('inDesc').value.trim(), amt:amt});
+  $('inDesc').value = ''; $('inAmt').value = '';
+  save('prod-income', incomes); renderIncome(); renderKPIs();
+});
+$('expBtn').addEventListener('click', function(){
+  var blob = new Blob([JSON.stringify({projects:projects, incomes:incomes, goals:goals, goalTarget:goalTarget}, null, 2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'prod-et1cruel-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 5000);
+});
+$('impBtn').addEventListener('click', function(){ $('impFile').click(); });
+$('impFile').addEventListener('change', function(){
+  var f = $('impFile').files[0];
+  if (!f) return;
+  var rd = new FileReader();
+  rd.onload = function(){
+    try{
+      var d = JSON.parse(rd.result);
+      if (!d || typeof d !== 'object') throw 0;
+      if (confirm('นำข้อมูลกลับ (' + (d.incomes||[]).length + ' ยอด · ' + (d.projects||[]).length + ' งาน)? ข้อมูลปัจจุบันจะถูกแทนที่')){
+        projects = Array.isArray(d.projects) ? d.projects : projects;
+        incomes = Array.isArray(d.incomes) ? d.incomes : incomes;
+        goals = Array.isArray(d.goals) ? d.goals : goals;
+        if (typeof d.goalTarget === 'number') goalTarget = d.goalTarget;
+        save('prod-projects', projects); save('prod-income', incomes); save('prod-goals', goals); save('prod-goal-target', goalTarget);
+        $('goalInput').value = goalTarget;
+        renderAll();
+      }
+    }catch(e){ alert('ไฟล์ไม่ถูกต้อง นำกลับไม่ได้'); }
+    $('impFile').value = '';
+  };
+  rd.readAsText(f);
+});
+
+function renderAll(){ renderKPIs(); renderGoals(); renderPipe(); renderIncome(); }
+renderAll();
+})();
+</script>
+</body>
+</html>
