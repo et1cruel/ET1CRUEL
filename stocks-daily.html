@@ -141,7 +141,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
       <button class="btn ghost" type="button" id="clearBtn">ล้างฟอร์ม</button>
     </div>
   </form>
-  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 2 ใบ: <b>8 ตุลาคม 2569</b> กับ <b>10 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
+  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 3 ใบ: <b>8, 10 และ 12 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
 </section>
 
 <section class="card" id="list">
@@ -150,7 +150,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
   <div class="toolbar">
     <input id="q" placeholder="ค้นหา… 10 ตุลาคม / NVDA / SET">
     <button class="btn small ghost" id="exportBtn" type="button">⬇ สำรองข้อมูล</button>
-    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 ต.ค. 69)</button>
+    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 + 12 ต.ค. 69)</button>
   </div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">ยังไม่มีรูปที่ค้นหา — ลองล้างคำค้นหรืออัปโหลดรูปใหม่ด้านบน</div>
@@ -199,6 +199,14 @@ function save(arr){
 }
 function seed(){
   return [{
+    id: 'seed-2026-10-12',
+    dateISO: '2026-10-12',
+    dateLabel: '12 ตุลาคม 2569',
+    src: 'stocks/2026-10-12.png',
+    note: 'วอทช์ลิสต์หุ้นรายวัน ประจำวันที่ 12 ตุลาคม 2569',
+    createdAt: Date.now(),
+    seed: true
+  },{
     id: 'seed-2026-10-10',
     dateISO: '2026-10-10',
     dateLabel: '10 ตุลาคม 2569',
@@ -216,7 +224,7 @@ function seed(){
     seed: true
   }];
 }
-var SEED_V = 2;
+var SEED_V = 3;
 var items = load();
 if(!items || !items.length){ items = seed(); }
 // เติมรูปตั้งต้นที่ยังขาด (เช่น เปิดครั้งแรกตอนมีแค่รูป 10 ต.ค. จะได้รูป 8 ต.ค. เพิ่มโดยไม่ทับรูปที่อัปโหลดเอง)
