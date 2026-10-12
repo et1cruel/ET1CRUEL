@@ -1,8 +1,8 @@
 /* ET1CRUEL service worker — แคชไฟล์ต้นทาง (same-origin) อย่างเดียว
  *  progressive enhancement: ไม่มี SW เว็บก็ทำงานปกติทุกอย่าง
  *  HTML = network-first (กันติดหน้าเก่า) · JS/CSS/รูป/ฟอนต์ = cache-first */
-var CACHE = 'et1cruel-v20';
-var CORE = ['index.html', 'banks.html', 'pillars.html', 'prod/index.html', '404.html', 'manifest.json', 'favicon.svg', 'logo.svg', 'banner.webp', 'banner-960.webp', 'logos/ktb.png', 'logos/kbank.png', 'logos/bbl.png', 'logos/scb.svg', 'logos/paypal.png', 'logos/truemoney.png', 'logos/ttb.svg', 'logos/dime.svg', 'logos/webull.png', 'logos/shopee.png', 'logos/kept.png', 'css/life-os-os.css', 'css/stock-os.css', 'fx/fx.css', 'css/home-responsive.css', 'css/site-polish.css', 'css/command-deck.css?v=10', 'js/hero-clock.js', 'js/command-console.js?v=6', 'js/reactive-lens.js', 'js/site-polish.js?v=3', 'js/life-os-os.js', 'js/sky-breaks.js', 'js/diary.js', 'js/stock-talk.js', 'js/port.js', 'js/watch.js', 'js/shield.js', 'js/sp500.js', 'js/money-tree.js', 'js/ambient.js', 'js/tv-widgets.js', 'fx/forest.js', 'fx/mouse.js', 'fx/audio.js'];
+var CACHE = 'et1cruel-v21';
+var CORE = ['index.html', 'banks.html', 'pillars.html', 'prod/index.html', '404.html', 'manifest.json', 'favicon.svg', 'logo.svg', 'banner.webp', 'banner-960.webp', 'logos/ktb.png', 'logos/kbank.png', 'logos/bbl.png', 'logos/scb.svg', 'logos/paypal.png', 'logos/truemoney.png', 'logos/ttb.svg', 'logos/dime.svg', 'logos/webull.png', 'logos/shopee.png', 'logos/kept.png', 'css/life-os-os.css', 'css/stock-os.css?v=2', 'fx/fx.css', 'css/home-responsive.css', 'css/site-polish.css', 'css/command-deck.css?v=10', 'js/hero-clock.js', 'js/command-console.js?v=6', 'js/reactive-lens.js', 'js/site-polish.js?v=3', 'js/life-os-os.js', 'js/sky-breaks.js', 'js/diary.js', 'js/stock-talk.js?v=4', 'js/port.js?v=2', 'js/watch.js', 'js/shield.js', 'js/sp500.js', 'js/money-tree.js', 'js/ambient.js', 'js/tv-widgets.js', 'fx/forest.js', 'fx/mouse.js', 'fx/audio.js'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(

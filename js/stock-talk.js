@@ -32,16 +32,17 @@
     { sym: 'PENG', name: 'Penguin Solutions', tv: 'NASDAQ:PENG', hidden: true, desc: 'เดิม SGH — หน่วยความจำ + edge AI' },
     { sym: 'LITE', name: 'Lumentum',    tv: 'NASDAQ:LITE', hidden: true, desc: 'ชิปแสง/เลเซอร์สื่อสาร optical' },
     { sym: 'COST', name: 'Costco',      tv: 'NASDAQ:COST', hidden: true, desc: 'ค้าปลีกสมาชิก — หุ้นป้อมปราการ' },
+    { sym: 'NTAP', name: 'NetApp',      tv: 'NASDAQ:NTAP', hidden: true, desc: 'สตอเรจ + ข้อมูลคลาวด์ — เงินสดแกร่ง ปันผลดี' },
     { sym: 'BTC',  name: 'Bitcoin',   crypto: true, cg: 'bitcoin',  bn: 'BTCUSDT',  desc: 'ทองดิจิทัล — ผันผวนโหด แบ่งไม้เล็กๆ พอ' },
     { sym: 'ETH',  name: 'Ethereum',  crypto: true, cg: 'ethereum', bn: 'ETHUSDT',  desc: 'แพลตฟอร์ม smart contract — เหวี่ยงตาม BTC' }
   ];
   var CACHE_KEY = 'aom-stock-cache-v1';
-  var HOLD_KEY = 'aom-stock-hold-v2'; // v2: พอร์ต DIME จริง 8 ตัว
-  var CACHE_MS = 5 * 60 * 1000;
+  var HOLD_KEY = 'aom-stock-hold-v4'; // v4: พอร์ต DIME 11 ตัวคาลิเบรตตรง snapshot ล่าสุด (รีเฟรชราคาสด TradingView)
+  var CACHE_MS = 60 * 1000; // รีเฟรชราคาสดทุก 1 นาที — เหมือน Dime (แคชกันยิงถี่)
   var FETCH_TIMEOUT = 12000;
-  var FALLBACK_FX = 33.61;
-  // ราคาอ้างอิง 7-8 ต.ค. 2026 (ใช้เฉพาะตอนออฟไลน์สนิท)
-  var FALLBACK = { QQQI: 56.60, AMD: 646.91, MU: 1086.16, DELL: 580.76, MRVL: 282.01, NVDA: 237.34, ASML: 1802.69, AMAT: 519.46, VRT: 243.88, TSM: 473.28, AAPL: 335.98, TSLA: 377.17, MSFT: 528.67, AMZN: 259.24, META: 724.67, AVGO: 373.70, CRWD: 264.74, PLTR: 193.20, PENG: 72.57, LITE: 1111.95, COST: 943.54, BTC: 83218, ETH: 2560 };
+  var FALLBACK_FX = 33.53;
+  // ราคาอ้างอิงล่าสุด (ใช้เฉพาะตอนออฟไลน์สนิท) — ตรงกับ snapshot Dime 11 ตัว
+  var FALLBACK = { QQQI: 56.60, AMD: 590.77, MU: 1086.16, DELL: 580.76, MRVL: 267.32, NVDA: 226.51, ASML: 1759.29, AMAT: 519.46, VRT: 243.88, TSM: 473.28, AAPL: 335.98, TSLA: 377.17, MSFT: 528.67, AMZN: 259.24, META: 724.67, AVGO: 355.37, CRWD: 263.08, PLTR: 207.27, PENG: 78.83, LITE: 983.00, COST: 959.76, NTAP: 237.70, BTC: 83218, ETH: 2560 };
 
   var state = { prices: {}, fx: FALLBACK_FX, fxLive: false, ts: null, stale: true, loading: false, src: { stock: null, crypto: null, fx: null } };
 
@@ -56,7 +57,7 @@
     [/asml/, 'ASML'], [/amat/, 'AMAT'],
     [/\bvrt\b|vertiv/, 'VRT'], [/\btsm\b|tsmc|ไต้หวันเซมิ/, 'TSM'],
     [/crwd|crowdstrike/, 'CRWD'], [/pltr|palantir|พาลานเทียร์/, 'PLTR'],
-    [/peng|penguin|เพนกวิน/, 'PENG'], [/lite|lumentum/, 'LITE'], [/cost|costco|คอสต์โก/, 'COST']
+    [/peng|penguin|เพนกวิน/, 'PENG'], [/lite|lumentum/, 'LITE'], [/cost|costco|คอสต์โก/, 'COST'], [/ntap|netapp|เน็ตแอป/, 'NTAP']
   ];
 
   function $(id) { return document.getElementById(id); }
@@ -189,6 +190,7 @@
     if (!force && cached && cached.ts && (Date.now() - cached.ts < CACHE_MS) && cached.prices && cached.prices.NVDA) {
       state.prices = cached.prices; state.fx = cached.fx || FALLBACK_FX; state.fxLive = !!cached.fxLive;
       state.ts = cached.ts; state.stale = !!cached.stale; state.src = cached.src || { stock: null, crypto: null, fx: null };
+      nextRefreshAt = cached.ts + CACHE_MS; // ซิงก์นับถอยหลังให้ตรงรอบดึงจริง
       renderAll();
       return Promise.resolve();
     }
@@ -228,29 +230,52 @@
       state.stale = !anyLive;
       saveCache();
       state.loading = false;
+      nextRefreshAt = state.ts + CACHE_MS; // นับถอยหลังรอบถัดไปเริ่มตอนข้อมูลลงจอแล้ว
       renderAll();
     });
   }
 
-  /* ---------- พอร์ต DIME จริง ---------- */
+  /* ---------- พอร์ต DIME จริง (11 ตัวคาลิเบรตตรง snapshot ล่าสุด — มูลค่ารวม ~$401.37 ต้นทุน ~$406.74) ---------- */
   function defaultHold() {
     return [
-      { sym: 'NVDA', qty: 0.4536, avg: 236.55 },
-      { sym: 'AVGO', qty: 0.1717, avg: 352.06 },
-      { sym: 'CRWD', qty: 0.1532, avg: 264.71 },
-      { sym: 'PLTR', qty: 0.1532, avg: 193.03 },
-      { sym: 'PENG', qty: 0.4050, avg: 73.02 },
-      { sym: 'LITE', qty: 0.0108, avg: 1110.84 },
-      { sym: 'COST', qty: 0.0100, avg: 888.79 },
-      { sym: 'AMZN', qty: 0.0306, avg: 246.34 }
+      { sym: 'NVDA', qty: 0.45301, avg: 236.82 },
+      { sym: 'AVGO', qty: 0.1719, avg: 351.6 },
+      { sym: 'CRWD', qty: 0.15262, avg: 265.69 },
+      { sym: 'PENG', qty: 0.40672, avg: 72.7 },
+      { sym: 'PLTR', qty: 0.15275, avg: 193.58 },
+      { sym: 'NTAP', qty: 0.1244, avg: 237.94 },
+      { sym: 'ASML', qty: 0.01668, avg: 1777.58 },
+      { sym: 'MRVL', qty: 0.1031, avg: 286.81 },
+      { sym: 'AMD',  qty: 0.04579, avg: 645.77 },
+      { sym: 'LITE', qty: 0.01081, avg: 1111.01 },
+      { sym: 'COST', qty: 0.01007, avg: 886.79 }
     ];
   }
   function getHold() {
     try {
       var raw = localStorage.getItem(HOLD_KEY);
-      if (raw) { var a = JSON.parse(raw); if (Array.isArray(a)) return a; }
+      if (raw) { var a = JSON.parse(raw); if (Array.isArray(a) && a.length) return a; }
     } catch (e) {}
-    return defaultHold();
+    // migrate ครั้งเดียวจาก key เก่า (v3/v2): คงจำนวน/ทุนที่ผู้ใช้แก้ไว้ + พกหุ้นส่วนเกินมาด้วย
+    var def = defaultHold();
+    ['aom-stock-hold-v3', 'aom-stock-hold-v2'].forEach(function (k) {
+      try {
+        var old = JSON.parse(localStorage.getItem(k) || 'null');
+      if (Array.isArray(old) && old.length) {
+        def.forEach(function (h) {
+          var o = old.filter(function (x) { return x && x.sym === h.sym; })[0];
+          if (o) {
+            if (isFinite(+o.qty) && +o.qty > 0) h.qty = +o.qty;
+            if (isFinite(+o.avg) && +o.avg >= 0) h.avg = +o.avg;
+          }
+        });
+        old.forEach(function (o) {
+          if (o && o.sym && !def.some(function (h) { return h.sym === o.sym; })) def.push(o);
+        });
+      }
+    } catch (e) {}
+    });
+    return def;
   }
   function saveHold(a) { try { localStorage.setItem(HOLD_KEY, JSON.stringify(a)); } catch (e) {} }
   function priceOf(sym) { var p = state.prices[sym]; return p ? p.price : FALLBACK[sym]; }
@@ -267,8 +292,22 @@
     rows.sort(function (a, b) { return b.v - a.v; });
     return { rows: rows, cost: cost, val: val, pl: val - cost, plp: cost ? ((val - cost) / cost) * 100 : 0, dayBase: dayBase, dayPl: dayPl, dayPct: dayBase ? (dayPl / dayBase) * 100 : 0 };
   }
- var LOGO_BG = { NVDA: '#76B900', AVGO: '#CC092F', CRWD: '#F05523', PLTR: '#4258D0', PENG: '#14B8A6', LITE: '#9CA3AF', COST: '#005DAA', AMZN: '#FF9900', AAPL: '#555555', TSLA: '#E31937', MSFT: '#00A4EF', META: '#0082FB', AMD: '#ED1C24', QQQI: '#00A651', MU: '#E31837', DELL: '#007DB8', MRVL: '#C8102E', ASML: '#00A0DF', AMAT: '#7AC143', VRT: '#FF6600', TSM: '#B22222', BTC: '#F7931A', ETH: '#627EEA' };
+ var LOGO_BG = { NVDA: '#76B900', AVGO: '#CC092F', CRWD: '#F05523', PLTR: '#4258D0', PENG: '#14B8A6', LITE: '#9CA3AF', COST: '#005DAA', NTAP: '#0083C1', AMZN: '#FF9900', AAPL: '#555555', TSLA: '#E31937', MSFT: '#00A4EF', META: '#0082FB', AMD: '#ED1C24', QQQI: '#00A651', MU: '#E31837', DELL: '#007DB8', MRVL: '#C8102E', ASML: '#00A0DF', AMAT: '#7AC143', VRT: '#FF6600', TSM: '#B22222', BTC: '#F7931A', ETH: '#627EEA' };
   var dimeMode = 'pl'; // 'pl' = กำไรรวม | 'day' = เปลี่ยนวันก่อน
+  var dimeSort = 'value'; // 'value' = มูลค่า | 'pl' = กำไร | 'day' = เปลี่ยนวันก่อน
+  var TH_M_S = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+  function dimeDate(ts) {
+    try {
+      var d = ts ? new Date(ts) : new Date();
+      var hh = ('0' + d.getHours()).slice(-2), mm = ('0' + d.getMinutes()).slice(-2);
+      return d.getDate() + ' ' + TH_M_S[d.getMonth()] + ' ' + String(d.getFullYear() + 543).slice(-2) + ' - ' + hh + ':' + mm + ' น.';
+    } catch (e) { return ''; }
+  }
+  function dimeLogo(sym) {
+    var bg = LOGO_BG[sym] || '#4b5563';
+    return '<span class="dime-logo" style="background:' + bg + '"><i>' + esc(sym.charAt(0)) + '</i>' +
+      '<img src="logos/' + esc(sym) + '.png" alt="" loading="lazy" onerror="this.remove()"></span>';
+  }
 
   /* ---------- เรนเดอร์ ---------- */
   function chgClass(p) { return p.chg > 0 ? 'stock-up' : (p.chg < 0 ? 'stock-down' : 'stock-flat'); }
@@ -284,6 +323,10 @@
     if (!ts) return '—';
     try { return new Date(ts).toLocaleString('th-TH', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
     catch (e) { return '—'; }
+  }
+  function timeSec(ts) {
+    try { return new Date(ts == null ? Date.now() : ts).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }); }
+    catch (e) { return ''; }
   }
   // ตลาด US เปิดไหม? (จ–ศ 9:30–16:00 ET = 21:30–04:00 ไทย)
   function usMarketStatus() {
@@ -367,39 +410,57 @@
     var head = state.stale ? '⚠ ออฟไลน์ ใช้ราคาแคช · ' : '● ราคาสด · ';
     el.innerHTML = head + bits.join(' · ') + ' · <b>' + esc(timeShort(state.ts)) + '</b><br>' + esc(usMarketStatus());
   }
-  /* ---------- พอร์ต DIME สไตล์ ---------- */
+  /* ---------- พอร์ต DIME สไตล์ (โคลนหน้าสินทรัพย์ Dime! 1:1 — ราคาสด TradingView + FX สด) ---------- */
   function dimeArrow(v) { return v > 0 ? '↗' : (v < 0 ? '↘' : '–'); }
+  function dimeCls(v) { return v > 0 ? 'd-up' : (v < 0 ? 'd-down' : 'd-flat'); }
   function renderPf() {
     var st = holdStats();
-    // หัวสรุป
+    // การ์ดสรุปบน (เหมือนแอป Dime! เป๊ะ)
     var dh = $('dimeHead');
     if (dh) {
-      var dc = st.dayPct > 0 ? 'stock-up' : (st.dayPct < 0 ? 'stock-down' : 'stock-flat');
-      var pc = st.plp > 0 ? 'stock-up' : (st.plp < 0 ? 'stock-down' : 'stock-flat');
-      dh.innerHTML = '<div class="dime-total">$' + fmtN(st.val) + ' <small>USD</small></div>' +
-        '<div class="dime-sub">≈ ' + fmtInt(st.val * state.fx) + ' THB &nbsp;·&nbsp; $1 ≈ ' + fmtN(state.fx) + ' ฿</div>' +
-        '<div class="dime-sub">ต้นทุนรวม ' + fmtN(st.cost) + ' USD</div>' +
-        '<div class="dime-cols"><div><span>% เปลี่ยนวันก่อน</span><b class="' + dc + '">' + dimeArrow(st.dayPct) + ' ' + fmtN(st.dayPct) + '%</b></div>' +
-        '<div><span>กำไรของสินทรัพย์ที่ถืออยู่</span><b class="' + pc + '">' + dimeArrow(st.plp) + ' ' + fmtN(st.plp) + '% (' + (st.pl >= 0 ? '+' : '') + fmtN(st.pl) + ' USD)</b></div></div>';
+      dh.innerHTML = '<div class="dime-sum-label">มูลค่าสินทรัพย์ทั้งหมด <span>(' + dimeDate(state.ts) + ')</span></div>' +
+        '<div class="dime-total">' + fmtN(st.val) + ' <small>USD</small></div>' +
+        '<div class="dime-fxrow"><span>≈ ' + fmtN(st.val * state.fx) + ' THB</span>' +
+        '<span class="dime-fx">🇺🇸 1 USD = ' + fmtN(state.fx) + ' THB' + (state.fxLive ? '' : ' ○') + '</span></div>' +
+        '<div class="dime-cost">~ ต้นทุนรวม: ' + fmtN(st.cost) + ' USD</div>' +
+        '<div class="dime-div"></div>' +
+        '<div class="dime-kv"><span>% เปลี่ยนแปลงจากวันก่อน <i>ⓘ</i></span><b class="' + dimeCls(st.dayPct) + '">' + dimeArrow(st.dayPct) + ' ' + fmtN(st.dayPct) + '%</b></div>' +
+        '<div class="dime-kv"><span>กำไรของสินทรัพย์ที่ถืออยู่</span><b class="' + dimeCls(st.plp) + '">' + dimeArrow(st.plp) + ' ' + fmtN(st.plp) + '% (' + (st.pl >= 0 ? '+' : '') + fmtN(st.pl) + ' USD)</b></div>';
     }
     var cnt = $('dimeCount');
-    if (cnt) cnt.textContent = st.rows.length + ' สินทรัพย์ · เรียงตามมูลค่า';
+    if (cnt) cnt.textContent = st.rows.length + ' สินทรัพย์';
+    var colH = $('dimeColH');
+    if (colH) colH.textContent = dimeMode === 'day' ? '% เปลี่ยนและมูลค่า' : '% กำไรและมูลค่า';
     var tg = $('plToggle');
     if (tg) tg.innerHTML = (dimeMode === 'pl' ? 'กำไรขาดทุน' : 'เปลี่ยนวันก่อน') + ' ⇄';
+    var sel = $('dimeSort');
+    if (sel && sel.value !== dimeSort) sel.value = dimeSort;
+    // เรียงตามที่เลือก
+    var rows = st.rows.slice();
+    if (dimeSort === 'pl') rows.sort(function (a, b) { return b.plp - a.plp; });
+    else if (dimeSort === 'day') rows.sort(function (a, b) { return b.dayPct - a.dayPct; });
+    else rows.sort(function (a, b) { return b.v - a.v; });
     // รายการ
     var list = $('dimeList');
     if (list) {
-      list.innerHTML = st.rows.map(function (r) {
+      list.innerHTML = rows.map(function (r) {
         var w = (r.v / (st.val || 1)) * 100;
         var showDay = dimeMode === 'day';
         var v = showDay ? r.dayPct : r.plp, money = showDay ? r.dayChg : r.pl;
-        var cls = v > 0 ? 'stock-up' : (v < 0 ? 'stock-down' : 'stock-flat');
-        var bg = LOGO_BG[r.sym] || '#4b5563';
-        return '<div class="dime-row"><span class="dime-logo" style="background:' + bg + '">' + esc(r.sym.charAt(0)) + '</span>' +
+        var tick = lastPx[r.sym] == null ? '' : (r.px > lastPx[r.sym] ? ' tick-up' : (r.px < lastPx[r.sym] ? ' tick-down' : ''));
+        return '<div class="dime-row">' + dimeLogo(r.sym) +
           '<div class="dime-mid"><b>' + esc(r.sym) + '</b><span>◔ ' + fmtN(w) + '%</span></div>' +
-          '<div class="dime-val"><b>' + fmtN(r.v) + '</b><span>≈ ' + fmtInt(r.v * state.fx) + ' THB</span></div>' +
-          '<div class="dime-pl ' + cls + '">' + dimeArrow(v) + ' ' + fmtN(v) + '%<span>(' + (money >= 0 ? '+' : '') + fmtN(money) + ' USD)</span></div></div>';
-      }).join('') || '<div style="text-align:center;color:var(--muted)">ยังไม่มีหุ้น — เพิ่มด้านล่างได้เลย</div>';
+          '<div class="dime-val"><b class="' + dimeCls(v) + tick + '">' + fmtN(r.v) + '</b><span>≈ ' + fmtN(r.v * state.fx) + ' THB</span></div>' +
+          '<div class="dime-pl ' + dimeCls(v) + '">' + dimeArrow(v) + ' ' + fmtN(v) + '%<span>(' + (money >= 0 ? '+' : '') + fmtN(money) + ' USD)</span></div></div>';
+      }).join('') || '<div style="text-align:center;color:#9ca3af;padding:20px">ยังไม่มีหุ้น — เพิ่มด้านล่างได้เลย</div>';
+      rows.forEach(function (r) { lastPx[r.sym] = r.px; });
+    }
+    var live = $('dimeLive');
+    if (live) {
+      live.innerHTML = (state.stale ? '○ แคชล่าสุด ' : '● สด TradingView · ') +
+        'ข้อมูล <b>' + esc(timeSec(state.ts)) + '</b> · รีเฟรชอีกใน <b id="dimeLiveCd">60</b> วิ' +
+        ' · DIME US → เงิน <b>฿' + fmtInt(st.val * state.fx) + '</b>' + (state.fxLive ? '' : ' (ค่าเงินแคช)') +
+        ' · <span id="dimeClock">' + esc(timeSec()) + '</span>';
     }
     // ตารางแก้ไข (ใน details)
     var tb = $('pfBody');
@@ -446,7 +507,28 @@
       sel.appendChild(o);
     });
   }
-  function renderAll() { renderWatch(); renderFx(); renderUpdated(); renderPf(); renderPlan(); }
+  /* ดันยอดพอร์ตสด (฿) เข้ากระปุก DIME US ใน LIFE OS — ยอดเงินขยับตามตลาดเหมือนในแอป Dime */
+  function syncDimeVault() {
+    try {
+      var st = holdStats();
+      var thb = Math.round(st.val * state.fx);
+      if (!(thb > 0)) return;
+      if (window.ET1OS && typeof window.ET1OS.syncStocks === 'function') { window.ET1OS.syncStocks(thb); return; }
+      var raw = localStorage.getItem('et1cruel_lifeos_v1');
+      if (!raw) return;
+      var s = JSON.parse(raw);
+      if (!s.money || !s.money.vaults || s.money.vaults.stocks === thb) return;
+      s.money.vaults.stocks = thb;
+      var nw = 0;
+      Object.keys(s.money.vaults).forEach(function (k) { nw += +s.money.vaults[k] || 0; });
+      if (s.mainQuest) s.mainQuest.current = nw;
+      s.meta.updatedAt = new Date().toISOString();
+      localStorage.setItem('et1cruel_lifeos_v1', JSON.stringify(s));
+    } catch (e) {}
+  }
+  var lastPx = {}; // ราคางวดก่อนไว้เทียบกะพริบขึ้น/ลง
+  var nextRefreshAt = 0;
+  function renderAll() { renderWatch(); renderFx(); renderUpdated(); renderPf(); renderPlan(); syncDimeVault(); }
 
   /* ---------- แชทบอท ---------- */
   function findSyms(text) {
@@ -603,6 +685,11 @@
       dimeMode = (dimeMode === 'pl' ? 'day' : 'pl');
       renderPf();
     });
+    var dsort = $('dimeSort');
+    if (dsort) dsort.addEventListener('change', function () {
+      dimeSort = dsort.value || 'value';
+      renderPf();
+    });
     // tab สลับ แชท/ตลาด/พอร์ต
     document.querySelectorAll('#stocks .os-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -645,8 +732,16 @@
       if (close) close.addEventListener('click', function () { pop.classList.remove('open'); });
     }
 
-    // รีเฟรชอัตโนมัติทุก 5 นาที
+    // รีเฟรชอัตโนมัติทุก 1 นาที + ตัวนับถอยหลังทุกวินาที (ให้เห็นว่าสดอยู่)
     setInterval(function () { refreshPrices(false); }, CACHE_MS);
+    setInterval(function () {
+      var cd = document.getElementById('dimeLiveCd');
+      var left = nextRefreshAt ? Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000)) : 60;
+      if (cd) cd.textContent = left;
+      var ck = document.getElementById('dimeClock');
+      if (ck) ck.textContent = timeSec();
+      if (nextRefreshAt && left <= 0 && !state.loading) refreshPrices(false); // ถึงรอบแล้วยิงเอง — กันนาฬิกาค้างที่ 0
+    }, 1000);
   });
 
   window.StockTalk = { refresh: function () { return refreshPrices(true); }, ask: botReply };

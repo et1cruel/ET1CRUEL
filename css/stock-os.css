@@ -74,32 +74,73 @@
 .plan-pill{font-family:'Chakra Petch',sans-serif;font-size:12px;background:#212637;border:1px solid #3d4666;border-radius:8px;padding:4px 10px;color:#fff;white-space:nowrap}
 .plan-pill.stale{opacity:.55}
 .wgroup td{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--gold,#4ADE80);padding-top:12px!important;border-bottom:1px solid rgba(74,222,128,.3)}
-/* ===== พอร์ต DIME ===== */
-.dime-head{background:linear-gradient(180deg,#1c2233,#12162a);border:1px solid rgba(74,222,128,.35);border-radius:16px;padding:18px}
-.dime-total{font-family:'Chakra Petch',sans-serif;font-size:36px;font-weight:700;color:#fff;line-height:1.1}
-.dime-total small{font-size:15px;color:var(--muted,#AAB4CC)}
-.dime-sub{font-size:13.5px;color:var(--muted,#AAB4CC);margin-top:3px}
-.dime-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed #2B3248}
-.dime-cols span{display:block;font-size:12.5px;color:var(--muted,#AAB4CC)}
-.dime-cols b{font-size:16.5px;font-family:'Chakra Petch',sans-serif}
-.dime-tools{display:flex;align-items:center;gap:8px;margin:12px 0 4px}
-.dime-count{font-size:12.5px;color:var(--muted,#AAB4CC);font-weight:600}
-.dime-toggle{margin-left:auto;font-family:inherit;font-size:12.5px;font-weight:700;border:1px solid #3d4666;background:transparent;color:#fff;border-radius:16px;padding:6px 14px;cursor:pointer}
-.dime-toggle:hover{border-color:var(--gold,#4ADE80)}
-.dime-list{display:flex;flex-direction:column}
-.dime-row{display:grid;grid-template-columns:44px 1fr auto auto;gap:10px;align-items:center;padding:12px 2px;border-bottom:1px solid #1c2130}
-.dime-logo{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#fff;font-family:'Chakra Petch',sans-serif}
-.dime-mid b{display:block;font-size:16px;color:#fff;font-family:'Chakra Petch',sans-serif}
-.dime-mid span{font-size:12.5px;color:var(--muted,#AAB4CC)}
+/* ===== พอร์ต DIME — โคลนหน้าสินทรัพย์ Dime! 1:1 ===== */
+.dime-app{background:#fff;border-radius:22px;overflow:hidden;color:#141118;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.dime-top{background:radial-gradient(600px 200px at 85% -20%,rgba(255,255,255,.25),transparent 60%),linear-gradient(135deg,#6d28d9,#8b5cf6 55%,#a855f7);padding:20px 18px 60px;color:#fff}
+.dime-title{font-size:26px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dime-eye{font-size:20px;opacity:.9}
+.dime-analytics{margin-left:auto;font-size:14px;font-weight:700;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:7px 16px;white-space:nowrap}
+.dime-pills{display:flex;gap:6px;margin-top:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.dime-pills::-webkit-scrollbar{display:none}
+.dime-pills span{flex:0 0 auto;font-size:14px;font-weight:700;background:#fff;color:#3b3542;border-radius:999px;padding:9px 18px;box-shadow:0 2px 8px rgba(0,0,0,.18);white-space:nowrap}
+.dime-pills span.on{box-shadow:0 0 0 2px #2d2a33,0 2px 8px rgba(0,0,0,.25)}
+.dime-head{background:#fff;border-radius:20px;margin:-42px 14px 0;padding:20px 20px 16px;box-shadow:0 12px 32px rgba(60,20,120,.16);color:#141118;position:relative}
+.dime-sum-label{font-size:14px;color:#4b4654;font-weight:600}
+.dime-sum-label span{color:#6b6575}
+.dime-total{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-size:40px;font-weight:700;color:#111;line-height:1.15;margin-top:2px}
+.dime-total small{font-size:17px;font-weight:700}
+.dime-fxrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:15px;color:#4b4654;margin-top:4px}
+.dime-fx{white-space:nowrap}
+.dime-cost{font-size:15px;color:#8a8494;margin-top:2px}
+.dime-div{border-top:2px dashed #e6e2ec;margin:12px 0}
+.dime-kv{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:15px;font-weight:700;color:#141118;padding:2px 0}
+.dime-kv span{font-weight:600;white-space:nowrap}
+.dime-kv i{font-style:normal;color:#8a8494;font-size:13px}
+.dime-kv b{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-size:17px;white-space:nowrap}
+.d-up{color:#22c55e}
+.d-down{color:#fb7185}
+.d-flat{color:#9ca3af}
+.dime-body{background:#fff;padding:14px 14px 16px;color:#141118}
+.dime-tools{display:flex;align-items:center;gap:8px;margin:2px 0 6px}
+.dime-sort{font-size:14px;color:#6b6575;display:flex;align-items:center;gap:6px;border:1px solid #e6e2ec;border-radius:999px;padding:7px 14px;background:#fff}
+.dime-sort select{font-family:inherit;font-size:14px;font-weight:700;color:#141118;border:none;background:transparent;outline:none;appearance:none;cursor:pointer;max-width:130px}
+.dime-caret{font-size:13px;color:#141118;font-weight:700}
+.dime-toggle{margin-left:auto;font-family:inherit;font-size:13.5px;font-weight:700;border:1px solid #e6e2ec;background:#fff;color:#141118;border-radius:999px;padding:8px 16px;cursor:pointer;white-space:nowrap}
+.dime-toggle:hover{border-color:#8b5cf6}
+.dime-cols-head{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end;font-size:12.5px;color:#9a94a6;padding:8px 2px 4px}
+.dime-cols-head span:nth-child(2),.dime-cols-head span:nth-child(3){text-align:right}
+.dime-list{display:flex;flex-direction:column;background:#fff}
+.dime-row{display:grid;grid-template-columns:46px 1fr auto auto;gap:10px;align-items:center;padding:13px 2px;border-bottom:1px solid #f0edf4;background:#fff}
+.dime-logo{position:relative;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#fff;font-family:'Chakra Petch',sans-serif;overflow:hidden;flex:0 0 44px}
+.dime-logo i{font-style:normal}
+.dime-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#fff}
+.dime-mid b{display:block;font-size:18px;color:#141118;font-family:'Chakra Petch',sans-serif;letter-spacing:.01em}
+.dime-mid span{font-size:13.5px;color:#6b6575}
 .dime-val{text-align:right}
-.dime-val b{display:block;font-size:17px;font-family:'Chakra Petch',sans-serif;color:#fff}
-.dime-val span{font-size:12px;color:var(--muted,#AAB4CC)}
-.dime-pl{text-align:right;font-weight:700;font-size:15px;min-width:118px}
-.dime-pl span{display:block;font-size:12px;font-weight:600}
-.dime-edit{margin-top:12px;border:1px dashed #3d4666;border-radius:12px;padding:10px 12px}
+.dime-val b{display:block;font-size:20px;font-family:'Chakra Petch',sans-serif;color:#141118}
+.dime-val span{font-size:12.5px;color:#9a94a6;white-space:nowrap}
+.dime-pl{text-align:right;font-weight:700;font-size:17px;min-width:128px;font-family:'Chakra Petch',sans-serif}
+.dime-pl span{display:block;font-size:13px;font-weight:600;font-family:'IBM Plex Sans Thai',sans-serif}
+.dime-live{text-align:center;font-size:12px;color:#9a94a6;padding:12px 0 2px}
+.dime-live b{color:#141118}
+@keyframes dimeTickUp{0%{background:rgba(34,197,94,.35);border-radius:8px}100%{background:transparent}}
+@keyframes dimeTickDown{0%{background:rgba(251,113,133,.35);border-radius:8px}100%{background:transparent}}
+.tick-up{animation:dimeTickUp 1.2s ease-out}
+.tick-down{animation:dimeTickDown 1.2s ease-out}
+.dime-edit{margin:12px 14px 0;border:1px dashed #3d4666;border-radius:12px;padding:10px 12px;background:#0B0D14}
 .dime-edit summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--gold,#4ADE80);padding:4px}
 .dime-edit .stock-table{margin-top:8px}
-@media(max-width:520px){.dime-cols{grid-template-columns:1fr}.dime-pl{min-width:0}.dime-total{font-size:30px}}
+@media(max-width:520px){
+  .dime-title{font-size:22px}
+  .dime-pills span{font-size:12px;padding:7px 11px}
+  .dime-total{font-size:32px}
+  .dime-pl{min-width:0;font-size:15px}
+  .dime-val b{font-size:17px}
+  .dime-mid b{font-size:16px}
+  .dime-kv{font-size:13.5px}
+  .dime-kv b{font-size:15px}
+  .dime-cols-head{font-size:11.5px}
+}
 @media(max-width:900px){.plan-grid{grid-template-columns:1fr}.pb-amt{font-size:26px}}
 /* ===== TradingView widgets (แนว OpenStock) ===== */
 .tv-loading{color:var(--muted,#AAB4CC);font-size:14px;text-align:center;padding:26px 10px}
@@ -135,7 +176,8 @@
 .port-table tbody td.l{text-align:left;white-space:normal;min-width:200px}
 .port-table tbody tr:hover td{background:rgba(74,222,128,.05)}
 .port-sym{display:flex;gap:9px;align-items:center}
-.port-logo{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:#212637;border:1px solid #3d4666;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.port-logo{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #3d4666;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;overflow:hidden}
+.port-logo img{width:26px;height:26px;object-fit:contain}
 .port-sym .sn{font-weight:700;font-size:13.5px;color:#fff}
 .port-sym .sn small{color:var(--muted,#AAB4CC);font-weight:600}
 .port-sym .fn{font-size:12px;color:var(--muted,#AAB4CC)}

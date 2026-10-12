@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="banner.webp" imagesrcset="banner-960.webp 960w, banner.webp 1920w" imagesizes="100vw" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="css/life-os-os.css">
-<link rel="stylesheet" href="css/stock-os.css">
+<link rel="stylesheet" href="css/stock-os.css?v=2">
 <link rel="stylesheet" href="fx/fx.css">
 <script>document.documentElement.classList.add('js');</script>
 <script>
@@ -846,12 +846,22 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
     </table>
   </div>
   <div class="os-pane" id="pane-pf">
-    <div class="dime-head" id="dimeHead"></div>
-    <div class="dime-tools">
-      <span class="dime-count" id="dimeCount"></span>
-      <button type="button" class="dime-toggle" id="plToggle">กำไรขาดทุน ⇄</button>
+    <div class="dime-app">
+      <div class="dime-top">
+        <div class="dime-title">สินทรัพย์ของฉัน <span class="dime-eye">👁</span> <span class="dime-analytics">📊 Dime! Analytics →</span></div>
+        <div class="dime-pills"><span>← ทั้งหมด</span><span>ลงทุนรวม</span><span>หุ้นไทย</span><span class="on">🇺🇸 หุ้นสหรัฐฯ</span></div>
+      </div>
+      <div class="dime-head" id="dimeHead"></div>
+      <div class="dime-body">
+        <div class="dime-tools">
+          <label class="dime-sort">เรียงตาม: <select id="dimeSort"><option value="value">มูลค่าสินทรัพย์</option><option value="pl">กำไรขาดทุน</option><option value="day">เปลี่ยนวันก่อน</option></select><span class="dime-caret">▾</span></label>
+          <button type="button" class="dime-toggle" id="plToggle">กำไรขาดทุน ⇄</button>
+        </div>
+        <div class="dime-cols-head"><span id="dimeCount">11 สินทรัพย์</span><span>มูลค่าสินทรัพย์ (USD)</span><span id="dimeColH">% กำไรและมูลค่า</span></div>
+        <div class="dime-list" id="dimeList"></div>
+        <div class="dime-live" id="dimeLive">● กำลังโหลดราคาสด…</div>
+      </div>
     </div>
-    <div class="dime-list" id="dimeList"></div>
     <details class="dime-edit">
       <summary>✎ แก้จำนวน / ทุนเฉลี่ย / เพิ่ม–ลบหุ้น</summary>
       <table class="stock-table">
@@ -863,7 +873,7 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
         <button type="button" class="pf-add" id="pfAdd">+ เพิ่มหุ้น</button>
       </div>
     </details>
-    <div class="chat-note">พอร์ต DIME จริง 8/10 ตัว · อีก 2 ตัวเพิ่มเองได้ · ไม่ใช่คำแนะนำการลงทุน</div>
+    <div class="chat-note">พอร์ต DIME จริง 11 ตัวตรงบัญชี · ราคาสด TradingView · ไม่ใช่คำแนะนำการลงทุน</div>
   </div>
   <div class="note">⚔ <b>กฎห้องเทรด:</b> เงินเย็นเท่านั้น · ไม่เกิน 5–10% ต่อตัวสำหรับหุ้นซิ่ง/คริปโต · แบ่งไม้ DCA อย่าหมดแม็กไม้เดียว · 📸 เก็บรูปหุ้นทุกวันได้ที่ <a href="./stocks-daily.html" style="color:var(--gold);font-weight:700">🗓️ ห้องดูหุ้นรายวัน ↗</a> (มีรูป 10 ตุลาคม 2569 แล้ว)</div>
 </section>
@@ -2455,8 +2465,8 @@ function apply(){
 <script defer src="js/life-os-os.js"></script>
 <script defer src="js/sky-breaks.js"></script>
 <script defer src="js/diary.js"></script>
-<script defer src="js/stock-talk.js"></script>
-<script defer src="js/port.js"></script>
+<script defer src="js/stock-talk.js?v=4"></script>
+<script defer src="js/port.js?v=2"></script>
 <script defer src="js/watch.js"></script>
 <script defer src="js/shield.js"></script>
 <script defer src="js/sp500.js"></script>

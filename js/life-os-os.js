@@ -462,7 +462,8 @@ function renderMoney() {
     '<div class="os-row" style="margin-top:8px"><button class="os-btn small ghost" data-act="vault-toggle">EDIT VAULTS</button><button class="os-btn small ghost" data-act="hist-toggle">+ HISTORY</button></div><div id="os-vault-edit"></div><div id="os-hist-edit"></div>';
   var ve = document.getElementById('os-vault-edit');
   if (ve) ve.innerHTML = OSUI.vaultEdit ? Object.keys(S.money.vaults).map(function (k) {
-    return '<div class="os-row" style="margin-top:6px"><span class="badge b-indigo" style="min-width:140px">' + esc(VAULT_LABEL[k] || k) + '</span><input class="os-input" id="os-vault-' + k + '" type="number" value="' + S.money.vaults[k] + '" style="max-width:150px;margin:0"></div>';
+    var lbl = esc(VAULT_LABEL[k] || k) + (k === 'stocks' ? ' · 🔴LIVE' : '');
+    return '<div class="os-row" style="margin-top:6px"><span class="badge b-indigo" style="min-width:140px">' + lbl + '</span><input class="os-input" id="os-vault-' + k + '" type="number" value="' + S.money.vaults[k] + '" style="max-width:150px;margin:0"></div>';
   }).join('') + '<button class="os-btn small" data-act="vault-save" style="margin-top:8px">SAVE VAULTS</button>' : '';
   var he = document.getElementById('os-hist-edit');
   if (he) he.innerHTML = OSUI.histEdit ? '<div class="os-row" style="margin-top:8px"><input class="os-input" id="os-hist-m" placeholder="เดือน (เช่น Oct)" style="max-width:110px;margin:0"><input class="os-input" id="os-hist-v" type="number" placeholder="net worth ฿" style="max-width:150px;margin:0"><button class="os-btn small" data-act="hist-add">ADD</button></div>' : '';
@@ -817,7 +818,16 @@ function boot() {
   S.streak.best = Math.max(S.streak.best || 0, bestStreak());
   Store.save(S);
   renderAll();
-  window.ET1OS = { state: function () { return S; }, addXP: addXP, netWorth: netWorth, progressToNext: function () { return progressToNext(S.character.xp, S.character.level); }, export: function () { return Store.export(S); } };
+  window.ET1OS = { state: function () { return S; }, addXP: addXP, netWorth: netWorth, progressToNext: function () { return progressToNext(S.character.xp, S.character.level); }, export: function () { return Store.export(S); },
+    syncStocks: function (thb) { // รับยอด DIME US สด (฿) จากห้องเทรด → อัปกระปุก + net worth ทันที
+      thb = Math.round(+thb);
+      if (!(thb > 0)) return false;
+      if (S.money.vaults.stocks === thb) return false;
+      S.money.vaults.stocks = thb;
+      if (S.mainQuest) S.mainQuest.current = netWorth();
+      Store.save(S); renderAll();
+      return true;
+    } };
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
 else boot();

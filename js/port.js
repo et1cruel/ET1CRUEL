@@ -16,7 +16,8 @@
     { sym: 'MRVL', market: 'NASDAQ', name: 'Marvell Technology Inc', price: 284.68, qty: 0.1035, cap: 0, inc: 0, curr: 0.19, logo: 'M', color: '#c8102e', domain: 'marvell.com' },
     { sym: 'PENG', market: 'NASDAQ', name: 'Penguin Solutions Inc.', price: 72.61, qty: 0.4054, cap: 0, inc: 0, curr: 0.19, logo: 'P', color: '#14b8a6', domain: 'penguinsolutions.com' },
     { sym: 'LITE', market: 'NASDAQ', name: 'Lumentum Holdings Inc', price: 1111.07, qty: 0.0108, cap: 0, inc: 0, curr: 0.08, logo: 'L', color: '#9ca3af', domain: 'lumentum.com' },
-    { sym: 'COST', market: 'NASDAQ', name: 'Costco Wholesale Corp', price: 942.25, qty: 0.0101, cap: 0, inc: 0, curr: 0.06, logo: 'C', color: '#005daa', domain: 'costco.com' }
+    { sym: 'COST', market: 'NASDAQ', name: 'Costco Wholesale Corp', price: 942.25, qty: 0.0101, cap: 0, inc: 0, curr: 0.06, logo: 'C', color: '#005daa', domain: 'costco.com' },
+    { sym: 'NTAP', market: 'NASDAQ', name: 'NetApp Inc', price: 237.34, qty: 0.1247, cap: 0, inc: 0, curr: 0, logo: 'N', color: '#0083c1', domain: 'netapp.com' } // เพิ่ม 12 ต.ค. 2569 — ซื้อ ~1,000 ฿ ≈ $29.60 ≈ 0.1247 หุ้น @ ~$237
   ];
 
   var section = document.getElementById('port-snap');
@@ -54,9 +55,14 @@
     return { fx: DEFAULT_FX, stocks: JSON.parse(JSON.stringify(DEFAULTS)), updatedAt: null };
   }
   function logoUrl(s) {
-    return s.domain
-      ? 'https://www.google.com/s2/favicons?domain=' + encodeURIComponent(s.domain) + '&sz=64'
-      : null;
+    // ใช้ไฟล์โลโก้จริงจากโฟลเดอร์ logos/ ก่อน ถ้าไม่มีค่อย fallback เป็น favicon จาก domain
+    return 'logos/' + s.sym + '.png';
+  }
+  function logoHtml(s) {
+    var u = logoUrl(s);
+    var img = '<img src="' + u + '" alt="' + s.sym + '" onerror="this.remove()">';
+    var letter = '<span style="color:' + (s.color || '#9e2b1e') + '">' + (s.logo || s.sym.charAt(0)) + '</span>';
+    return img + letter;
   }
   function save(d) {
     d.updatedAt = new Date().toISOString();
@@ -126,8 +132,7 @@
 
       var tdSym = document.createElement('td');
       tdSym.className = 'l';
-      tdSym.innerHTML = '<div class="port-sym"><span class="port-logo" style="color:' + (s.color || '#9e2b1e') + '">' +
-        (s.logo || s.sym.charAt(0)) + '</span><span><div class="sn">' + s.sym +
+      tdSym.innerHTML = '<div class="port-sym"><span class="port-logo">' + logoHtml(s) + '</span><span><div class="sn">' + s.sym +
         ' <small>| ' + (s.market || 'NASDAQ') + '</small></div><div class="fn">' + s.name + '</div></span></div>';
       tr.appendChild(tdSym);
 
@@ -273,6 +278,69 @@
   var init = getData();
   renderUpdated(init.updatedAt);
   render();
+
+  /* ===== ราคาสด TradingView Scanner — อัพเดต price ในตารางพอร์ต ===== */
+  var LIVE_KEY = 'aom-port-live-v1';
+  var REFRESH_MS = 60000;
+  function getJSON(url) {
+    return fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  function fetchLiveQuotes() {
+    var d = getData();
+    var fx = d.fx || DEFAULT_FX;
+    var jobs = d.stocks.map(function (s) {
+      var tv = 'NASDAQ:' + s.sym;
+      return getJSON('https://scanner.tradingview.com/symbol?symbol=' + encodeURIComponent(tv) +
+        '&fields=close,change,previous_close')
+        .then(function (r) {
+          var price = parseFloat(r.close);
+          if (!(price > 0)) throw new Error('bad');
+          var pct = parseFloat(r.change) || 0;
+          var prevRaw = parseFloat(r.previous_close);
+          var prev = prevRaw > 0 ? prevRaw : (pct ? price / (1 + pct / 100) : price);
+          return { sym: s.sym, price: price, prev: prev, pct: pct };
+        })
+        .catch(function () { return null; });
+    });
+    return Promise.all(jobs).then(function (qs) {
+      var ok = qs.filter(Boolean);
+      if (!ok.length) throw new Error('no quotes');
+      return ok;
+    });
+  }
+  function setLiveBanner(html) {
+    var b = document.getElementById('portLive');
+    if (b) b.innerHTML = html;
+  }
+  function refreshLive() {
+    fetchLiveQuotes().then(function (qs) {
+      var d = getData();
+      var fx = d.fx || DEFAULT_FX;
+      qs.forEach(function (q) {
+        var s = d.stocks.filter(function (x) { return x.sym === q.sym; })[0];
+        if (s) s.price = q.price;
+      });
+      // ราคาสดอยู่เหนือการแก้ไข — ไม่เซฟทับ default เก็บแคชแยกไว้แสดงตอนออฟไลน์
+      try { localStorage.setItem(LIVE_KEY, JSON.stringify({ q: qs, ts: Date.now() })); } catch (e) {}
+      render();
+      var up = qs.filter(function (q) { return q.pct > 0; }).length;
+      var down = qs.filter(function (q) { return q.pct < 0; }).length;
+      setLiveBanner('● <b>ราคาสด TradingView</b> · เขียว <b class="stock-up">' + up + '</b> แดง <b class="stock-down">' + down +
+        '</b> · $1 ≈ ' + fx.toFixed(2) + ' ฿ · อัพเดท ' + new Date().toLocaleTimeString('th-TH') + ' · รีเฟรชอัตโนมัติทุก 1 นาที');
+    }).catch(function () {
+      try {
+        var c = JSON.parse(localStorage.getItem(LIVE_KEY) || 'null');
+        setLiveBanner('○ ออฟไลน์ — ใช้ราคาแคชล่าสุด' + (c ? ' (' + new Date(c.ts).toLocaleString('th-TH') + ')' : ''));
+      } catch (e) { setLiveBanner('○ ออฟไลน์ — ไม่สามารถดึงราคาสดได้'); }
+    });
+  }
+  var liveEl = document.createElement('div');
+  liveEl.id = 'portLive';
+  liveEl.className = 'px-updated';
+  liveEl.style.marginBottom = '10px';
+  if (updatedEl && updatedEl.parentNode) updatedEl.parentNode.insertBefore(liveEl, updatedEl);
+  refreshLive();
+  setInterval(refreshLive, REFRESH_MS);
 
   // เผย section ด้วย observer เดิมถ้ามี
   if ('IntersectionObserver' in window) {
