@@ -66,7 +66,7 @@
   });
 
   /* ---------- Coin drawing ---------- */
-  var R = 13; // รัศมีเหรียญ (px)
+  var R = 18; // รัศมีเหรียญ (px) — ใหญ่พออ่าน ฿ ชัด
 
   function drawCoin(c, t) {
     if (!ctx) return;
@@ -74,12 +74,13 @@
     var sway = Math.sin(t / 400 + c.phase) * c.swayAmp;
     var x = c.x + sway;
     var y = c.y;
-    var alpha = c.life > 0.7 ? Math.min(1, (1 - c.life) / 0.3) : Math.min(1, c.life / 0.3);
+    var alpha = Math.min(1, c.life / 0.3); // เกิดมาเต็มตา ค่อยจางตอนหมดอายุ
 
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.translate(x, y);
-    ctx.rotate(c.rot);
+    // ตัวเหรียญเป็นวงกลมเลยไม่ต้องหมุน — ฿ ตั้งตรงอ่านออกเสมอ
+    try { ctx.shadowColor = 'rgba(251,191,36,.8)'; ctx.shadowBlur = 12; } catch (e) {}
     var grad = ctx.createLinearGradient(-R, -R, R, R);
     grad.addColorStop(0, '#FDE68A');
     grad.addColorStop(1, '#FBBF24');
@@ -87,7 +88,8 @@
     ctx.arc(0, 0, R, 0, Math.PI * 2);
     ctx.fillStyle = grad;
     ctx.fill();
-    ctx.lineWidth = 1.5;
+    try { ctx.shadowBlur = 0; } catch (e) {}
+    ctx.lineWidth = 2;
     ctx.strokeStyle = '#B45309';
     ctx.stroke();
     ctx.fillStyle = '#92400E';
@@ -144,9 +146,11 @@
       var max = 120;
       n = Math.min(n, max);
       for (var i = 0; i < n; i++) {
+        // ครึ่งหนึ่งร่วงจากฟ้า อีกครึ่งเกิดกลางจอเลย — เห็นทันทีไม่ต้องรอ
+        var inView = (i % 2 === 1);
         coins.push({
           x: Math.random() * w,
-          y: -R * 2 - Math.random() * (h * 0.4), // อิงความสูงจอ ไม่ใช่ความกว้าง
+          y: inView ? Math.random() * (h * 0.6) : (-R * 2 - Math.random() * (h * 0.4)),
           vx: (Math.random() - 0.5) * 1.2,
           vy: 2.5 + Math.random() * 4,
           vr: (Math.random() - 0.5) * 0.12,
