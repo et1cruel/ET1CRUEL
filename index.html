@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="banner.webp" imagesrcset="banner-960.webp 960w, banner.webp 1920w" imagesizes="100vw" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="css/life-os-os.css">
-<link rel="stylesheet" href="css/stock-os.css?v=2">
+<link rel="stylesheet" href="css/stock-os.css?v=3">
 <link rel="stylesheet" href="fx/fx.css">
 <script>document.documentElement.classList.add('js');</script>
 <script>
@@ -570,7 +570,13 @@ body section.card#memento .count{background:linear-gradient(180deg,#E7E5E4,#A8A2
 #npcHead button{margin-left:auto;background:transparent;border:1px solid #3d4666;color:var(--muted);border-radius:8px;cursor:pointer;font-size:12px;padding:3px 10px;font-family:inherit}
 #npcHead button:hover{border-color:#A78BFA;color:#fff}
 #npcBody{padding:14px;max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px}
-.npc-msg{max-width:92%;font-size:14.5px;font-weight:600;line-height:1.85;border-radius:12px;padding:10px 13px}
+.npc-msg{max-width:92%;font-size:14.5px;font-weight:600;line-height:1.85;border-radius:12px;padding:10px 13px;animation:npcMsgIn .22s ease-out}
+@keyframes npcMsgIn{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
+.npc-msg.typing .tdots{display:inline-flex;gap:5px;padding:4px 2px}
+.npc-msg.typing .tdots i{width:7px;height:7px;border-radius:50%;background:#A78BFA;animation:npcBlink 1s infinite}
+.npc-msg.typing .tdots i:nth-child(2){animation-delay:.18s}
+.npc-msg.typing .tdots i:nth-child(3){animation-delay:.36s}
+@keyframes npcBlink{0%,100%{opacity:.25}50%{opacity:1}}
 .npc-msg.npc{background:#222839;border:1px solid #3d4666;color:#fff;border-bottom-left-radius:4px;align-self:flex-start}
 .npc-msg.me{background:linear-gradient(180deg,#7C3AED,#5B21B6);color:#fff;border:1px solid #A78BFA;border-bottom-right-radius:4px;align-self:flex-end}
 .npc-msg.npc .cursor{display:inline-block;width:8px;animation:blink 1s infinite;color:#A78BFA}
@@ -581,7 +587,7 @@ body section.card#memento .count{background:linear-gradient(180deg,#E7E5E4,#A8A2
 #npcBtns button:hover{background:rgba(139,92,246,.2);box-shadow:0 0 10px rgba(139,92,246,.35)}
 #npcBtns button:disabled{opacity:.4;cursor:default;box-shadow:none}
 @media(max-width:700px){#npcFab{left:auto;right:82px;bottom:18px}#npcPop{left:12px;bottom:82px}.mem-stats{grid-template-columns:1fr 1fr}}
-@media(prefers-reduced-motion:reduce){#npcPop.open{animation:none}.mem-cell.now{animation:none}}
+@media(prefers-reduced-motion:reduce){#npcPop.open{animation:none}.mem-cell.now{animation:none}.npc-msg{animation:none}}
 .quote-foot{
   margin-top:16px;text-align:center;font-size:14.5px;font-weight:700;color:#831843;
   background:rgba(255,255,255,.7);border:1.5px dashed #F9A8D4;border-radius:14px;padding:12px 16px;line-height:1.9;
@@ -837,7 +843,7 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
       <button type="button" data-chatchip="พอร์ตฉันเป็นไง">พอร์ตฉันเป็นไง</button>
       <button type="button" data-chatchip="DCA คืออะไร">DCA คืออะไร</button>
     </div>
-    <form class="chat-form" id="chatForm"><input id="chatInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง">↑</button></form>
+    <form class="chat-form" id="chatForm"><input id="chatInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button></form>
     <div class="chat-note">ราคาสด: หุ้น TradingView · คริปโต CoinGecko · ค่าเงิน ER-API · ไม่ใช่คำแนะนำการลงทุน</div>
   </div>
   <div class="os-pane" id="pane-market">
@@ -2370,15 +2376,22 @@ function apply(){
     div.className='npc-msg '+who;
     body.appendChild(div);
     if(who==='me'||reduce){div.textContent=text;scrollDown();return;}
-    var chars=Array.from(text);var i=0;
-    div.innerHTML='<span class="txt"></span><span class="cursor">▌</span>';
-    var txt=div.querySelector('.txt');
-    var timer=setInterval(function(){
-      i+=2;
-      txt.textContent=chars.slice(0,i).join('');
-      scrollDown();
-      if(i>=chars.length){clearInterval(timer);var cur=div.querySelector('.cursor');if(cur)cur.parentNode.removeChild(cur);}
-    },18);
+    div.classList.add('typing');
+    div.innerHTML='<span class="tdots" aria-hidden="true"><i></i><i></i><i></i></span>';
+    scrollDown();
+    setTimeout(function(){
+      if(!document.body.contains(div))return;
+      div.classList.remove('typing');
+      var chars=Array.from(text);var i=0;
+      div.innerHTML='<span class="txt"></span><span class="cursor">▌</span>';
+      var txt=div.querySelector('.txt');
+      var timer=setInterval(function(){
+        i+=2;
+        txt.textContent=chars.slice(0,i).join('');
+        scrollDown();
+        if(i>=chars.length){clearInterval(timer);var cur=div.querySelector('.cursor');if(cur)cur.parentNode.removeChild(cur);}
+      },18);
+    },550);
   }
   function faceByTime(){
     var h=new Date().getHours();
@@ -2497,7 +2510,7 @@ function apply(){
     <button type="button" data-npc="who">❓ มึงคือใคร</button>
   </div>
 </div>
-<div id="os-toasts"></div>
+<div id="os-toasts" role="status" aria-live="polite"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
 <button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆ QUEST</button>
 <nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button type="button" class="qmin" id="qtrackerMin" aria-label="พับ/กางรายการ" title="พับ/กางรายการ">–</button><button type="button" class="qmin" id="qtrackerHide" aria-label="ซ่อนแผง" title="ซ่อนแผง — เปิดคืนจากแถบข้างจอ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
@@ -2577,7 +2590,7 @@ function apply(){
     <button type="button" data-popchip="พอร์ตฉันเป็นไง">พอร์ตฉัน</button>
     <button type="button" data-popchip="ตัวไหนวิ่งแรง">ตัวไหนวิ่งแรง</button>
   </div>
-  <form class="chat-form" id="popForm"><input id="popInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง">↑</button></form>
+  <form class="chat-form" id="popForm"><input id="popInput" placeholder="ถามเรื่องหุ้น…" autocomplete="off"><button type="submit" aria-label="ส่ง"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button></form>
   <div class="chat-note">ราคาสด: หุ้น TradingView · คริปโต CoinGecko · ไม่ใช่คำแนะนำการลงทุน</div>
 </div>
 <div class="command-console" id="commandConsole" hidden>
