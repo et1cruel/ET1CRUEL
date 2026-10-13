@@ -31,7 +31,7 @@
 <style>
 :root{
   --bg:#07070B; --card:#12141D; --card2:#1A1E2B; --ink:#F4F6FB; --muted:#AAB4CC; --line:#2B3248;
-  --gold:#4ADE80; --gold-dim:#166534; --hp:#FF4D5E; --mp:#4DA6FF; --xp:#6EE7B7;
+  --gold:#4ADE80; --gold-dim:#166534; --hp:#FF4D5E; --mp:#4DA6FF; --xp:#5EEAD4;
   --amber:#FBBF24; --pink:#F472B6; --indigo:#A5B4FC;
   --shadow:0 20px 60px rgba(0,0,0,.65);
 }
@@ -51,7 +51,7 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:70;opacity:.05;
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"/><feColorMatrix type="saturate" values="0"/></filter><rect width="160" height="160" filter="url(%23n)" opacity="0.6"/></svg>')}
 .wrap{max-width:none;width:100%;margin:0;padding:20px 28px 80px;position:relative;z-index:1}
-.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-variant-numeric:tabular-nums}
 /* ===== TOP HUD ===== */
 .topbar{position:sticky;top:12px;z-index:20;display:flex;gap:14px;align-items:center;background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--gold);border-radius:14px;padding:10px 12px 10px 14px;box-shadow:var(--shadow)}
 .topbar .logo{width:46px;height:46px;flex:0 0 46px;background:conic-gradient(from 0deg,#4ADE80,#15803d,#4ADE80);border-radius:10px;padding:2px;transform:rotate(-3deg)}
