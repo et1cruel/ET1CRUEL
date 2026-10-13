@@ -238,6 +238,8 @@ section.card,.treasury{content-visibility:auto;contain-intrinsic-size:auto 600px
 .cover picture,.busk-photo picture,.joy-photo picture,.photo-break picture{display:block;width:100%}
 .cover picture img,.busk-photo picture img,.joy-photo picture img,.photo-break picture img{width:100%}
 @media(max-width:700px){.cover img{aspect-ratio:16/9}}
+.cover-video{margin:18px 0 0;border:1px solid #454f76;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);background:#000}
+.cover-video video{width:100%;height:auto;display:block;aspect-ratio:16/9;background:#000}
 /* ===== FLAT LAYER (เอา 3D tilt ออก — เรียบง่าย) ===== */
 #bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
 .wrap{position:relative;z-index:1}
@@ -676,6 +678,8 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
 </div>
 
 <div class="cover"><picture><source type="image/webp" srcset="banner-960.webp 960w, banner.webp 1920w" sizes="100vw"><img src="banner.jpg" alt="ET1CRUEL — ปก" fetchpriority="high" decoding="async" width="1920" height="576"></picture><span class="cover-tag">ET1CRUEL · LIFE OS</span></div>
+
+<div class="cover-video"><video controls preload="metadata" playsinline src="tweet.mp4"></video></div>
 
 <div class="hero">
   <span class="hero-ghost" aria-hidden="true">ET1CRUEL</span>
