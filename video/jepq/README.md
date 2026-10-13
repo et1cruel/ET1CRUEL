@@ -8,15 +8,17 @@ python render.py
 Outputs: `jepq-ep1.mp4` (1080x1920, 30fps, H.264+AAC, ~85s), `subs.ass`,
 `contact.jpg`, `thumb-jepq.jpg`. Verifies with ffprobe at the end.
 
-## Voiceover status: MISSING (honest)
-No Thai TTS available in this environment, so the video ships with:
-- timed Thai subtitles (burned in, from `subtitles.srt`)
-- synthesized ambient music bed (numpy pad, -20dBFS, not speech)
+## Voiceover status: DONE (v2)
+Thai voiceover by edge-tts `th-TH-PremwadeeNeural`, timed to `subtitles.srt`
+slots via `gen_audio.py` (clips auto-fitted with atempo ≤1.15x if needed).
+Music bed replaced with soothing Am–F–C–G warm pad (~-21dBFS) under voice.
 
-To add real voiceover later:
-1. Record/read `SCRIPT_TH.md` (12 cues, ~85s) as wav `voice.wav`
-2. `ffmpeg -i jepq-ep1.mp4 -i voice.wav -filter_complex "[0:v]subtitles=subs.ass:fontsdir='assets'[v]" -map "[v]" -map 1:a -c:v copy -c:a aac -b:a 160k -shortest jepq-ep1-vo.mp4`
-3. Re-time SRT to actual speech if pacing differs.
+Regenerate audio only:
+```
+cd video/jepq
+python gen_audio.py   # -> mix.wav
+ffmpeg -y -i jepq-ep1.mp4 -i mix.wav -c:v copy -c:a aac -b:a 160k -shortest jepq-ep1-vo.mp4
+```
 
 ## Files
 - `SCRIPT_TH.md` narration+storyboard · `subtitles.srt` · `FACTCHECK.md`
