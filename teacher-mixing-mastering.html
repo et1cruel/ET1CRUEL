@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mixing & Mastering Teacher Room · Personal Teaching Command Center</title>
+<meta name="description" content="ห้องเตรียมสอน Mixing & Mastering 7 วัน 14 ชม. — บทพูด สไลด์ แบบฝึกหัด เช็กลิสต์ สำหรับสอนผ่าน TeamViewer + Discord (FL Studio)">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#07070B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/teacher-mixing.css">
+</head>
+<body>
+<div class="mm-wrap">
+  <div class="mm-top">
+    <a class="back" href="./index.html">← หน้าแรก</a>
+    <div><b>🎛 MIXING &amp; MASTERING TEACHER ROOM</b><small>Personal Teaching Command Center · <span id="saveState">พร้อมใช้งาน</span></small></div>
+  </div>
+
+  <header class="mm-hero">
+    <span class="mm-eyebrow"><i></i>PRIVATE STUDIO WORKSPACE · ภาษาไทย</span>
+    <h1>MIXING &amp; MASTERING <span class="accent">TEACHER ROOM</span></h1>
+    <p class="sub">พื้นที่เตรียมสอนลูกค้าคอร์ส Mixing &amp; Mastering — เปิดใช้จริงระหว่างสอนผ่าน TeamViewer + Discord</p>
+    <div id="ovCourse"></div>
+    <div class="mm-progress">
+      <div class="row"><span>📊 Teaching Progress: <span class="num" id="ovPct">0%</span></span><span class="num" id="ovReady"></span></div>
+      <div class="bar"><i id="ovBar"></i></div>
+      <div class="row" style="margin-top:8px"><small style="color:var(--mm-muted)">สอนเสร็จ: <span class="num" id="ovDone"></span> · เตรียมอุปกรณ์: <span class="num" id="ovCheck"></span></small></div>
+    </div>
+  </header>
+
+  <nav class="mm-tabs" id="mmTabs" aria-label="เมนูห้องสอน"></nav>
+
+  <!-- OVERVIEW -->
+  <section class="mm-panel" id="p-overview">
+    <div class="mm-card"><h2><span class="tag">A ·</span> Overview — ภาพรวมคอร์ส</h2>
+      <p class="desc">แผน 7 วัน / ครั้งละ 120 นาที — กดที่การ์ดเพื่อกระโดดไปดูรายละเอียดวันนั้น</p>
+      <div class="mm-grid7" id="ovDays"></div>
+    </div>
+    <div class="mm-card"><h2>⏱ โครงเวลา 120 นาที (ใช้ทุกวัน)</h2>
+      <p class="desc">ทบทวน 10 · ทฤษฎี 25 · สาธิต 25 · ปฏิบัติ 40 · A/B+Feedback 15 · สรุป+การบ้าน 5</p>
+      <ul class="mm-tl" style="margin-top:12px">
+        <li><span class="t num">00:00–00:10</span><span>ทบทวนและตรวจการบ้าน</span><span class="m num">10 นาที</span></li>
+        <li><span class="t num">00:10–00:35</span><span>ทฤษฎี</span><span class="m num">25 นาที</span></li>
+        <li><span class="t num">00:35–01:00</span><span>สาธิตใน FL Studio</span><span class="m num">25 นาที</span></li>
+        <li><span class="t num">01:00–01:40</span><span>นักเรียนลงมือปฏิบัติ</span><span class="m num">40 นาที</span></li>
+        <li><span class="t num">01:40–01:55</span><span>A/B Comparison และ Feedback</span><span class="m num">15 นาที</span></li>
+        <li><span class="t num">01:55–02:00</span><span>สรุปและมอบการบ้าน</span><span class="m num">5 นาที</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CURRICULUM -->
+  <section class="mm-panel" id="p-curriculum">
+    <div class="mm-card"><h2><span class="tag">B ·</span> Curriculum — บทเรียน 7 วัน</h2>
+      <p class="desc">เลือกวัน แล้วดู Timeline, หัวข้อ, ของที่ต้องเตรียม และจด Teaching Notes ได้ทันที</p>
+      <div class="mm-grid7" id="currGrid"></div>
+      <div class="mm-detail" id="currDetail"></div>
+    </div>
+  </section>
+
+  <!-- SCRIPT -->
+  <section class="mm-panel" id="p-script">
+    <div class="mm-card"><h2><span class="tag">C ·</span> Teaching Script — บทพูดสอนจริง</h2>
+      <p class="desc">บทพูดภาษาไทยธรรมชาติ: เปิด → อธิบาย → เปรียบเทียบ → สาธิต → ให้ฟัง → ถาม → เชื่อม มีปุ่ม Copy ทุกหัวข้อ</p>
+      <div style="margin-top:12px"><select class="mm-sel" id="scriptDaySel" aria-label="เลือกวัน"></select></div>
+      <div id="scriptBody" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <!-- SLIDES -->
+  <section class="mm-panel" id="p-slides">
+    <div class="mm-card"><h2><span class="tag">D ·</span> Slide Studio — เตรียมสไลด์ + นำเสนอ</h2>
+      <p class="desc">สไลด์เปิดคอร์ส 10 สไลด์ + สไลด์ประกอบ 7 วัน — ไม่มีปุ่มดาวน์โหลด PPTX มี Copy Content + Presentation Mode แทน</p>
+      <div class="mm-slide-nav">
+        <select class="mm-sel" id="slideDeckSel" style="max-width:280px" aria-label="เลือกชุดสไลด์"></select>
+        <button class="mm-btn ghost" id="prevSlide">← Prev</button>
+        <span class="pos num" id="slidePos"></span>
+        <button class="mm-btn ghost" id="nextSlide">Next →</button>
+        <label style="font-size:13px;font-weight:700;color:var(--mm-muted)"><input type="checkbox" id="showNotesChk" checked style="accent-color:#4ADE80"> Speaker notes</label>
+      </div>
+      <div class="mm-slide" id="slideBox"></div>
+      <div class="mm-btnrow">
+        <button class="mm-btn" id="copySlide">📋 Copy Slide Content</button>
+        <button class="mm-btn vio" id="presentBtn">🖥 Presentation Mode</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section class="mm-panel" id="p-practice">
+    <div class="mm-card"><h2><span class="tag">E ·</span> Practice &amp; Homework — แบบฝึกหัด + งานที่ต้องตรวจ</h2>
+      <p class="desc">แบบฝึกหัดระหว่างเรียนและการบ้านของแต่ละวัน พร้อมปุ่ม Copy สั่งงาน</p>
+      <div style="margin-top:12px"><select class="mm-sel" id="pracDaySel" aria-label="เลือกวัน"></select></div>
+      <div id="pracBody" style="margin-top:12px"></div>
+    </div>
+    <div class="mm-card"><h2>🧑‍🎓 Student Progress — บันทึกผู้สอนกรอกเอง</h2>
+      <p class="desc">บันทึกอัตโนมัติลงเครื่องนี้ — ยังไม่มีข้อมูลนักเรียนจริงจะแสดง Empty State</p>
+      <div class="mm-empty" id="stEmpty">📭 ยังไม่มีข้อมูลนักเรียน — กรอกด้านล่างเมื่อเริ่มสอนจริง ข้อมูลจะถูกจำไว้ในเครื่องนี้</div>
+      <div class="mm-grid2">
+        <div><label style="font-size:13px;font-weight:700">เข้าใจแล้ว<input class="mm-in" id="st-understand" placeholder="เช่น Signal flow, EQ เบื้องต้น"></label></div>
+        <div><label style="font-size:13px;font-weight:700">ยังไม่เข้าใจ<input class="mm-in" id="st-confused" placeholder="เช่น Attack/Release"></label></div>
+      </div>
+      <div style="margin-top:10px"><label style="font-size:13px;font-weight:700">งานที่ส่งแล้ว<textarea class="mm-ta" id="st-submitted" placeholder="เช่น Day 1: ภาพ Mixer + โปรเจกต์ ✓"></textarea></label></div>
+      <div class="mm-grid2">
+        <div><label style="font-size:13px;font-weight:700">Feedback<textarea class="mm-ta" id="st-feedback" placeholder="จุดชม 1 จุด + จุดแก้ 1 จุด"></textarea></label></div>
+        <div><label style="font-size:13px;font-weight:700">การบ้านครั้งถัดไป<textarea class="mm-ta" id="st-next" placeholder="เช่น อัด Vocal ใหม่ 2 เทค"></textarea></label></div>
+      </div>
+      <div class="mm-save-ok" id="stOk"></div>
+      <div class="mm-btnrow"><button class="mm-btn danger" id="stReset">🗑 ล้างข้อมูล (มีถามยืนยัน)</button></div>
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section class="mm-panel" id="p-check">
+    <div class="mm-card"><h2><span class="tag">F ·</span> Teaching Checklist — เตรียมก่อนเริ่มคลาส</h2>
+      <p class="desc">ติ๊กแล้วจำไว้หลัง Reload (เก็บในเครื่องนี้) · <span class="num" id="checkPct"></span></p>
+      <div class="mm-progress"><div class="bar"><i id="checkBar"></i></div></div>
+      <ul class="mm-check" id="checkList"></ul>
+      <div class="mm-btnrow"><button class="mm-btn danger" id="checkReset">🗑 ล้าง Checklist (มีถามยืนยัน)</button></div>
+    </div>
+  </section>
+
+  <!-- REFERENCE -->
+  <section class="mm-panel" id="p-ref">
+    <div class="mm-card"><h2><span class="tag">G ·</span> Reference Library — คลังความรู้ผู้สอน</h2>
+      <p class="desc">ลิงก์ภายนอกเปิดได้จริงทุกอัน — ใช้ทวนก่อนสอน ไม่ได้คัดลอกเนื้อหามาแสดง</p>
+      <div id="refBody"></div>
+    </div>
+  </section>
+
+  <footer class="mm-foot">🎛 ET1CRUEL · TEACHER ROOM — ข้อมูลทั้งหมดอยู่ในเครื่องนี้ (LocalStorage) · สอนผ่าน TeamViewer + Discord · FL Studio</footer>
+</div>
+
+<div id="mmPresent" role="dialog" aria-label="Presentation Mode">
+  <div class="pslide" id="pSlide"></div>
+  <div class="pbar">
+    <button class="mm-btn ghost" id="pPrev">← Prev</button>
+    <button class="mm-btn ghost" id="pNext">Next →</button>
+    <button class="mm-btn danger" id="exitPresent">✕ ออกจากนำเสนอ (Esc)</button>
+  </div>
+</div>
+<div id="mmToast"></div>
+<script src="js/teacher-mixing-data.js"></script>
+<script src="js/teacher-mixing-app.js"></script>
+</body>
+</html>
