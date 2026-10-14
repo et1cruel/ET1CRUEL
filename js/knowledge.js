@@ -105,7 +105,7 @@
   function build() {
     if (document.getElementById('know-card')) return;
     if (!data().length) return; // ยังไม่มีไฟล์ข้อมูลจาก GLM → ไม่แสดงอะไร
-    var anchor = document.getElementById('gear');
+    var anchor = document.querySelector('.treasury') || document.getElementById('gear');
     if (!anchor) return;
     injectCSS();
     var s = document.createElement('section');
