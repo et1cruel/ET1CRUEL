@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<title>LIFE IS RPG 30s — Neo-Brutalism (code render)</title>
+<!--
+  LIFE_IS_RPG_30S — motion graphic วาดด้วยโค้ดล้วน (ไม่พึ่ง AI video)
+  preview : เปิดไฟล์นี้ในเบราว์เซอร์ (scrub + play)
+  render  : node render.mjs life-is-rpg-30s.html drafts/LIFE_IS_RPG_30S.mp4 24 2 4
+  voiceover : ส่งไฟล์ mp3 พากย์มา แล้ว mux ทีหลัง (ffmpeg -i video -i vo -filter_complex amix)
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@700&family=IBM+Plex+Sans+Thai:wght@700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#0A0A0A;flex-shrink:0;transform-origin:center center;font-family:'Space Grotesk','IBM Plex Sans Thai',Tahoma,sans-serif}
+  .scene{position:absolute;inset:0;overflow:hidden;opacity:0}
+  .abs{position:absolute;white-space:nowrap}
+  /* brutal type: stroke 6px + hard shadow 8px, no blur */
+  .mega{font-family:Anton,'Arial Black','IBM Plex Sans Thai',Tahoma,sans-serif;font-weight:400;letter-spacing:.01em;line-height:.95;
+    -webkit-text-stroke:6px #0A0A0A;paint-order:stroke fill;text-shadow:8px 8px 0 #0A0A0A}
+  .heav{font-family:'IBM Plex Sans Thai',Tahoma,sans-serif;font-weight:700;line-height:1.15}
+  .mono{font-family:'Space Grotesk',monospace;font-weight:700;letter-spacing:.25em}
+  .box4{border:4px solid #0A0A0A;box-shadow:8px 8px 0 #0A0A0A}
+  .scan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 3px,transparent 3px 7px)}
+  .halftone{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(#0A0A0A 2.2px,transparent 2.6px);background-size:26px 26px;opacity:.16}
+  /* subtitle brutal box */
+  #sub{position:absolute;left:70px;right:70px;bottom:120px;text-align:center;z-index:40;opacity:0}
+  #sub .in{display:inline-block;max-width:100%;white-space:normal;font-family:'IBM Plex Sans Thai',Tahoma,sans-serif;font-weight:700;
+    font-size:54px;line-height:1.5;color:#fff;background:#FF4D00;border:3px solid #0A0A0A;padding:14px 30px}
+  #sub.blue .in{background:#2B3CFF}
+  #sub span{-webkit-text-stroke:0;text-shadow:3px 3px 0 #0A0A0A}
+  /* 16:9 safe guides (preview only) */
+  #safe{position:absolute;inset:0;z-index:60;pointer-events:none;display:none}
+  #safe .band{position:absolute;left:0;right:0;top:660px;height:600px;border:4px dashed #FFEB00}
+  #safe .tag{position:absolute;left:20px;top:620px;color:#FFEB00;font-family:monospace;font-size:24px;letter-spacing:.2em}
+  #controls{position:fixed;left:12px;bottom:12px;z-index:50;background:rgba(0,0,0,.8);color:#fff;padding:10px 14px;border-radius:10px;font-family:monospace;display:flex;gap:10px;align-items:center}
+  #controls button{font-size:16px;padding:6px 14px;cursor:pointer}
+  #controls input{width:400px}
+  #hud{position:fixed;right:12px;bottom:12px;z-index:50;background:rgba(0,0,0,.8);color:#FFEB00;padding:10px 14px;border-radius:10px;font-family:monospace;font-size:14px}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+  <div id="bg" style="position:absolute;inset:0;background:#0A0A0A"></div>
+
+  <!-- S1 00-05 TUTORIAL ZONE -->
+  <div class="scene" id="s1">
+    <div class="abs mono" style="left:60px;top:110px;color:#F5F1E8;font-size:26px;opacity:.85">LIFE / SYSTEM - 2026</div>
+    <div id="s1-barwrap" style="position:absolute;left:140px;right:140px;top:860px;height:56px;background:#0A0A0A;border:4px solid #FF4D00">
+      <div id="s1-bar" style="height:100%;width:0%;background:#FF4D00"></div>
+    </div>
+    <div class="abs mono" id="s1-load" style="left:0;right:0;top:780px;text-align:center;color:#FF4D00;font-size:34px">TUTORIAL ZONE LOADING...</div>
+    <div class="abs mega" id="s1-word" style="left:0;right:0;top:1000px;text-align:center;color:#F5F1E8;font-size:120px">ตื่น</div>
+    <div class="scan"></div>
+  </div>
+
+  <!-- S2 05-10 NPC MODE -->
+  <div class="scene" id="s2">
+    <div style="position:absolute;inset:0;background:#6E675A"></div>
+    <div style="position:absolute;left:90px;right:90px;top:420px;bottom:520px;background:#57503F;border:4px solid #0A0A0A"></div>
+    <div style="position:absolute;left:140px;right:140px;top:900px;height:120px;background:#3E382C;border:4px solid #0A0A0A"></div>
+    <!-- monitor -->
+    <div style="position:absolute;left:240px;right:240px;top:560px;height:300px;background:#F5F1E8;border:4px solid #0A0A0A">
+      <div class="abs mono" style="left:0;right:0;top:40px;text-align:center;color:#0A0A0A;font-size:44px">WORK LOOP 100%</div>
+      <div id="s2-loopbar" style="position:absolute;left:60px;right:60px;top:140px;height:40px;background:#0A0A0A"><div id="s2-loopfill" style="height:100%;width:100%;background:#8a8578"></div></div>
+      <div class="abs mono" style="left:0;right:0;top:210px;text-align:center;color:#0A0A0A;font-size:30px">DAY 365</div>
+    </div>
+    <!-- NPC slumped -->
+    <div id="s2-npc" style="position:absolute;left:440px;top:1010px;width:200px;height:260px">
+      <div style="width:110px;height:110px;background:#C9B8A6;border:4px solid #0A0A0A;margin:0 auto"></div>
+      <div style="width:180px;height:150px;background:#4a4436;border:4px solid #0A0A0A;margin:-4px auto 0;transform:rotate(6deg)"></div>
+    </div>
+    <div class="abs mega" style="left:0;right:0;top:240px;text-align:center;color:#8a8578;font-size:150px">NPC MODE</div>
+    <div id="s2-strike" style="position:absolute;left:120px;right:120px;top:330px;height:22px;background:#c1121f;transform:rotate(-4deg)"></div>
+    <div class="abs heav" style="left:0;right:0;top:1330px;text-align:center;color:#0A0A0A;font-size:72px;font-weight:700">ตายผ่อนส่ง?</div>
+    <div id="s2-arrow" class="abs mono" style="right:110px;top:1250px;color:#0A0A0A;font-size:90px">↻</div>
+  </div>
+
+  <!-- S3 10-18 PLAYER INTRO -->
+  <div class="scene" id="s3">
+    <div id="s3-glitch" style="position:absolute;inset:0;background:#0A0A0A"></div>
+    <div id="s3-main" style="position:absolute;inset:0;background:#FF4D00">
+      <div class="halftone"></div>
+      <!-- aura: flat offset rects -->
+      <div style="position:absolute;left:330px;top:560px;width:420px;height:700px;background:#2B3CFF;border:4px solid #0A0A0A"></div>
+      <div style="position:absolute;left:306px;top:584px;width:420px;height:700px;border:4px solid #0A0A0A"></div>
+      <!-- player body -->
+      <div id="s3-hero" style="position:absolute;left:390px;top:660px;width:300px;height:560px">
+        <div style="width:150px;height:150px;background:#F5F1E8;border:4px solid #0A0A0A;margin:0 auto"></div>
+        <div style="width:60px;height:40px;background:#0A0A0A;margin:10px auto 0"></div>
+        <div style="width:230px;height:260px;background:#2B3CFF;border:4px solid #0A0A0A;margin:10px auto 0"></div>
+        <div style="width:120px;height:150px;background:#FF4D00;border:4px solid #0A0A0A;margin:-4px auto 0"></div>
+      </div>
+      <!-- sword -->
+      <div id="s3-sword" style="position:absolute;left:700px;top:600px;width:56px;height:560px;background:#F5F1E8;border:4px solid #0A0A0A;transform:rotate(18deg)"></div>
+      <div class="abs mega" id="s3-q" style="left:0;right:0;top:240px;text-align:center;color:#F5F1E8;font-size:110px">หรือจะเลือกเป็น<br>PLAYER?</div>
+      <div id="s3-ui" style="position:absolute;left:110px;right:110px;bottom:330px;display:flex;gap:24px">
+        <div class="box4 pop" id="s3-u1" style="flex:1;background:#F5F1E8;padding:20px"><div class="mono" style="font-size:26px">LEVEL 12</div></div>
+        <div class="box4 pop" id="s3-u2" style="flex:2;background:#F5F1E8;padding:20px"><div class="mono" style="font-size:26px">EXP 8500/10000</div><div style="height:34px;background:#0A0A0A;margin-top:12px"><div id="s3-exp" style="height:100%;width:0%;background:#2B3CFF"></div></div></div>
+        <div class="box4 pop" id="s3-u3" style="flex:1;background:#F5F1E8;padding:20px"><div class="mono" style="font-size:26px">HP 1200</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4 18-24 FARM & UPGRADE -->
+  <div class="scene" id="s4">
+    <div style="position:absolute;inset:0;background:#F5F1E8"></div>
+    <div class="abs mega" style="left:0;right:0;top:120px;text-align:center;color:#FF4D00;font-size:104px">FARM &amp; UPGRADE</div>
+    <div style="position:absolute;left:60px;right:60px;top:420px;display:flex;gap:24px">
+      <div class="box4" id="s4-a" style="flex:1;background:#fff;padding:24px">
+        <div class="mono" style="font-size:28px">SKILL TREE</div>
+        <div class="heav" id="s4-skills" style="font-size:44px;margin-top:14px;line-height:1.7">STR ▰▰▰▱▱<br>INT ▰▰▰▰▱<br>AGI ▰▰▱▱▱<br>LUK ▰▰▰▰▰</div>
+      </div>
+      <div class="box4" id="s4-b" style="flex:1;background:#FFEB00;padding:24px">
+        <div class="mono" style="font-size:28px">INVENTORY</div>
+        <div class="heav" style="font-size:40px;margin-top:14px;line-height:1.7">🗡️ ดาบ LEGENDARY +3<br>🛡️ เกราะมังกร<br>🥾 รองเท้าเร็ว</div>
+      </div>
+      <div class="box4" id="s4-c" style="flex:1;background:#2B3CFF;padding:24px">
+        <div class="mono" style="font-size:28px;color:#fff">QUEST LOG</div>
+        <div class="heav" style="font-size:40px;margin-top:14px;line-height:1.7;color:#fff">◆ EXPLORE DUNGEON<br>◆ BOSS FIGHT<br>◆ RARE LOOT</div>
+      </div>
+    </div>
+    <!-- dungeon door + runner -->
+    <div style="position:absolute;left:340px;right:340px;bottom:180px;height:420px;background:#0A0A0A;border:4px solid #0A0A0A">
+      <div class="abs mono" style="left:0;right:0;top:30px;text-align:center;color:#FF4D00;font-size:40px">DUNGEON</div>
+      <div id="s4-fire1" style="position:absolute;left:40px;bottom:0;width:0;height:0;border-left:40px solid transparent;border-right:40px solid transparent;border-bottom:120px solid #FF4D00"></div>
+      <div id="s4-fire2" style="position:absolute;right:40px;bottom:0;width:0;height:0;border-left:40px solid transparent;border-right:40px solid transparent;border-bottom:120px solid #FFEB00"></div>
+    </div>
+    <div id="s4-run" style="position:absolute;bottom:230px;left:80px;width:140px;height:200px;background:#2B3CFF;border:4px solid #0A0A0A"></div>
+  </div>
+
+  <!-- S5 24-28 LEVEL UP -->
+  <div class="scene" id="s5">
+    <div style="position:absolute;inset:0;background:#FFEB00"></div>
+    <div class="halftone"></div>
+    <div id="s5-coins" style="position:absolute;inset:0"></div>
+    <div class="abs mega" id="s5-big" style="left:0;right:0;top:640px;text-align:center;color:#0A0A0A;font-size:230px;-webkit-text-stroke:0;text-shadow:10px 10px 0 #FF4D00">LEVEL UP!</div>
+    <div class="abs mega" id="s5-lv" style="left:0;right:0;top:930px;text-align:center;color:#fff;font-size:150px">LV.13</div>
+    <div class="abs" id="s5-stats" style="left:0;right:0;top:1230px;text-align:center">
+      <span class="box4 heav" id="s5-s1" style="display:inline-block;background:#fff;font-size:56px;padding:14px 34px;margin:0 12px">ATK+25</span>
+      <span class="box4 heav" id="s5-s2" style="display:inline-block;background:#fff;font-size:56px;padding:14px 34px;margin:0 12px">DEF+15</span>
+      <span class="box4 heav" id="s5-s3" style="display:inline-block;background:#FF4D00;color:#fff;font-size:56px;padding:14px 34px;margin:0 12px">SKILL POINT+5</span>
+    </div>
+  </div>
+
+  <!-- S6 28-30 END CARD -->
+  <div class="scene" id="s6">
+    <div id="s6-ring" style="position:absolute;left:50%;top:760px;width:120px;height:120px;background:#FF4D00;border-radius:50%;transform:translate(-50%,-50%)"></div>
+    <div class="abs mega" style="left:0;right:0;top:1020px;text-align:center;color:#F5F1E8;font-size:120px">ชีวิตคือการเก็บเลเวล</div>
+    <div class="abs mono" style="left:0;right:0;top:1210px;text-align:center;color:#FF4D00;font-size:44px">level up your life</div>
+    <div class="abs mono" id="s6-type" style="left:0;right:0;top:1360px;text-align:center;color:#F5F1E8;font-size:52px"></div>
+    <div class="abs heav" style="left:0;right:0;bottom:300px;text-align:center;color:#F5F1E8;font-size:54px;opacity:.85">คุณจะเล่นเป็นอะไร?</div>
+  </div>
+
+  <div id="sub"><div class="in"><span id="subtxt"></span></div></div>
+  <div class="scan" style="z-index:50"></div>
+  <div id="safe"><div class="band"></div><div class="tag">16:9 SAFE</div></div>
+</div>
+</div>
+
+<div id="controls"><button id="btn">▶ play</button><input id="scrub" type="range" min="0" max="30" step="0.01" value="0"><button id="safeBtn">16:9</button></div>
+<div id="hud"><span id="hud-scene">SCENE 01 / 06</span></div>
+
+<script>
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const q12=t=>Math.floor(t*12)/12; // 12fps quantize = stop-motion feel
+const pop=t=>{const k=clamp(t/0.12);return 1.5-0.5*k;}; // 150% -> 100% hard pop
+let _s=987; const srnd=()=>{_s=(_s+0x6D2B79F5)|0;_s=Math.imul(_s^(_s>>>15),1|_s);_s^=_s+Math.imul(_s^(_s>>>7),61|_s);return((_s^(_s>>>14))>>>0)/4294967296;};
+const COINS=[]; for(let i=0;i<14;i++) COINS.push({a:srnd()*Math.PI*2,sp:0.5+srnd()*0.9,r:120+srnd()*260,sz:34+srnd()*30,ph:srnd()*6});
+
+window.VIDEO={w:1080,h:1920,duration:30};
+const $=id=>document.getElementById(id);
+const stage=$('stage'),bg=$('bg');
+const SCENES=[$('s1'),$('s2'),$('s3'),$('s4'),$('s5'),$('s6')];
+const NAMES=['TUTORIAL','NPC MODE','PLAYER?','FARM','LEVEL UP','END'];
+const BOUNDS=[[0,5],[5,10],[10,18],[18,24],[24,28],[28,30.01]];
+const CUES=[
+  [0,5,'ตื่น ทำงาน นอน วนลูป...',''],
+  [5,7.5,'ชีวิตแบบนี้ เหมือนเราเป็นแค่ NPC',''],
+  [7.5,10,'ในเกมของคนอื่น','blue'],
+  [10,14,'แต่ถ้า... คุณเลือกเป็น',''],
+  [14,18,'PLAYER ล่ะ?','blue'],
+  [18,21,'PLAYER ที่ตื่นมาฟาร์มเลเวล อัพเกรดสกิล อัพเกรดของ',''],
+  [21,24,'ออกตามหาดันเจี้ยนใหม่ๆ ฟาร์มเวล ฟาร์มของ อัพเกรดตัวละครอย่างสนุกสนาน','blue'],
+  [24,26.5,'เลือกคลาสเอง สร้างเควสเอง',''],
+  [26.5,28,'ล้มเหลวก็แค่เกิดใหม่ ไม่ใช่เกมโอเวอร์','blue'],
+  [28,30,'เพราะสุดท้ายแล้ว... ชีวิตคือเกม RPG',''],
+];
+// coins baked once
+(function(){const w=$('s5-coins');COINS.forEach(c=>{const d=document.createElement('div');d.style.cssText=`position:absolute;left:540px;top:900px;width:${c.sz}px;height:${c.sz}px;background:#FF4D00;border:4px solid #0A0A0A;border-radius:50%`;w.appendChild(d);c.el=d;});})();
+
+window.seek=function(tt){
+  const t=((tt%30)+30)%30, R=location.search.includes('render');
+  if(!R){
+    const s=Math.min(innerWidth/1080,innerHeight/1920)*0.92;
+    stage.style.transform=`scale(${s})`;
+    $('controls').style.display='flex';$('hud').style.display='block';$('safe').style.display=$('safe').dataset.on==='1'?'block':'none';
+  } else { stage.style.transform='none';$('controls').style.display='none';$('hud').style.display='none';$('safe').style.display='none';$('wrap').style.display='block'; }
+
+  // bg floods
+  let bgCol='#0A0A0A';
+  if(t>=10&&t<18) bgCol='#FF4D00';
+  else if(t>=18&&t<24) bgCol='#F5F1E8';
+  else if(t>=24&&t<28) bgCol='#FFEB00';
+  bg.style.background=bgCol;
+
+  // hard-cut scene visibility
+  SCENES.forEach((el,i)=>{const[a,b]=BOUNDS[i];el.style.opacity=(t>=a-0.03&&t<b)?1:0;});
+
+  // S1 loading
+  {
+    $('s1-bar').style.width=(seg(t,0.3,4.2)*100)+'%';
+    $('s1-load').style.opacity=(Math.floor(t*3)%2)?1:0.25;
+    const words=['ตื่น','ทำงาน','นอน','วนลูป'];const w=words[Math.min(3,Math.floor(t/1.1))];
+    const e=$('s1-word');if(e.textContent!==w)e.textContent=w;
+    e.style.transform=`scale(${pop(t%1.1)})`;
+  }
+  // S2 npc
+  {
+    $('s2-loopfill').style.width=(100-seg(t,5,9.5)*8)+'%';
+    $('s2-strike').style.transform=`rotate(-4deg) scaleX(${seg(t,5.5,6.5)})`;
+    $('s2-npc').style.transform=`translateY(${Math.floor(q12(t)*2)%2*8}px) rotate(2deg)`;
+    $('s2-arrow').style.transform=`rotate(${Math.floor((t-5)*60)}deg)`;
+  }
+  // S3 glitch then player
+  {
+    const g=t>=10&&t<11;
+    $('s3-glitch').style.opacity=g?1:0;
+    if(g){ // hard glitch slices
+      const f=Math.floor(t*24);
+      $('s3-glitch').style.background=(f%2)?'#2B3CFF':'#0A0A0A';
+      $('s3-glitch').style.clipPath=`inset(${(f*37)%60}% 0 ${(f*53)%55}% 0)`;
+    }
+    $('s3-main').style.opacity=(t>=11||!g&&t>=10)?1:0;
+    const bob=Math.floor(q12(Math.max(0,t-11))*6)%2*-14;
+    $('s3-hero').style.transform=`translateY(${bob}px)`;
+    $('s3-sword').style.transform=`rotate(${18+Math.sin((t-11)*6)*6}deg)`;
+    const e1=seg(t,12,12.4),e2=seg(t,12.8,13.2),e3=seg(t,13.6,14);
+    $('s3-u1').style.transform=`scale(${e1?1.5-0.5*e1:0.01})`;$('s3-u1').style.opacity=e1?1:0;
+    $('s3-u2').style.transform=`scale(${e2?1.5-0.5*e2:0.01})`;$('s3-u2').style.opacity=e2?1:0;
+    $('s3-u3').style.transform=`scale(${e3?1.5-0.5*e3:0.01})`;$('s3-u3').style.opacity=e3?1:0;
+    $('s3-exp').style.width=(seg(t,13,16)*85)+'%';
+    $('s3-q').style.opacity=1-seg(t,16.5,17.5);
+  }
+  // S4 farm
+  {
+    const mk=(id,a)=>{const e=seg(t,a,a+0.35);const el=$(id);el.style.transform=`scale(${e?1.5-0.5*e:0.01})`;el.style.opacity=e?1:0;};
+    mk('s4-a',18.2);mk('s4-b',18.7);mk('s4-c',19.2);
+    $('s4-run').style.left=(80+seg(t,19.5,23.5)*560)+'px';
+    $('s4-run').style.transform=`translateY(${Math.floor(q12(t)*8)%2*-12}px)`;
+    $('s4-fire1').style.transform=`scaleY(${0.7+((Math.floor(t*10)%3)*0.25)})`;
+    $('s4-fire2').style.transform=`scaleY(${0.7+((Math.floor(t*10+1)%3)*0.25)})`;
+  }
+  // S5 levelup
+  {
+    const e=seg(t,24,24.4);
+    $('s5-big').style.transform=`scale(${e?1.6-0.6*e:0.01}) rotate(${(1-e)*-5}deg)`;
+    $('s5-big').style.opacity=e?1:0;
+    $('s5-lv').style.transform=`scale(${seg(t,24.5,24.8)?1.5-0.5*seg(t,24.5,24.8):0.01})`;
+    $('s5-lv').style.opacity=seg(t,24.5,24.8)?1:0;
+    ['s5-s1','s5-s2','s5-s3'].forEach((id,i)=>{const k=seg(t,25.2+i*0.4,25.2+i*0.4+0.3);const el=$(id);el.style.transform=`scale(${k?1.5-0.5*k:0.01})`;el.style.opacity=k?1:0;});
+    COINS.forEach(c=>{const k=seg(t,24.2,27.5);const x=Math.cos(c.a+c.ph)*c.r*k*2.2,y=Math.sin(c.a)*c.r*k*2.2-300*k*k;
+      c.el.style.transform=`translate(${x}px,${y}px) rotate(${k*540}deg)`;c.el.style.opacity=k>0&&k<1?1:0;});
+  }
+  // S6 end
+  {
+    const rp=seg(t,28,28.6);
+    $('s6-ring').style.transform=`translate(-50%,-50%) scale(${1+rp*7})`;
+    $('s6-ring').style.opacity=1-rp*0.9;
+    const full='NPC → PLAYER';
+    const n=Math.floor(seg(t,28.4,29.4)*full.length);
+    $('s6-type').textContent=full.slice(0,n)+(Math.floor(t*6)%2?'▌':'');
+  }
+  // subtitles: hard-cut pop 0.1s
+  {
+    let cur=null;
+    for(const[a,b,txt,cls]of CUES){if(t>=a&&t<b){cur=[a,txt,cls];break;}}
+    const box=$('sub');
+    if(cur){box.style.opacity=1;box.className=cur[2]||'';
+      $('subtxt').textContent=cur[1];
+      box.firstElementChild.style.transform=`scale(${pop(t-cur[0])})`;
+    } else box.style.opacity=0;
+  }
+  // HUD
+  {
+    let si=0;BOUNDS.forEach((b,i)=>{if(t>=b[0])si=i;});
+    $('hud-scene').textContent=`SCENE 0${si+1} / 06 · ${NAMES[si]}`;
+  }
+  if(!R){$('scrub').value=t;}
+};
+
+// audio: office 0-10 (80bpm dull) -> chiptune 10-30 (140bpm). VO slot reserved.
+window.buildAudio=function(ctx){
+  const sr=48000;
+  const nb=ctx.createBuffer(1,sr*2,sr),nd=nb.getChannelData(0);
+  let s=777;for(let i=0;i<nd.length;i++){s=(s+0x6D2B79F5)|0;s=Math.imul(s^(s>>>15),1|s);s^=s+Math.imul(s^(s>>>7),61|s);nd[i]=(((s^(s>>>14))>>>0)/4294967296)*2-1;}
+  const master=ctx.createGain();master.gain.value=0.85;master.connect(ctx.destination);
+  const mus=ctx.createGain();mus.gain.value=0.8;mus.connect(master);
+  function tone(at,fq,d,type,g,dest){const o=ctx.createOscillator(),e=ctx.createGain();o.type=type||'sine';o.frequency.value=fq;
+    e.gain.setValueAtTime(g,at);e.gain.exponentialRampToValueAtTime(0.001,at+d);o.connect(e).connect(dest||mus);o.start(at);o.stop(at+d+0.05);}
+  function noise(at,d,fType,fq,g,Q){const src=ctx.createBufferSource();src.buffer=nb;src.loop=true;
+    const f=ctx.createBiquadFilter();f.type=fType;f.frequency.value=fq;f.Q.value=Q||1;
+    const e=ctx.createGain();e.gain.setValueAtTime(g,at);e.gain.exponentialRampToValueAtTime(0.001,at+d);
+    src.connect(f).connect(e).connect(mus);src.start(at);src.stop(at+d+0.05);}
+  function sweep(at,d,f0,f1,g,type){const src=ctx.createBufferSource();src.buffer=nb;src.loop=true;
+    const f=ctx.createBiquadFilter();f.type=type||'bandpass';f.Q.value=1.4;
+    f.frequency.setValueAtTime(f0,at);f.frequency.exponentialRampToValueAtTime(f1,at+d);
+    const e=ctx.createGain();e.gain.setValueAtTime(0.001,at);e.gain.exponentialRampToValueAtTime(g,at+d*0.5);e.gain.exponentialRampToValueAtTime(0.001,at+d);
+    src.connect(f).connect(e).connect(mus);src.start(at);src.stop(at+d+0.05);}
+  const kick=at=>{const o=ctx.createOscillator(),e=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(160,at);
+    o.frequency.exponentialRampToValueAtTime(45,at+0.11);e.gain.setValueAtTime(0.85,at);e.gain.exponentialRampToValueAtTime(0.001,at+0.24);
+    o.connect(e).connect(mus);o.start(at);o.stop(at+0.3);};
+  // --- 0-10 office dull (80bpm) ---
+  for(let b=0;b<14;b++){const at=b*0.75;if(at>10)break;
+    tone(at,110,0.18,'sine',0.35); // dull thump
+    tone(at,196-(b%4)*12,0.5,'sine',0.1); // sparse pluck
+  }
+  for(let k=0;k<10;k++) tone(k,2000,0.03,'sine',0.1); // clock ticks
+  for(let k=0;k<24;k++) noise(1.5+k*0.12,0.03,'highpass',3000,0.12); // typing
+  // --- transitions ---
+  [5,10,18,24,28].forEach(a=>sweep(a,0.45,300,5200,0.4));
+  sweep(10,0.5,5200,300,0.45); // glitch down
+  [880,660,990].forEach((f,i)=>tone(10.05+i*0.09,f,0.09,'square',0.22)); // glitch stabs
+  // --- 10-30 chiptune 140bpm ---
+  const beat=60/140;
+  const roots=[55,55,65.41,49];
+  const arpNotes=[220,261.63,329.63,440,329.63,261.63];
+  for(let b=0;b<47;b++){const at=10+b*beat;if(at>29.8)break;
+    kick(at);
+    if(b%2===0) noise(at,0.05,'highpass',6000,0.16); // hat 8ths
+    if(b%4===1||b%4===3) noise(at,0.09,'bandpass',1800,0.4); // snare
+    const o=ctx.createOscillator(),e=ctx.createGain(),f=ctx.createBiquadFilter();
+    o.type='sawtooth';o.frequency.value=roots[Math.floor(b/8)%4];f.type='lowpass';f.frequency.value=320;
+    e.gain.setValueAtTime(0.22,at);e.gain.exponentialRampToValueAtTime(0.001,at+beat*0.9);
+    o.connect(f).connect(e).connect(mus);o.start(at);o.stop(at+beat);
+    const an=arpNotes[(b*2)%6],an2=arpNotes[(b*2+1)%6];
+    tone(at,an,0.11,'square',0.07);tone(at+beat/2,an2,0.11,'square',0.07);
+  }
+  // level-up 24: ding + coins + riser before
+  sweep(23,1.0,400,6000,0.3,'highpass');
+  tone(24,880,0.5,'sine',0.4);tone(24,1318.5,0.6,'sine',0.3);
+  for(let i=0;i<8;i++){tone(24.15+i*0.12,1318.5+i*147,0.12,'sine',0.22);}
+  sweep(27.6,0.4,400,6000,0.3,'highpass');
+  tone(28,110,0.5,'sine',0.7); // end boom
+  [440,554.37,659.25].forEach((f,i)=>tone(28.4+i*0.18,f,0.25,'square',0.14)); // end jingle
+};
+
+if(location.search.includes('render')){seek(0);}else{
+let AC=null,BUF=null,SRC=null,startAt=0,offset=0,playing=false;
+async function play(){AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+  if(!BUF){const off=new OfflineAudioContext(2,Math.ceil(48000*30),48000);await window.buildAudio(off);BUF=await off.startRendering();}
+  SRC=AC.createBufferSource();SRC.buffer=BUF;SRC.connect(AC.destination);SRC.start(0,offset%30);startAt=AC.currentTime;playing=true;$('btn').textContent='⏸ pause';}
+function pause(){if(!playing)return;offset+=AC.currentTime-startAt;SRC.stop();playing=false;$('btn').textContent='▶ play';}
+function now(){return playing?(offset+AC.currentTime-startAt)%30:offset;}
+$('btn').onclick=()=>playing?pause():play();
+$('scrub').addEventListener('input',e=>{if(playing)pause();offset=parseFloat(e.target.value);seek(offset);});
+$('safeBtn').onclick=()=>{const s=$('safe');s.dataset.on=s.dataset.on==='1'?'':'1';seek(now());};
+(function loop(){seek(now());requestAnimationFrame(loop);})();
+}
+</script>
+</body>
+</html>

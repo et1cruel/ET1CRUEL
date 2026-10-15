@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080">
+<title>LIFE IS RPG — ชีวิตคือการเก็บเลเวล</title>
+<style>
+  html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000}
+  #stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#0B0B10;flex-shrink:0;transform-origin:center center}
+  .scene{position:absolute;inset:0;overflow:hidden;background:transparent;opacity:0;will-change:transform,opacity}
+  .abs{position:absolute;white-space:nowrap}
+  .heavy{font-family:Kanit,'Archivo Black','Inter Tight','Noto Sans Thai','Leelawadee UI',system-ui,sans-serif;font-weight:900;letter-spacing:-0.02em;line-height:0.92}
+  .serif{font-family:'Noto Serif Thai','Instrument Serif',Georgia,'TH Sarabun New',serif;font-style:italic}
+  .mono{font-family:'JetBrains Mono',Consolas,'Noto Sans Thai',monospace}
+  #controls{position:fixed;left:12px;bottom:12px;z-index:50;background:rgba(0,0,0,.7);color:#fff;padding:10px 14px;border-radius:10px;font-family:monospace;display:flex;gap:10px;align-items:center}
+  #controls button{font-size:16px;padding:6px 14px;cursor:pointer}
+  #controls input{width:400px}
+  /* Audio-reactive background layer; isolated from scene, HUD, and overlays */
+  #audio-visual{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.92}
+  #cubes{z-index:1;pointer-events:none}
+  .scene{z-index:3}
+  #vignette{z-index:4}
+  #hud{z-index:5}
+  #grain{z-index:6}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+  <div id="bg" style="position:absolute;inset:0;background:#0B0B10"></div>
+  <canvas id="cubes" width="1080" height="1920" style="position:absolute;inset:0;opacity:0"></canvas>
+  <canvas id="audio-visual" width="1080" height="1920" aria-hidden="true"></canvas>
+  <canvas id="vignette" width="1080" height="1920" style="position:absolute;inset:0;opacity:.55;pointer-events:none"></canvas>
+
+  <!-- S1 spark open -->
+  <div class="scene" id="s1">
+    <div class="abs mono" id="s1-grid-label" style="left:60px;top:120px;color:#EDEBE4;opacity:.5;font-size:22px;letter-spacing:.3em">LIFE / SYSTEM — 2026</div>
+    <div id="s1-spark" style="position:absolute;left:50%;top:46%;width:14px;height:14px;background:#FF4F1A;border-radius:50%;transform:translate(-50%,-50%)"></div>
+    <div id="s1-line" style="position:absolute;left:80px;right:80px;top:46%;height:6px;background:#FF4F1A;transform-origin:center"></div>
+    <div class="abs mono" id="s1-sub" style="left:0;right:0;top:52%;text-align:center;color:#EDEBE4;font-size:26px;letter-spacing:.35em;opacity:.7">TUTORIAL ZONE LOADING…</div>
+    <div class="abs heavy" id="s1-npc" style="left:0;right:0;top:62%;text-align:center;color:#EDEBE4;font-size:64px">ตื่น → ทำงาน → นอน → วนลูป</div>
+  </div>
+
+  <!-- S2 brand slam -->
+  <div class="scene" id="s2">
+    <div class="abs mono" style="left:70px;top:150px;color:#0B0B10;font-size:24px;letter-spacing:.35em">INTRODUCING — 2026</div>
+    <div class="abs heavy" id="s2-l1" style="left:60px;top:300px;color:#0B0B10;font-size:190px">LIFE</div>
+    <div class="abs heavy" id="s2-l2" style="left:60px;top:480px;color:#0B0B10;font-size:190px">IS RPG</div>
+    <div class="abs serif" style="left:70px;top:880px;color:#0B0B10;font-size:72px">ชีวิตคือการเก็บเลเวล</div>
+    <div id="s2-dot" style="position:absolute;width:60px;height:60px;background:#0B0B10;border-radius:50%"></div>
+  </div>
+
+  <!-- S3 kinetic triplet -->
+  <div class="scene" id="s3">
+    <div id="s3-a" style="position:absolute;inset:0;background:#EDEBE4;display:flex;align-items:center;justify-content:center">
+      <div class="heavy" id="s3-w1" style="color:#0B0B10;font-size:170px">ตื่น</div>
+    </div>
+    <div id="s3-b" style="position:absolute;inset:0;background:#0B0B10;display:flex;align-items:center;justify-content:center;overflow:hidden">
+      <div class="heavy" id="s3-w2" style="color:#FF4F1A;font-size:150px">ทำงาน</div>
+    </div>
+    <div id="s3-c" style="position:absolute;inset:0;background:#2F47FF;display:flex;align-items:center;justify-content:center">
+      <div class="heavy" id="s3-w3" style="color:#fff;font-size:170px">ตายผ่อนส่ง?</div>
+    </div>
+  </div>
+
+  <!-- S4 signature cubes / skill tree -->
+  <div class="scene" id="s4">
+    <div class="abs mono" style="left:70px;top:140px;color:#0B0B10;background:#FF4F1A;padding:10px 18px;border-radius:12px;font-size:24px;letter-spacing:.3em;opacity:.95">SKILL TREE — SELECT YOUR BUILD</div>
+    <div class="abs heavy" style="left:60px;top:220px;color:#EDEBE4;font-size:110px;text-shadow:0 8px 40px rgba(0,0,0,.8)">เลือกอัพ<br>สเตตัสเอง</div>
+    <div class="abs mono" id="s4-stats" style="left:70px;bottom:260px;color:#FF4F1A;font-size:32px;line-height:1.6">STR ▰▰▰▱▱&nbsp;&nbsp;INT ▰▰▰▰▱<br>AGI ▰▰▱▱▱&nbsp;&nbsp;LUK ▰▰▰▰▰</div>
+  </div>
+
+  <!-- S5 quest log UI -->
+  <div class="scene" id="s5">
+    <div id="s5-card" style="position:absolute;left:90px;right:90px;top:300px;background:#EDEBE4;border-radius:36px;padding:60px 50px;box-shadow:0 40px 120px rgba(0,0,0,.5)">
+      <div class="mono" style="font-size:26px;letter-spacing:.3em;color:#0B0B10;opacity:.6">QUEST LOG</div>
+      <div class="heavy" style="font-size:64px;color:#0B0B10;margin-top:12px">เควสหลัก: งานประจำ</div>
+      <div class="heavy" id="s5-side" style="font-size:64px;color:#2F47FF;margin-top:6px">เควสเสริม: สิ่งที่รัก</div>
+      <div style="margin-top:36px;background:#0B0B10;border-radius:20px;height:34px;overflow:hidden"><div id="s5-bar" style="height:100%;background:#FF4F1A;width:0%"></div></div>
+      <div class="mono" id="s5-pct" style="margin-top:14px;font-size:30px;color:#0B0B10">EXP 0%</div>
+      <div id="s5-btn" class="heavy" style="margin-top:26px;display:inline-block;background:#0B0B10;color:#fff;font-size:42px;padding:18px 44px;border-radius:999px">FARM → DONE ✓</div>
+    </div>
+    <div id="s5-toast" class="heavy" style="position:absolute;right:90px;top:180px;background:#FF4F1A;color:#0B0B10;font-size:52px;padding:20px 36px;border-radius:20px">LEVEL UP!</div>
+  </div>
+
+  <!-- S6 capability slams -->
+  <div class="scene" id="s6">
+    <div class="abs heavy" id="s6-l1" style="left:70px;top:340px;color:#EDEBE4;font-size:96px">เลือกคลาสเอง</div>
+    <div class="abs heavy" id="s6-l2" style="left:70px;top:520px;color:#FF4F1A;font-size:96px">สร้างเควสเอง</div>
+    <div class="abs heavy" id="s6-l3" style="left:70px;top:700px;color:#EDEBE4;font-size:96px">ตาย → เกิดใหม่ได้</div>
+    <div class="abs serif" style="left:70px;top:920px;color:#EDEBE4;font-size:56px;opacity:.9">ล้มเหลวไม่ใช่เกมโอเวอร์</div>
+    <div id="s6-barwrap" style="position:absolute;left:70px;right:70px;bottom:380px;display:flex;gap:18px;align-items:flex-end;height:260px">
+      <div class="s6bar" style="flex:1;background:#2F47FF;border-radius:12px;height:30%"></div>
+      <div class="s6bar" style="flex:1;background:#2F47FF;border-radius:12px;height:50%"></div>
+      <div class="s6bar" style="flex:1;background:#FF4F1A;border-radius:12px;height:90%"></div>
+      <div class="s6bar" style="flex:1;background:#EDEBE4;border-radius:12px;height:65%"></div>
+    </div>
+  </div>
+
+  <!-- S7 end card -->
+  <div class="scene" id="s7">
+    <div id="s7-ring" style="position:absolute;left:50%;top:36%;width:40px;height:40px;border:8px solid #FF4F1A;border-radius:50%;transform:translate(-50%,-50%)"></div>
+    <div class="abs heavy" style="left:0;right:0;top:560px;text-align:center;color:#EDEBE4;font-size:120px">ชีวิตคือ<br>การเก็บเลเวล</div>
+    <div class="abs serif" style="left:0;right:0;top:980px;text-align:center;color:#FF4F1A;font-size:64px">level up your life</div>
+    <div class="abs mono" id="s7-type" style="left:0;right:0;top:1120px;text-align:center;color:#EDEBE4;font-size:32px;letter-spacing:.25em"></div>
+    <div style="position:absolute;left:140px;right:140px;top:1220px;height:2px;background:#EDEBE4;opacity:.4"></div>
+    <div class="abs mono" style="left:0;right:0;top:1260px;text-align:center;color:#EDEBE4;font-size:26px;opacity:.6;letter-spacing:.3em">NPC → PLAYER</div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud" style="position:absolute;inset:0;pointer-events:none;opacity:.55">
+    <div class="mono" style="position:absolute;left:36px;top:36px;color:#fff;font-size:22px">◤</div>
+    <div class="mono" style="position:absolute;right:36px;top:36px;color:#fff;font-size:22px">◥</div>
+    <div class="mono" style="position:absolute;left:36px;bottom:36px;color:#fff;font-size:22px">◣</div>
+    <div class="mono" style="position:absolute;right:36px;bottom:36px;color:#fff;font-size:22px">◢</div>
+    <div class="mono" id="hud-scene" style="position:absolute;right:70px;top:70px;color:#fff;font-size:22px">SCENE 01 / 07</div>
+    <div class="mono" id="hud-cat" style="position:absolute;left:70px;bottom:70px;color:#fff;font-size:22px">SPARK OPEN</div>
+    <div class="mono" id="hud-tc" style="position:absolute;right:70px;bottom:70px;color:#fff;font-size:22px">● 00:00:00</div>
+  </div>
+  <canvas id="grain" width="540" height="960" style="position:absolute;inset:0;width:1080px;height:1920px;opacity:.07;pointer-events:none"></canvas>
+</div>
+</div>
+<div id="controls"><button id="btn">▶ play</button><input id="scrub" type="range" min="0" max="15" step="0.01" value="0"><span id="tlabel" class="mono">0.00</span></div>
+<script>
+// BEAT SHEET (128 BPM, beat=0.46875s, 15s = 8 bars)
+// 0.00 S1 spark open | spark pulse->line->flood | kick+riser+impact
+// 1.875 S2 brand slam LIFE IS RPG | dot detaches | impact+clap
+// 3.75 S3 kinetic triplet ตื่น/ทำงาน/ตายผ่อนส่ง? | hard swaps | kick+clap+whoosh
+// 6.5625 S4 cubes skill-tree orbit | dot grows to bg | whoosh+sub
+// 9.375 S5 quest-log card EXP bar->DONE toast LEVEL UP | blips+impact
+// 11.25 S6 capability slams 3 lines+bars | slams | claps+boom
+// 13.125 S7 ring->end card ชีวิตคือการเก็บเลเวล | ring pulse | riser+ring-out
+
+function spring(t,w=14,z=0.82){if(t<=0)return 0;if(z>=1)return 1-Math.exp(-w*t)*(1+w*t);const wd=w*Math.sqrt(1-z*z);return 1-Math.exp(-z*w*t)*(Math.cos(wd*t)+(z*w/wd)*Math.sin(wd*t));}
+const track=(v0,keys)=>t=>{let v=v0,p=v0;for(const [tk,val,w,z] of keys){v+=(val-p)*spring(t-tk,w,z);p=val;}return v;};
+const kf=keys=>t=>{if(t<=keys[0][0])return keys[0][1];for(let i=1;i<keys.length;i++){const [a,va]=keys[i-1],[b,vb,e=ease]=keys[i];if(t<=b)return lerp(va,vb,e((t-a)/(b-a)));}return keys[keys.length-1][1];};
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const ease=x=>(x=clamp(x),x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2);
+const lerp=(a,b,k)=>a+(b-a)*k;
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const rng=s=>()=>(s=(s+0x6D2B79F5)|0,s=Math.imul(s^(s>>>15),1|s),s^=s+Math.imul(s^(s>>>7),61|s),((s^(s>>>14))>>>0)/4294967296);
+
+window.VIDEO={w:1080,h:1920,duration:15};
+const $=id=>document.getElementById(id);
+const stage=$('stage'),bg=$('bg'),cubes=$('cubes'),ctxC=cubes.getContext('2d');
+const audioVisual=$('audio-visual'),ctxAV=audioVisual.getContext('2d');
+const vig=$('vignette'),ctxV=vig.getContext('2d');
+const grain=$('grain'),ctxG=grain.getContext('2d');
+const audioWave={levels:new Float32Array(64),phase:0};
+function drawAudioWave(t){
+  const w=1080,h=1920,cx=w/2,cy=h*.5,level=clamp(audioWave.levels.reduce((a,b)=>a+b,0)/audioWave.levels.length,0,1);
+  ctxAV.clearRect(0,0,w,h);
+  const active=t<1.875||t>=6.4&&t<9.5||t>=11.25&&t<13.125;
+  if(!active)return;
+  const amp=34+level*150, base=clamp(.18+level*.72,.18,.9), phase=audioWave.phase;
+  ctxAV.save();ctxAV.lineWidth=5+level*8;ctxAV.lineCap='round';ctxAV.shadowBlur=12+level*22;
+  const colors=['#FF4F1A','#2F47FF','#C8FF35'];
+  for(let row=0;row<3;row++){
+    ctxAV.beginPath();
+    for(let x=0;x<=w;x+=6){
+      const nx=x/w, envelope=Math.pow(Math.sin(Math.PI*nx),.65);
+      const y=cy+(row-1)*25+Math.sin(nx* Math.PI*8-phase*(1+row*.12)+row*1.2)*amp*envelope
+        +Math.sin(nx*Math.PI*19-phase*.55+row)*amp*.24*envelope;
+      if(x===0)ctxAV.moveTo(x,y);else ctxAV.lineTo(x,y);
+    }
+    ctxAV.strokeStyle=colors[row];ctxAV.globalAlpha=base*(row===1?.82:.55);ctxAV.shadowColor=colors[row];ctxAV.stroke();
+  }
+  ctxAV.restore();
+}
+
+// vignette baked once
+(function(){const g=ctxV.createRadialGradient(540,960,400,540,960,1200);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0.55)');ctxV.fillStyle=g;ctxV.fillRect(0,0,1080,1920);})();
+// grain tiles baked
+const grainTiles=[];(function(){const r=rng(7);for(let k=0;k<4;k++){const d=ctxG.createImageData(540,960);for(let i=0;i<d.data.length;i+=4){const v=(r()*255)|0;d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=255;}grainTiles.push(d);}})();
+
+const SCENES=[$('s1'),$('s2'),$('s3'),$('s4'),$('s5'),$('s6'),$('s7')];
+const NAMES=['SPARK OPEN','BRAND SLAM','KINETIC TYPE','SKILL TREE','QUEST LOG','STATS','END CARD'];
+
+function drawCubes(t){
+  ctxC.clearRect(0,0,1080,1920);
+  const cx=540,cy=1320;
+  const N=14,M=14;
+  for(let j=0;j<M;j++)for(let i=0;i<N;i++){
+    const u=(i/(N-1)-0.5),v=(j/(M-1)-0.5);
+    const wave=Math.sin(u*6+t*4)*Math.cos(v*6-t*3.2);
+    const h=(wave*0.5+0.5);
+    const pers=1/(1.4+v*1.0);
+    const x=cx+u*900*pers+Math.sin(t*0.8)*30*pers;
+    const y=cy+v*1100*pers-h*220*pers;
+    if(y<620) continue;
+    const s=52*pers*(0.6+h*0.7);
+    const shade=h;
+    let col= shade>0.66?'#FF4F1A': shade>0.33?'#EDEBE4':'#2F47FF';
+    ctxC.fillStyle=col; ctxC.globalAlpha=0.92;
+    ctxC.fillRect(x-s/2,y-s/2,s,s*0.72);
+    ctxC.globalAlpha=1;
+  }
+}
+
+window.seek=function(tt){
+  const t=((tt%15)+15)%15;
+  audioWave.phase=t*5.2;
+  drawAudioWave(t);
+  // fit preview
+  if(!location.search.includes('render')){
+    const s=Math.min(innerWidth/1080,innerHeight/1920)*0.92;
+    stage.style.transform=`scale(${s})`;
+    $('controls').style.display='flex';
+  } else { stage.style.transform='none'; $('controls').style.display='none'; $('wrap').style.display='block'; }
+
+  // ---- background base ----
+  // flood logic: S1 dark, S2 accent flood, S3 varies, S4 dark, S5 cream, S6 dark, S7 dark
+  let bgCol='#0B0B10';
+  if(t>=1.2&&t<1.875) bgCol='#FF4F1A';
+  else if(t>=1.875&&t<3.75) bgCol='#FF4F1A';
+  else if(t>=3.75&&t<4.6875) bgCol='#EDEBE4';
+  else if(t>=4.6875&&t<5.625) bgCol='#0B0B10';
+  else if(t>=5.625&&t<6.5625) bgCol='#2F47FF';
+  else if(t>=9.375&&t<11.25) bgCol='#EDEBE4';
+  bg.style.background=bgCol;
+
+  // scene visibility (with 0.12s overlap for carried transitions)
+  const bounds=[[0,1.875],[1.875,3.75],[3.75,6.5625],[6.5625,9.375],[9.375,11.25],[11.25,13.125],[13.125,15.01]];
+  SCENES.forEach((el,i)=>{
+    const [a,b]=bounds[i];
+    const inn=spring(t-a,18,0.85), out=1-spring(t-(b-0.12),18,0.9);
+    el.style.opacity=clamp(Math.min(inn,out)*1.2,0,1);
+  });
+
+  // S1
+  {
+    const pulse=1+Math.sin(t*12)*0.25;
+    $('s1-spark').style.transform=`translate(-50%,-50%) scale(${clamp(spring(t,10,0.7)*pulse,0,3)})`;
+    $('s1-spark').style.opacity=1-seg(t,1.0,1.4);
+    const lw=spring(t-0.35,12,0.7);
+    $('s1-line').style.transform=`scaleX(${clamp(lw,0.001,1)})`;
+    $('s1-line').style.opacity=1-seg(t,1.2,1.5);
+    $('s1-line').style.height=(6+seg(t,1.2,1.6)*1900)+'px';
+    $('s1-line').style.top='46%';
+    $('s1-sub').style.opacity=0.7*(1-seg(t,1.3,1.7));
+    $('s1-npc').style.transform=`translateY(${(1-spring(t-0.5,10,0.75))*120}px)`;
+    $('s1-npc').style.opacity=clamp(spring(t-0.5,10,0.8)-seg(t,1.3,1.7),0,1);
+  }
+  // S2 letters reveal on 1/16 (beat/4=0.117s)
+  {
+    const r1=spring(t-1.95,22,0.65), r2=spring(t-2.07,22,0.65);
+    $('s2-l1').style.transform=`translateX(${(1-r1)*-160}px) skewX(${(1-r1)*-8}deg)`;
+    $('s2-l2').style.transform=`translateX(${(1-r2)*160}px) skewX(${(1-r2)*8}deg)`;
+    $('s2-l1').style.opacity=clamp(r1*1.2,0,1);$('s2-l2').style.opacity=clamp(r2*1.2,0,1);
+    const dx=lerp(880,540,seg(t,3.2,3.7)), dy=lerp(760,960,seg(t,3.2,3.7)), ds=lerp(1,14,seg(t,3.3,3.75));
+    const d=$('s2-dot'); d.style.left=(dx-30)+'px'; d.style.top=(dy-30)+'px'; d.style.transform=`scale(${ds})`;
+  }
+  // S3 triplet hard swaps each 2 beats (0.9375s) — hard cut, no ghosting
+  {
+    const aOn=1-seg(t,4.6875,4.76), bOn=seg(t,4.6875,4.76)*(1-seg(t,5.625,5.69)), cOn=seg(t,5.625,5.69);
+    $('s3-a').style.opacity=aOn; $('s3-b').style.opacity=bOn; $('s3-c').style.opacity=cOn;
+    $('s3-a').style.visibility=aOn>0.02?'visible':'hidden';$('s3-b').style.visibility=bOn>0.02?'visible':'hidden';$('s3-c').style.visibility=cOn>0.02?'visible':'hidden';
+    $('s3-w1').style.transform=`scale(${0.7+0.3*spring(t-3.75,16,0.6)}) translateY(${(1-spring(t-3.75,16,0.6))*80}px)`;
+    $('s3-w2').style.transform=`scale(${0.7+0.3*spring(t-4.6875,16,0.6)})`;
+    $('s3-w3').style.transform=`scale(${0.7+0.3*spring(t-5.625,16,0.6)}) rotate(${(1-spring(t-5.625,14,0.65))*-4}deg)`;
+  }
+  // S4 cubes
+  {
+    const on=t>=6.4&&t<9.5;
+    $('cubes').style.opacity=on?clamp(spring(t-6.5625,8,0.8)-seg(t,9.0,9.375),0,1):0;
+    if(on) drawCubes(t); else ctxC.clearRect(0,0,1080,1920);
+  }
+  // S5 quest card tilt + bar + toast
+  {
+    const e=spring(t-9.375,10,0.75);
+    $('s5-card').style.transform=`perspective(1200px) rotateX(${(1-e)*10}deg) rotateY(${(1-e)*-12}deg) translateY(${(1-e)*160}px)`;
+    const pct=clamp(seg(t,9.7,10.8),0,1);
+    $('s5-bar').style.width=(pct*100)+'%';
+    $('s5-pct').textContent='EXP '+Math.round(ease(pct)*100)+'%';
+    const done=spring(t-10.6,14,0.6);
+    $('s5-btn').style.background=seg(t,10.6,10.9)>0.5?'#2F47FF':'#0B0B10';
+    $('s5-toast').style.transform=`translateY(${(1-done)*-160}px) scale(${0.6+0.4*done}) rotate(${(1-done)*8}deg)`;
+    $('s5-toast').style.opacity=clamp(done,0,1);
+  }
+  // S6 slams
+  {
+    [0,1,2].forEach(k=>{
+      const el=$('s6-l'+(k+1));
+      const e=spring(t-(11.3+k*0.2),18,0.6);
+      el.style.transform=`translateX(${(1-e)*-220}px)`;
+      el.style.opacity=clamp(e*1.3,0,1);
+    });
+    document.querySelectorAll('.s6bar').forEach((b,i)=>{
+      const e=spring(t-(11.4+i*0.12),12,0.65);
+      const base=[30,50,90,65][i];
+      b.style.height=(base*e)+'%';
+    });
+  }
+  // S7 ring + type
+  {
+    const rp=seg(t,13.125,13.7);
+    const ring=$('s7-ring');
+    ring.style.transform=`translate(-50%,-50%) scale(${1+rp*14})`;
+    ring.style.opacity=1-rp;
+    const full='NPC → PLAYER  •  START YOUR QUEST';
+    const n=Math.floor(seg(t,13.6,14.4)*full.length);
+    $('s7-type').textContent=full.slice(0,n)+(Math.floor(t*6)%2?'▌':'');
+  }
+  // HUD
+  {
+    let si=0;bounds.forEach((b,i)=>{if(t>=b[0])si=i;});
+    $('hud-scene').textContent=`SCENE 0${si+1} / 07`;
+    $('hud-cat').textContent=NAMES[si];
+    const ms=Math.floor((t%1)*100), s=Math.floor(t)%60;
+    $('hud-tc').textContent=`● 00:00:${String(s).padStart(2,'0')}:${String(ms).padStart(2,'0')}`;
+  }
+  // grain cycle
+  {
+    const gi=Math.floor(t*24)%4;
+    ctxG.putImageData(grainTiles[gi],0,0);
+  }
+  if(!location.search.includes('render')){$('scrub').value=t;$('tlabel').textContent=t.toFixed(2);}
+};
+
+// audio: 128bpm synth
+window.buildAudio=function(ctx){
+  const sr=48000, beat=60/128, dur=15;
+  const noiseLen=sr*2, nb=ctx.createBuffer(1,noiseLen,sr), nd=nb.getChannelData(0);
+  let s=1234; for(let i=0;i<noiseLen;i++){s=(s+0x6D2B79F5)|0;s=Math.imul(s^(s>>>15),1|s);s^=s+Math.imul(s^(s>>>7),61|s);nd[i]=(((s^(s>>>14))>>>0)/4294967296)*2-1;}
+  const master=ctx.createGain();master.gain.value=0.9;
+  const analyser=ctx.createAnalyser();analyser.fftSize=128;analyser.smoothingTimeConstant=.78;
+  master.connect(analyser);analyser.connect(ctx.destination);
+  if(!ctx._visualiserAnalyser)ctx._visualiserAnalyser=analyser;
+  function kick(at){const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(150,at);o.frequency.exponentialRampToValueAtTime(40,at+0.12);g.gain.setValueAtTime(0.9,at);g.gain.exponentialRampToValueAtTime(0.001,at+0.25);o.connect(g).connect(master);o.start(at);o.stop(at+0.3);}
+  function clap(at){const src=ctx.createBufferSource();src.buffer=nb;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=1800;f.Q.value=1.2;const g=ctx.createGain();g.gain.setValueAtTime(0.5,at);g.gain.exponentialRampToValueAtTime(0.001,at+0.18);src.connect(f).connect(g).connect(master);src.start(at);src.stop(at+0.2);}
+  function boom(at){const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(70,at);o.frequency.exponentialRampToValueAtTime(30,at+0.5);g.gain.setValueAtTime(0.8,at);g.gain.exponentialRampToValueAtTime(0.001,at+0.6);o.connect(g).connect(master);o.start(at);o.stop(at+0.65);}
+  function whoosh(at,d=0.4){const src=ctx.createBufferSource();src.buffer=nb;src.loop=true;const f=ctx.createBiquadFilter();f.type='bandpass';f.Q.value=1.5;f.frequency.setValueAtTime(300,at);f.frequency.exponentialRampToValueAtTime(5000,at+d);const g=ctx.createGain();g.gain.setValueAtTime(0.001,at);g.gain.exponentialRampToValueAtTime(0.4,at+d*0.5);g.gain.exponentialRampToValueAtTime(0.001,at+d);src.connect(f).connect(g).connect(master);src.start(at);src.stop(at+d+0.05);}
+  function blip(at,fq=880){const o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.value=fq;g.gain.setValueAtTime(0.15,at);g.gain.exponentialRampToValueAtTime(0.001,at+0.08);o.connect(g).connect(master);o.start(at);o.stop(at+0.1);}
+  function riser(at,d=1.4){const src=ctx.createBufferSource();src.buffer=nb;src.loop=true;const f=ctx.createBiquadFilter();f.type='highpass';f.frequency.setValueAtTime(400,at);f.frequency.exponentialRampToValueAtTime(6000,at+d);const g=ctx.createGain();g.gain.setValueAtTime(0.001,at);g.gain.exponentialRampToValueAtTime(0.35,at+d);src.connect(f).connect(g).connect(master);src.start(at);src.stop(at+d+0.05);}
+  function bass(at,fq,d=0.4){const o=ctx.createOscillator(),g=ctx.createGain();o.type='sawtooth';o.frequency.value=fq;const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=300;g.gain.setValueAtTime(0.25,at);g.gain.exponentialRampToValueAtTime(0.001,at+d);o.connect(f).connect(g).connect(master);o.start(at);o.stop(at+d+0.05);}
+  for(let b=0;b<32;b++){const at=b*beat;kick(at);if(b%4===1||b%4===3)clap(at);bass(at,[55,55,65.4,49][Math.floor(b/8)%4],beat*0.9);}
+  [0,1.875,3.75,6.5625,9.375,11.25].forEach(whoosh);
+  boom(1.2);boom(1.875);boom(9.375);boom(11.25);
+  riser(0.2,1.5);riser(12.2,1.2);
+  for(let i=0;i<12;i++) blip(13.6+i*0.08, 660+i*40);
+  // end ring
+  {const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(0.25,13.4);g.gain.exponentialRampToValueAtTime(0.001,15);o.connect(g).connect(master);o.start(13.4);o.stop(15);}
+};
+
+// preview controls — disabled in ?render (renderer drives seek explicitly)
+if(location.search.includes('render')){
+  seek(0);
+} else {
+let AC=null,BUF=null,SRC=null,startAt=0,offset=0,playing=false;
+async function play(){AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(!BUF){const off=new OfflineAudioContext(2,Math.ceil(48000*15),48000);await window.buildAudio(off);BUF=await off.startRendering();}SRC=AC.createBufferSource();SRC.buffer=BUF;SRC.connect(AC.destination);SRC.start(0,offset%15);startAt=AC.currentTime;playing=true;$('btn').textContent='⏸ pause';}
+function pause(){if(!playing)return;offset+=AC.currentTime-startAt;SRC.stop();playing=false;$('btn').textContent='▶ play';}
+function now(){return playing?(offset+AC.currentTime-startAt)%15:offset;}
+(function loop(){
+  seek(now());
+  if(playing&&AC&&AC._visualiserAnalyser){
+    const analyser=AC._visualiserAnalyser,bins=new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(bins);
+    for(let i=0;i<audioWave.levels.length;i++)audioWave.levels[i]=(bins[i]||0)/255;
+  }else{for(let i=0;i<audioWave.levels.length;i++)audioWave.levels[i]=.12+.08*Math.sin(i*.33+audioWave.phase);}
+  requestAnimationFrame(loop);
+})();
+$('btn').onclick=()=>playing?pause():play();
+$('scrub').oninput=e=>{const was=playing;if(was)pause();offset=parseFloat(e.target.value);if(was)play();else seek(offset);};
+seek(0);
+}
+</script>
+</body>
+</html>

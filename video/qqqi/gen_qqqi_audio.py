@@ -10,7 +10,7 @@ import numpy as np
 import edge_tts
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VOICE = "th-TH-PremwadeeNeural"
+VOICE = "th-TH-NiwatNeural"
 SR = 44100
 
 CUES = [
@@ -30,7 +30,18 @@ CUES = [
 ENDS = [5.0, 10.0, 17.0, 25.0, 33.0, 45.0, 55.0, 65.0, 75.0, 90.0, 100.0, 105.0]
 
 
+# TTS-only respellings (subs keep standard written forms)
+TTS_OVERRIDE = {
+    2: "คิวคิวคิวไอ คืออะไร มาดูกัน",
+    3: "คิวคิวคิวไอ คือ อีทีเอฟ ของ นีออส เริ่มปี สองพันยี่สิบสี่ ลงทุนหุ้นแนสแดก หนึ่งร้อย",
+    6: "อัตราจ่าย สิบสี่จุดสองแปดเปอร์เซ็นต์ ต่อปี ณ กันยายน สองพันยี่สิบหก แต่ยอดเปลี่ยนทุกเดือน ไม่ใช่กำไรการันตี",
+    7: "ข้อแลกคือ ตลาดขึ้นแรงอาจได้ไม่เต็ม หนึ่งปีกองทุนบวก สิบแปดเปอร์เซ็นต์ ตลาดบวก ยี่สิบสี่เปอร์เซ็นต์",
+    8: "ตลาดลงก็ขาดทุนได้ แถมค่าธรรมเนียม ศูนย์จุดหกแปดเปอร์เซ็นต์ ต่อปี",
+}
+
+
 async def make_clip(i, text):
+    text = TTS_OVERRIDE.get(i, text)
     out = os.path.join(HERE, f"qcue{i:02d}.mp3")
     if os.path.exists(out) and os.path.getsize(out) > 1024:
         return out

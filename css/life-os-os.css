@@ -452,3 +452,66 @@ body .item .txt .badge{margin-left:12px}
 .photo-break::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(8,9,14,.5))}
 .photo-tag{position:absolute;left:16px;bottom:12px;z-index:2;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;color:#fff;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.3);padding:5px 14px;border-radius:999px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 @media(max-width:700px){.photo-break img{max-height:380px}}
+/* ===== GENPIC — ห้องภาพสวรรค์ (บอเดอร์คอลลี่ + หนูไมซ์) ===== */
+#genpic{background:linear-gradient(180deg,#26210f 0%,#14131a 55%,#10131c 100%);border-color:#8a7642}
+#genpic .shead{border-bottom:1.5px dashed #8a7642}
+#genpic .shead h2{color:#FEF3C7}
+#genpic .shead p{color:#D8C99A}
+#genpic .icon{background:linear-gradient(180deg,#FFFBEB,#F59E0B)!important;border-color:#FFF7E6;box-shadow:0 4px 18px rgba(253,224,71,.45)}
+#genpic .count{background:linear-gradient(180deg,#FFFBEB,#FDE68A);color:#451a03;border:1px solid #FFF7E6}
+.genpic-stage{display:grid;grid-template-columns:1.35fr .85fr;gap:16px;margin-top:6px;align-items:stretch}
+.genpic-main{margin:0;position:relative;border-radius:18px;overflow:hidden;border:2px solid #FDE68A;background:#0B0D14;box-shadow:0 0 0 1px rgba(253,224,71,.25),0 0 34px rgba(253,224,71,.22),0 18px 44px rgba(0,0,0,.55)}
+.genpic-main::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(420px 240px at 50% 0%,rgba(255,251,235,.55),transparent 65%),linear-gradient(180deg,transparent 60%,rgba(8,9,14,.55))}
+.genpic-main img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+.genpic-main figcaption{padding:14px 16px;font-size:15px;line-height:1.9;color:#FEF3C7;background:rgba(8,9,14,.72)}
+.genpic-main figcaption b{color:#fff}
+.genpic-side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.genpic-side figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid #57534E;background:#0B0D14;flex:1}
+.genpic-side img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+.genpic-side figcaption{padding:10px 14px;font-size:13.5px;line-height:1.8;color:#D8C99A}
+.genpic-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;align-items:center}
+.genpic-dl{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-weight:700;font-size:15.5px;color:#221600;background:linear-gradient(180deg,#FFFBEB 0%,#FDE68A 48%,#9AE6B4 135%);border:1px solid #FFF7E6;border-radius:14px;padding:13px 24px;box-shadow:0 6px 24px rgba(253,224,71,.35),inset 0 1px 0 #fff;transition:transform .18s ease,box-shadow .18s ease}
+.genpic-dl:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(253,224,71,.5),inset 0 1px 0 #fff}
+.genpic-dl::after{content:'';position:absolute;top:0;bottom:0;left:-60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.75),transparent);transform:skewX(-18deg);transition:left .5s ease}
+.genpic-dl:hover::after{left:120%}
+.genpic-dl.ghost{background:transparent;color:#FDE68A;border:1.5px solid #8a7642;box-shadow:none;font-size:14px;padding:11px 18px}
+.genpic-dl.ghost::after{display:none}
+.genpic-dl.ghost:hover{border-color:#FDE68A;box-shadow:0 0 14px rgba(253,224,71,.25);transform:translateY(-2px)}
+@media(max-width:700px){.genpic-stage{grid-template-columns:1fr}}
+.genpic-dev{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:16px;border:1px solid #57534E;border-radius:18px;overflow:hidden;background:#0B0D14}
+.genpic-dev img{display:block;width:100%;height:100%;object-fit:cover;aspect-ratio:1/1}
+.genpic-dev .gd-body{padding:20px 22px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.genpic-dev .gd-tag{align-self:flex-start;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.1em;color:#221600;background:linear-gradient(180deg,#FFFBEB,#FDE68A);border-radius:999px;padding:4px 14px}
+.genpic-dev h3{font-size:22px;color:#fff;line-height:1.5}
+.genpic-dev p{font-size:15.5px;color:#D8C99A;line-height:1.9}
+.genpic-dev p b{color:#FEF3C7}
+@media(max-width:700px){.genpic-dev{grid-template-columns:1fr}.genpic-dev img{aspect-ratio:1/1}}
+/* ===== AI LAB — แผนที่ความสามารถ AI ===== */
+#ai-lab{background:linear-gradient(180deg,#0d1420 0%,#10131c 60%);border-color:#3E63DD}
+#ai-lab .shead{border-bottom:1.5px dashed #3E63DD}
+#ai-lab .shead h2{color:#DBEAFE}
+#ai-lab .shead p{color:#93A4C4}
+#ai-lab .icon{background:linear-gradient(180deg,#1E293B,#3E63DD)!important;border-color:#93C5FD;box-shadow:0 4px 18px rgba(62,99,221,.5)}
+#ai-lab .count{background:linear-gradient(180deg,#3E63DD,#1E40AF);color:#fff;border:1px solid #93C5FD}
+.ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.ai-cell{background:#0B0D14;border:1px solid #343c58;border-radius:16px;padding:18px;position:relative;overflow:hidden}
+.ai-cell::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px}
+.ai-cell.live::before{background:#4ADE80;box-shadow:0 0 10px #4ADE80}
+.ai-cell.ready::before{background:#FBBF24;box-shadow:0 0 10px #FBBF24}
+.ai-cell.hold::before{background:#FF4D5E;box-shadow:0 0 10px #FF4D5E}
+.ai-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.led{width:11px;height:11px;border-radius:50%;flex:0 0 11px}
+.live .led{background:#4ADE80;box-shadow:0 0 10px #4ADE80}
+.ready .led{background:#FBBF24;box-shadow:0 0 10px #FBBF24}
+.hold .led{background:#FF4D5E;box-shadow:0 0 10px #FF4D5E}
+.ai-state{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em}
+.live .ai-state{color:#4ADE80}.ready .ai-state{color:#FBBF24}.hold .ai-state{color:#FF8B96}
+.ai-cell h3{font-size:19px;color:#fff;margin:2px 0 6px}
+.ai-cell p{font-size:14.5px;color:#AAB4CC;line-height:1.9}
+.ai-cell p b{color:#E2E8FA}
+.ai-ev{display:block;margin-top:10px;font-size:12.5px;color:#9AA3C2}
+.ai-go{display:inline-block;margin-top:10px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13.5px;color:#93C5FD;border:1.5px solid #3E63DD;border-radius:10px;padding:8px 16px}
+.ai-go:hover{border-color:#93C5FD;box-shadow:0 0 12px rgba(62,99,221,.4)}
+@media(max-width:900px){.ai-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.ai-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.genpic-dl,.genpic-dl::after{transition:none}.genpic-dl:hover{transform:none}}

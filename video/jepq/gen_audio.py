@@ -10,7 +10,7 @@ import numpy as np
 import edge_tts
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-VOICE = "th-TH-PremwadeeNeural"
+VOICE = "th-TH-NiwatNeural"
 SR = 44100
 
 # (start_sec, text) — matches subtitles.srt
@@ -31,7 +31,19 @@ CUES = [
 ENDS = [3.5, 7.0, 13.5, 20.0, 27.5, 35.0, 43.5, 52.0, 61.0, 70.0, 85.0]
 
 
+# TTS-only respellings (subs keep standard written forms)
+TTS_OVERRIDE = {
+    2: "มาดู เจพีคิว กันก่อน ว่ามันคืออะไรกันแน่",
+    3: "เจพีคิว คือ อีทีเอฟ ของ เจพีมอร์แกน เริ่มปี สองพันยี่สิบสอง ลงทุนหุ้นแนสแดก หนึ่งร้อย",
+    6: "ย้อนหลัง พรีเมียมเฉลี่ยปีละ สิบจุดสองเก้าเปอร์เซ็นต์ ปันผล ศูนย์จุดหกหนึ่งเปอร์เซ็นต์ ยอดจ่ายเปลี่ยนได้ทุกเดือน",
+    8: "ไตรมาส 2 ปี สองพันยี่สิบหก กองทุนบวก สิบสี่เปอร์เซ็นต์ ขณะที่ตลาดบวก ยี่สิบแปดเปอร์เซ็นต์ และขาลงก็ยังขาดทุนได้",
+    9: "ค่าธรรมเนียม ศูนย์จุดสามห้าเปอร์เซ็นต์ ต่อปี บวกภาษีเงินปันผล อย่าลืมหักออก",
+    10: "เจพีคิว คือเครื่องมือสร้างรายได้ที่มีความเสี่ยง ไม่ใช่เงินเดือนการันตี ศึกษาข้อมูลกองทุนก่อนลงทุนเสมอ อีทีวันครูเอล",
+}
+
+
 async def make_clip(i, text):
+    text = TTS_OVERRIDE.get(i, text)
     out = os.path.join(HERE, f"cue{i:02d}.mp3")
     if os.path.exists(out) and os.path.getsize(out) > 1024:
         return out

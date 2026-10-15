@@ -1,0 +1,40 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BorderStyle, Outline, Shadow, Alignment, MarginV
+Style: Sub,Tahoma,62,&H001A141E,&H00FFFDF5,1,2.5,0,2,150
+Style: Head,Tahoma,88,&H001A141E,&H00FFFDF5,1,3,0,8,500
+Style: Sub2,Tahoma,46,&H001D4ED8,&H00FFFDF5,1,2,0,8,320
+Style: Src,Tahoma,36,&H006E625A,&H00FFFDF5,1,1.5,0,8,210
+
+[Events]
+Format: Layer, Start, End, Style, Text
+Dialogue: 0,0:00:00.80,0:00:04.80,Sub,อยากทำบีทเป็น แต่ไม่รู้จะเริ่มตรงไหน? เริ่มตรงนี้เลย
+Dialogue: 0,0:00:05.15,0:00:09.71,Sub,นี่คือ FL Studio โปรแกรมทำเพลงยอดฮิต
+Dialogue: 0,0:00:10.06,0:00:15.06,Sub,สามหน้าต่างหลัก Channel Rack F6, Piano Roll F7, Playlist F5
+Dialogue: 0,0:00:15.41,0:00:20.05,Sub,BPM คือจังหวะต่อนาที เลขมาก เพลงยิ่งเร็ว
+Dialogue: 0,0:00:20.40,0:00:24.36,Sub,ฮิปฮอปช้าๆ ใช้ 90 ตั้งเลย แล้วกด Spacebar ฟัง
+Dialogue: 0,0:00:24.71,0:00:28.27,Sub,Channel Rack คือตารางกลอง แถวคือเสียง ช่องคือ Step
+Dialogue: 0,0:00:28.62,0:00:32.86,Sub,คลิกซ้ายเปิด ขวาปิด เริ่มที่ Kick วาง 1, 5, 9, 13
+Dialogue: 0,0:00:33.21,0:00:35.41,Sub,นี่คือจังหวะตรงทุกบีท ฟังดู
+Dialogue: 0,0:00:39.13,0:00:42.45,Sub,เติม Snare ที่ 5 กับ 13 กลางระหว่าง Kick พอดี
+Dialogue: 0,0:00:46.16,0:00:48.84,Sub,Hi-hat ทุกสองช่อง เติมความลื่นไหล
+Dialogue: 0,0:00:55.23,0:01:02.19,Sub,กด Play ฟัง แล้วขยับ ไม่ต้องกลัวผิด
+Dialogue: 0,0:01:02.54,0:01:05.62,Sub,ย้าย Snare ทีละช่อง ฟังความต่าง นี่แหละ Groove
+Dialogue: 0,0:01:05.97,0:01:08.81,Sub,พอใจแล้ว กด Ctrl+S บันทึกงาน
+Dialogue: 0,0:01:09.16,0:01:12.100,Sub,เซฟเป็น .flp เซฟบ่อยๆ กันงานหาย
+Dialogue: 0,0:01:13.35,0:01:19.99,Sub,ทบทวน BPM, Pattern กลอง ฟังปรับ แล้วบันทึก
+Dialogue: 0,0:01:20.34,0:01:31.66,Sub,เริ่มจากบีทง่ายๆ แล้วค่อยสร้างเสียงในแบบของตัวเอง ET1CRUEL
+Dialogue: 0,0:00:00.80,0:00:04.80,Head,{\fad(300,300)}อยากทำบีทเป็น?
+Dialogue: 0,0:00:05.15,0:00:15.06,Sub2,{\fad(300,300)}สามหน้าต่างหลักของ FL Studio
+Dialogue: 0,0:00:05.15,0:00:15.06,Src,{\fad(300,300)}ภาพประกอบเพื่อการสอน
+Dialogue: 0,0:00:15.41,0:00:24.36,Head,{\fad(300,300)}BPM = จังหวะต่อนาที
+Dialogue: 0,0:00:24.71,0:00:32.86,Sub2,{\fad(300,300)}คลิกซ้ายเปิด · คลิกขวาปิด
+Dialogue: 0,0:00:24.71,0:00:54.84,Src,{\fad(300,300)}แผนภาพกริด ไม่ใช่หน้าจอจริง
+Dialogue: 0,0:00:55.23,0:01:05.62,Sub2,{\fad(300,300)}ย้ายทีละช่อง หาความต่าง
+Dialogue: 0,0:01:05.97,0:01:12.100,Sub2,{\fad(300,300)}Ctrl+S · เซฟเป็น .flp
+Dialogue: 0,0:01:27.21,0:01:33.21,Src,{\fad(300,300)}ET1CRUEL · BEAT LAB

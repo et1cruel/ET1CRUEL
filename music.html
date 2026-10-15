@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ห้องเพลง · ET1CRUEL GenMusic</title>
+<meta name="description" content="ห้องสร้างเพลง ET1CRUEL — ฟัง โหลด สั่งทำเพลงใหม่ผ่าน Agency OS">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#FFF4D6">
+<style>
+:root{--bg:#07070B;--card:#12141D;--ink:#F4F6FB;--muted:#AAB4CC;--line:#2B3248;--gold:#4ADE80;--gold-dim:#166534;--vio:#A78BFA}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(900px 420px at 85% -5%,rgba(167,139,250,.14) 0%,transparent 55%),var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai',system-ui,sans-serif;line-height:1.9}
+.wrap{max-width:900px;margin:0 auto;padding:24px 18px 70px}
+a{color:var(--gold)}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.top a.back{color:var(--muted);text-decoration:none;font-weight:700}
+h1{font-size:30px;margin:6px 0 2px}
+.sub{color:var(--muted);margin-bottom:18px}
+.menu{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.menu a{text-decoration:none;font-weight:700;font-size:15px;color:var(--gold);border:1.5px solid var(--gold-dim);border-radius:12px;padding:9px 18px;background:rgba(74,222,128,.06)}
+.menu a:hover{border-color:var(--gold)}
+.menu a.vio{color:var(--vio);border-color:#5b4a8a;background:rgba(167,139,250,.07)}
+.tcard{background:var(--card);border:1px solid #454f76;border-radius:18px;overflow:hidden;margin-bottom:22px}
+.tbody{padding:20px}
+.tbody h2{font-size:22px;margin-bottom:4px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.meta span{font-size:12.5px;font-weight:700;border:1px solid var(--gold-dim);border-radius:8px;padding:3px 12px;color:var(--gold)}
+.desc{color:var(--muted);font-size:15px}
+audio{width:100%;margin-top:12px}
+.dl{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.dl a{display:inline-block;text-decoration:none;font-weight:700;font-size:15px;color:#111;background:linear-gradient(180deg,#BBF7D0,var(--gold));border-radius:12px;padding:10px 20px}
+.dl a.ghost{background:transparent;color:var(--gold);border:1.5px solid var(--gold-dim)}
+.src{font-size:13.5px;color:var(--muted);margin-top:12px}
+/* FIX: neo-brutal.css ย้อม body เป็นหมึกเข้มบนครีม แต่การ์ด .tcard/.panel ยังพื้นเข้ม -> h2 มืดบนมืด */
+.tbody h2,.panel h2{color:#F4F6FB}
+.panel p{color:#C9D2E8}
+/* ส่วนที่อยู่บนพื้นครีมของ body ต้องใช้หมึกเข้ม */
+.sub,.top a.back{color:#5a5a58}
+.menu a{color:#0d5c2e;border-color:#0d5c2e;background:rgba(74,222,128,.14)}
+.menu a.vio{color:#4c1d95;border-color:#4c1d95;background:rgba(167,139,250,.14)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:22px}
+.panel h2{font-size:20px;margin-bottom:6px}
+.panel p{color:var(--muted);font-size:15px}
+.form{display:grid;gap:8px;grid-template-columns:1fr 1fr;margin-top:10px}
+.form input,.form select{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px;width:100%}
+.form button{border:1px solid var(--gold-dim);background:rgba(74,222,128,.08);color:var(--gold);border-radius:10px;padding:10px;font-weight:700;cursor:pointer;font-size:15px}
+footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px}
+</style>
+  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a class="back" href="./index.html">← กลับหน้าแรก</a><span style="flex:1"></span><a class="back" href="./agency.html">◈ Agency OS</a></div>
+  <h1>🎹 ห้องเพลง GenMusic</h1>
+  <p class="sub">สร้าง ฟัง โหลด — ดนตรี compose ในเครื่อง ไร้ค่าลิขสิทธิ์</p>
+
+  <nav class="menu" aria-label="เมนูห้องเพลง">
+    <a href="#library">🎧 คลังเพลง</a>
+    <a href="#request">＋ สั่งทำเพลงใหม่</a>
+    <a href="#howto">❓ วิธีใช้</a>
+    <a class="vio" href="./agency.html">◈ เปิด Agency OS</a>
+    <a class="vio" href="./beat-select.html">🎧 ห้องบีท</a>
+  </nav>
+
+  <div id="library"></div>
+
+  <div class="panel" id="request">
+    <h2>＋ สั่งทำเพลงใหม่</h2>
+    <p>เลือกอารมณ์เพลง กดส่ง — งานจะเข้า Agency OS เป็นโปรเจกต์ Music Studio พร้อม task ให้ MAESTRO ทันที (ไฟล์เสียง compose ใหม่ในรอบถัดไป)</p>
+    <div class="form">
+      <select id="m-mood"><option value="lofi">lofi — กลางคืน/โฟกัส</option><option value="chill">chill — เช้า/สดใส</option><option value="traplite">traplite — ดาร์ก/808</option></select>
+      <select id="m-dur"><option value="30">30 วินาที</option><option value="60" selected>60 วินาที</option><option value="120">120 วินาที</option></select>
+      <div><button id="m-send">ส่งเข้า Agency OS →</button></div>
+    </div>
+  </div>
+
+  <div class="panel" id="howto">
+    <h2>❓ วิธีใช้ห้องนี้</h2>
+    <p>1) กดเล่นฟังก่อน · 2) ถูกใจกดโหลด MP3 (ใช้ฟรีในงานของ ET1CRUEL) · 3) อยากได้แบบใหม่กด “สั่งทำเพลงใหม่” หร��อ “📋 ส่งเข้า Agency” ใต้เพลง — งานจะไปโผล่ใน Agency OS พร้อม task ให้ agent ทำต่อ · เพลง AI ภายนอก (RunComfy) ใช้ได้เมื่อมี account + budget แล้ว ดูวิธีใน Agency → Settings</p>
+  </div>
+
+  <footer>⚔ ET1CRUEL · GENMUSIC — COMPOSED LOCALLY, NO ROYALTIES</footer>
+</div>
+<script>
+(function(){
+  fetch('music/tracks.json').then(function(r){ return r.json(); }).then(function(tracks){
+    document.getElementById('library').innerHTML = tracks.map(function(t){
+      return '<div class="tcard"><div class="tbody">' +
+        '<h2>' + t.id + '</h2>' +
+        '<div class="meta"><span>' + t.mood + '</span><span>' + t.bpm + ' BPM</span><span>' + t.dur + 's</span><span>MP3</span></div>' +
+        '<p class="desc">' + t.desc + '</p>' +
+        '<audio controls preload="metadata" src="' + t.file + '"></audio>' +
+        '<div class="dl"><a href="' + t.file + '" download>⬇ โหลด MP3</a>' +
+        '<a class="ghost" href="./agency.html" data-music="' + t.id + '">📋 ส่งเข้า Agency OS</a></div>' +
+        '<p class="src">engine: ' + t.engine + ' · compose ในเครื่อง · ใช้ฟรี</p>' +
+        '</div></div>';
+    }).join('');
+    document.querySelectorAll('[data-music]').forEach(function(a){
+      a.addEventListener('click', function(ev){
+        ev.preventDefault();
+        try { localStorage.setItem('et1cruel.agency.import', JSON.stringify({ kind: 'music', track: a.dataset.music, at: Date.now() })); } catch (e) {}
+        location.href = './agency.html#/projects';
+      });
+    });
+  }).catch(function(){ document.getElementById('library').innerHTML = '<p>โหลดคลังเพลงไม่ได้</p>'; });
+  document.getElementById('m-send').onclick = function(){
+    try { localStorage.setItem('et1cruel.agency.import', JSON.stringify({ kind: 'music-req',
+      mood: document.getElementById('m-mood').value, dur: document.getElementById('m-dur').value, at: Date.now() })); } catch (e) {}
+    location.href = './agency.html#/projects';
+  };
+})();
+</script>
+</body>
+</html>

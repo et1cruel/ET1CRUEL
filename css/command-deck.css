@@ -39,7 +39,7 @@ body.site-polish .hero::before {
   box-shadow: 0 0 10px rgba(141, 240, 177, .7);
   content: '';
 }
-.hero-sysbar .node-divider { color: #566176; }
+.hero-sysbar .node-divider { color: #8A94A8; }
 .hero-sysbar time { color: #eef3ff; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
 .command-open {
   display: inline-flex;
@@ -73,7 +73,7 @@ kbd { font: 600 9px/1 'Chakra Petch', sans-serif; letter-spacing: .05em; }
 .memory-progress-track { height: 5px; margin: 7px 0 8px; overflow: hidden; border-radius: 99px; background: #080c12; }
 .memory-progress-track > span { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #8df0b1, #9cb9ff, #eacb78); box-shadow: 0 0 10px rgba(141, 240, 177, .45); transition: width .45s cubic-bezier(.2,.8,.2,1); }
 .memory-ranks { display: flex; flex-wrap: wrap; gap: 5px; }
-.memory-rank { padding: 3px 6px; border: 1px solid rgba(105, 119, 143, .25); border-radius: 999px; color: #66738a; font: 600 8px/1.3 'Chakra Petch', sans-serif; letter-spacing: .04em; }
+.memory-rank { padding: 3px 6px; border: 1px solid rgba(105, 119, 143, .25); border-radius: 999px; color: #9AA3BC; font: 600 8px/1.3 'Chakra Petch', sans-serif; letter-spacing: .04em; }
 .memory-rank.is-unlocked { border-color: rgba(234, 203, 120, .38); background: rgba(234, 203, 120, .08); color: #f2d990; box-shadow: inset 0 0 10px rgba(234, 203, 120, .04); }
 .memory-next-goal { margin: 7px 0 0; color: #abb8cb; font-size: 10px; }
 .memory-discover { display: inline-flex; align-items: center; gap: 6px; margin-top: 7px; padding: 5px 9px; border: 1px solid rgba(141, 240, 177, .28); border-radius: 7px; background: rgba(141, 240, 177, .08); color: #c8f7d6; text-decoration: none; font-size: 10px; font-weight: 700; }

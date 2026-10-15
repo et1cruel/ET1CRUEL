@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUCKY INCOME — ห้องสรุปรายได้จากลัคกี้ 🐭💰</title>
+<meta name="description" content="ห้องสรุปรายได้จากลัคกี้ — รวม 5,672 บาท จาก 30 ยอด 21 วัน (29 พ.ค. – 14 ต.ค. 2569) พร้อมตารางเดินบัญชีรายยอด">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LUCKY INCOME — ห้องสรุปรายได้จากลัคกี้ | ET1CRUEL">
+<meta property="og:description" content="รวมรายได้ลัคกี้ 5,672 บาท · 30 ยอด · แยกเป็นรายเดือน + ตารางเดินบัญชี">
+<meta property="og:image" content="https://et1cruel.github.io/ET1CRUEL/assets/img/banner.webp">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#FFF4D6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== NEO BRUTALISM — LUCKY INCOME ===== */
+:root{
+  --paper:#FFF4D6;
+  --ink:#131313;
+  --yellow:#FFC900;
+  --pink:#FF90E8;
+  --mint:#00E5A0;
+  --lav:#B8A9FF;
+  --sky:#87D6FF;
+  --peach:#FFB38A;
+  --card:#FFFFFF;
+  --shadow:6px 6px 0 var(--ink);
+  --shadow-sm:4px 4px 0 var(--ink);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  background-image:radial-gradient(var(--ink) 1.2px, transparent 1.2px);
+  background-size:26px 26px;
+  color:var(--ink);
+  font-family:'IBM Plex Sans Thai',sans-serif;
+  font-size:18px;line-height:1.8;
+}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,244,214,.92),rgba(255,244,214,.75));z-index:0}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 22px 90px;position:relative;z-index:1}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px;background:var(--yellow)}
+
+/* ticker */
+.ticker{background:var(--ink);color:var(--paper);border:3px solid var(--ink);border-radius:12px;
+  overflow:hidden;white-space:nowrap;box-shadow:var(--shadow-sm);font-family:'Chakra Petch',sans-serif;
+  font-weight:700;font-size:14px;letter-spacing:.04em;padding:8px 0}
+.ticker span{display:inline-block;padding-left:100%;animation:tick 18s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+
+/* topbar */
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  background:var(--card);border:3px solid var(--ink);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow-sm);margin-top:14px}
+.topbar a{color:var(--ink);text-decoration:none;font-weight:700;font-size:14.5px;border:3px solid var(--ink);
+  border-radius:10px;padding:7px 14px;background:var(--yellow);box-shadow:3px 3px 0 var(--ink);font-family:'Chakra Petch',sans-serif}
+.topbar a:nth-of-type(2){background:var(--pink)}
+.topbar a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.topbar a:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;background:var(--ink);color:#fff;
+  border-radius:8px;padding:6px 12px}
+
+/* hero ticket */
+.hero{margin:22px 0 6px;background:var(--yellow);border:4px solid var(--ink);border-radius:20px;
+  box-shadow:8px 8px 0 var(--ink);padding:30px 28px 26px;transform:rotate(-.7deg);position:relative;overflow:hidden}
+.hero::after{content:'★ ★ ★';position:absolute;right:18px;top:12px;font-family:'Chakra Petch',sans-serif;
+  font-weight:700;font-size:15px;letter-spacing:.2em;border:3px solid var(--ink);border-radius:999px;
+  background:var(--card);padding:4px 14px;transform:rotate(4deg);box-shadow:3px 3px 0 var(--ink)}
+.hero .kicker{display:inline-block;background:var(--ink);color:#fff;font-family:'Chakra Petch',sans-serif;
+  font-weight:700;font-size:13px;letter-spacing:.08em;border-radius:8px;padding:5px 14px}
+.hero h1{font-size:clamp(34px,5vw,56px);line-height:1.2;margin:12px 0 4px;font-weight:700;letter-spacing:-.01em}
+.hero h1 .big{display:block;font-family:'Chakra Petch',sans-serif;font-size:clamp(58px,9vw,104px);line-height:1;
+  background:var(--card);border:4px solid var(--ink);border-radius:16px;display:inline-block;
+  padding:6px 22px;margin-top:10px;box-shadow:6px 6px 0 var(--ink);transform:rotate(1deg)}
+.hero p{margin-top:14px;font-weight:600;max-width:70ch;background:rgba(255,255,255,.65);
+  border:3px solid var(--ink);border-radius:12px;padding:10px 16px;display:inline-block}
+.hero p b{background:var(--ink);color:#fff;padding:0 8px;border-radius:6px}
+
+/* stats stickers */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.stat{background:var(--card);border:3px solid var(--ink);border-radius:16px;padding:16px 14px;text-align:center;
+  box-shadow:var(--shadow-sm);transition:transform .12s}
+.stat:nth-child(1){background:var(--mint);transform:rotate(-1deg)}
+.stat:nth-child(2){background:var(--card);transform:rotate(.8deg)}
+.stat:nth-child(3){background:var(--sky);transform:rotate(-.6deg)}
+.stat:nth-child(4){background:var(--pink);transform:rotate(.9deg)}
+.stat:nth-child(5){background:var(--lav);transform:rotate(-.9deg)}
+.stat:nth-child(6){background:var(--peach);transform:rotate(.7deg)}
+.stat:hover{transform:rotate(0) translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.stat small{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.06em;background:var(--ink);color:#fff;border-radius:7px;padding:3px 12px}
+.stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:32px;line-height:1.25;margin:8px 0 2px}
+.stat span{font-size:13.5px;font-weight:600}
+
+/* cards */
+.card{background:var(--card);border:3px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);
+  margin:26px 0;padding:24px 24px 22px;scroll-margin-top:90px}
+.card h2{font-size:25px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.card h2 .em{background:var(--mint);border:3px solid var(--ink);border-radius:12px;width:48px;height:48px;
+  display:flex;align-items:center;justify-content:center;font-size:23px;flex:0 0 48px;box-shadow:3px 3px 0 var(--ink)}
+#addCard h2 .em{background:var(--yellow)}
+#ledgerCard h2 .em{background:var(--sky)}
+.card .sub{font-size:15px;margin:6px 0 14px;font-weight:600}
+.card .sub::before{content:'◼ ';font-size:12px}
+
+/* monthly */
+.mrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:3px dashed var(--ink)}
+.mrow:first-of-type{border-top:none}
+.mrow .mname{width:180px;flex:0 0 180px;font-weight:700;font-size:15.5px}
+.mrow .mname small{display:inline-block;background:var(--ink);color:#fff;font-size:12px;font-weight:700;
+  border-radius:6px;padding:1px 10px;margin-top:4px}
+.mbar{flex:1;height:22px;background:#fff;border:3px solid var(--ink);border-radius:999px;overflow:hidden;box-shadow:3px 3px 0 var(--ink)}
+.mbar i{display:block;height:100%;background:repeating-linear-gradient(-55deg,var(--mint) 0 12px,#00b87e 12px 24px)}
+.mrow:nth-child(2) .mbar i{background:repeating-linear-gradient(-55deg,var(--sky) 0 12px,#2e9fd8 12px 24px)}
+.mrow:nth-child(3) .mbar i{background:repeating-linear-gradient(-55deg,var(--lav) 0 12px,#7c5cf0 12px 24px)}
+.mrow:nth-child(4) .mbar i{background:repeating-linear-gradient(-55deg,var(--yellow) 0 12px,#e0a800 12px 24px)}
+.mrow:nth-child(5) .mbar i{background:repeating-linear-gradient(-55deg,var(--pink) 0 12px,#e049b8 12px 24px)}
+.mrow:nth-child(6) .mbar i{background:repeating-linear-gradient(-55deg,var(--peach) 0 12px,#e07b45 12px 24px)}
+.mrow .mamt{width:130px;flex:0 0 130px;text-align:right;font-family:'Chakra Petch',sans-serif;font-weight:700;
+  font-size:18px;background:var(--ink);color:#fff;border-radius:10px;padding:2px 10px}
+
+.note{background:var(--pink);border:3px solid var(--ink);border-radius:14px;padding:16px 18px;font-size:15.5px;
+  font-weight:600;margin-top:16px;line-height:1.9;box-shadow:var(--shadow-sm)}
+.note b{background:var(--ink);color:#fff;padding:0 8px;border-radius:6px}
+.note .num{background:#fff;border:2px solid var(--ink);border-radius:6px;padding:0 8px;color:var(--ink)}
+
+/* form */
+form.add{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+form.add .full{grid-column:1/-1}
+form.add label{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;display:flex;flex-direction:column;gap:8px}
+form.add label span.tag{align-self:flex-start;background:var(--ink);color:#fff;border-radius:7px;padding:2px 12px}
+form.add input{border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:12px;padding:12px 14px;
+  font-family:inherit;font-size:16px;font-weight:700;outline:none;width:100%;box-shadow:4px 4px 0 var(--ink)}
+form.add input:focus{background:var(--yellow)}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:15px;border-radius:12px;padding:12px 24px;
+  cursor:pointer;border:3px solid var(--ink);background:var(--mint);color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.ghost{background:#fff}
+.btn.small{padding:8px 14px;font-size:13px;border-width:3px}
+.btn.danger{background:#fff;color:var(--ink);border-color:var(--ink)}
+#resetBtn{background:var(--pink)}
+
+/* ledger */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:6px 0 14px}
+.toolbar input{border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:12px;padding:10px 14px;
+  font-family:inherit;font-size:15px;font-weight:600;outline:none;min-width:200px;flex:1;box-shadow:4px 4px 0 var(--ink)}
+.toolbar input:focus{background:var(--yellow)}
+table.ledger{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px;font-size:15.5px;
+  border:3px solid var(--ink);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm)}
+table.ledger th{font-family:'Chakra Petch',sans-serif;font-size:12.5px;letter-spacing:.06em;color:#fff;
+  text-align:left;padding:12px 10px;background:var(--ink)}
+table.ledger td{padding:11px 10px;border-bottom:2px solid var(--ink);color:var(--ink);vertical-align:top;background:#fff;font-weight:600}
+table.ledger tr:nth-child(even) td{background:#FFF9EC}
+table.ledger td.amt{font-family:'Chakra Petch',sans-serif;font-weight:700;text-align:right;white-space:nowrap;
+  background:var(--yellow)}
+table.ledger tr:nth-child(even) td.amt{background:#FFD93B}
+table.ledger td.run{font-family:'Chakra Petch',sans-serif;text-align:right;white-space:nowrap;font-size:13.5px;background:#fff}
+table.ledger td .del{background:#fff;border:3px solid var(--ink);border-radius:8px;padding:4px 12px;cursor:pointer;
+  font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:12.5px;box-shadow:2px 2px 0 var(--ink)}
+table.ledger td .del:hover{background:#C92A2A;color:#fff}
+table.ledger tr.big td.amt{background:var(--pink)}
+.empty{text-align:center;font-weight:700;padding:26px;border:3px dashed var(--ink);border-radius:14px;background:#fff}
+footer{text-align:center;font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif;font-weight:700;
+  background:var(--ink);color:#fff;border-radius:12px;padding:12px}
+@media(max-width:900px){.stats{grid-template-columns:1fr 1fr}.hero{transform:rotate(0)}.mrow .mname{width:130px;flex-basis:130px}.mrow .mamt{width:105px;flex-basis:105px;font-size:15px}}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr;gap:12px}.card{padding:18px}form.add{grid-template-columns:1fr}
+  table.ledger{font-size:13.5px}.mrow .mname{width:105px;flex-basis:105px;font-size:13.5px}.hero h1{font-size:30px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.ticker span{padding-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="ticker" aria-hidden="true"><span>★ LUCKY INCOME ★ TOTAL 5,672 ฿ ★ 30 YODS ★ 21 DAYS ★ 29 MAY – 14 OCT 2569 ★ BASE 100 ฿ ★ BIG 1,311 ฿ ★ LUCKY INCOME ★ TOTAL 5,672 ฿ ★ 30 YODS ★ 21 DAYS ★</span></div>
+
+<div class="topbar">
+  <a href="./index.html">← LIFE OS</a>
+  <a href="./index.html#lucky">🐭 งานลัคกี้</a>
+  <span class="t">🐭💰 LUCKY INCOME · NEO-BRUTAL EDITION</span>
+</div>
+
+<header class="hero">
+  <span class="kicker">🐭 HALL OF LUCKY · 29 MAY – 14 OCT 2569</span>
+  <h1>รายได้จากลัคกี้<span class="big num">5,672 ฿</span></h1>
+  <p>ยอดโอนจริงจากแชท <b>30 ยอด · 21 วัน</b> · เพิ่มยอดใหม่ด้านล่างได้ เก็บในเครื่อง</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><small>💰 TOTAL</small><strong class="num" id="stTotal">5,672 ฿</strong><span>ยอดรวมทั้งหมด</span></div>
+  <div class="stat"><small>🧾 YODS</small><strong class="num" id="stCount">30</strong><span>ยอดโอน</span></div>
+  <div class="stat"><small>🗓️ DAYS</small><strong class="num" id="stDays">21</strong><span>วันที่มีรายได้</span></div>
+  <div class="stat"><small>⚡ BIG 1 YOD</small><strong class="num" id="stBig">+1,311</strong><span>4 ส.ค. 22:16</span></div>
+  <div class="stat"><small>🔥 BIG 1 DAY</small><strong class="num" id="stBigDay">1,411</strong><span>4 ส.ค. (2 ยอด)</span></div>
+  <div class="stat"><small>📊 AVG</small><strong class="num" id="stAvg">189</strong><span>บาทต่อยอด</span></div>
+</div>
+
+<section class="card" id="monthly">
+  <h2><span class="em">📅</span> สรุปรายเดือน</h2>
+  <p class="sub">พ.ค. เริ่มแรง · ส.ค. พีคสุด · ก.ย.–ต.ค. แผ่ว</p>
+  <div id="monthRows"></div>
+  <div class="note">🏆 <b>เดือนพีคคือสิงหาคม +1,711</b> (ยอดเดี่ยว +1,311 วันที่ 4 ส.ค. ดันทั้งเดือน) · รองมาคือกรกฎาคม +1,211 (มีบิ๊กยอด +1,000) · <b>ฐานมาตรฐานคือยอดละ 100</b> มาถี่ = กระแสเงินสดรายวัน · เดือน ต.ค. นับถึง 14 ต.ค. +300 แล้ว</div>
+</section>
+
+<section class="card" id="addCard">
+  <h2><span class="em">➕</span> เพิ่มยอดใหม่</h2>
+  <p class="sub">มีโอนเข้าใหม่ก็กรอกตรงนี้ · วันที่ + เวลา + จำนวน + โน้ต</p>
+  <form class="add" id="addForm">
+    <label><span class="tag">🗓️ วันที่ *</span>
+      <input id="fDate" type="date" value="2026-10-14" min="2020-01-01" max="2030-12-31" required>
+    </label>
+    <label><span class="tag">🕒 เวลา</span>
+      <input id="fTime" type="time" value="11:32">
+    </label>
+    <label><span class="tag">💰 จำนวน (บาท) *</span>
+      <input id="fAmt" type="number" min="1" step="1" placeholder="เช่น 100" required>
+    </label>
+    <label><span class="tag">📝 โน้ต</span>
+      <input id="fNote" maxlength="80" placeholder="เช่น ลัคกี้อวยพรวันเกิด">
+    </label>
+    <div class="full" style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn" type="submit">💾 บันทึกยอด</button>
+      <button class="btn ghost" type="button" id="clearBtn">ล้างฟอร์ม</button>
+    </div>
+  </form>
+</section>
+
+<section class="card" id="ledgerCard">
+  <h2><span class="em">🧾</span> ตารางเดินบัญชี — ทุกยอด</h2>
+  <p class="sub">เรียงใหม่ → เก่า · ช่องขวาคือยอดสะสม (นับจากเก่า → ใหม่)</p>
+  <div class="toolbar">
+    <input id="q" placeholder="ค้นหา… 1311 / สิงหา / 2026-08-04 / อวยพร">
+    <button class="btn small ghost" id="exportBtn" type="button">⬇ สำรอง</button>
+    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ต 30 ยอด</button>
+  </div>
+  <div style="overflow-x:auto">
+  <table class="ledger" id="ledgerTable">
+    <thead><tr><th>#</th><th>วัน–เวลา</th><th>รายละเอียด</th><th style="text-align:right">ยอด</th><th style="text-align:right">สะสม</th><th></th></tr></thead>
+    <tbody id="ledgerBody"></tbody>
+  </table>
+  </div>
+  <div class="empty" id="empty" style="display:none">ยังไม่มียอดที่ค้นหา — ลองล้างคำค้นหรือเพิ่มยอดใหม่ด้านบน</div>
+  <div class="note">✔ <b>ตรวจยอดแล้ว:</b> 200+100+200+100+300+100 (29 พ.ค.) → สะสม 1,000 วันแรก · ปลายทาง <b class="num">5,672</b> ตรงกับผลบวก 30 ยอดทุกยอด · ยอดแปลกมีแค่ <b class="num">+150 / +200 / +300 / +1,000 / +111 / +1,311</b> นอกนั้น +100 ล้วน</div>
+</section>
+
+<footer>LUCKY INCOME · NEO BRUTALISM · 29 MAY – 14 OCT 2569 🐭💰</footer>
+</div>
+
+<script>
+var KEY = 'luckyIncomeV1';
+var TH_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function thaiDate(iso){
+  try{
+    var p = iso.split('-');
+    return parseInt(p[2],10) + ' ' + TH_MONTHS[parseInt(p[1],10)-1] + ' ' + (parseInt(p[0],10)+543);
+  }catch(e){ return iso; }
+}
+function seed(){
+  var raw = [
+    ['2026-05-29','13:21',200,'ลัคกี้ — ยอดที่ 1'],
+    ['2026-05-29','13:21',100,'ลัคกี้ — ยอดที่ 2'],
+    ['2026-05-29','13:21',200,'ลัคกี้ — ยอดที่ 3'],
+    ['2026-05-29','13:31',100,'ลัคกี้'],
+    ['2026-05-29','14:41',300,'ลัคกี้ 3 คลิปรวด'],
+    ['2026-05-29','17:06',100,'ลัคกี้'],
+    ['2026-05-30','10:44',100,'ลัคกี้'],
+    ['2026-05-31','23:38',100,'ลัคกี้'],
+    ['2026-06-01','13:15',100,'วิดีโอลัคกี้อวยพรวันเกิด'],
+    ['2026-06-02','15:52',100,'ลัคกี้'],
+    ['2026-06-03','10:29',100,'ลัคกี้'],
+    ['2026-06-03','22:39',100,'ลัคกี้'],
+    ['2026-06-05','19:02',150,'วิดีโอให้กำลังใจ'],
+    ['2026-06-06','10:28',100,'วิดีโอฝากบอกศิลปิน'],
+    ['2026-06-11','17:19',100,'ลัคกี้ — ยอดที่ 1'],
+    ['2026-06-11','17:19',100,'ลัคกี้ — ยอดที่ 2'],
+    ['2026-06-19','04:47',100,'วิดีโออวยพรติดมหาลัย'],
+    ['2026-06-20','12:22',100,'ลัคกี้'],
+    ['2026-07-15','13:46',1000,'งานคอลแลบหมาเล็ก (บิ๊กจ๊อบ)'],
+    ['2026-07-15','13:46',111,'ลัคกี้ (ยอดพ่วง)'],
+    ['2026-07-19','13:10',100,'ลัคกี้'],
+    ['2026-08-04','11:25',100,'ลัคกี้อวยพรวันเกิด'],
+    ['2026-08-04','22:16',1311,'ลัคกี้ (บิ๊กยอด)'],
+    ['2026-08-06','15:48',100,'ลัคกี้'],
+    ['2026-08-09','07:05',100,'ลัคกี้'],
+    ['2026-08-17','17:40',100,'ลัคกี้'],
+    ['2026-09-30','10:03',200,'ลัคกี้'],
+    ['2026-10-03','10:34',100,'ลัคกี้'],
+    ['2026-10-08','23:19',100,'ลัคกี้'],
+    ['2026-10-14','11:32',100,'ลัคกี้']
+  ];
+  return raw.map(function(r,i){
+    return { id:'seed-'+(i+1), dateISO:r[0], time:r[1], amount:r[2], note:r[3], createdAt: Date.now()+i, seed:true };
+  });
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){ var a = JSON.parse(raw); if(Array.isArray(a) && a.length) return a; }
+  }catch(e){}
+  return null;
+}
+function save(a){ try{ localStorage.setItem(KEY, JSON.stringify(a)); }catch(e){ alert('เมมเต็ม — ลบยอดเก่าออกบ้าง'); } }
+var items = load();
+if(!items || !items.length){ items = seed(); save(items); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function fmt(n){ return Number(n||0).toLocaleString('en-US'); }
+
+function render(filter){
+  var q = (filter||'').trim().toLowerCase();
+  var chrono = items.slice().sort(function(a,b){
+    var k1 = (a.dateISO||'')+' '+(a.time||''), k2 = (b.dateISO||'')+' '+(b.time||'');
+    if(k1!==k2) return k1<k2?-1:1;
+    return (a.createdAt||0)-(b.createdAt||0);
+  });
+  var runMap = {}, run = 0;
+  chrono.forEach(function(it){ run += Number(it.amount)||0; runMap[it.id] = run; });
+  var total = run;
+  var days = {}; chrono.forEach(function(it){ days[it.dateISO]=1; });
+  var big = 0, bigIt = null;
+  chrono.forEach(function(it){ if(Number(it.amount)>big){ big=Number(it.amount); bigIt=it; } });
+  var perDay = {};
+  chrono.forEach(function(it){ perDay[it.dateISO]=(perDay[it.dateISO]||0)+Number(it.amount); });
+  var bigDay='–', bigDayAmt=0;
+  Object.keys(perDay).forEach(function(d){ if(perDay[d]>bigDayAmt){ bigDayAmt=perDay[d]; bigDay=d; } });
+  document.getElementById('stTotal').textContent = fmt(total)+' ฿';
+  document.getElementById('stCount').textContent = items.length;
+  document.getElementById('stDays').textContent = Object.keys(days).length;
+  document.getElementById('stBig').textContent = '+'+fmt(big);
+  if(bigIt) document.getElementById('stBig').nextElementSibling.textContent = thaiDate(bigIt.dateISO)+' '+bigIt.time;
+  document.getElementById('stBigDay').textContent = fmt(bigDayAmt);
+  document.getElementById('stBigDay').nextElementSibling.textContent = thaiDate(bigDay);
+  document.getElementById('stAvg').textContent = items.length? fmt(Math.round(total/items.length)) : '0';
+
+  var months = [
+    {k:'2026-05', label:'พฤษภาคม 69', sub:'8 ยอด'},
+    {k:'2026-06', label:'มิถุนายน 69', sub:'10 ยอด'},
+    {k:'2026-07', label:'กรกฎาคม 69', sub:'3 ยอด'},
+    {k:'2026-08', label:'สิงหาคม 69', sub:'5 ยอด'},
+    {k:'2026-09', label:'กันยายน 69', sub:'1 ยอด'},
+    {k:'2026-10', label:'ตุลาคม 69*', sub:'3 ยอด (ถึง 14 ต.ค.)'}
+  ];
+  var sums = {};
+  chrono.forEach(function(it){
+    var mk = (it.dateISO||'').slice(0,7);
+    sums[mk]=(sums[mk]||0)+Number(it.amount);
+  });
+  var mx = 1; Object.keys(sums).forEach(function(k){ if(sums[k]>mx) mx=sums[k]; });
+  var mr = document.getElementById('monthRows'); mr.innerHTML='';
+  months.forEach(function(m){
+    var v = sums[m.k]||0;
+    var row = document.createElement('div'); row.className='mrow';
+    row.innerHTML = '<div class="mname">'+esc(m.label)+'<br><small>'+esc(m.sub)+'</small></div>'+
+      '<div class="mbar"><i style="width:'+Math.max(3,Math.round(v/mx*100))+'%"></i></div>'+
+      '<div class="mamt num">+'+fmt(v)+'</div>';
+    mr.appendChild(row);
+  });
+
+  var desc = chrono.slice().reverse();
+  var tb = document.getElementById('ledgerBody'); tb.innerHTML='';
+  var shown = 0;
+  desc.forEach(function(it, idx){
+    var hay = ((it.dateISO||'')+' '+(it.time||'')+' '+(it.note||'')+' '+it.amount+' '+thaiDate(it.dateISO||'')).toLowerCase();
+    if(q && hay.indexOf(q)===-1) return;
+    shown++;
+    var tr = document.createElement('tr');
+    if(Number(it.amount)>=1000) tr.className='big';
+    tr.innerHTML = '<td class="num">'+(desc.length-idx)+'</td>'+
+      '<td><b>'+esc(thaiDate(it.dateISO))+'</b><br><small class="num">'+esc(it.dateISO)+' · '+esc(it.time||'–')+'</small></td>'+
+      '<td>'+esc(it.note||'ลัคกี้')+'</td>'+
+      '<td class="amt">+'+fmt(it.amount)+'</td>'+
+      '<td class="run">'+fmt(runMap[it.id])+'</td>'+
+      '<td style="text-align:right;white-space:nowrap"><button class="del" data-del="'+it.id+'" type="button">ลบ</button></td>';
+    tb.appendChild(tr);
+  });
+  document.getElementById('empty').style.display = shown? 'none':'block';
+  tb.querySelectorAll('[data-del]').forEach(function(b){
+    b.onclick = function(){
+      var id = b.getAttribute('data-del');
+      var it = null; items.forEach(function(x){ if(x.id===id) it=x; });
+      if(!confirm('ลบยอด +'+(it?fmt(it.amount):'')+' วันที่ '+(it?thaiDate(it.dateISO):'')+' ใช่ไหม?')) return;
+      items = items.filter(function(x){ return x.id!==id; });
+      save(items); render(document.getElementById('q').value);
+    };
+  });
+}
+document.getElementById('q').addEventListener('input', function(e){ render(e.target.value); });
+document.getElementById('addForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var d = document.getElementById('fDate').value;
+  var t = document.getElementById('fTime').value || '';
+  var amt = parseInt(document.getElementById('fAmt').value,10);
+  var note = (document.getElementById('fNote').value||'ลัคกี้').trim() || 'ลัคกี้';
+  if(!d){ alert('เลือกวันที่ก่อน'); return; }
+  if(!amt || amt<=0){ alert('ใส่จำนวนเงินให้ถูกต้อง'); return; }
+  items.push({ id:'u'+Date.now(), dateISO:d, time:t, amount:amt, note:note, createdAt:Date.now() });
+  save(items);
+  document.getElementById('fAmt').value=''; document.getElementById('fNote').value='';
+  render(document.getElementById('q').value);
+  document.getElementById('ledgerCard').scrollIntoView({behavior:'smooth'});
+});
+document.getElementById('clearBtn').onclick = function(){
+  document.getElementById('fAmt').value=''; document.getElementById('fNote').value='';
+};
+document.getElementById('resetBtn').onclick = function(){
+  if(!confirm('รีเซ็ตกลับเหลือ 30 ยอดตั้งต้น (29 พ.ค. – 14 ต.ค. 2569) ใช่ไหม?')) return;
+  items = seed(); save(items); render('');
+};
+document.getElementById('exportBtn').onclick = function(){
+  var blob = new Blob([JSON.stringify(items,null,2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lucky-income-backup.json';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+};
+render('');
+</script>
+</body>
+</html>

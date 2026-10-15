@@ -52,7 +52,7 @@
       '#know-foot{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center}',
       '#know-rand{border:1.5px solid #4ADE80;background:rgba(74,222,128,.12);color:#6EE7B7;border-radius:10px;',
       ' padding:8px 14px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}',
-      '#know-count{margin-left:auto;font-family:"Chakra Petch",sans-serif;font-size:11.5px;color:#5d6785}'
+      '#know-count{margin-left:auto;font-family:"Chakra Petch",sans-serif;font-size:11.5px;color:#9AA3C2}'
     ].join('\n');
     document.head.appendChild(st);
   }
@@ -103,7 +103,26 @@
     body.appendChild(tag); body.appendChild(h); body.appendChild(p);
   }
   function build() {
-    if (document.getElementById('know-card')) return;
+    var existing = document.getElementById('know-card');
+    if (existing) {
+      if (!data().length) return; // เหลือ static fallback ไว้
+      injectCSS();
+      var tabs = existing.querySelectorAll('.know-tab');
+      for (var i = 0; i < tabs.length; i++) {
+        (function (b) {
+          b.addEventListener('click', function () { render(existing, b.getAttribute('data-cat')); });
+        })(tabs[i]);
+      }
+      var rand = existing.querySelector('#know-rand');
+      if (rand) rand.addEventListener('click', function () { random(existing); });
+      render(existing, 'today');
+      window.ET1KNOW = {
+        random: function (cat) { render(existing, cat || 'today'); random(existing); },
+        today: function () { render(existing, 'today'); },
+        count: function () { return data().length; }
+      };
+      return;
+    }
     if (!data().length) return; // ยังไม่มีไฟล์ข้อมูลจาก GLM → ไม่แสดงอะไร
     var anchor = document.querySelector('.treasury') || document.getElementById('gear');
     if (!anchor) return;

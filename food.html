@@ -8,13 +8,13 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="ห้องอาหาร — สมุดบันทึกมื้อโปรด | ET1CRUEL">
 <meta property="og:description" content="สมุดบันทึกมื้อโปรด — ร้านที่ชอบ เมนูที่ใช่ กินอร่อยคือเติม HP">
-<meta property="og:image" content="https://et1cruel.github.io/ET1CRUEL/banner.webp">
+<meta property="og:image" content="https://et1cruel.github.io/ET1CRUEL/assets/img/banner.webp">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="theme-color" content="#0B100D">
+<meta name="theme-color" content="#08090E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Mitr:wght@600;700&family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f1e9;--paper:#fffdf8;--ink:#202820;--muted:#667064;--line:#e4e2d8;--green:#315b45;--green-dark:#244634;--gold:#b8783d;--gold-soft:#f3e8d8;--red:#a84d3d;--shadow:0 12px 34px rgba(39,51,39,.07)}
+:root{--bg:#f4f1e9;--paper:#fffdf8;--ink:#202820;--muted:#49544A;--line:#e4e2d8;--green:#315b45;--green-dark:#244634;--gold:#8F5C14;--gold-soft:#f3e8d8;--red:#a84d3d;--shadow:0 12px 34px rgba(39,51,39,.07)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:96px}
 body{background:radial-gradient(ellipse at 90% 0%,#e7eddf 0,transparent 32rem),var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai','Sarabun',sans-serif;font-size:16px;line-height:1.7}
@@ -83,7 +83,7 @@ form.add label{display:flex;flex-direction:column;gap:6px;color:#465347;font-siz
 form.add input,form.add select,form.add textarea,.toolbar input,.toolbar select{width:100%;min-height:45px;padding:10px 13px;border:1px solid #dfe2d8;border-radius:11px;background:#fff;color:var(--ink);font:400 15px 'IBM Plex Sans Thai',sans-serif;outline:none;color-scheme:light}
 form.add textarea{min-height:82px;resize:vertical}
 form.add input:focus,form.add select:focus,form.add textarea:focus,.toolbar input:focus,.toolbar select:focus{border-color:#87a98a;box-shadow:0 0 0 3px rgba(91,133,93,.12)}
-form.add input::placeholder,form.add textarea::placeholder,.toolbar input::placeholder{color:#939a8e}
+form.add input::placeholder,form.add textarea::placeholder,.toolbar input::placeholder{color:#6B726B}
 .toolbar{display:grid;grid-template-columns:minmax(180px,1fr) minmax(140px,.45fr) minmax(160px,.5fr);gap:9px;margin:6px 0 14px}
 .toolbar input{min-width:0}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
@@ -100,20 +100,20 @@ form.add input::placeholder,form.add textarea::placeholder,.toolbar input::place
 .fcard:nth-child(6n){--dish-accent:#b47a70;--dish-bg:#fbf0ee}
 .fcard:hover{transform:translateY(-3px);border-color:#cbd6c6;box-shadow:0 12px 24px rgba(39,51,39,.09)}
 .fcard.fav{border-color:#e5cba9;border-left-color:var(--dish-accent);background:var(--dish-bg)}
-.fcard.fav::after{content:'★ ของโปรด';position:absolute;top:11px;right:12px;padding:3px 7px;border-radius:99px;background:#f7ebda;color:#9b6533;font-size:10px;font-weight:700}
+.fcard.fav::after{content:'★ ของโปรด';position:absolute;top:11px;right:12px;padding:3px 7px;border-radius:99px;background:#f7ebda;color:#7C4E1F;font-size:10px;font-weight:700}
 .fcard .top{display:flex;align-items:center;gap:11px;min-width:0;padding-bottom:12px;border-bottom:1px solid #eff0e9}
 .fcard .top>div:last-child{min-width:0}
 .fcard .emoji{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border:1px solid #edf0e7;border-radius:13px;background:#f5f7f0;font-size:23px}
 .fcard h3{overflow-wrap:anywhere;color:var(--ink);font-family:'Mitr','IBM Plex Sans Thai',sans-serif;font-size:17px;font-weight:500;line-height:1.4}
 .fcard .shop{margin-top:2px;color:var(--muted);font-size:12px;line-height:1.5}
-.fcard .stars{margin-top:11px;color:#bd843e;font-size:14px;letter-spacing:2px}
+.fcard .stars{margin-top:11px;color:#8A5E22;font-size:14px;letter-spacing:2px}
 .fcard .meta{display:flex;flex-wrap:wrap;align-items:center;gap:5px 9px;margin-top:7px}
 .fcard .meta .price{margin-left:auto}
 .tag{color:var(--muted);font-size:11.5px;font-weight:500;font-variant-numeric:tabular-nums}
 .tag.price{color:var(--green-dark);font-size:17px;font-weight:700}
-.tag.buff{color:#8a673d}
-.tag.count{width:100%;color:#7a8377;font-size:11px}
-.fcard .story{margin-top:11px;color:#687064;font-size:12.5px;line-height:1.65}
+.tag.buff{color:#6B4F22}
+.tag.count{width:100%;color:#5A645A;font-size:11px}
+.fcard .story{margin-top:11px;color:#49544A;font-size:12.5px;line-height:1.65}
 .fcard .story::before{content:'“ '}
 .fcard .story::after{content:' ”'}
 .fcard .row{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:14px}
@@ -129,6 +129,7 @@ footer a{color:var(--green)}
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
+  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
 </head>
 <body class="site-polish">
 <div class="wrap">

@@ -1,1 +1,33 @@
 .playwright-mcp/
+.vscode/
+.agents/
+node_modules/
+# local video workspaces — never commit
+DimeVideo/
+EditVid/
+GenVideo/
+# secrets / local config
+.env
+# OS / accidents
+desktop.ini
+Thumbs.db
+$null
+# temp screenshots + root draft renders (keep local only)
+check*.png
+draft-*.mp4
+final-*.mp4
+drafts/
+# python bytecode
+*.pyc
+__pycache__/
+# heavy audio intermediates (regenerable by gen_*.py — finals are music/*.mp3)
+music/*.wav
+voice/
+video/*/silent.mp4
+video/*/vo-full.mp4
+video/*/v2.mp4
+video/*/mix*.wav
+video/*/music.wav
+video/*/voice*.wav
+video/*/voiceover/
+video/*/voiceover_v2/

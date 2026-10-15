@@ -1,0 +1,691 @@
+/* =====================================================
+   NEO-BRUTALISM site-wide — "LUCKY EDITION" v1
+   Tokens เดียวกับ lucky-income.html : กระดาษครีม + ขอบดำหนา + เงาแข็ง
+   โหลดไฟล์นี้เป็น <link> ตัวสุดท้ายของทุกหน้า
+   ===================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Mitr:wght@600;700&display=swap');
+:root{
+  --br-paper:#FFF4D6;
+  --br-ink:#131313;
+  --br-yellow:#FFC900;
+  --br-pink:#FF90E8;
+  --br-mint:#00E5A0;
+  --br-lav:#B8A9FF;
+  --br-sky:#87D6FF;
+  --br-peach:#FFB38A;
+  --br-card:#FFFFFF;
+  --br-cream:#FFF9EC;
+  --shadow:6px 6px 0 #131313 !important;
+}
+
+/* ---- พื้นหลังกระดาษ + ลายจุด ---- */
+body{
+  background-color:var(--br-paper) !important;
+  background-image:radial-gradient(#131313 1.2px, transparent 1.2px),url('../assets/img/temple-bg.jpg') !important;
+  background-size:26px 26px,cover !important;
+  background-attachment:scroll,fixed !important;
+  background-position:0 0,center top !important;
+  background-repeat:repeat,no-repeat !important;
+  color:var(--br-ink) !important;
+}
+body::before{
+  background:linear-gradient(180deg,rgba(255,244,214,.9),rgba(255,244,214,.7)) !important;
+}
+body::after{opacity:.04 !important;}
+.wrap{position:relative;z-index:1}
+:focus-visible{outline:3px solid var(--br-ink) !important;outline-offset:2px;background:var(--br-yellow) !important}
+
+/* ---- แถบบน / เมนู ---- */
+.topbar{
+  background:var(--br-card) !important;
+  border:3px solid var(--br-ink) !important;border-top:3px solid var(--br-ink) !important;
+  border-radius:14px !important;box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+.topbar b,.topbar .t{color:var(--br-ink) !important}
+.topbar small{color:#5a5a58 !important}
+.topbar a,.topbar .fbtn{
+  background:var(--br-yellow) !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-radius:10px !important;
+  box-shadow:3px 3px 0 var(--br-ink) !important;
+}
+.topbar a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--br-ink) !important}
+.search input{
+  background:#fff !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-radius:10px !important;box-shadow:3px 3px 0 var(--br-ink);
+}
+.fbtn{background:#fff !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink) !important}
+.fbtn.on{background:var(--br-ink) !important;color:#fff !important}
+.money-hud{
+  background:var(--br-ink) !important;color:#fff !important;
+  border:3px solid var(--br-ink) !important;border-radius:12px !important;box-shadow:3px 3px 0 rgba(19,19,19,.25);
+}
+.topbar .money-hud b{color:#fff !important}
+.hbar{background:#fff !important;border:2px solid var(--br-ink) !important}
+.hbar em{color:var(--br-ink) !important;text-shadow:none !important}
+
+/* ---- WORLD MAP (nav ข้าง) ---- */
+.nav,.nav-group,.nav-groups{
+  background:var(--br-card) !important;border:3px solid var(--br-ink) !important;
+  border-radius:16px !important;box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+.nav a{
+  color:var(--br-ink) !important;border:3px solid transparent !important;border-radius:10px !important;
+}
+.nav a:hover{background:var(--br-cream) !important;border-color:var(--br-ink) !important}
+.nav a span.n{background:var(--br-yellow) !important;color:var(--br-ink) !important;border:2px solid var(--br-ink) !important}
+
+/* ---- HERO ตั๋วเหลือง ---- */
+.hero{
+  background:var(--br-yellow) !important;border:4px solid var(--br-ink) !important;
+  border-radius:20px !important;box-shadow:8px 8px 0 var(--br-ink) !important;
+}
+.hero::before{display:none !important}
+.hero h1,.hero-left h1{color:var(--br-ink) !important;animation:none !important}
+.hero h1 span.et,.hero h1 .ph,.hero .et{color:var(--br-ink) !important;text-shadow:none !important;animation:none !important}
+.hero .lead,.hero p{color:var(--br-ink) !important}
+.hero .lead b,.hero p b{background:var(--br-ink);color:#fff;padding:0 8px;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.hero-left,.hero-right{background:transparent !important;border:none !important}
+.hero-right{border-left:3px dashed var(--br-ink) !important}
+.class-line{background:var(--br-ink) !important;color:#fff !important}
+.hero-cta a{
+  color:var(--br-ink) !important;border:3px solid var(--br-ink) !important;border-radius:12px !important;
+  background:#fff !important;box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+.hero-cta a:hover{box-shadow:5px 5px 0 var(--br-ink) !important}
+.kpi,.stat,.gacha-stat,.mem-stat,.vault{
+  background:var(--br-card) !important;border:3px solid var(--br-ink) !important;
+  border-radius:14px !important;box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+.kpi::after{display:none !important}
+.kpi small,.stat small,.vault small{color:#5a5a58 !important}
+.kpi strong,.stat strong,.vault .vamt{color:var(--br-ink) !important}
+.formula{background:#fff !important;border:3px solid var(--br-ink) !important;border-radius:14px !important}
+.formula::before{background:var(--br-ink) !important;color:#fff !important}
+.formula h3,.formula p,.formula p b{color:var(--br-ink) !important}
+
+/* ---- การ์ด section ---- */
+section.card,.card,.treasury{
+  background:var(--br-card) !important;border:3px solid var(--br-ink) !important;
+  border-radius:18px !important;box-shadow:6px 6px 0 var(--br-ink) !important;
+}
+section.card::before,.treasury::before{display:none !important}
+.shead{border-bottom:3px dashed var(--br-ink) !important}
+.shead h2{color:var(--br-ink) !important}
+.shead h2::after{content:' ★' !important;color:var(--br-ink) !important}
+.shead p{color:#5a5a58 !important}
+.sections section.card .shead::after{color:rgba(19,19,19,.12) !important}
+.icon{background:var(--br-mint) !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink) !important}
+.count{background:var(--br-ink) !important;color:#fff !important;border:none !important}
+.group-title{
+  background:var(--br-cream) !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-left:8px solid var(--br-ink) !important;
+  border-radius:10px !important;
+}
+.group-title .gnum{background:var(--br-ink) !important;color:#fff !important}
+.treas-head h2{color:var(--br-ink) !important}
+.treas-head h2 span{color:#5a5a58 !important}
+.treas-total strong{color:var(--br-ink) !important}
+.treas-total small{color:#5a5a58 !important}
+.vault.save{background:#EFF6FF !important}
+.vault.spend{background:#FFFBEB !important}
+.vault.boss{background:var(--br-yellow) !important;border-color:var(--br-ink) !important}
+.vault .vrow{border-top:2px dashed var(--br-ink) !important}
+.vault .vrow,.vault .vrow b{color:var(--br-ink) !important}
+.vault .vbar{background:#fff !important;border:2px solid var(--br-ink) !important}
+
+/* ---- ไอเท็ม / เควส ---- */
+.item,.persona,.zone,.scard,.wbox,.mem-stat,.dime-edit,.chat-msgs{
+  background:#fff !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-radius:14px !important;
+  box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+.item::before{display:none !important}
+.item:hover,.persona:hover,.zone:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--br-ink) !important;border-color:var(--br-ink) !important}
+.item .txt small,.persona p,.zone p,.zone ul{color:#3d3d3b !important}
+.item b,.persona h4,.zone h4{color:var(--br-ink) !important}
+.dot{border:2px solid var(--br-ink) !important}
+.done .dot{background:var(--br-mint) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+.todo .dot{background:var(--br-pink) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important;animation:none !important}
+.badge{border:2px solid var(--br-ink) !important;border-radius:8px !important;background:#fff !important;color:var(--br-ink) !important}
+.badge::before{content:'' !important}
+.b-done{background:var(--br-mint) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+.b-todo{background:var(--br-pink) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+.b-money{background:var(--br-yellow) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+.b-indigo,.b-shield{background:var(--br-lav) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+.skill{background:#fff !important;color:var(--br-ink) !important;border:2.5px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink)}
+.skill.hot{background:var(--br-yellow) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+.tags span{background:var(--br-cream) !important;color:var(--br-ink) !important;border:2px solid var(--br-ink) !important}
+.persona::after{color:var(--br-ink) !important;border-color:var(--br-ink) !important;background:#fff !important}
+.progress{background:#fff !important;border:3px solid var(--br-ink) !important;border-radius:999px !important}
+.note,.dateprev{
+  background:var(--br-pink) !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-left:8px solid var(--br-ink) !important;
+  border-radius:12px !important;box-shadow:4px 4px 0 var(--br-ink);
+}
+.note::before{content:'' !important}
+.note b,.note a{background:var(--br-ink);color:#fff !important;padding:0 8px;border-radius:6px}
+.note .num{background:#fff;border:2px solid var(--br-ink);border-radius:6px;padding:0 8px;color:var(--br-ink)}
+
+/* ---- ปุ่ม / ฟอร์ม ---- */
+.btn,.os-btn,.money-btn,.qbtn,.pf-add,.gr-link,.qcopy,.qchip,.dime-toggle,.stock-refresh,.sp-search,.port-fx{
+  font-family:'Chakra Petch',sans-serif;font-weight:700;
+}
+.btn,.os-btn,.money-btn,.pf-add,.dime-toggle,.stock-refresh{
+  background:var(--br-mint) !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-radius:12px !important;
+  box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+.btn:hover,.os-btn:hover,.money-btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--br-ink) !important}
+.btn:active,.os-btn:active,.money-btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--br-ink) !important}
+.btn.ghost,.os-btn.ghost,.money-btn.ghost,.qbtn.ghost,.btn.small.ghost{background:#fff !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important}
+.btn.danger,.os-btn.danger{background:var(--br-pink) !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important}
+.os-tab,.qchip{
+  background:#fff !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-radius:999px !important;box-shadow:3px 3px 0 var(--br-ink);
+}
+.os-tab.on,.qchip.on{background:var(--br-ink) !important;color:#fff !important}
+input,select,textarea,.os-input,.os-text,.money-input,.chat-form input,.toolbar input,.diary-date,.diary-area{
+  background:#fff !important;color:var(--br-ink) !important;
+  border:3px solid var(--br-ink) !important;border-radius:10px !important;
+}
+input:focus,select:focus,textarea:focus{box-shadow:3px 3px 0 var(--br-ink);background:var(--br-cream) !important}
+input::placeholder,textarea::placeholder{color:#63635E !important}
+.drop{background:#fff !important;border:3px dashed var(--br-ink) !important;border-radius:14px !important}
+.drop:hover,.drop.over{background:var(--br-cream) !important;border-color:var(--br-ink) !important}
+.drop b{color:var(--br-ink) !important}
+.drop small{color:#5a5a58 !important}
+
+/* ---- ตาราง ---- */
+table,.stock-table,.port-table,.plan-table,.ledger,#w17Table,#spTable{
+  border:3px solid var(--br-ink) !important;border-radius:14px !important;overflow:hidden;
+}
+.stock-table th,.port-table th,.plan-table th,.ledger th,table th{
+  background:var(--br-ink) !important;color:#fff !important;
+}
+.stock-table td,.port-table td,.plan-table td,.ledger td,table td{
+  border-bottom:2px solid var(--br-ink) !important;color:var(--br-ink) !important;
+}
+.stock-up{color:#0a7a44 !important}
+.stock-down,.down{color:#d11f3c !important}
+.up{color:#0a7a44 !important}
+.plan-live,.stock-updated,.px-updated,.dime-live,.chat-note,.wmt-snap{color:#3d3d3b !important}
+.wmt-snap{background:var(--br-cream) !important;border:3px solid var(--br-ink) !important;border-radius:12px !important}
+.wname,.wflag{color:#5a5a58 !important}
+
+/* ---- โมดูลเฉพาะหน้า ---- */
+.explore a{background:#fff !important;color:var(--br-ink) !important;border:2.5px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink)}
+.explore a:hover{background:var(--br-yellow) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+#qtracker{background:#fff !important;border:3px solid var(--br-ink) !important;border-left:8px solid var(--br-ink) !important;box-shadow:4px 4px 0 var(--br-ink) !important;width:284px !important}
+#qtracker h4{color:var(--br-ink) !important;font-size:13.5px !important;background:var(--br-yellow) !important;border:2px solid var(--br-ink) !important;border-radius:8px !important;padding:6px 10px !important;box-shadow:2px 2px 0 var(--br-ink) !important}
+#qtracker li a{color:var(--br-ink) !important;border-left:4px solid #16a34a !important;font-size:15.5px !important;line-height:1.75 !important}
+#qtracker h4 .qcount{background:var(--br-mint) !important;color:var(--br-ink) !important;border:2px solid var(--br-ink) !important;border-radius:6px !important;padding:0 8px !important}
+#qtracker h4 .qmin{background:var(--br-yellow) !important;color:var(--br-ink) !important;border:2px solid var(--br-ink) !important}
+#qtracker li a small{font-size:13.5px !important}
+footer{color:var(--br-ink) !important}
+footer.site-foot,body footer{background:var(--br-ink) !important;color:#fff !important;border-radius:12px;padding:12px}
+.chat-msgs{background:#fff !important}
+.chat-form button{background:var(--br-ink) !important;color:#fff !important;border:3px solid var(--br-ink) !important;border-radius:10px !important}
+.chat-chips button{background:#fff !important;color:var(--br-ink) !important;border:2.5px solid var(--br-ink) !important;border-radius:999px !important;box-shadow:2px 2px 0 var(--br-ink)}
+.dime-pills span{background:#fff !important;color:var(--br-ink) !important;border:2px solid var(--br-ink) !important}
+.dime-pills span.on{background:var(--br-ink) !important;color:#fff !important}
+.wbar-track{background:#fff !important;border:2.5px solid var(--br-ink) !important;border-radius:999px !important}
+.cover img,.busk-photo img,.joy-photo img,.photo-break img{border:3px solid var(--br-ink);border-radius:16px}
+.photo-tag,.busk-photo figcaption{background:var(--br-ink) !important;color:#fff !important}
+.empty{background:#fff !important;color:var(--br-ink) !important;border:3px dashed var(--br-ink) !important}
+#lightbox{background:rgba(19,19,19,.88) !important}
+#lightbox img{border:4px solid var(--br-yellow) !important}
+#npcFab{border:3px solid var(--br-ink) !important;box-shadow:4px 4px 0 var(--br-ink) !important}
+/* ป่าพื้นหลังถูกถอดออกแล้ว — ซ่อนปุ่มตั้งค่าป่าที่ไม่มีผลแล้ว (เสียงป่า·นกยังใช้ได้) */
+#forestFab,#forestPop{display:none !important}
+
+/* คงโครงแผนภูมิสด (TradingView/CoinGecko) ไว้ — แค่ใส่กรอบ */
+.tv-chart,.tv-heat,.tv-tape{border:3px solid var(--br-ink) !important;border-radius:14px;overflow:hidden;background:#fff}
+
+/* ---- QUOTE GARDEN — การ์ดขาวแล้ว ตัวหนังสือต้องเข้ม ----
+   หัวข้อ (.qtext) = ดำเข้มสุด · เนื้อหา (small ที่มา) = สี accent เข้ม แยกชัดแต่อ่านออก */
+body section.card#quotes{
+  background:var(--br-card) !important;
+  border:3px solid var(--br-ink) !important;border-radius:18px !important;
+  box-shadow:6px 6px 0 var(--br-ink) !important;
+}
+body section.card#quotes .shead{border-bottom:3px dashed var(--br-ink) !important}
+body section.card#quotes .shead h2{color:var(--br-ink) !important}
+body section.card#quotes .shead h2::after{content:' ♡' !important;color:var(--br-ink) !important}
+body section.card#quotes .shead p{color:#5a5a58 !important}
+body section.card#quotes .icon{background:var(--br-pink) !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink) !important}
+body section.card#quotes .count{background:var(--br-ink) !important;color:#fff !important}
+.quote-daily{background:#fff !important;border:3px solid var(--br-ink) !important;border-radius:18px !important;box-shadow:4px 4px 0 var(--br-ink)}
+.quote-daily::before{color:var(--br-ink) !important;opacity:.3}
+.quote-daily .qd-label{background:var(--br-ink) !important;color:#fff !important;box-shadow:none !important}
+.quote-daily .qd-text{color:var(--br-ink) !important}
+.quote-daily .qd-sub{color:#5a5a58 !important}
+#quotes .qbtn,#quotes .qchip{background:#fff !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important;border-radius:999px !important;box-shadow:3px 3px 0 var(--br-ink)}
+#quotes .qbtn.primary,#quotes .qchip.on{background:var(--br-yellow) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+#quotes .qbtn:hover,#quotes .qchip:hover,#quotes .qbtn.ghost:hover{background:var(--br-cream) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+#quotes .item.quote-card[data-cat]{background:#fff !important;border:3px solid var(--br-ink) !important;border-radius:14px !important;box-shadow:4px 4px 0 var(--br-ink) !important;color:var(--br-ink) !important;transform:none}
+#quotes .item.quote-card[data-cat]:hover{transform:translate(-2px,-2px);border-color:var(--br-ink) !important;box-shadow:6px 6px 0 var(--br-ink) !important}
+#quotes .item.quote-card[data-cat] .qtext{color:#131313 !important}
+#quotes .item.quote-card[data-cat] small{color:color-mix(in srgb, var(--quote-accent,#6EE7B7) 45%, #131313) !important;font-weight:700}
+#quotes .item.quote-card[data-cat] .qtag{background:#fff !important;color:color-mix(in srgb, var(--quote-accent,#6EE7B7) 50%, #131313) !important;border:2.5px solid var(--br-ink) !important}
+#quotes .item.quote-card[data-cat] .qemoji{background:var(--br-yellow) !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink) !important}
+#quotes .item.quote-card[data-cat] .qcopy{background:#fff !important;border:2.5px solid var(--br-ink) !important;color:var(--br-ink) !important;box-shadow:2px 2px 0 var(--br-ink)}
+#quotes .item.quote-card[data-cat] .qcopy:hover{background:var(--br-yellow) !important}
+#quotes .item.quote-card .qtext{color:#131313 !important}
+#quotes .item.quote-card small{color:#5a5a58 !important}
+#quotes .quote-foot{background:var(--br-cream) !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important;border-left:8px solid var(--br-ink) !important;border-radius:12px !important;box-shadow:4px 4px 0 var(--br-ink)}
+
+/* ---- UPGRADE ROOM — scope body.page-upgrade (ไม่แตะหน้าอื่น)
+   หัวข้อ = ดำเข้ม · เนื้อหา = เทาเข้ม/ม่วงเข้ม แยกชัดแต่อ่านออก ---- */
+body.page-upgrade .bg-fx{display:none !important}
+body.page-upgrade::after{display:none !important}
+body.page-upgrade .hudlabel{color:#5a5a58 !important}
+body.page-upgrade .topbar .clock b{color:var(--br-ink) !important}
+body.page-upgrade .topbar .clock small{color:#5a5a58 !important}
+body.page-upgrade .brand b{color:var(--br-ink) !important}
+body.page-upgrade .navbtn{background:#fff !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink)}
+body.page-upgrade .sidenav a{background:#fff !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important;border-radius:10px !important;box-shadow:3px 3px 0 var(--br-ink)}
+body.page-upgrade .sidenav a:hover{color:var(--br-ink) !important;border-color:var(--br-ink) !important;background:var(--br-cream) !important}
+body.page-upgrade .sidenav a.active{background:var(--br-ink) !important;color:#fff !important;border-color:var(--br-ink) !important}
+body.page-upgrade .hero h1{color:var(--br-ink) !important;text-shadow:none !important}
+body.page-upgrade .hero p{color:#3d3d3b !important}
+body.page-upgrade .sub{color:#3d3d3b !important}
+body.page-upgrade .cardhead{border-bottom:3px dashed var(--br-ink) !important}
+body.page-upgrade .cardhead h2{color:var(--br-ink) !important}
+body.page-upgrade .cardhead .em{background:var(--br-yellow) !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink)}
+body.page-upgrade .char b{color:var(--br-ink) !important}
+body.page-upgrade .char .role{color:#6d28d9 !important}
+body.page-upgrade .avatar{border:3px solid var(--br-ink) !important;box-shadow:6px 6px 0 var(--br-ink) !important}
+body.page-upgrade .avatar span{color:#fff !important}
+body.page-upgrade .bar{background:#fff !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink)}
+body.page-upgrade .barlab{color:#5a5a58 !important}
+body.page-upgrade .barlab b{color:var(--br-ink) !important}
+body.page-upgrade .tile{background:#fff !important;border:3px solid var(--br-ink) !important;border-top:6px solid var(--a) !important;border-radius:12px !important;box-shadow:4px 4px 0 var(--br-ink)}
+body.page-upgrade .tile small{color:#5a5a58 !important}
+body.page-upgrade .tile strong{color:color-mix(in srgb, var(--a) 50%, #131313) !important;text-shadow:none !important}
+body.page-upgrade .tile span{color:#3d3d3b !important}
+body.page-upgrade .scard{background:#fff !important;border:3px solid var(--br-ink) !important;border-radius:14px !important;box-shadow:4px 4px 0 var(--br-ink) !important}
+body.page-upgrade .scard:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--br-ink) !important;border-color:var(--br-ink) !important}
+body.page-upgrade .scard .ic{background:#fff !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink) !important}
+body.page-upgrade .scard b{color:color-mix(in srgb, var(--neon) 50%, #131313) !important}
+body.page-upgrade .scard .lv{color:#5a5a58 !important}
+body.page-upgrade .scard .pts{color:var(--br-ink) !important}
+body.page-upgrade .scard .pts b{color:var(--br-ink) !important}
+body.page-upgrade .scard .bar{background:#fff !important;border:2.5px solid var(--br-ink) !important;box-shadow:none !important}
+body.page-upgrade .scard .need{color:color-mix(in srgb, var(--neon) 50%, #131313) !important;opacity:1 !important}
+body.page-upgrade .scard.up .lv{color:color-mix(in srgb, var(--neon) 50%, #131313) !important}
+body.page-upgrade .poolbox small{color:#5a5a58 !important}
+body.page-upgrade .poolbox strong{color:var(--br-ink) !important;text-shadow:none !important}
+body.page-upgrade .poolbox .simrank{color:#0e7490 !important}
+body.page-upgrade .rankshow b{color:var(--br-ink) !important;text-shadow:none !important}
+body.page-upgrade .rankshow small{color:#5a5a58 !important}
+body.page-upgrade .rung{background:#fff !important;color:var(--br-ink) !important;border:3px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink)}
+body.page-upgrade .rung.hit{background:var(--br-ink) !important;color:#fff !important;border-color:var(--br-ink) !important}
+body.page-upgrade .rung.done{background:var(--br-mint) !important;color:var(--br-ink) !important;border-color:var(--br-ink) !important}
+body.page-upgrade .trow b{color:var(--br-ink) !important}
+body.page-upgrade .trow small{color:#5a5a58 !important}
+body.page-upgrade .tag{background:#fff !important;color:var(--br-ink) !important;border:2.5px solid var(--br-ink) !important}
+body.page-upgrade .tag.xp{background:var(--br-yellow) !important;color:var(--br-ink) !important}
+body.page-upgrade .tag.pt{background:var(--br-lav) !important;color:var(--br-ink) !important}
+body.page-upgrade .lvnode{background:#fff !important;border:3px solid var(--br-ink) !important;opacity:1 !important}
+body.page-upgrade .lvnode b{color:var(--br-ink) !important;text-shadow:none !important}
+body.page-upgrade .lvnode small,body.page-upgrade .lvnode .st{color:#5a5a58 !important}
+body.page-upgrade .lvnode.cur{background:var(--br-yellow) !important;border-color:var(--br-ink) !important;box-shadow:4px 4px 0 var(--br-ink) !important}
+body.page-upgrade .lvnode.cur .st{color:#0e7490 !important}
+body.page-upgrade .lvnode.lock b{color:#5a5a58 !important}
+body.page-upgrade .achit{background:#fff !important;border:3px solid var(--br-ink) !important;box-shadow:4px 4px 0 var(--br-ink)}
+body.page-upgrade .achit:hover{transform:translate(-2px,-2px);border-color:var(--br-ink) !important}
+body.page-upgrade .achit b{color:var(--br-ink) !important}
+body.page-upgrade .achit small{color:#5a5a58 !important}
+body.page-upgrade .achit.got{border-color:var(--br-ink) !important}
+body.page-upgrade .logit{background:#fff !important;border:3px solid var(--br-ink) !important;color:var(--br-ink) !important}
+body.page-upgrade .logit small{color:#5a5a58 !important}
+body.page-upgrade .setrow .lab b{color:var(--br-ink) !important}
+body.page-upgrade .setrow .lab small{color:#5a5a58 !important}
+
+/* ---- TREASURY 3D + น้องกอบ ยามเฝ้าคลังทอง ---- */
+.treas-head{flex-wrap:wrap}
+.treas-total{text-align:right}
+.treas-total small{display:inline-block;background:transparent;color:var(--br-ink);font-family:'Mitr','IBM Plex Sans Thai',sans-serif;font-size:16px;font-weight:700;letter-spacing:.1em;border-radius:0;padding:0}
+.treas-total strong{
+  display:inline-block;margin-top:8px;
+  font-family:'Mitr','Chakra Petch',sans-serif;font-weight:700;font-size:48px;
+  color:transparent !important;
+  background:linear-gradient(180deg,#D8F9E5 0%,#6EE7B7 28%,#22C55E 55%,#15803D 78%,#052e16 100%) !important;
+  -webkit-background-clip:text !important;background-clip:text !important;
+  filter:drop-shadow(3px 3px 0 #052e16) drop-shadow(6px 6px 0 rgba(5,46,22,.45)) drop-shadow(0 0 22px rgba(34,197,94,.95)) drop-shadow(0 0 55px rgba(34,197,94,.55)) !important;
+  border:none !important;box-shadow:none !important;
+  padding:4px 12px;letter-spacing:.02em;transform:rotate(1deg);
+}
+.treas-grid{perspective:1200px}
+.treasury .vault{
+  overflow:visible !important;
+  transform-style:preserve-3d;
+}
+.treasury .vault:hover{
+  transform:translateY(-6px) rotateX(5deg) rotateY(-5deg) !important;
+  box-shadow:9px 9px 0 var(--br-ink) !important;
+  border-color:var(--br-ink) !important;
+}
+/* กองเหรียญ 3D บนห้อง boss */
+.vault.boss::before{
+  content:'' !important;position:absolute !important;top:-20px;right:16px;width:58px;height:20px;
+  background:var(--br-yellow) !important;border:3px solid var(--br-ink) !important;border-radius:50% !important;
+  box-shadow:0 8px 0 #B8860B,0 16px 0 var(--br-yellow),0 24px 0 #B8860B,7px 7px 0 var(--br-ink) !important;
+  animation:coinfloat 3.4s ease-in-out infinite;
+}
+@keyframes coinfloat{50%{transform:translateY(-7px) rotate(-6deg)}}
+/* น้องกอบ */
+.treas-guard{position:relative;flex:0 0 auto;width:104px;text-align:center;margin:0 4px}
+.treas-guard .g-body{
+  position:relative;width:88px;height:88px;margin:0 auto;background:var(--br-yellow);
+  border:3px solid var(--br-ink);border-radius:50%;box-shadow:4px 4px 0 var(--br-ink);
+  animation:guardbob 3s ease-in-out infinite;
+}
+@keyframes guardbob{50%{transform:translateY(-6px) rotate(-2deg)}}
+.treas-guard .g-ear{position:absolute;top:-12px;width:30px;height:30px;background:var(--br-yellow);border:3px solid var(--br-ink);border-radius:50%}
+.treas-guard .g-ear.l{left:2px}.treas-guard .g-ear.r{right:2px}
+.treas-guard .g-ear::after{content:'';position:absolute;inset:6px;background:var(--br-pink);border-radius:50%}
+.treas-guard .g-hat{position:absolute;top:-16px;left:50%;transform:translateX(-50%) rotate(-4deg);width:56px;height:22px;background:var(--br-ink);border-radius:8px 8px 4px 4px}
+.treas-guard .g-hat::after{content:'';position:absolute;left:-8px;right:-8px;bottom:-7px;height:9px;background:var(--br-mint);border:3px solid var(--br-ink);border-radius:6px}
+.treas-guard .g-eye{position:absolute;top:34px;width:13px;height:18px;background:var(--br-ink);border-radius:50%;animation:guardblink 4.2s infinite}
+.treas-guard .g-eye.l{left:22px}.treas-guard .g-eye.r{right:22px}
+.treas-guard .g-eye::after{content:'';position:absolute;left:3px;top:3px;width:4px;height:4px;background:#fff;border-radius:50%}
+@keyframes guardblink{0%,93%,100%{transform:scaleY(1)}95%,97%{transform:scaleY(.08)}}
+.treas-guard .g-cheek{position:absolute;top:52px;width:14px;height:10px;background:var(--br-pink);border-radius:50%;opacity:.9}
+.treas-guard .g-cheek.l{left:12px}.treas-guard .g-cheek.r{right:12px}
+.treas-guard .g-nose{position:absolute;left:50%;top:54px;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--br-ink)}
+.treas-guard .g-tag{display:inline-block;margin-top:8px;background:var(--br-ink);color:#fff;font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;border-radius:7px;padding:2px 12px}
+.treas-guard .g-bub{
+  position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%) rotate(-2deg) scale(0);
+  background:#fff;border:3px solid var(--br-ink);border-radius:12px;padding:4px 14px;white-space:nowrap;
+  font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--br-ink);transition:transform .15s;pointer-events:none;
+}
+.treas-guard .g-bub::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);border:7px solid transparent;border-top-color:var(--br-ink)}
+.treas-guard:hover .g-bub{transform:translateX(-50%) rotate(-2deg) scale(1)}
+
+/* ---- ORB — ลูกแก้ววิเศษลอยได้ (hero-right) ---- */
+.orb-wrap{margin-top:18px;text-align:center;padding:10px 0 4px}
+.orb-ball{
+  position:relative;width:min(300px,72vw);aspect-ratio:1;margin:0 auto;border-radius:50%;overflow:hidden;
+  border:4px solid var(--br-ink);box-shadow:7px 7px 0 var(--br-ink),0 0 44px rgba(139,92,246,.55);
+  animation:orbfloat 5s ease-in-out infinite;background:#fff;
+}
+@keyframes orbfloat{50%{transform:translateY(-14px) rotate(1.5deg)}}
+.orb-ball img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.15) contrast(1.05) brightness(1.03)}
+.orb-ball::after{ /* เงาสะท้อนแก้ว */
+  content:'';position:absolute;left:9%;top:6%;width:38%;height:26%;border-radius:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,0));transform:rotate(-18deg);pointer-events:none;
+}
+.orb-base{width:150px;height:26px;margin:14px auto 0;background:var(--br-ink);border-radius:50%;opacity:.9}
+.orb-cap{display:inline-block;margin-top:12px;background:#fff;border:3px solid var(--br-ink);border-radius:999px;
+  padding:6px 20px;font-weight:700;font-size:15px;box-shadow:4px 4px 0 var(--br-ink)}
+
+/* ---- ฟิกซ์คอนทราสต์บนการ์ดขาว (formula / know-card / masterplan) ---- */
+.formula h3{font-size:14px !important}
+.formula p b{background:var(--br-ink) !important;color:#fff !important;padding:0 8px;border-radius:6px}
+#know-body{background:#fff !important;border:3px solid var(--br-ink) !important;box-shadow:4px 4px 0 var(--br-ink)}
+#know-tag{color:var(--br-ink) !important;border-color:var(--br-ink) !important;background:var(--br-cream) !important}
+#know-title{color:var(--br-ink) !important}
+#know-text{color:#3d3d3b !important}
+#know-count{color:#5a5a58 !important}
+.plan-bucket{background:#fff !important;border:3px solid var(--br-ink) !important;border-top:4px solid var(--bdot,#4ADE80) !important;box-shadow:4px 4px 0 var(--br-ink) !important}
+.pb-top b{color:var(--br-ink) !important}
+.pb-holds{color:#3d3d3b !important}
+.pb-amt{color:var(--br-ink) !important}
+.pb-amt small{color:#5a5a58 !important}
+.pb-ret{color:var(--br-ink) !important}
+.plan-bucket[style*="#3DFF88"] .pb-h{color:#0a7a44 !important;border-color:#0a7a44 !important}
+.plan-bucket[style*="#3DFF88"] .pb-ret b{color:#0a7a44 !important}
+
+/* ---- ฟิกซ์คอนทราสต์ตารางหุ้น (port-scroll/wbox เทา + ตัวอักษรจาง) ---- */
+.port-scroll{background:#fff !important;border:3px solid var(--br-ink) !important}
+.wbox{background:#fff !important;border:3px solid var(--br-ink) !important}
+.stock-sym small,.port-sym .sn small,.port-sym .fn,.wbox .wh small,.wbar-sym{color:#3d3d3b !important}
+.port-fx{color:#3d3d3b !important}
+#w17Table .wname{color:#3d3d3b !important}
+#w17Table .wflag{color:#0a7a44 !important;border-color:#0a7a44 !important}
+.wgroup td{color:#0a7a44 !important}
+.port-table .num.muted,.stock-flat,.stock-hl,.d-flat{color:#5a5a58 !important}
+.px-toolbar{color:#3d3d3b !important;background:#fff !important;border-color:var(--br-ink) !important}
+
+/* ---- FIX: หัวข้อ nav-group + หัวข้อจางทั้งหมดบนการ์ดขาว ----
+   root cause: .nav,.nav-group ได้พื้นขาว แต่ตัวหนังสือยังเป็นสีขาว/เขียวนีออน
+   จากธีมดาร์ก → คอนทราสต์ 1.0–1.7:1 มองไม่เห็น จึงบังคับเป็นหมึกบนเหลือง + เงาแข็ง */
+body .nav .nav-group,body .nav-group{
+  background:var(--br-yellow) !important;color:var(--br-ink) !important;
+  text-shadow:none !important;
+  border:3px solid var(--br-ink) !important;border-radius:10px !important;
+  box-shadow:3px 3px 0 var(--br-ink) !important;
+  font-size:15px !important;font-weight:700 !important;letter-spacing:.02em !important;
+  padding:8px 12px !important;margin:12px 0 6px !important;
+  display:flex !important;align-items:center !important;gap:8px !important;
+}
+body .nav .nav-group:first-of-type,body .nav-group:first-of-type{margin-top:2px !important}
+/* ป้าย WORLD MAP บน nav พื้นขาว — เดิมเขียวอ่อนบนขาวจางมาก */
+body .nav::before{
+  background:var(--br-ink) !important;color:#fff !important;
+  border-radius:8px !important;padding:6px 12px !important;margin-bottom:8px !important;
+  text-shadow:none !important;box-shadow:3px 3px 0 rgba(19,19,19,.22) !important;
+  display:inline-block !important;
+}
+/* หัวข้อหลักทุกการ์ด — ลบ glow ฟุ้งบนพื้นขาว แล้วเติมเงาแข็งให้เด้ง */
+body .shead h2,body .treas-head h2{
+  text-shadow:2px 2px 0 rgba(255,201,0,.6) !important;
+}
+body .group-title{
+  text-shadow:none !important;box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+/* eyebrow บน hero เหลือง — เดิมเขียวบนเหลืองจาง */
+.hero .eyebrow,body .eyebrow{
+  color:var(--br-ink) !important;text-shadow:none !important;
+  background:#fff !important;border:2px solid var(--br-ink) !important;
+  border-radius:999px !important;padding:4px 12px !important;
+  box-shadow:2px 2px 0 var(--br-ink) !important;
+}
+/* ตัวรองที่ยังจาง — เข้มขึ้น + หนาขึ้น อ่านชัดแต่ยังเป็นลำดับรอง */
+.shead p,.kpi small,.topbar small,.vault small,.treas-total small,
+.explore small,footer.site-foot,body footer,.pb-amt small,.pb-holds,
+#know-text,.item .txt small,.persona p,.zone p,.zone ul{
+  text-shadow:none !important;
+}
+.shead p,.kpi small,.topbar small,.vault small,.treas-total small,
+.explore small,#know-count,.pb-amt small,.wname,.wflag{
+  color:#33312c !important;font-weight:700 !important;
+}
+
+/* ---- FIX: หัวข้อ pillars/poker บนการ์ดขาว + คำบรรยาย stat ----
+   root cause: details.card โดนย้อมพื้นขาว (.card) แต่ h2/small/chev
+   ยังเป็นขาว/เทาจาง/เขียวนีออนจากธีมดาร์ก (วัดจริง 1.0–2.1:1)
+   h1 span เขียวนีออนบนตั๋วเหลือง (1.1:1) และ .stat span เทาจางบนขาว (2.1:1)
+   :not(.lv) กันป้าย LV ที่มีพื้นเข้มของตัวเอง — วัดหลังแก้ต้อง ≥7:1 */
+body details.card summary h2{color:var(--br-ink) !important;text-shadow:2px 2px 0 rgba(255,201,0,.6) !important}
+body details.card summary h2 small{color:#33312c !important}
+body details.card summary .chev{color:var(--br-ink) !important}
+body header.hero h1 span{color:var(--br-ink) !important;text-shadow:none !important}
+body .stat>span:not(.lv){color:#33312c !important;font-weight:700 !important}
+
+/* ---- FIX2: ตัวบรรยายเทาเล็กทั้งเว็บอ่านยาก → เข้ม+ใหญ่+ป้ายสีสด ----
+   root cause: การ์ดโดนย้อมพื้นขาว แต่ desc/small ยังเป็นเทาจาง
+   (#5a5a58/#3d3d3b/#555/inline #555) หรือพาสเทลอ่อนของธีมดาร์ก
+   (#AAB4CC/#B7C1D4/#FCD34D/...) ที่ 11–13.5px/500–600 → ตัวไทยเล็กอ่านไม่ออก
+   วิธี: บังคับหมึกเข้ม + ไซส์ขั้นต่ำ + หนา 700 + quote-small เป็นป้ายครีมแถบสี accent + เงาแข็ง
+   หมายเหตุ: ไม่แตะ footer/.count/.money-hud ที่พื้นเข้มตัวขาวอยู่แล้ว */
+
+/* A. เนื้อความบรรยาย — เข้ม อ่านชัด */
+body .item .txt small,
+body .persona p,
+body .zone p,
+body .zone ul,
+body #know-text,
+body .pb-holds,
+body .pb-ret,
+body .ai-cell p,
+body .jentry p,
+body .mem-tl .mi,
+body .dq .t small,
+body .os-task,
+body .busk-photo figcaption,
+body .joy-photo figcaption{
+  color:#23211d !important;
+  font-size:15.5px !important;
+  font-weight:600 !important;
+  line-height:1.9 !important;
+  text-shadow:none !important;
+}
+/* B. ป้ายกำกับจิ๋ว — คงความกะทัดรัด แต่เข้ม+หนา */
+body .topbar small,
+body .kpi small,body .stat small,body .vault small,
+body .shead p,
+body .treas-head h2 span,
+body .treas-total small,
+body .explore small,
+body .drop small,
+body .drop b,
+body .plan-live,body .stock-updated,body .px-updated,body .dime-live,body .chat-note,
+body .wmt-snap,
+body .wname,body .wflag,
+body #qtracker li a small,
+body #know-count,
+body .pb-amt small,
+body .stock-sym small,body .port-sym .sn small,body .port-sym .fn,
+body .wbox .wh small,body .wbar-sym,
+body .port-fx,
+body #w17Table .wname,
+body .port-table .num.muted,body .stock-flat,body .stock-hl,body .d-flat,
+body .px-toolbar,
+body details.card summary h2 small{
+  color:#2e2c28 !important;
+  font-weight:700 !important;
+  text-shadow:none !important;
+}
+/* QUEST TRACKER — ตัวเล็กอ่านชัด: ใหญ่ขึ้น ดำเข้ม มี glow เน้นคำ + shadow */
+body #qtracker li a small{
+  font-size:16px !important;
+  color:#131313 !important;
+  font-weight:800 !important;
+  line-height:1.7 !important;
+  text-shadow:0 1px 0 #fff,0 0 10px rgba(250,204,21,.65),2px 2px 0 rgba(19,19,19,.12) !important;
+}
+/* C. จิ๋วสุด 11–12px ดันขึ้นขั้นต่ำ */
+body #w17Table .wname,body .wbar-sym{font-size:12.5px !important}
+body .port-sym .fn,body .wbox .wh small{font-size:13px !important}
+body .shead p{font-size:15.5px !important}
+/* D. quote-small (ภาพที่ 1) — ป้ายครีมแถบสีสด + เงาแข็ง เด้งแต่ยังอ่านออก */
+body #quotes .item.quote-card small{
+  display:block !important;
+  background:var(--br-cream) !important;
+  color:#131313 !important;
+  border:2px solid var(--br-ink) !important;
+  border-left:6px solid var(--quote-accent,#EC4899) !important;
+  border-radius:8px !important;
+  padding:6px 10px !important;
+  margin-top:8px !important;
+  font-size:14.5px !important;
+  font-weight:700 !important;
+  line-height:1.8 !important;
+  box-shadow:2px 2px 0 var(--br-ink) !important;
+  text-shadow:none !important;
+}
+body #quotes .quote-daily .qd-sub,
+body section.card#quotes .shead p{
+  color:#831843 !important;
+  font-weight:700 !important;
+  font-size:15px !important;
+  text-shadow:none !important;
+}
+
+/* ---- FIX3: หัวข้อหน้า 8 หลัก (pillars) — ล็อกการ์ดเข้ม + ป้ายสว่าง ----
+   root cause (วัดจากเรนเดอร์จริง headless): .pillar/.eq/.chip/.toc a ไม่มีกฎนีโอคุม
+   พื้นเข้มเดิมรอด แต่หัวรอง (EN small 11px / pcount / toc) เป็นเทา #AAB4CC จางบนเข้ม
+   และสถานะตารางใช้ inline เขียว/อำพัน โดน table td !important ทับจนเสียโค้ดสี
+   วิธี: ล็อกพื้นเข้ม + ขอบดำ + เงาแข็ง + หัวข้อขาว/ป้ายเหลืองตัวหมึก + สถานะเป็นป้าย class */
+body .pillar{
+  background:linear-gradient(180deg,#222839,#151927) !important;
+  border:2px solid var(--br-ink) !important;border-radius:16px !important;
+  box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+body .ptop h3{color:#fff !important;text-shadow:0 2px 0 rgba(0,0,0,.65) !important}
+body .ptop small{
+  color:#fff !important;font-size:12px !important;font-weight:800 !important;
+  letter-spacing:.1em !important;text-shadow:0 1px 0 rgba(0,0,0,.6) !important;
+}
+body .pnum{
+  color:#131313 !important;background:var(--br-yellow) !important;
+  border:2px solid var(--br-ink) !important;border-radius:8px !important;
+  box-shadow:2px 2px 0 var(--br-ink) !important;
+  font-size:12.5px !important;text-shadow:none !important;
+}
+body .pcount{color:#E2E8FA !important;font-size:13.5px !important;font-weight:700 !important;text-shadow:none !important}
+body .eq{background:#0B0D14 !important;border:1.5px solid var(--br-ink) !important;box-shadow:2px 2px 0 var(--br-ink) !important}
+body .toc a{
+  color:#fff !important;background:#0B0D14 !important;
+  border:2px solid var(--br-ink) !important;border-radius:999px !important;
+  box-shadow:2px 2px 0 var(--br-ink) !important;text-shadow:none !important;
+}
+body .chip{
+  background:#0B0D14 !important;color:#fff !important;
+  border:2px solid var(--br-ink) !important;box-shadow:3px 3px 0 var(--br-ink) !important;
+}
+body .addrow input::placeholder{color:#6b675f !important}
+/* สถานะตารางอาวุธคุ้มสุด — ป้ายมิ้นต์/อำพันตัวหมึก (คลาสจาก renderShared) */
+body #sharedRows td.st-have,body #sharedRows td.st-miss{
+  font-weight:800 !important;font-size:14.5px !important;white-space:nowrap;
+  border:2px solid var(--br-ink) !important;border-radius:8px !important;
+  padding:4px 12px !important;
+}
+body #sharedRows td.st-have{color:#052e16 !important;background:#BBF7D0 !important}
+body #sharedRows td.st-miss{color:#451a03 !important;background:#FDE68A !important}
+
+/* ---- FIX4: agency ธีมเข้ม — หัวข้อดำบนเข้ม ----
+   root cause (วัดจากเรนเดอร์จริง #/chat): neo ย้อม body พื้นครีม+ตัวหมึก
+   แต่ agency คงพื้นเข้ม (.top/.panel/.room/.tl/.perm td/.msg)
+   → b/td ที่ inherit กลายเป็นดำบนเข้ม (#131313 บน #12141D ≈ 0.9:1)
+   ส่วน .foot อยู่บนพื้นครีม → เทาจาง 2:1
+   วิธี: scope page-agency ล็อกพื้นเข้ม+ตัวสว่าง, .foot ตัวหมึก */
+
+/* ล็อกพื้นเข้ม + ขอบดำ + เงาแข็ง */
+body.page-agency .top{
+  background:linear-gradient(180deg,#1C2030,#11141E) !important;
+  border:2px solid var(--br-ink) !important;border-top:4px solid #A78BFA !important;
+  border-radius:14px !important;box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+body.page-agency .panel{
+  background:#12141D !important;
+  border:2px solid var(--br-ink) !important;border-radius:14px !important;
+  box-shadow:4px 4px 0 var(--br-ink) !important;
+}
+/* ตัวหนังสือสว่างบนพื้นเข้ม — ระดับคอนเทนเนอร์ (JS เรนเดอร์อะไรเพิ่มก็รอด) */
+body.page-agency .top,
+body.page-agency .panel,
+body.page-agency .anode,
+body.page-agency .room,
+body.page-agency .call,
+body.page-agency .ros,
+body.page-agency .tl,
+body.page-agency .office-side,
+body.page-agency code,
+body.page-agency table.perm td{
+  color:#F4F6FB !important;
+}
+/* หัวข้อที่ถูกร้องเรียน — ขาวล้วน + เงาดำ */
+body.page-agency .top b,
+body.page-agency .chat-head b,
+body.page-agency .room>b{
+  color:#fff !important;text-shadow:0 2px 0 rgba(0,0,0,.65) !important;
+}
+body.page-agency .msg:not(.tool){color:#F4F6FB !important}
+/* agency ใช้ .stat b (ไม่ใช่ strong) บนการ์ดขาว → ตัวหมึก */
+body.page-agency .stat b{color:var(--br-ink) !important}
+/* agency .item โดนย้อมขาวแล้ว → small ต้องหมึก (กันจางบนขาว) */
+body.page-agency .item small{color:#2e2c28 !important;font-weight:700 !important;text-shadow:none !important}
+/* .foot อยู่บนพื้นครีม → ตัวหมึก */
+body.page-agency .foot{color:#33312c !important}
+body.page-agency .foot a{color:var(--br-ink) !important;font-weight:700 !important}
+
+/* เคารพ reduced-motion */
+@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+
+/* ---- FIX3: .ai-cell keeps dark bg (#0B0D14) but FIX2 dyed its p dark (#23211d) -> dark-on-dark unreadable. This rule is later in file with equal specificity, so it wins and restores the dark-theme light text. */
+body .ai-cell p{color:#D7DFEE !important;font-size:15.5px !important;font-weight:600 !important;line-height:1.9 !important;text-shadow:none !important}
+body .ai-cell p b{color:#FFFFFF !important}

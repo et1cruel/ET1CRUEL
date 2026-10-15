@@ -45,12 +45,12 @@
 .chat-chips button:hover{border-color:var(--gold,#4ADE80);color:#fff}
 .chat-form{display:flex;gap:8px;padding:4px 0 2px}
 .chat-form input{flex:1;font-family:inherit;font-size:14.5px;padding:12px 18px;border-radius:24px;border:1px solid #3d4666;background:#212637;color:#fff;outline:none;min-width:0}
-.chat-form input::placeholder{color:#5d6785}
+.chat-form input::placeholder{color:#9AA3C2}
 .chat-form input:focus{border-color:#6b7386}
 .chat-form button{font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;border-radius:50%;width:44px;height:44px;flex:0 0 44px;line-height:1;box-shadow:0 0 14px rgba(74,222,128,.35);display:flex;align-items:center;justify-content:center}
 .chat-form button svg{width:20px;height:20px;display:block}
 .chat-form button:hover{box-shadow:0 0 20px rgba(74,222,128,.55)}
-.chat-note{font-size:11.5px;color:#5d6785;padding:8px 2px 0;line-height:1.6}
+.chat-note{font-size:11.5px;color:#9AA3C2;padding:8px 2px 0;line-height:1.6}
 .shead .fx-badge{font-family:'Chakra Petch',sans-serif;white-space:nowrap}
 /* ===== แผนหลัก MASTER PLAN ===== */
 .plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:6px}
@@ -92,11 +92,11 @@
 .dime-total small{font-size:17px;font-weight:700}
 .dime-fxrow{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:15px;color:#4b4654;margin-top:4px}
 .dime-fx{white-space:nowrap}
-.dime-cost{font-size:15px;color:#8a8494;margin-top:2px}
+.dime-cost{font-size:15px;color:#5E5A6C;margin-top:2px}
 .dime-div{border-top:2px dashed #e6e2ec;margin:12px 0}
 .dime-kv{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:15px;font-weight:700;color:#141118;padding:2px 0}
 .dime-kv span{font-weight:600;white-space:nowrap}
-.dime-kv i{font-style:normal;color:#8a8494;font-size:13px}
+.dime-kv i{font-style:normal;color:#5E5A6C;font-size:13px}
 .dime-kv b{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif;font-size:17px;white-space:nowrap}
 .d-up{color:#22c55e}
 .d-down{color:#fb7185}
@@ -183,7 +183,7 @@
 .port-sym .sn small{color:var(--muted,#AAB4CC);font-weight:600}
 .port-sym .fn{font-size:12px;color:var(--muted,#AAB4CC)}
 .port-table .num{font-variant-numeric:tabular-nums;font-family:'Chakra Petch',sans-serif}
-.port-table .num.muted{color:#5d6785}
+.port-table .num.muted{color:#9AA3C2}
 .port-table tfoot td{padding:11px 10px;border-top:2px solid rgba(74,222,128,.4);text-align:right;font-weight:700;white-space:nowrap;background:rgba(74,222,128,.06);color:#fff}
 .port-table tfoot td.l{text-align:left}
 .port-table tfoot tr.grand td{background:rgba(74,222,128,.1)}
@@ -202,9 +202,9 @@
 .wbar-track{flex:1;background:#0B0D14;border:1px solid #1c2130;border-radius:6px;min-width:0;overflow:hidden}
 .wbar-fill{font-size:10.5px;font-weight:700;color:#06130c;line-height:1.9;white-space:nowrap;border-radius:5px;padding-left:7px;min-width:52px;font-family:'Chakra Petch',sans-serif}
 .wbar-fill.g{background:linear-gradient(90deg,#16a34a,#4ADE80)}
-.wbar-fill.b{background:linear-gradient(90deg,#2563eb,#7fb2ff);color:#06121f}
-.wbar-fill.gr{background:linear-gradient(90deg,#64748b,#b6c2d6);color:#101418}
-.wbar-fill.r{background:linear-gradient(90deg,#dc2626,#ff8b96);color:#1c0505}
+.wbar-fill.b{background:linear-gradient(90deg,#2563eb,#7fb2ff);color:#fff}
+.wbar-fill.gr{background:linear-gradient(90deg,#64748b,#b6c2d6);color:#fff}
+.wbar-fill.r{background:linear-gradient(90deg,#dc2626,#ff8b96);color:#fff}
 /* sp500 hero */
 .sp-hero{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1.5px solid var(--gold,#4ADE80);background:rgba(74,222,128,.07);padding:12px 15px;margin-bottom:12px;border-radius:14px}
 .sp-idx{font-weight:700;font-size:19px;color:#fff;font-family:'Chakra Petch',sans-serif}

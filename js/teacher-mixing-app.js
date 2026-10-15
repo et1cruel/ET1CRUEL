@@ -29,12 +29,13 @@ var STATUS = [["not","Not Prepared"],["prep","Preparing"],["ready","Ready to Tea
 var ST_TH = { not:"ยังไม่เตรียม", prep:"กำลังเตรียม", ready:"พร้อมสอน", done:"สอนเสร็จ" };
 function dayStatus(id){ return state.dayStatus[id] || "not"; }
 /* ---------- tabs ---------- */
-var TABS = [["overview","◈ Overview"],["curriculum","📚 Curriculum"],["script","🎙 Teaching Script"],["slides","🖥 Slide Studio"],["practice","📝 Practice & HW"],["check","✅ Checklist"],["ref","📖 Reference"]];
+var TABS = [["course","🎓 ห้องคอร์ส 7 วัน"],["overview","◈ Overview"],["curriculum","📚 Curriculum"],["script","🎙 Teaching Script"],["slides","🖥 Slide Studio"],["practice","📝 Practice & HW"],["check","✅ Checklist"],["ref","📖 Reference"]];
 function renderTabs(){
   document.getElementById("mmTabs").innerHTML = TABS.map(function(t){
     var c = ""; if (t[0]==="curriculum") c = ' <span class="cnt">7</span>';
     if (t[0]==="slides") c = ' <span class="cnt">' + (D.openingDeck.length + D.days.reduce(function(a,d){return a+d.slides.length;},0)) + "</span>";
-    return '<button class="mm-tab'+(state.lastTab===t[0]?" on":"")+'" data-tab="'+t[0]+'">'+t[1]+c+"</button>";
+    var hot = t[0]==="course" ? " hot" : "";
+    return '<button class="mm-tab'+hot+(state.lastTab===t[0]?" on":"")+'" data-tab="'+t[0]+'">'+t[1]+c+"</button>";
   }).join("");
   document.querySelectorAll(".mm-tab").forEach(function(b){ b.addEventListener("click", function(){ switchTab(b.dataset.tab); }); });
 }

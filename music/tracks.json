@@ -1,0 +1,29 @@
+[
+ {
+  "id": "lofi-night-60",
+  "mood": "lofi",
+  "bpm": 84,
+  "dur": 60,
+  "desc": "Lo-fi กลางคืน โฟกัส/อ่านหนังสือ",
+  "file": "music/lofi-night-60.mp3",
+  "engine": "genmusic-numpy"
+ },
+ {
+  "id": "chill-morning-60",
+  "mood": "chill",
+  "bpm": 96,
+  "dur": 60,
+  "desc": "ชิลยามเช้า สดใส เมโลดี้เพนตา",
+  "file": "music/chill-morning-60.mp3",
+  "engine": "genmusic-numpy"
+ },
+ {
+  "id": "traplite-dark-60",
+  "mood": "traplite",
+  "bpm": 140,
+  "dur": 60,
+  "desc": "แทรปดาร์ก 808 หนัก เหมาะทำบีทท็อป",
+  "file": "music/traplite-dark-60.mp3",
+  "engine": "genmusic-numpy"
+ }
+]
