@@ -216,9 +216,9 @@
 
   /* ---------- detail ---------- */
   var SECTIONS = [
-    ['identity', '🪪', 'Skill Identity'], ['history', '📜', 'History & Evolution'],
+    ['identity', '📇', 'Skill Identity'], ['history', '📜', 'History & Evolution'],
     ['fundamentals', '📖', 'Knowledge Fundamentals'], ['roadmap', '🗺️', 'Learning Roadmap'],
-    ['practice', '🏋️', 'How to Learn & Practice'], ['tools', '🧰', 'Tools & Resources'],
+    ['practice', '💪', 'How to Learn & Practice'], ['tools', '🔧', 'Tools & Resources'],
     ['projects', '🛠️', 'Project-Based Learning'], ['careers', '💼', 'Career & Monetization'],
     ['people', '🌟', 'Famous People'], ['progress', '📈', 'My Progress'], ['references', '🔗', 'References']
   ];

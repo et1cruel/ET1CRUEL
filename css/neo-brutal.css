@@ -567,8 +567,12 @@ body #qtracker li a small{
   line-height:1.7 !important;
   text-shadow:0 1px 0 #fff,0 0 10px rgba(250,204,21,.65),2px 2px 0 rgba(19,19,19,.12) !important;
 }
-/* C. จิ๋วสุด 11–12px ดันขึ้นขั้นต่ำ */
-body #w17Table .wname,body .wbar-sym{font-size:12.5px !important}
+/* C. จิ๋วสุด 11–12px ดันขึ้นขั้นต่ำ (ชื่อหุ้นในตารางขอดันเพิ่มให้อ่านง่าย) */
+body #w17Table .wname{font-size:14px !important;font-weight:700 !important}
+body .wbar-sym{font-size:12.5px !important}
+body #spBody td.l b,body #w17Body td.l b{font-size:15.5px !important}
+body .stock-sym{font-size:16px !important}
+body .stock-sym small{font-size:13px !important;line-height:1.7 !important}
 body .port-sym .fn,body .wbox .wh small{font-size:13px !important}
 body .shead p{font-size:15.5px !important}
 /* D. quote-small (ภาพที่ 1) — ป้ายครีมแถบสีสด + เงาแข็ง เด้งแต่ยังอ่านออก */

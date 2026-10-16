@@ -31,3 +31,8 @@ video/*/music.wav
 video/*/voice*.wav
 video/*/voiceover/
 video/*/voiceover_v2/
+
+# isolated worktrees + agent scratch (never commit)
+.worktrees/
+.superpowers/
+

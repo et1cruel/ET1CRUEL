@@ -100,7 +100,7 @@ header.hero p{color:#E2E8FA;font-size:17px;margin:12px auto 0;max-width:70ch}
 .form input,.form select,.form textarea{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14.5px;width:100%}
 .ref{font-size:13px;color:var(--muted)}
 .ref a{color:var(--tech)}
-.empty{text-align:center;color:var(--muted);padding:26px;border:1.5px dashed #3d4666;border-radius:14px}
+.empty{text-align:center;color:var(--muted);padding:26px;border:1.5px dashed #3d4666;border-radius:14px;grid-column:1/-1}
 .note{background:#0C0F18;border:2px solid #166534;border-left:5px solid var(--gold);border-radius:12px;padding:14px 18px;font-size:15px;margin-top:14px}
 .note.todo{border-color:#92600a;border-left-color:var(--amber)}
 footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
@@ -110,6 +110,30 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
 <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+<style>
+/* FIX: neo-brutal ย้อมการ์ดขาว — บังคับหมึกทุกตัวอักษรในการ์ด (กันตัวขาวบนขาว) */
+.card h2,.sec h3{color:#131313!important}
+.card .sub,.scard .sum,.sec p,.sec li,.kbox,.tl li,.lvl,.person,.note,.empty{color:#23211d!important}
+.scard .dhead b{color:#131313!important}
+.scard.tech .dhead small{color:#0b5cc5!important}
+.scard.art .dhead small{color:#be185d!important}
+.kbox small{color:#57534e!important}
+.kbox .ex{color:#15803d!important;font-weight:700}
+.pill{color:#44403c!important;border-color:#131313!important}
+.pill.st{color:#166534!important;border-color:#166534!important}
+.pill.deep{color:#0b5cc5!important;border-color:#0b5cc5!important}
+.pill.todo{color:#92400e!important;border-color:#92400e!important}
+.ref{color:#57534e!important}
+.ref a{color:#0b5cc5!important}
+.person .av{color:#be185d!important;border-color:#131313!important}
+.tl b.yr{color:#92400e!important}
+.lvl b.lv{color:#166534!important}
+.sec h3 .no{color:#0b5cc5!important}
+/* กล่องใน: neo-brutal ไม่ย้อมคลาสพวกนี้ (ยังพื้นเข้ม) — บังคับขาวให้หมดจะได้เข้ากับการ์ดนอก */
+.tl li,.kbox,.person,.lvl{background:#fff!important;border:2px solid #131313!important}
+.kbox b{color:#131313!important}
+.person .av{background:#fff!important}
+</style>
 </head>
 <body class="site-polish">
 <div class="wrap">

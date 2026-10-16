@@ -17,8 +17,14 @@
 .stock-table td{padding:10px 6px;border-bottom:1px solid #1c2130;vertical-align:middle;color:#fff}
 .stock-table tr:last-child td{border-bottom:none}
 #watchBody tr:hover td,#pfBody tr:hover td{background:rgba(74,222,128,.05)}
-.stock-sym{font-weight:700;color:#fff;font-family:'Chakra Petch',sans-serif}
-.stock-sym small{display:block;font-weight:600;font-size:12px;color:var(--muted,#9AA3BD);font-family:'IBM Plex Sans Thai',sans-serif}
+.stock-sym{font-weight:700;font-size:16px;color:#fff;font-family:'Chakra Petch',sans-serif;display:flex;align-items:center;gap:10px}
+.stock-sym small{display:block;font-weight:600;font-size:13px;line-height:1.7;color:var(--muted,#9AA3BD);font-family:'IBM Plex Sans Thai',sans-serif}
+/* ===== โลโก้บริษัท + ชื่ออ่านง่าย (shield / watch17 / sp500) ===== */
+.co-logo{width:32px;height:32px;object-fit:contain;background:#fff;border:2px solid #131313;border-radius:9px;padding:2px;flex:0 0 auto;vertical-align:middle}
+td.l.co-cell .co-tx{display:inline-block;vertical-align:middle}
+td.l.co-cell .co-logo{margin-right:9px}
+#spBody td.l b,#w17Body td.l b{font-size:15px}
+#w17Table .wname{font-size:13.5px}
 .stock-price{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;white-space:nowrap;color:#fff}
 .stock-up{color:#3DFF88;font-weight:700}
 .stock-down{color:#FF8b96;font-weight:700}

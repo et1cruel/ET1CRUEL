@@ -265,6 +265,7 @@ function vDashboard(el) {
       ? 'ยังไม่มีข้อมูล — เริ่มจาก Quick Actions หรือโหลด <button id="q5" class="link">demo data (DEMO)</button>'
       : 'ข้อมูลจริงจากการใช้งาน' + (store.projects.some(function (p) { return p.demo; }) ? ' + มี DEMO ปนอยู่' : '')) +
     ' · AI provider: <b>Not Connected</b></p></div></div>' +
+    '<div class="panel"><h3>🧠 CREATE AI — ห้องสร้าง AI</h3><p class="muted">From Zero to AI Architect · เรียน/แล็บ/ศัพท์/โปรเจกต์ (local-first)</p><div class="btns"><a href="./create-ai.html" style="text-decoration:none"><button>→ เปิดห้อง CREATE AI</button></a></div></div>' +
     '<div class="panel"><h3>Activity Timeline</h3>' + timeline(store.events.slice(0, 20)) + '</div>';
   $('#q1').onclick = function () { go('projects'); };
   $('#q2').onclick = wizard;
