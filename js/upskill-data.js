@@ -107,7 +107,22 @@
           { label: 'Node.js', url: 'https://nodejs.org/' },
           { label: 'Git docs', url: 'https://git-scm.com/doc' },
           { label: 'freeCodeCamp (ฝึกฟรี)', url: 'https://www.freecodecamp.org/' }
-        ]
+        ],
+        tree: {
+          nodes: [
+            { id: 'html', label: 'HTML โครงสร้าง', requires: [], unlockHint: 'ทำหน้าแนะนำตัวเอง 1 หน้าจบ' },
+            { id: 'css', label: 'CSS สไตล์ + เลย์เอาต์', requires: ['html'], unlockHint: 'จัด card เดิม 3 สไตล์ + กล่องไม่ล้น' },
+            { id: 'js', label: 'JavaScript + DOM', requires: ['html'], unlockHint: 'ปุ่มโต้ตอบ + เซฟ localStorage ได้' },
+            { id: 'responsive', label: 'Responsive ทุกจอ', requires: ['css'], unlockHint: 'เปิดจอ 400px แล้วไม่ล้น/ทับ (self-check)' },
+            { id: 'git', label: 'Git + GitHub', requires: [], unlockHint: 'push งานขึ้น repo ตัวเอง' },
+            { id: 'ts', label: 'TypeScript', requires: ['js'], unlockHint: 'แปลงไฟล์ JS เป็น type-safe ผ่าน' },
+            { id: 'react', label: 'React components', requires: ['js'], unlockHint: 'ย้ายเว็บ 1 หน้าเป็น components' },
+            { id: 'api', label: 'API + HTTP', requires: ['js'], unlockHint: 'ดึง API จริงมาแสดงพร้อม loading/error state' },
+            { id: 'db', label: 'Database', requires: ['api'], unlockHint: 'CRUD ครบ + อธิบาย schema ได้' },
+            { id: 'auth', label: 'Auth + Security', requires: ['db', 'api'], unlockHint: 'ล็อกอินได้ + ไม่มีรหัส plain text' },
+            { id: 'deploy', label: 'Deploy + CI/CD', requires: ['html', 'git'], unlockHint: 'ส่งลิงก์ให้คนอื่นเปิดได้จริง' }
+          ]
+        }
       }
     },
     {
@@ -215,5 +230,15 @@
     }
   ];
 
-  window.ET1UPSKILL_DATA = { skills: SKILLS };
+  var CROSS = [
+    { a: 'coding-robotics', b: 'web-app', why: 'แดชบอร์ดควบคุมหุ่นยนต์ผ่านเว็บ' },
+    { a: 'coding-robotics', b: 'electricity-energy', why: 'วงจร + เซนเซอร์คือร่างกายหุ่นยนต์' },
+    { a: 'materials', b: 'coding-robotics', why: 'เลือกวัสดุให้เบา+แข็งสำหรับโครงหุ่นยนต์' },
+    { a: 'music-audio', b: 'video-motion', why: 'เสียง + ภาพ = มิวสิกวิดีโอ/สกอร์หนัง' },
+    { a: 'visual-art', b: 'fashion', why: 'ลายเส้น + สี = คอลเลกชันเสื้อผ้า' },
+    { a: 'design-visual', b: 'book-publishing', why: 'กริด + type = หนังสือสวยทั้งเล่ม' },
+    { a: 'music-audio', b: 'web-app', why: 'เว็บฟังเพลง/ขายบีทของตัวเอง' }
+  ];
+
+  window.ET1UPSKILL_DATA = { skills: SKILLS, crossLinks: CROSS };
 })();

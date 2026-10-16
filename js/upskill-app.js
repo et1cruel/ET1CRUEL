@@ -86,6 +86,26 @@
   }
 
   /* ---------- views ---------- */
+  /* ---------- weekly review (ข้อมูลจริง 7 วันย้อนหลัง) ---------- */
+  function vWeekly() {
+    var since = Date.now() - 7 * 864e5;
+    var wk = S.sessions.filter(function (s) { return s.ts >= since; });
+    var mins = wk.reduce(function (t, s) { return t + (+s.minutes || 0); }, 0);
+    var by = {};
+    wk.forEach(function (s) { by[s.skill] = (by[s.skill] || 0) + (+s.minutes || 0); });
+    var top = Object.keys(by).sort(function (a, b) { return by[b] - by[a]; })[0];
+    var topSk = top && bySlug(top);
+    var stale = tracked().filter(function (k) {
+      return ['LEARNING', 'PRACTICING', 'PROJECT'].indexOf(S.status[k]) >= 0 && (!S.updated[k] || Date.now() - S.updated[k] > 7 * 864e5);
+    }).map(function (k) { var sk = bySlug(k); return sk ? sk.nameTh : k; });
+    if (!wk.length && !tracked().length) return '<section class="card"><h2><span class="em">📊</span> สรุปสัปดาห์นี้</h2><div class="empty">ยังไม่มีข้อมูล — เริ่มติดตามทักษะแล้วสรุปจะขึ้นตรงนี้</div></section>';
+    return '<section class="card"><h2><span class="em">📊</span> สรุปสัปดาห์นี้</h2><div class="kv">' +
+      '<div class="kbox"><b>⏱️ ฝึกไป ' + mins + ' นาที / ' + wk.length + ' session</b><small>ทักษะที่ซ้อมมากสุด: ' + esc(topSk ? topSk.nameTh : '—') + '</small></div>' +
+      '<div class="kbox"><b>⚠️ ค้างเกิน 7 วัน (' + stale.length + ')</b><small>' + esc(stale.join(' · ') || 'ไม่มี — ดีมาก') + '</small></div>' +
+      '<div class="kbox"><b>🎯 แผนสัปดาห์หน้า</b><small>' + esc(stale.length ? 'กลับไปแตะ ' + stale[0] + ' ก่อน' : 'เพิ่มชั่วโมงทักษะเป้า หรือเริ่มโปรเจกต์ใหม่') + '</small></div>' +
+      '</div></section>';
+  }
+
   function vOverview() {
     var act = tracked().filter(function (k) { return S.status[k] !== 'PAUSED'; })
       .sort(function (a, b) { return (S.updated[b] || 0) - (S.updated[a] || 0); }).slice(0, 3);
@@ -102,6 +122,7 @@
       var sk = bySlug(r.skill); return '<div class="kbox"><b>' + esc(sk ? sk.nameTh : r.skill) + '</b><small>' + esc(fmtDate(r.ts)) + '</small><div>' + esc(r.text).slice(0, 140) + '</div></div>';
     }).join('') : '<div class="empty">ยังไม่มีบันทึก — เขียน reflection แรกจากหน้าทักษะได้เลย</div>';
     return '<section class="card"><h2><span class="em">▶️</span> เรียนค้างไว้</h2><div class="kv">' + cont + '</div></section>' +
+      vWeekly() +
       '<section class="card"><h2><span class="em">🧭</span> NEXT MOVE</h2><p class="sub">แนะนำจากข้อมูลจริงของเธอ</p><div class="kv">' + moves + '</div></section>' +
       '<section class="card"><h2><span class="em">📓</span> บันทึกล่าสุด</h2><div class="kv">' + jh + '</div></section>';
   }
@@ -132,16 +153,22 @@
 
   function vTree() {
     var web = bySlug('web-app');
-    var inner;
-    if (web && web.tree) {
-      inner = '<div class="kv">' + web.tree.nodes.map(function (n) {
-        return '<div class="kbox"><b>' + esc(n.label) + '</b><small>ต้องผ่านก่อน: ' + esc((n.requires || []).join(', ') || '—') +
-          '<br>ปลดล็อกด้วย: ' + esc(n.unlockHint || '—') + '</small></div>';
+    var inner = '';
+    if (web && web.detail && web.detail.tree) {
+      inner += '<h3 style="color:#fff;margin:6px 0">🌐 Web App — แผนที่ทักษะย่อย</h3><div class="kv">' + web.detail.tree.nodes.map(function (n) {
+        return '<div class="kbox"><b>' + esc(n.label) + '</b><small>ต้องผ่านก่อน: ' + esc((n.requires || []).join(', ') || '—เริ่มได้เลย') +
+          '<br>🔓 ปลดล็อกด้วย: ' + esc(n.unlockHint || '—') + '</small></div>';
       }).join('') + '</div>';
     } else {
-      inner = '<div class="note todo">🌳 <b>Skill Tree อยู่ระหว่างสร้าง</b> — โครงทักษะย่อย + เงื่อนไขปลดล็อกจะมาที่แท็บนี้ (Task 3)</div>';
+      inner += '<div class="note todo">🌳 <b>Skill Tree อยู่ระหว่างสร้าง</b></div>';
     }
-    return '<section class="card"><h2><span class="em">🌳</span> Skill Tree</h2><p class="sub">ทักษะย่อยโยงกันยังไง + ปลดล็อกขั้นสูงด้วยอะไร (ไม่ใช่แค่นับคลิก)</p>' + inner + '</section>';
+    var links = (window.ET1UPSKILL_DATA && window.ET1UPSKILL_DATA.crossLinks) || [];
+    inner += '<h3 style="color:#fff;margin:16px 0 6px">🔗 ทักษะข้ามสาย (รวมกันเป็นความเชี่ยวชาญเฉพาะตัว)</h3><div class="kv">' +
+      links.map(function (c) {
+        var a = bySlug(c.a), b = bySlug(c.b);
+        return '<div class="kbox"><b>' + esc(a ? a.nameTh : c.a) + ' × ' + esc(b ? b.nameTh : c.b) + '</b><small>' + esc(c.why) + '</small></div>';
+      }).join('') + '</div>';
+    return '<section class="card"><h2><span class="em">🌳</span> Skill Tree</h2><p class="sub">ทักษะย่อยโยงกันยังไง + ปลดล็อกขั้นสูงด้วยผลงาน (ไม่ใช่แค่นับคลิก)</p>' + inner + '</section>';
   }
 
   function vProjects() {
