@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPSKILL — อัพสกิล · ศูนย์พัฒนาความสามารถ | ET1CRUEL</title>
+<meta name="description" content="UPSKILL — Personal Skill Intelligence System: เปลี่ยนความสนใจเป็นทักษะ ทักษะเป็นผลงาน ผลงานเป็นโอกาส">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#08090E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090E; --ink:#F4F6FB; --muted:#AAB4CC;
+  --gold:#4ADE80; --tech:#4DA6FF; --art:#F472B6; --amber:#FBBF24;
+  --shadow:0 20px 60px rgba(0,0,0,.65);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:
+  radial-gradient(900px 400px at 15% -5%,rgba(74,222,128,.14),transparent 60%),
+  radial-gradient(900px 500px at 90% 0%,rgba(77,166,255,.16),transparent 55%),
+  var(--bg);
+  color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:17px;line-height:1.85}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 22px 90px}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  background:linear-gradient(180deg,#1C2030,#11141E);border:1px solid #3d4666;border-top:2px solid var(--tech);
+  border-radius:14px;padding:12px 18px;box-shadow:var(--shadow)}
+.topbar a{color:var(--gold);text-decoration:none;font-weight:700;font-size:15px;border:1px solid #3d4666;border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar a:hover{border-color:var(--gold)}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:#fff}
+header.hero{margin:26px 0 8px;text-align:center}
+header.hero h1{font-size:clamp(30px,5vw,46px);line-height:1.3;color:#fff;font-family:'Chakra Petch',sans-serif}
+header.hero h1 span{color:var(--tech);text-shadow:0 0 14px rgba(77,166,255,.4)}
+header.hero p{color:#E2E8FA;font-size:17px;margin:12px auto 0;max-width:70ch}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:20px 0}
+.stat{background:#0B0D14;border:1.5px solid #3d4666;border-radius:14px;padding:12px 8px;text-align:center}
+.stat small{font-family:'Chakra Petch',sans-serif;font-size:10.5px;letter-spacing:.08em;color:var(--muted);font-weight:700;display:block}
+.stat strong{display:block;font-family:'Chakra Petch',sans-serif;font-size:24px;color:var(--gold);line-height:1.3}
+.stat span{font-size:12px;color:var(--muted)}
+.stat small.cn{font-size:9.5px}
+.card{background:linear-gradient(180deg,#1A2033,#10131c);border:2px solid #4a557e;border-radius:20px;box-shadow:var(--shadow);margin:22px 0;padding:24px;scroll-margin-top:90px}
+.card h2{font-size:23px;color:#fff;display:flex;align-items:center;gap:10px;font-family:'Chakra Petch',sans-serif}
+.card h2 .em{background:linear-gradient(180deg,#BFDBFE,#4DA6FF);border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:21px;flex:0 0 42px}
+.card .sub{color:var(--muted);font-size:15px;margin:4px 0 14px}
+#tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+#tabs button{border:1px solid #3d4666;background:#0B0D14;color:var(--muted);border-radius:10px;padding:9px 15px;font-family:'Chakra Petch',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer}
+#tabs button.on{background:var(--tech);border-color:var(--tech);color:#0B0D14}
+#tabs button:hover{border-color:var(--tech);color:#fff}
+#tabs button.on:hover{color:#0B0D14}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.toolbar input,.toolbar select{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 13px;font-family:inherit;font-size:14.5px;font-weight:600;outline:none}
+.toolbar input{flex:2;min-width:180px}
+.toolbar select{flex:1;min-width:140px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.scard{background:#0B0D14;border:2px solid #3d4666;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;position:relative;cursor:pointer;text-align:left;color:var(--ink);font:inherit;width:100%}
+.scard:hover{border-color:var(--tech)}
+.scard.tech{border-left:6px solid var(--tech)}
+.scard.art{border-left:6px solid var(--art)}
+.scard .dhead{padding:14px 16px 6px}
+.scard .dhead b{color:#fff;font-size:18px;display:block}
+.scard .dhead small{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;letter-spacing:.05em}
+.scard.tech .dhead small{color:var(--tech)}
+.scard.art .dhead small{color:var(--art)}
+.scard .sum{padding:0 16px;font-size:14.5px;color:#DDE3F5}
+.scard .meta{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px 16px;margin-top:auto}
+.pill{font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;border:1px solid #3d4666;border-radius:999px;padding:3px 11px;color:var(--muted)}
+.pill.st{border-color:var(--gold);color:var(--gold)}
+.pill.todo{border-color:var(--amber);color:var(--amber)}
+.pill.deep{border-color:var(--tech);color:var(--tech)}
+.toc{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.toc button{border:1px solid #3d4666;background:#080A10;color:var(--ink);border-radius:999px;padding:7px 14px;font-family:'Chakra Petch',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer}
+.toc button:hover{border-color:var(--gold);color:var(--gold)}
+.sec{border-top:1px solid #2B3248;padding:18px 0;scroll-margin-top:110px}
+.sec h3{font-size:19px;color:#fff;font-family:'Chakra Petch',sans-serif;margin-bottom:8px}
+.sec h3 .no{color:var(--tech);margin-right:8px}
+.sec p,.sec li{font-size:15.5px;color:#DDE3F5}
+.sec ul{padding-left:22px;display:grid;gap:6px}
+.tl{list-style:none;padding:0;display:grid;gap:10px}
+.tl li{border:1px solid #3d4666;border-left:4px solid var(--tech);border-radius:10px;padding:10px 14px;background:#0B0D14}
+.tl b.yr{font-family:'Chakra Petch',sans-serif;color:var(--amber);margin-right:8px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.kbox{border:1px solid #3d4666;border-radius:12px;padding:12px 14px;background:#0B0D14}
+.kbox b{color:#fff;display:block;margin-bottom:4px}
+.kbox small{color:var(--muted);font-size:13px;display:block}
+.kbox .ex{color:var(--gold);font-size:13.5px}
+.lvl{border:1px solid var(--gold);border-radius:12px;padding:14px 16px;margin:10px 0;background:rgba(74,222,128,.05)}
+.lvl b.lv{font-family:'Chakra Petch',sans-serif;color:var(--gold);font-size:16px}
+.person{display:grid;grid-template-columns:64px 1fr;gap:12px;border:1px solid #3d4666;border-radius:12px;padding:12px 14px;background:#0B0D14;margin:8px 0}
+.person .av{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,#222839,#151927);border:1.5px solid var(--art);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:var(--art);font-family:'Chakra Petch',sans-serif}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14.5px;border-radius:12px;padding:11px 20px;cursor:pointer;border:1.5px solid var(--gold);background:linear-gradient(180deg,#BBF7D0,#4ADE80);color:#052e16;text-decoration:none;display:inline-block}
+.btn.ghost{background:#0B0D14;color:var(--gold)}
+.btn.blue{border-color:var(--tech);background:#0B0D14;color:var(--tech)}
+.btn.small{padding:7px 13px;font-size:12.5px}
+.form{display:grid;gap:8px;margin-top:10px}
+.form label{font-size:13px;font-weight:700;color:var(--muted);display:grid;gap:5px}
+.form input,.form select,.form textarea{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14.5px;width:100%}
+.ref{font-size:13px;color:var(--muted)}
+.ref a{color:var(--tech)}
+.empty{text-align:center;color:var(--muted);padding:26px;border:1.5px dashed #3d4666;border-radius:14px}
+.note{background:#0C0F18;border:2px solid #166534;border-left:5px solid var(--gold);border-radius:12px;padding:14px 18px;font-size:15px;margin-top:14px}
+.note.todo{border-color:#92600a;border-left-color:var(--amber)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-family:'Chakra Petch',sans-serif}
+@media(max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr}}
+@media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.card{padding:18px}}
+</style>
+<link rel="stylesheet" href="css/site-polish.css">
+<script defer src="js/site-polish.js?v=3"></script>
+<link rel="stylesheet" href="css/neo-brutal.css?v=15">
+</head>
+<body class="site-polish">
+<div class="wrap">
+
+<div class="topbar">
+  <a href="./index.html">← LIFE OS</a>
+  <span class="t">🎓 UPSKILL · อัพสกิล</span>
+</div>
+
+<header class="hero">
+  <h1>BUILD YOURSELF. <span>ONE SKILL AT A TIME.</span></h1>
+  <p>เปลี่ยนความสนใจให้เป็นความสามารถ เปลี่ยนความสามารถให้เป็นผลงาน — ศูนย์พัฒนาทักษะส่วนตัวของ ET1CRUEL</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><small>🎯 TRACKED</small><strong class="num" id="stTotal">0</strong><span>ทักษะที่ติดตาม</span></div>
+  <div class="stat"><small>📖 LEARNING</small><strong class="num" id="stLearning">0</strong><span>กำลังเรียน</span></div>
+  <div class="stat"><small>💪 PRACTICING</small><strong class="num" id="stPracticing">0</strong><span>กำลังฝึก</span></div>
+  <div class="stat"><small>🏆 PROJECTS</small><strong class="num" id="stProjects">0</strong><span>โปรเจกต์สำเร็จ</span></div>
+  <div class="stat"><small>⏱️ HOURS</small><strong class="num" id="stHours">0</strong><span>ชั่วโมงฝึกสะสม</span></div>
+  <div class="stat"><small class="cn">⭐ FIRST TO MASTER</small><strong class="num" id="stTarget" style="font-size:15px">–</strong><span>เป้าเชี่ยวชาญอันดับแรก</span></div>
+</div>
+
+<div id="tabs" role="tablist">
+  <button data-tab="overview" class="on">🏠 ภาพรวม</button>
+  <button data-tab="tech">🔧 Technology</button>
+  <button data-tab="art">🎨 Art &amp; Ent.</button>
+  <button data-tab="mine">🧭 การเรียนของฉัน</button>
+  <button data-tab="tree">🌳 Skill Tree</button>
+  <button data-tab="projects">🛠️ โปรเจกต์</button>
+  <button data-tab="journal">📓 Journal</button>
+  <button data-tab="resources">📚 คลังความรู้</button>
+</div>
+
+<div class="toolbar" id="toolbar">
+  <input id="q" placeholder="ค้นหาทักษะ… web / ดนตรี / tattoo">
+  <select id="fStatus" aria-label="กรองตามสถานะ">
+    <option value="">ทุกสถานะ</option>
+    <option value="WISHLIST">WISHLIST อยากเรียน</option>
+    <option value="EXPLORING">EXPLORING สำรวจ</option>
+    <option value="LEARNING">กำลังเรียน</option>
+    <option value="PRACTICING">กำลังฝึก</option>
+    <option value="PROJECT">ทำโปรเจกต์</option>
+    <option value="MASTERED">เชี่ยวชาญแล้ว</option>
+    <option value="PAUSED">หยุดพัก</option>
+  </select>
+</div>
+
+<div id="view"></div>
+
+<footer>UPSKILL · LIFE OS · LEARN DEEPLY. BUILD SKILLFULLY. 🎓</footer>
+</div>
+
+<script src="js/upskill-data.js?v=1"></script>
+<script src="js/upskill-app.js?v=1"></script>
+</body>
+</html>

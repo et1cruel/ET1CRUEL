@@ -22,7 +22,7 @@
       summary: 'สร้างเว็บและแอปให้คนใช้จริง: ตั้งแต่ HTML หน้าเดียว จนถึงระบบมีสมาชิก ฐานข้อมูล และ AI',
       objectives: ['ทำเว็บใช้เองได้', 'รับงานฟรีแลนซ์ได้', 'สร้างโปรดักต์ของตัวเองได้'],
       prerequisites: ['คอม + อินเทอร์เน็ต', 'ภาษาอังกฤษอ่าน docs ได้บ้าง'],
-      tags: ['html', 'css', 'javascript', 'react', 'node', 'deploy'],
+      tags: ['html', 'css', 'javascript', 'react', 'node', 'deploy', 'เว็บแอป', 'ทำเว็บ'],
       links: [
         { label: 'AI Agency (โค้ด + AI)', url: 'agency.html' },
         { label: 'CREATE AI', url: 'create-ai.html' },
