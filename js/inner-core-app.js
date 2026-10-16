@@ -12,21 +12,27 @@
   function blankStore() {
     return { v: 1, statement: { text: '', status: 'HYPOTHESIS', updatedAt: null }, interests: {}, skills: {}, projects: {}, values: {}, direction: {}, journal: [], quests: {}, focus: { main: '', subs: [] }, archive: [] };
   }
+  function sanitize(o) {
+    var b = blankStore();
+    if (!isObj(o)) return b;
+    ['interests', 'skills', 'projects', 'values', 'direction', 'quests', 'focus'].forEach(function (k) { if (!isObj(o[k])) o[k] = b[k]; });
+    if (!isObj(o.statement)) o.statement = b.statement;
+    if (typeof o.statement.text !== 'string') o.statement.text = '';
+    if (!Array.isArray(o.journal)) o.journal = [];
+    if (!Array.isArray(o.archive)) o.archive = [];
+    if (!Array.isArray(o.customs)) o.customs = [];
+    if (!isObj(o.desires)) o.desires = {};
+    if (!isObj(o.style)) o.style = {};
+    if (!Array.isArray(o.focus.subs)) o.focus.subs = [];
+    if (typeof o.focus.main !== 'string') o.focus.main = '';
+    Object.keys(o.interests).forEach(function (k) { if (!isObj(o.interests[k])) o.interests[k] = {}; });
+    return o;
+  }
   function load() {
     try {
       var raw = localStorage.getItem(KEY);
       if (!raw) return blankStore();
-      var o = JSON.parse(raw);
-      if (!isObj(o)) return blankStore();
-      var b = blankStore();
-      ['interests', 'skills', 'projects', 'values', 'direction', 'quests', 'focus'].forEach(function (k) { if (!isObj(o[k])) o[k] = b[k]; });
-      if (!Array.isArray(o.journal)) o.journal = [];
-      if (!Array.isArray(o.archive)) o.archive = [];
-      if (!Array.isArray(o.customs)) o.customs = [];
-      if (!isObj(o.desires)) o.desires = {};
-      if (!isObj(o.style)) o.style = {};
-      if (!isObj(o.statement)) o.statement = b.statement;
-      return o;
+      return sanitize(JSON.parse(raw));
     } catch (e) { return blankStore(); }
   }
   function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
@@ -197,7 +203,8 @@
     if (sv) sv.addEventListener('click', function () {
       var p = params(), id = p.get('open');
       if (!id) return;
-      var cur = S.interests[id] || {};
+      var cur = isObj(S.interests[id]) ? S.interests[id] : {};
+      cur.status = document.querySelector('#iStatus').value;
       cur.status = document.querySelector('#iStatus').value;
       cur.ratings = cur.ratings || {};
       document.querySelectorAll('[data-ax]').forEach(function (el) {
@@ -709,7 +716,9 @@
           var o = JSON.parse(r.result);
           var d = (o && o.app === 'inner-core' && o.data) ? o.data : null;
           if (!d || typeof d !== 'object') throw new Error('bad-schema');
-          var n = Object.keys(d.interests || {}).length + Object.keys(d.skills || {}).length + (d.journal || []).length;
+          d = sanitize(d);
+          if (!d.statement || !d.interests || !d.focus || !Array.isArray(d.journal)) throw new Error('bad-schema');
+          var n = Object.keys(d.interests).length + Object.keys(d.skills || {}).length + d.journal.length;
           if (!confirm('นำเข้าข้อมูล ' + n + ' รายการ? (จะเขียนทับของเดิมทั้งหมด)')) return;
           S = d;
           save(S); render();
