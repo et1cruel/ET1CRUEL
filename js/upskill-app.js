@@ -258,10 +258,11 @@
       }).join(''));
     var pr = d.practice;
     h += secWrap('practice', '05', 'How to Learn & Practice',
-      '<ul><li>วิธีเรียน: ' + esc(pr.methods.join(' · ')) + '</li><li>มือใหม่: ' + esc(pr.novice.join(' · ')) + '</li><li>ระดับกลาง: ' + esc(pr.intermediate.join(' · ')) + '</li><li>ขั้นสูง: ' + esc(pr.advanced.join(' · ')) + '</li><li>ตารางสัปดาห์: ' + esc(pr.weekly) + '</li><li>ทบทวน: ' + esc(pr.review) + '</li><li>รับ feedback: ' + esc(pr.feedback) + '</li><li>แก้บั๊ก: ' + esc(pr.debug) + '</li><li>เช็คว่าเป็นจริง: ' + esc(pr.selftest) + '</li></ul>');
+      '<ul><li>วิธีเรียน: ' + esc(pr.methods.join(' · ')) + '</li><li>มือใหม่: ' + esc(pr.novice.join(' · ')) + '</li><li>ระดับกลาง: ' + esc(pr.intermediate.join(' · ')) + '</li><li>ขั้นสูง: ' + esc(pr.advanced.join(' · ')) + '</li><li>ตารางสัปดาห์: ' + esc(pr.weekly) + '</li><li>ทบทวน: ' + esc(pr.review) + '</li><li>รับ feedback: ' + esc(pr.feedback) + '</li><li>แก้บั๊ก: ' + esc(pr.debug) + '</li><li>เช็คว่าเป็นจริง: ' + esc(pr.selftest) + '</li></ul>' +
+      (d.safety ? '<div class="note todo">⚠️ <b>Safety:</b> ' + esc(d.safety) + '</div>' : ''));
     h += secWrap('tools', '06', 'Tools & Resources',
       '<div class="kv">' + d.tools.map(function (t) {
-        return '<div class="kbox"><b>🧰 ' + esc(t.name) + '</b><small>' + esc(t.use) + ' · เหมาะกับ: ' + esc(t.for) + '</small><div class="ex">ค่าใช้จ่าย: ' + esc(t.cost) + '</div></div>';
+        return '<div class="kbox"><b>🔧 ' + esc(t.name) + '</b><small>' + esc(t.use) + ' · เหมาะกับ: ' + esc(t.for) + '</small><div class="ex">ค่าใช้จ่าย: ' + esc(t.cost) + '</div></div>';
       }).join('') + '</div>');
     h += secWrap('projects', '07', 'Project-Based Learning',
       d.projects.map(function (p) {
