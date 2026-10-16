@@ -574,7 +574,11 @@
       '<div><button class="btn small" id="jAdd">บันทึก journal</button></div>' +
       '<label>📌 เหตุการณ์ตัวตน (มีวันที่)<input id="aText" maxlength="200" placeholder="เช่น เริ่มทำบีทแรก"></label>' +
       '<label>วันที่<input id="aDate" type="date"></label>' +
-      '<div><button class="btn small ghost" id="aAdd">เพิ่มเหตุการณ์ (ต้องมีวันที่)</button></div></div></section>';
+      '<div><button class="btn small ghost" id="aAdd">เพิ่มเหตุการณ์ (ต้องมีวันที่)</button></div>' +
+      '<div class="rowbtns"><button class="btn small ghost" id="expJson">⬇ Export JSON</button> ' +
+      '<button class="btn small ghost" id="expMd">⬇ Export Markdown</button> ' +
+      '<label class="btn small ghost" style="cursor:pointer">⬆ Import JSON<input id="impFile" type="file" accept=".json" hidden></label></div>' +
+      '<p class="ev">ข้อมูลอยู่ในเบราว์เซอร์เครื่องนี้เท่านั้น · Export สำรองไว้ก่อนล้างข้อมูลเว็บ</p></div></section>';
   }
   function bindArchive() {
     var ja = document.querySelector('#jAdd');
@@ -594,6 +598,127 @@
     });
   }
 
+  function pickAdaptive() {
+    var tracked = Object.keys(S.interests);
+    var conf = tracked.filter(function (k) { return S.interests[k].status === 'CONFIRMED'; });
+    var Bank = (D().questions || {}).adaptive || [];
+    function Q(when) { return Bank.filter(function (q) { return q.when === when; })[0]; }
+    if (!tracked.length) return Q('no-love');
+    if (conf.length === 0 && tracked.length >= 3) return Q('many-interests');
+    var pausedLove = tracked.filter(function (k) {
+      var r = (S.interests[k].ratings || {});
+      return S.interests[k].status === 'PAUSED' && (+r.enjoyment || 0) >= 4;
+    });
+    if (pausedLove.length) return { when: 'paused-love', text: 'มีเรื่องที่เคยให้คะแนนความสุขไว้สูงแต่ตอนนี้หยุดพัก — อยากเล่าว่าเกิดอะไรขึ้นไหม?' };
+    return Q('direction');
+  }
+  function contradictions() {
+    var out = [];
+    Object.keys(S.interests).forEach(function (k) {
+      var r = S.interests[k];
+      if (r.status === 'PAUSED' && r.ratings && (+r.ratings.enjoyment || 0) >= 4) {
+        var s = intById(k);
+        out.push('“' + (s ? s.name : k) + '” เคยสุขมากแต่ตอนนี้หยุดพัก — ติดที่เวลาหรือหมดไฟ?');
+      }
+    });
+    return out;
+  }
+  function discoveryBlock() {
+    if (S.dqSkip) return '';
+    var q = pickAdaptive();
+    if (!q) return '';
+    var contra = contradictions();
+    return '<section class="card"><h2><span class="em">🔍</span> คำถามค้นพบตัวเอง (ทีละข้อ ข้ามได้)</h2>' +
+      '<div class="stmt">“' + esc(q.text) + '”</div>' +
+      '<div class="rowbtns"><a class="btn small ghost" href="?tab=archive">✎ เขียนคำตอบใน journal</a> ' +
+      '<button class="btn small vio" id="dqSkip">ข้ามข้อนี้</button></div>' +
+      (contra.length ? '<p class="sub" style="margin-top:8px">⚠️ ที่สังเกต (ไม่ใช่คำตัดสิน):</p><ul><li>' + contra.map(esc).join('</li><li>') + '</li></ul>' : '') + '</section>';
+  }
+  function exportJSON() {
+    var blob = new Blob([JSON.stringify({ app: 'inner-core', v: 1, exportedAt: new Date().toISOString(), data: S }, null, 2)], { type: 'application/json' });
+    dl(blob, 'inner-core-backup.json');
+  }
+  function exportMD() {
+    var L = [];
+    L.push('# INNER CORE — ' + fmtDate(Date.now()));
+    L.push('');
+    L.push('## ประโยคตัวตน (' + (S.statement.status || 'HYPOTHESIS') + ')');
+    L.push(S.statement.text || '(ยังไม่เขียน)');
+    L.push('');
+    L.push('## ความสนใจ');
+    Object.keys(S.interests).forEach(function (k) {
+      var r = S.interests[k], s = intById(k);
+      L.push('- ' + (s ? s.name : k) + ' [' + (r.status || '?') + ']' + (r.notes ? ' — ' + r.notes : ''));
+    });
+    if (!Object.keys(S.interests).length) L.push('(ยังไม่มี)');
+    L.push('');
+    L.push('## ทักษะ');
+    Object.keys(S.skills || {}).forEach(function (k) {
+      var r = S.skills[k];
+      L.push('- ' + k + ': ' + (r.level || '?') + (r.evidence ? ' — ' + r.evidence : ''));
+    });
+    L.push('');
+    L.push('## โปรเจกต์');
+    Object.keys(S.projects || {}).forEach(function (k) { L.push('- ' + k + ' [' + ((S.projects[k] || {}).status || '?') + ']'); });
+    L.push('');
+    L.push('## ค่านิยม (ที่ยืนยัน)');
+    Object.keys(S.values || {}).forEach(function (k) { if (S.values[k].confirmed) L.push('- ' + k); });
+    L.push('');
+    L.push('## Quests');
+    Object.keys(S.quests || {}).forEach(function (k) {
+      var q = S.quests[k];
+      L.push('- [' + q.status + '] ' + q.title + (q.reflection ? ' — ' + q.reflection : ''));
+    });
+    L.push('');
+    L.push('## Journal');
+    (S.journal || []).slice().sort(function (a, b) { return b.ts - a.ts; }).forEach(function (j) {
+      L.push('- ' + fmtDate(j.ts) + ': ' + j.text);
+    });
+    L.push('');
+    L.push('## คำถามที่ยังเปิดอยู่');
+    D().interests.filter(function (s) { return userStatus(s.id) !== 'CONFIRMED'; }).slice(0, 10).forEach(function (s) {
+      L.push('- ' + s.name + ': ' + s.question);
+    });
+    var blob = new Blob([L.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    dl(blob, 'inner-core.md');
+  }
+  function dl(blob, name) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  }
+  function bindDiscovery() {
+    var sk = document.querySelector('#dqSkip');
+    if (sk) sk.addEventListener('click', function () { S.dqSkip = Date.now(); save(S); render(); });
+  }
+  function bindExport() {
+    var je = document.querySelector('#expJson');
+    if (je) je.addEventListener('click', exportJSON);
+    var me = document.querySelector('#expMd');
+    if (me) me.addEventListener('click', exportMD);
+    var fi = document.querySelector('#impFile');
+    if (fi) fi.addEventListener('change', function () {
+      var f = fi.files && fi.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () {
+        try {
+          var o = JSON.parse(r.result);
+          var d = (o && o.app === 'inner-core' && o.data) ? o.data : null;
+          if (!d || typeof d !== 'object') throw new Error('bad-schema');
+          var n = Object.keys(d.interests || {}).length + Object.keys(d.skills || {}).length + (d.journal || []).length;
+          if (!confirm('นำเข้าข้อมูล ' + n + ' รายการ? (จะเขียนทับของเดิมทั้งหมด)')) return;
+          S = d;
+          save(S); render();
+        } catch (e) { alert('ไฟล์นี้ใช้ไม่ได้: ต้องเป็นไฟล์ inner-core-backup.json ที่ export จากห้องนี้'); }
+      };
+      r.readAsText(f);
+    });
+  }
+
   /* ---------- router ---------- */
   function render() {
     paintStats();
@@ -607,14 +732,14 @@
       b.classList.toggle('on', b.getAttribute('data-tab') === tab);
     });
     var view = $('view');
-    if (tab === 'overview') { view.innerHTML = searchBlock() + vOverview(); bindOverview(); return; }
+    if (tab === 'overview') { view.innerHTML = discoveryBlock() + searchBlock() + vOverview(); bindOverview(); bindDiscovery(); return; }
     if (tab === 'interests') { view.innerHTML = vInterests(); bindInterests(); return; }
     if (tab === 'desires') { view.innerHTML = vDesires(); bindDesires(); return; }
     if (tab === 'values') { view.innerHTML = vValues(); bindValues(); return; }
     if (tab === 'direction') { view.innerHTML = vDirection(); bindDirection(); return; }
     if (tab === 'skills') { view.innerHTML = vSkills(); bindSkills(); return; }
     if (tab === 'projects') { view.innerHTML = vProjects(); bindProjects(); return; }
-    if (tab === 'archive') { view.innerHTML = vArchive(); bindArchive(); return; }
+    if (tab === 'archive') { view.innerHTML = vArchive(); bindArchive(); bindExport(); return; }
     var titles = { interests: 'ความสนใจ', desires: 'อยากทำที่สุด', skills: 'ทักษะ', projects: 'โปรเจกต์', values: 'ค่านิยม', direction: 'ทิศชีวิต', archive: 'คลังตัวตน' };
     view.innerHTML = todoShell(titles[tab] || tab);
   }
