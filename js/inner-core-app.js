@@ -24,6 +24,7 @@
       if (!Array.isArray(o.archive)) o.archive = [];
       if (!Array.isArray(o.customs)) o.customs = [];
       if (!isObj(o.desires)) o.desires = {};
+      if (!isObj(o.style)) o.style = {};
       if (!isObj(o.statement)) o.statement = b.statement;
       return o;
     } catch (e) { return blankStore(); }
@@ -289,6 +290,310 @@
     return Math.round((vs.reduce(function (a, b) { return a + b; }, 0) / vs.length) * 10) / 10;
   }
 
+  var VLEVELS = ['สำคัญมาก', 'สำคัญ', 'กลางๆ', 'ไม่เกี่ยว', 'ยังไม่แน่ใจ'];
+  function vValues() {
+    var h = '<section class="card"><h2><span class="em">⚖️</span> ค่านิยมของฉัน</h2><p class="sub">เลือกเองทุกข้อ — ไม่เลือกคือไม่นับ ไม่เดาแทน</p><div class="kv">' +
+      D().values.map(function (v) {
+        var u = S.values[v.id] || {};
+        return '<div class="kbox"><b>' + esc(v.name) + '</b><small>' + esc(v.desc) + '</small>' +
+          '<div class="form"><label>ความสำคัญ<select data-vimp="' + esc(v.id) + '">' +
+          VLEVELS.map(function (l) { return '<option' + (u.importance === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label>' +
+          '<label style="flex-direction:row;align-items:center;gap:8px;display:flex"><input type="checkbox" data-vconf="' + esc(v.id) + '"' + (u.confirmed ? ' checked' : '') + ' style="width:auto"> นี่คือฉันจริงๆ</label></div></div>';
+      }).join('') + '</div><div class="rowbtns"><button class="btn small" id="vSave">💾 บันทึกค่านิยม</button></div></section>';
+    var to = (S.tradeoffs || []);
+    var th = to.length ? '<ul>' + to.map(function (t, i) {
+      return '<li><b>' + esc(t.a) + ' × ' + esc(t.b) + '</b> — ' + esc(t.note) + ' <button class="btn small ghost" data-tdel="' + i + '">ลบ</button></li>';
+    }).join('') + '</ul>' : '<div class="empty">ยังไม่มีข้อขัดแย้งที่สำรวจ</div>';
+    var vnames = D().values.map(function (v) { return '<option>' + esc(v.name) + '</option>'; }).join('');
+    h += '<section class="card"><h2><span class="em">🔀</span> Trade-off Explorer</h2><p class="sub">ค่านิยม 2 ข้อที่ดึงกัน — ไม่ต้องเลือกข้างเดียว หาทางอยู่ด้วยกัน</p>' + th +
+      '<div class="form"><label>ด้าน A<select id="tA">' + vnames + '</select></label><label>ด้าน B<select id="tB">' + vnames + '</select></label>' +
+      '<label>อยู่ด้วยกันอย่างไร<input id="tN" maxlength="200" placeholder="เช่น รับงานประจำ 3 วัน อีก 2 วันให้เพลง"></label>' +
+      '<div><button class="btn small" id="tAdd">บันทึก</button></div></div></section>';
+    return h;
+  }
+  function bindValues() {
+    var sv = document.querySelector('#vSave');
+    if (sv) sv.addEventListener('click', function () {
+      document.querySelectorAll('[data-vimp]').forEach(function (el) {
+        var id = el.getAttribute('data-vimp');
+        S.values[id] = S.values[id] || {};
+        S.values[id].importance = el.value;
+      });
+      document.querySelectorAll('[data-vconf]').forEach(function (el) {
+        var id = el.getAttribute('data-vconf');
+        S.values[id] = S.values[id] || {};
+        S.values[id].confirmed = !!el.checked;
+      });
+      save(S); render();
+    });
+    var ta = document.querySelector('#tAdd');
+    if (ta) ta.addEventListener('click', function () {
+      var a = document.querySelector('#tA').value, b = document.querySelector('#tB').value;
+      var n = (document.querySelector('#tN').value || '').trim();
+      if (!n || a === b) return;
+      S.tradeoffs = S.tradeoffs || [];
+      S.tradeoffs.push({ a: a, b: b, note: n });
+      save(S); render();
+    });
+    document.querySelectorAll('[data-tdel]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (!confirm('ลบข้อนี้ใช่ไหม?')) return;
+        S.tradeoffs.splice(+b.getAttribute('data-tdel'), 1);
+        save(S); render();
+      });
+    });
+  }
+
+  var DAREAS = [['creative', 'ชีวิตสร้างสรรค์'], ['technical', 'ชีวิตเทคนิค'], ['work', 'งาน/ธุรกิจ'], ['money', 'มั่นคงการเงิน'], ['learn', 'การเรียนรู้'], ['freedom', 'อิสระ'], ['people', 'คน/ชุมชน'], ['travel', 'เที่ยว/สำรวจ'], ['health', 'สุขภาพ/รูทีน'], ['arttime', 'เวลาดนตรี/ศิลปะ'], ['longterm', 'โปรเจกต์ยาว']];
+  var DLEVELS = ['สำคัญมาก', 'สำคัญ', 'กำลังทดลอง', 'ยังไม่แน่ใจ', 'ยังไม่เน้น'];
+  var STYLEQ = [
+    ['solo', 'ทำงานแบบไหน?', ['คนเดียว', 'มีเพื่อนร่วมทาง']],
+    ['brief', 'เริ่มจากอะไร?', ['ไอเดียตัวเอง', 'โจทย์ชัดๆ']],
+    ['mode', 'ชอบแบบไหน?', ['ลงมือเป็นโปรเจกต์', 'เรียนเป็นคอร์ส']],
+    ['plan', 'สไตล์ไหน?', ['ลองก่อนค่อยปรับ', 'วางแผนละเอียดก่อน']],
+    ['span', 'งานแบบไหน?', ['สั้นจบไว', 'ยาวลึก']],
+    ['output', 'ชอบเห็นผลเป็นอะไร?', ['ภาพ', 'เสียง', 'โปรแกรม', 'ตัวหนังสือ']]
+  ];
+  function vDirection() {
+    var h = '<section class="card"><h2><span class="em">🧭</span> ทิศชีวิต (11 ด้าน)</h2><p class="sub">พักผ่อนและใช้ชีวิตโดยไม่มีเป้าหมายก็มีที่อยู่ตรงนี้ — ไม่ต้อง optimize ทุกอย่าง</p><div class="kv">' +
+      DAREAS.map(function (a) {
+        var v = (S.direction || {})[a[0]] || '';
+        return '<div class="kbox"><b>' + a[1] + '</b><div class="form"><label>ระดับ<select data-darea="' + a[0] + '">' +
+          DLEVELS.map(function (l) { return '<option' + (v === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label></div></div>';
+      }).join('') + '</div><div class="rowbtns"><button class="btn small" id="dSave">💾 บันทึกทิศชีวิต</button></div></section>';
+    h += '<section class="card"><h2><span class="em">⚙️</span> สไตล์ทำงาน/เรียนรู้ของฉัน</h2><p class="sub">เปลี่ยนได้เสมอ ไม่ใช่ป้ายถาวร</p><div class="kv">' +
+      STYLEQ.map(function (q) {
+        var v = (S.style || {})[q[0]] || '';
+        return '<div class="kbox"><b>' + q[1] + '</b><div class="form"><label>เลือก<select data-sq="' + q[0] + '"><option value="">—</option>' +
+          q[2].map(function (o) { return '<option' + (v === o ? ' selected' : '') + '>' + o + '</option>'; }).join('') + '</select></label></div></div>';
+      }).join('') + '</div><div class="rowbtns"><button class="btn small" id="sSave">💾 บันทึกสไตล์</button></div></section>';
+    return h;
+  }
+  function bindDirection() {
+    var ds = document.querySelector('#dSave');
+    if (ds) ds.addEventListener('click', function () {
+      S.direction = S.direction || {};
+      document.querySelectorAll('[data-darea]').forEach(function (el) { S.direction[el.getAttribute('data-darea')] = el.value; });
+      save(S); render();
+    });
+    var ss = document.querySelector('#sSave');
+    if (ss) ss.addEventListener('click', function () {
+      S.style = S.style || {};
+      document.querySelectorAll('[data-sq]').forEach(function (el) { if (el.value) S.style[el.getAttribute('data-sq')] = el.value; });
+      save(S); render();
+    });
+  }
+
+  var SKLV = ['Not Assessed', 'L0', 'L1', 'L2', 'L3', 'L4', 'L5'];
+  var SKGOAL = ['อยากใช้เป็น', 'อยากทำได้อย่างอิสระ', 'อยากทำเป็นอาชีพ', 'อยากสร้างผลิตภัณฑ์', 'อยากสอนคนอื่น', 'อยากวิจัยระดับลึก'];
+  function upskillEvidence(name) {
+    try {
+      var raw = localStorage.getItem('et1cruel.upskill.v1');
+      if (!raw) return '';
+      var u = JSON.parse(raw);
+      var slug = (D().skillSeeds || []).filter(function (x) { return x.name === name; })[0];
+      slug = slug && slug.upskill;
+      if (slug && u.status && u.status[slug]) {
+        var mins = (u.minutes && +u.minutes[slug]) || 0;
+        return 'UPSKILL: ' + u.status[slug] + (mins ? ' · ' + Math.round(mins / 60 * 10) / 10 + ' ชม.' : '');
+      }
+    } catch (e) {}
+    return '';
+  }
+  function vSkills() {
+    var seeds = (D().skillSeeds || []).map(function (x) { return x.name; });
+    var mine = Object.keys(S.skills || {});
+    var all = seeds.concat(mine.filter(function (k) { return seeds.indexOf(k) < 0; }));
+    var h = '<section class="card"><h2><span class="em">🌳</span> ทักษะของฉัน</h2><p class="sub">ระดับอิงหลักฐาน — ไม่มีหลักฐานคือ Not Assessed ไม่เดาให้</p><div class="kv">' +
+      all.map(function (nm) {
+        var r = (S.skills || {})[nm] || {};
+        var ev = upskillEvidence(nm);
+        return '<div class="kbox"><b>' + esc(nm) + '</b>' +
+          (ev ? '<small>🔗 ' + esc(ev) + '</small>' : '') +
+          '<small>ระดับ: ' + esc(r.level || 'Not Assessed') + (r.goal ? ' → เป้า: ' + esc(r.goal) : '') + '</small>' +
+          '<div class="rowbtns"><button class="btn small ghost" data-sk="' + esc(nm) + '">ประเมิน →</button></div></div>';
+      }).join('') + '</div>';
+    var open = params().get('open');
+    if (open && open.indexOf('skill:') === 0) {
+      var nm = open.slice(6);
+      var r = (S.skills || {})[nm] || {};
+      h += '<section class="card"><h2><span class="em">📝</span> ประเมิน: ' + esc(nm) + '</h2>' +
+        '<div class="form"><label>ระดับตอนนี้<select id="skLevel">' + SKLV.map(function (l) { return '<option' + ((r.level || 'Not Assessed') === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label>' +
+        '<label>อยากไปถึง<select id="skGoal"><option value="">—</option>' + SKGOAL.map(function (l) { return '<option' + (r.goal === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label>' +
+        '<label>หลักฐาน (ทำอะไรมา)<textarea id="skEv" rows="2">' + esc(r.evidence || '') + '</textarea></label>' +
+        '<label>ก้าวต่อไป<input id="skNext" maxlength="140" value="' + esc(r.next || '') + '"></label>' +
+        '<div><button class="btn small" id="skSave">💾 บันทึก</button></div></div></section>';
+    }
+    h += '<section class="card"><h2><span class="em">➕</span> เพิ่มทักษะ</h2><div class="form"><label>ชื่อทักษะ<input id="skName" maxlength="60"></label><div><button class="btn small" id="skAdd">เพิ่ม</button></div></div></section>';
+    return h;
+  }
+  function bindSkills() {
+    document.querySelectorAll('[data-sk]').forEach(function (b) {
+      b.addEventListener('click', function () { location.search = '?tab=skills&open=skill:' + encodeURIComponent(b.getAttribute('data-sk')); });
+    });
+    var sv = document.querySelector('#skSave');
+    if (sv) sv.addEventListener('click', function () {
+      var nm = params().get('open').slice(6);
+      S.skills = S.skills || {};
+      S.skills[nm] = {
+        level: document.querySelector('#skLevel').value,
+        goal: document.querySelector('#skGoal').value,
+        evidence: (document.querySelector('#skEv').value || '').trim(),
+        next: (document.querySelector('#skNext').value || '').trim(),
+        updatedAt: Date.now()
+      };
+      save(S); render();
+    });
+    var ad = document.querySelector('#skAdd');
+    if (ad) ad.addEventListener('click', function () {
+      var nm = (document.querySelector('#skName').value || '').trim();
+      if (!nm) return;
+      S.skills = S.skills || {};
+      if (!S.skills[nm]) S.skills[nm] = { level: 'Not Assessed', updatedAt: Date.now() };
+      save(S); render();
+    });
+  }
+
+  var PST = ['CORE', 'SUPPORT', 'EXPERIMENT', 'ON HOLD', 'ARCHIVED', 'COMPLETED'];
+  function vProjects() {
+    var seeds = D().projectSeeds || [];
+    var mine = S.projects || {};
+    var seedH = '<div class="kv">' + seeds.map(function (s) {
+      var has = !!mine[s.name];
+      return '<div class="kbox"><b>' + esc(s.name) + '</b><small>ห้องจริงในเว็บ' + (has ? ' · ติดตามแล้ว' : '') + '</small><div class="rowbtns"><a class="btn small ghost" href="' + esc(s.url) + '">เปิดห้อง →</a> ' +
+        (has ? '' : '<button class="btn small blue" data-padd="' + esc(s.name) + '">＋ ติดตาม</button>') + '</div></div>';
+    }).join('') + '</div>';
+    var keys = Object.keys(mine);
+    var mh = keys.length ? '<div class="kv">' + keys.map(function (k) {
+      var p = mine[k];
+      return '<div class="kbox"><b>' + esc(k) + '</b><small>' + esc(p.status || 'EXPERIMENT') + (p.next ? ' · ต่อไป: ' + esc(p.next) : '') + '</small><div class="rowbtns"><button class="btn small ghost" data-pedit="' + esc(k) + '">แก้ →</button></div></div>';
+    }).join('') + '</div>' : '<div class="empty">ยังไม่ติดตามโปรเจกต์ไหน — กด ＋ จากห้องจริงด้านบน หรือเพิ่มเอง</div>';
+    var open = params().get('open');
+    var eh = '';
+    if (open && open.indexOf('proj:') === 0) {
+      var nm = open.slice(5), p = mine[nm] || { status: 'EXPERIMENT' };
+      eh = '<section class="card"><h2><span class="em">📝</span> ' + esc(nm) + '</h2><div class="form">' +
+        '<label>คำอธิบาย<textarea id="pDesc" rows="2">' + esc(p.desc || '') + '</textarea></label>' +
+        '<label>สถานะ<select id="pStatus">' + PST.map(function (s) { return '<option' + (p.status === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select></label>' +
+        '<label>ก้าวต่อไป<input id="pNext" maxlength="140" value="' + esc(p.next || '') + '"></label>' +
+        '<div class="rowbtns"><button class="btn small" id="pSave">💾 บันทึก</button> <button class="btn small ghost" id="pDel">ลบ</button></div></div></section>';
+    }
+    var qs = S.quests || {}, qk = Object.keys(qs);
+    var qh = qk.length ? '<ul class="tl">' + qk.map(function (k) {
+      var q = qs[k];
+      return '<li><b>' + esc(q.title) + '</b> <span class="tag ' + (q.status === 'done' ? 'confirmed' : 'hypo') + '">' + esc(q.status) + '</span><br><small>' + esc(q.timeframe) + (q.reflection ? ' · ' + esc(q.reflection).slice(0, 80) : '') + '</small> ' +
+        (q.status === 'done' ? '' : '<button class="btn small ghost" data-qdone="' + esc(k) + '">สำเร็จ ✓</button>') + '</li>';
+    }).join('') + '</ul>' : '<div class="empty">ยังไม่มี quest — ตั้งการทดลองเล็กๆ ข้อแรกด้านล่าง</div>';
+    return '<section class="card"><h2><span class="em">🛰️</span> โปรเจกต์</h2><p class="sub">ห้องจริงในเว็บ</p>' + seedH + '<p class="sub" style="margin-top:10px">ที่ฉันติดตาม</p>' + mh + eh +
+      '<div class="form"><label>＋ เพิ่มโปรเจกต์เอง<input id="pName" maxlength="80"></label><div><button class="btn small" id="pAdd">เพิ่ม</button></div></div></section>' +
+      '<section class="card"><h2><span class="em">🧪</span> ONE THING + Quests</h2><p class="sub">ทดลองเล็กๆ ทีละอย่าง — หยุดได้โดยไม่ใช่ความล้มเหลว</p>' + qh +
+      '<div class="form"><label>การทดลอง<input id="qTitle" maxlength="120" placeholder="เช่น ทำบีท 8 ห้องใน 1 ชม."></label>' +
+      '<label>สมมติฐาน<input id="qHyp" maxlength="200" placeholder="คิดว่าจะสนุกกว่าที่คิด"></label>' +
+      '<label>กรอบเวลา<select id="qTime"><option value="24h">24 ชม.</option><option value="7d">7 วัน</option><option value="30d">30 วัน</option><option value="90d">90 วัน</option></select></label>' +
+      '<label>จะรู้ว่าสำเร็จได้อย่างไร<input id="qEv" maxlength="200"></label>' +
+      '<div><button class="btn small" id="qAdd">ตั้ง quest</button></div></div></section>';
+  }
+  function bindProjects() {
+    document.querySelectorAll('[data-padd]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var nm = b.getAttribute('data-padd');
+        S.projects = S.projects || {};
+        S.projects[nm] = { status: 'EXPERIMENT', updatedAt: Date.now() };
+        save(S); render();
+      });
+    });
+    document.querySelectorAll('[data-pedit]').forEach(function (b) {
+      b.addEventListener('click', function () { location.search = '?tab=projects&open=proj:' + encodeURIComponent(b.getAttribute('data-pedit')); });
+    });
+    var pa = document.querySelector('#pAdd');
+    if (pa) pa.addEventListener('click', function () {
+      var nm = (document.querySelector('#pName').value || '').trim();
+      if (!nm) return;
+      S.projects = S.projects || {};
+      if (!S.projects[nm]) S.projects[nm] = { status: 'EXPERIMENT', updatedAt: Date.now() };
+      save(S); render();
+    });
+    var ps = document.querySelector('#pSave');
+    if (ps) ps.addEventListener('click', function () {
+      var nm = params().get('open').slice(5);
+      S.projects[nm] = {
+        desc: (document.querySelector('#pDesc').value || '').trim(),
+        status: document.querySelector('#pStatus').value,
+        next: (document.querySelector('#pNext').value || '').trim(),
+        updatedAt: Date.now()
+      };
+      save(S); render();
+    });
+    var pd = document.querySelector('#pDel');
+    if (pd) pd.addEventListener('click', function () {
+      var nm = params().get('open').slice(5);
+      if (!confirm('ลบโปรเจกต์ “' + nm + '” ใช่ไหม?')) return;
+      delete S.projects[nm];
+      save(S); location.search = '?tab=projects';
+    });
+    var qa = document.querySelector('#qAdd');
+    if (qa) qa.addEventListener('click', function () {
+      var t = (document.querySelector('#qTitle').value || '').trim();
+      if (!t) return;
+      S.quests = S.quests || {};
+      var id = 'q' + Date.now();
+      S.quests[id] = {
+        title: t, hypothesis: (document.querySelector('#qHyp').value || '').trim(),
+        timeframe: document.querySelector('#qTime').value,
+        evidence: (document.querySelector('#qEv').value || '').trim(),
+        status: 'planned', createdAt: Date.now()
+      };
+      save(S); render();
+    });
+    document.querySelectorAll('[data-qdone]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var q = S.quests[b.getAttribute('data-qdone')];
+        if (!q) return;
+        var r = prompt('ทดลองเสร็จแล้ว — สนุกกว่าที่คิดไหม? อยากทำต่อไหม? (1 บรรทัด)', '');
+        q.status = 'done'; q.completedAt = Date.now();
+        if (r) { q.reflection = r; S.journal.push({ type: 'quest', text: r, ts: Date.now() }); }
+        save(S); render();
+      });
+    });
+  }
+
+  function vArchive() {
+    var items = [];
+    (S.journal || []).forEach(function (j) { items.push({ ts: j.ts, h: '📓 ' + (j.type || 'reflection'), t: j.text }); });
+    (S.archive || []).forEach(function (a) { items.push({ ts: a.ts, h: '📌 ' + (a.source || 'บันทึก'), t: a.text }); });
+    Object.keys(S.quests || {}).forEach(function (k) {
+      var q = S.quests[k];
+      if (q.status === 'done') items.push({ ts: q.completedAt || q.createdAt, h: '🧪 quest สำเร็จ: ' + q.title, t: q.reflection || '' });
+    });
+    items.sort(function (a, b) { return b.ts - a.ts; });
+    var h = items.length ? '<ul class="tl">' + items.map(function (it) {
+      return '<li><b class="yr num">' + esc(fmtDate(it.ts)) + '</b><b>' + esc(it.h) + '</b><br>' + esc(it.t).slice(0, 200) + '</li>';
+    }).join('') + '</ul>' : '<div class="empty">ยังว่างเปล่า — ทุกอย่างที่บันทึกจะกลายเป็น timeline ตรงนี้ (ไม่แก้ประวัติเก่า)</div>';
+    return '<section class="card"><h2><span class="em">📓</span> Journal + Archive Timeline</h2>' + h +
+      '<div class="form"><label>✍️ บันทึกสะท้อน<input id="jText" maxlength="500" placeholder="วันนี้ค้นพบอะไรเกี่ยวกับตัวเอง?"></label>' +
+      '<div><button class="btn small" id="jAdd">บันทึก journal</button></div>' +
+      '<label>📌 เหตุการณ์ตัวตน (มีวันที่)<input id="aText" maxlength="200" placeholder="เช่น เริ่มทำบีทแรก"></label>' +
+      '<label>วันที่<input id="aDate" type="date"></label>' +
+      '<div><button class="btn small ghost" id="aAdd">เพิ่มเหตุการณ์ (ต้องมีวันที่)</button></div></div></section>';
+  }
+  function bindArchive() {
+    var ja = document.querySelector('#jAdd');
+    if (ja) ja.addEventListener('click', function () {
+      var t = (document.querySelector('#jText').value || '').trim();
+      if (!t) return;
+      S.journal.push({ type: 'daily', text: t, ts: Date.now() });
+      save(S); render();
+    });
+    var aa = document.querySelector('#aAdd');
+    if (aa) aa.addEventListener('click', function () {
+      var t = (document.querySelector('#aText').value || '').trim();
+      var d = document.querySelector('#aDate').value;
+      if (!t || !d) { alert('ต้องมีทั้งข้อความและวันที่'); return; }
+      S.archive.push({ text: t, ts: new Date(d + 'T12:00:00').getTime(), source: 'ผู้ใช้บันทึกเอง' });
+      save(S); render();
+    });
+  }
+
   /* ---------- router ---------- */
   function render() {
     paintStats();
@@ -305,6 +610,11 @@
     if (tab === 'overview') { view.innerHTML = searchBlock() + vOverview(); bindOverview(); return; }
     if (tab === 'interests') { view.innerHTML = vInterests(); bindInterests(); return; }
     if (tab === 'desires') { view.innerHTML = vDesires(); bindDesires(); return; }
+    if (tab === 'values') { view.innerHTML = vValues(); bindValues(); return; }
+    if (tab === 'direction') { view.innerHTML = vDirection(); bindDirection(); return; }
+    if (tab === 'skills') { view.innerHTML = vSkills(); bindSkills(); return; }
+    if (tab === 'projects') { view.innerHTML = vProjects(); bindProjects(); return; }
+    if (tab === 'archive') { view.innerHTML = vArchive(); bindArchive(); return; }
     var titles = { interests: 'ความสนใจ', desires: 'อยากทำที่สุด', skills: 'ทักษะ', projects: 'โปรเจกต์', values: 'ค่านิยม', direction: 'ทิศชีวิต', archive: 'คลังตัวตน' };
     view.innerHTML = todoShell(titles[tab] || tab);
   }
