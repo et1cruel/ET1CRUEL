@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATE AI · สร้าง AI — ET1CRUEL AI AGENCY</title>
+<meta name="description" content="สร้าง AI (CREATE AI) — ศูนย์เรียนรู้ ทดลอง และสร้าง AI ตั้งแต่ศูนย์จนถึงโมเดลของตัวเอง · From Zero to Artificial Intelligence Architect">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#07070B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site-polish.css">
+<style>
+:root{
+  --paper:#FFF4D6; --cream:#FFF9EC; --card:#FFFFFF; --ink:#131313; --muted:#55534E; --line:#131313;
+  --yellow:#FFC900; --pink:#FF90E8; --mint:#00E5A0; --lav:#B8A9FF; --sky:#87D6FF;
+  --lime:#4ADE80; --vio:#A78BFA; --amber:#FBBF24; --cyan:#22D3EE; --red:#FF4D5E;
+  --ok:#0a7a44; --bad:#c2172e; --warn:#8a5a00; --link:#0e5a8a;
+  --mono:ui-monospace,'Cascadia Code','JetBrains Mono',Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+::selection{background:var(--yellow);color:var(--ink)}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px;background:var(--yellow)}
+html{scroll-behavior:smooth}
+body{background-color:var(--paper);background-image:radial-gradient(#131313 1.1px,transparent 1.1px);background-size:24px 24px;color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:17px;line-height:1.9}
+.wrap{max-width:1280px;margin:0 auto;padding:18px 20px 90px;position:relative;z-index:1}
+.top{position:sticky;top:12px;z-index:30;display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--card);border:3px solid var(--ink);border-radius:14px;padding:10px 16px;box-shadow:4px 4px 0 var(--ink)}
+.top a.home{background:var(--yellow);color:var(--ink);font-weight:700;text-decoration:none;font-size:14px;white-space:nowrap;border:2px solid var(--ink);border-radius:8px;padding:4px 12px;box-shadow:2px 2px 0 var(--ink)}
+.top b{font-size:17px}.top small{color:var(--muted);display:block;font-size:12.5px;font-weight:600}
+.progress{margin-left:auto;min-width:180px;flex:1;max-width:280px}
+.progress .bar{height:12px;background:#fff;border:2px solid var(--ink);border-radius:7px;overflow:hidden}
+.progress .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--sky))}
+.progress small{color:var(--muted);font-size:12px;font-weight:700}
+.layout{display:grid;grid-template-columns:290px 1fr;gap:16px;margin-top:16px;align-items:start}
+.side{position:sticky;top:96px;max-height:calc(100vh - 120px);overflow-y:auto;display:grid;gap:10px;align-content:start}
+.sgroup{border:3px solid var(--ink);border-radius:14px;background:var(--card);padding:10px;box-shadow:4px 4px 0 var(--ink)}
+.sgroup>h4{font-family:'Chakra Petch',sans-serif;font-size:12px;letter-spacing:.08em;color:var(--ink);background:var(--cream);border:2px solid var(--ink);border-radius:8px;padding:3px 10px;margin:2px 2px 8px;display:inline-block}
+.sbtn{display:flex;gap:8px;align-items:center;width:100%;text-align:left;border:2px solid transparent;background:none;color:var(--ink);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.sbtn small{color:var(--muted);font-size:12.5px;display:block;font-weight:600}
+.sbtn:hover{border-color:var(--ink);background:var(--cream)}
+.sbtn.on{background:var(--yellow);border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.sbtn .dot{width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--ink);flex:0 0 10px}
+.sbtn.done .dot{background:var(--mint)}
+.sbtn.lock{opacity:.55}
+.search{width:100%;border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px;font-weight:600}
+.search::placeholder{color:#8a8781}
+#view{min-width:0}
+.hero{background:var(--yellow);border:4px solid var(--ink);border-radius:20px;padding:22px;box-shadow:8px 8px 0 var(--ink);overflow:hidden}
+.hero h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(28px,4vw,44px);line-height:1.25;color:var(--ink)}
+.hero h1 .ac{background:var(--ink);color:var(--yellow);padding:0 14px;border-radius:10px;display:inline-block;transform:rotate(-1deg)}
+.hero p.sub{color:#33312c;margin-top:8px;font-weight:600}
+#brain{width:100%;height:220px;display:block;margin-top:12px;border:3px solid var(--ink);border-radius:12px;background:#0B0D14}
+.hero-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.hero-controls .muted{color:#33312c!important;font-weight:600}
+button,.btn{border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:10px;padding:8px 14px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;box-shadow:3px 3px 0 var(--ink)}
+button:hover,.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);background:var(--cream)}
+button:active,.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+button.primary,.btn.primary{background:var(--mint);border-color:var(--ink);color:var(--ink)}
+button.ghost{background:#fff}
+.panel{border:3px solid var(--ink);border-radius:16px;background:var(--card);padding:18px;margin-top:14px;box-shadow:5px 5px 0 var(--ink)}
+.panel h2{font-family:'Chakra Petch',sans-serif;font-size:23px;margin-bottom:4px;color:var(--ink);text-shadow:2px 2px 0 rgba(255,201,0,.55)}
+.panel h3{font-size:17px;margin:14px 0 6px;color:var(--ink)}
+.panel p.desc,.muted{color:#33312c}
+.muted{font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.cardx{border:3px solid var(--ink);border-radius:12px;background:var(--cream);padding:14px;cursor:pointer;color:var(--ink);text-align:left;font-family:inherit;width:100%;box-shadow:3px 3px 0 var(--ink)}
+.cardx:hover{background:var(--yellow);transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+.cardx b{font-size:16px;display:block}
+.cardx small{color:#33312c;font-size:13.5px;font-weight:600}
+.cardx .tag{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;background:var(--ink);color:#fff;border-radius:6px;padding:2px 9px;margin-bottom:6px}
+.pill{display:inline-block;font-family:'Chakra Petch',sans-serif;font-size:11.5px;font-weight:700;border:2px solid var(--ink);border-radius:7px;padding:1px 9px;margin-left:8px;vertical-align:middle;background:#fff;color:var(--ink)}
+.pill.ok{background:var(--mint)}
+.pill.info{background:var(--sky)}
+.pill.vio{background:var(--lav)}
+.lesson{border:3px solid var(--ink);border-radius:12px;background:#fff;padding:14px 16px;margin-top:12px;font-size:16px}
+.lesson h3{margin-top:0;font-size:18px}
+.lesson .eq{font-family:var(--mono);background:#131313;border:3px solid var(--ink);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto;font-size:14.5px;color:#7CFC9A}
+.lesson table{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0}
+.lesson th,.lesson td{border:2px solid var(--ink);padding:7px 10px;text-align:left;background:#fff;color:var(--ink)}
+.lesson th{background:var(--ink);color:#fff}
+pre.code{font-family:var(--mono);font-size:13.5px;background:#131313;color:#E8F5E9;border:3px solid var(--ink);border-radius:10px;padding:12px 14px;overflow-x:auto;margin:8px 0;white-space:pre}
+.quiz{border:3px dashed var(--ink);border-radius:12px;padding:14px;margin-top:12px;background:var(--cream)}
+.quiz .q{font-weight:700;margin:10px 0 6px;font-size:16px}
+.quiz label{display:block;border:2px solid var(--ink);border-radius:8px;padding:7px 12px;margin:5px 0;cursor:pointer;font-size:15px;background:#fff;font-weight:600}
+.quiz label:hover{background:var(--yellow)}
+.quiz .fb{font-size:14.5px;margin-top:6px;font-weight:700}
+.lab{border:3px solid var(--ink);border-radius:14px;background:#101319;color:#F4F6FB;padding:16px;margin-top:12px;box-shadow:5px 5px 0 rgba(19,19,19,.35)}
+.lab h3{margin-top:0;color:#fff}
+.lab .muted{color:#C9D2E8!important}
+.lab .ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:10px 0}
+.lab label{font-size:13.5px;color:#C9D2E8;display:grid;gap:4px;font-weight:600}
+.lab input[type=range]{width:100%;accent-color:var(--mint)}
+.lab input[type=number],.lab input[type=text],.lab select{border:2px solid #3d4666;background:#080A10;color:#fff;border-radius:8px;padding:7px 10px;font-family:var(--mono);font-size:13.5px;width:100%}
+.lab output{font-family:var(--mono);color:var(--mint);font-size:14px}
+.lab canvas{width:100%;border:2px solid #3d4666;border-radius:10px;background:#080A10;margin-top:8px}
+.lab .pill{background:#fff}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.kv div{border:2px solid #3d4666;border-radius:10px;padding:8px 12px;background:#080A10}
+.kv small{color:#C9D2E8;display:block;font-size:12px}
+.kv b{font-family:var(--mono);font-size:16px;color:var(--mint)}
+.bot{display:flex;gap:10px;align-items:flex-start;border:3px solid var(--ink);border-radius:12px;background:var(--cream);padding:12px;margin-top:10px}
+.bot .face{font-size:30px;flex:0 0 auto}
+.bot .bubble{background:#fff;border:2px solid var(--ink);border-radius:10px;padding:8px 12px;font-size:15px;flex:1;white-space:pre-wrap;color:var(--ink);font-weight:500}
+.bot .bubble b{color:var(--ok)}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;background:#fff;color:var(--ink)}
+table.cmp th,table.cmp td{border:2px solid var(--ink);padding:7px 10px;text-align:left;vertical-align:top}
+table.cmp th{background:var(--ink);color:#fff}
+.searchres{display:grid;gap:8px;margin-top:10px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);border:3px solid var(--ink);color:#fff;border-radius:12px;padding:10px 20px;opacity:0;transition:.25s;z-index:99;font-size:14.5px;box-shadow:4px 4px 0 rgba(0,0,0,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.foot{color:#33312c;font-size:13.5px;font-weight:600;text-align:center;margin-top:26px}
+.foot a{color:var(--ink)}
+.crumbs{font-size:13.5px;color:#33312c;margin-bottom:8px;font-weight:600}
+.crumbs b{color:var(--ink)}
+details.road{border:3px solid var(--ink);border-radius:12px;background:var(--cream);padding:10px 14px;margin-top:10px}
+details.road summary{cursor:pointer;font-weight:700;font-size:16px}
+@media(max-width:960px){.layout{grid-template-columns:1fr}.side{position:static;max-height:none}.progress{max-width:none}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="home" href="./index.html">← ET1CRUEL</a>
+    <a class="home" href="./agency.html">◈ AI AGENCY</a>
+    <div><b>🧠 CREATE AI · สร้าง AI</b><small>From Zero to Artificial Intelligence Architect · local-first</small></div>
+    <div class="progress"><div class="bar"><i id="pbar"></i></div><small id="ptxt">ความคืบหน้า 0%</small></div>
+  </div>
+  <div class="layout">
+    <aside class="side" aria-label="Create AI navigation">
+      <div class="sgroup"><h4>ค้นหาทั้งห้อง</h4><input class="search" id="q" placeholder="บทเรียน · ศัพท์ · โปรเจกต์…"></div>
+      <div class="sgroup" id="navMain"><h4>ห้องเรียน</h4></div>
+      <div class="sgroup" id="navBots"><h4>หุ่นยนต์ผู้ช่วย</h4></div>
+      <div class="sgroup" id="navTools"><h4>เครื่องมือแล็บ</h4></div>
+    </aside>
+    <main id="view" tabindex="-1"></main>
+  </div>
+  <div class="foot">CREATE AI · ET1CRUEL AI AGENCY · เรียนในเครื่องนี้ progress จำใน localStorage · <a class="home" href="./agency.html" style="color:var(--lime)">กลับ AI AGENCY</a></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="js/create-ai-data.js?v=1"></script>
+<script src="js/create-ai-m2.js?v=1"></script>
+<script src="js/create-ai-m34.js?v=1"></script>
+<script src="js/create-ai-m6.js?v=1"></script>
+<script src="js/create-ai-models.js?v=1"></script>
+<script src="js/create-ai-m91012.js?v=1"></script>
+<script src="js/create-ai-m1115.js?v=1"></script>
+<script src="js/create-ai-m13.js?v=1"></script>
+<script src="js/create-ai-lab.js?v=1"></script>
+<script src="js/create-ai-lab2.js?v=1"></script>
+<script src="js/create-ai-app.js?v=4"></script>
+</body>
+</html>
