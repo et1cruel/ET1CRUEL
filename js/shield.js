@@ -4,29 +4,29 @@
 (function () {
   'use strict';
   var LIST = [
-    { sym: 'PLTR', name: 'Palantir', tv: 'NASDAQ:PLTR', why: 'สัญญารัฐ+เอกชนระยะยาว รายได้ประจำ' },
-    { sym: 'AAPL', name: 'Apple', tv: 'NASDAQ:AAPL', why: 'เงินสดล้น ปันผล+ซื้อหุ้นคืน หลุมหลบภัย' },
-    { sym: 'FDX', name: 'FedEx', tv: 'NYSE:FDX', why: 'ขนส่งตามเศรษฐกิจจริง ไม่พึ่งไฮป์เทค' },
-    { sym: 'WMT', name: 'Walmart', tv: 'NASDAQ:WMT', why: 'ของจำเป็น คนแห่เข้าตอนเศรษฐกิจแย่' },
-    { sym: 'RDDT', name: 'Reddit', tv: 'NYSE:RDDT', why: 'โฆษณา+data โตแรงเกินตลาดซบ' },
-    { sym: 'KO', name: 'Coca-Cola', tv: 'NYSE:KO', why: 'เครื่องดื่มกันตาย ปันผลยาวนาน' },
-    { sym: 'NFLX', name: 'Netflix', tv: 'NASDAQ:NFLX', why: 'สมาชิกรายเดือน กระแสเงินสดนิ่ง' },
-    { sym: 'CVX', name: 'Chevron', tv: 'NYSE:CVX', why: 'น้ำมัน+ปันผล พลังงานยืนระยะ' },
-    { sym: 'ADBE', name: 'Adobe', tv: 'NASDAQ:ADBE', why: 'ซอฟต์แวร์สมัครสมาชิก กำไรนิ่ง' },
-    { sym: 'MCD', name: "McDonald's", tv: 'NYSE:MCD', why: 'ฟาสต์ฟู้ดขายดีทุกสภาวะ' },
-    { sym: 'DPZ', name: "Domino's", tv: 'NASDAQ:DPZ', why: 'พิซซ่าเดลิเวอรี ธุรกิจง่ายกำไรดี' },
-    { sym: 'EG', name: 'Everest Group', tv: 'NYSE:EG', why: 'ประกันภัย เบี้ยนิ่งไม่สนตลาด' },
-    { sym: 'RL', name: 'Ralph Lauren', tv: 'NYSE:RL', why: 'แบรนด์พรีเมียม ลูกค้าซื้อซ้ำ' },
-    { sym: 'MA', name: 'Mastercard', tv: 'NYSE:MA', why: 'กินค่าธรรมเนียมทุกธุรกรรม' },
-    { sym: 'PSX', name: 'Phillips 66', tv: 'NYSE:PSX', why: 'โรงกลั่น+ปั๊ม เงินสดนิ่ง' },
-    { sym: 'HP', name: 'Helmerich & Payne', tv: 'NYSE:HP', why: 'ขุดเจาะน้ำมัน สัญญาระยะยาว' },
-    { sym: 'COST', name: 'Costco', tv: 'NASDAQ:COST', why: 'สมาชิก+ของถูก คนแน่นทุกวิกฤต' }
+    { sym: 'PLTR', name: 'Palantir', logo: 'palantir', tv: 'NASDAQ:PLTR', why: 'สัญญารัฐ+เอกชนระยะยาว รายได้ประจำ' },
+    { sym: 'AAPL', name: 'Apple', logo: 'apple', tv: 'NASDAQ:AAPL', why: 'เงินสดล้น ปันผล+ซื้อหุ้นคืน หลุมหลบภัย' },
+    { sym: 'FDX', name: 'FedEx', logo: 'fedex', tv: 'NYSE:FDX', why: 'ขนส่งตามเศรษฐกิจจริง ไม่พึ่งไฮป์เทค' },
+    { sym: 'WMT', name: 'Walmart', logo: 'walmart', tv: 'NASDAQ:WMT', why: 'ของจำเป็น คนแห่เข้าตอนเศรษฐกิจแย่' },
+    { sym: 'RDDT', name: 'Reddit', logo: 'reddit', tv: 'NYSE:RDDT', why: 'โฆษณา+data โตแรงเกินตลาดซบ' },
+    { sym: 'KO', name: 'Coca-Cola', logo: 'coca-cola', tv: 'NYSE:KO', why: 'เครื่องดื่มกันตาย ปันผลยาวนาน' },
+    { sym: 'NFLX', name: 'Netflix', logo: 'netflix', tv: 'NASDAQ:NFLX', why: 'สมาชิกรายเดือน กระแสเงินสดนิ่ง' },
+    { sym: 'CVX', name: 'Chevron', logo: 'chevron', tv: 'NYSE:CVX', why: 'น้ำมัน+ปันผล พลังงานยืนระยะ' },
+    { sym: 'ADBE', name: 'Adobe', logo: 'adobe', tv: 'NASDAQ:ADBE', why: 'ซอฟต์แวร์สมัครสมาชิก กำไรนิ่ง' },
+    { sym: 'MCD', name: "McDonald's", logo: 'mcdonalds', tv: 'NYSE:MCD', why: 'ฟาสต์ฟู้ดขายดีทุกสภาวะ' },
+    { sym: 'DPZ', name: "Domino's", logo: 'dominos', tv: 'NASDAQ:DPZ', why: 'พิซซ่าเดลิเวอรี ธุรกิจง่ายกำไรดี' },
+    { sym: 'EG', name: 'Everest Group', logo: 'everest', tv: 'NYSE:EG', why: 'ประกันภัย เบี้ยนิ่งไม่สนตลาด' },
+    { sym: 'RL', name: 'Ralph Lauren', logo: 'ralph-lauren', tv: 'NYSE:RL', why: 'แบรนด์พรีเมียม ลูกค้าซื้อซ้ำ' },
+    { sym: 'MA', name: 'Mastercard', logo: 'mastercard', tv: 'NYSE:MA', why: 'กินค่าธรรมเนียมทุกธุรกรรม' },
+    { sym: 'PSX', name: 'Phillips 66', logo: 'phillips66', tv: 'NYSE:PSX', why: 'โรงกลั่น+ปั๊ม เงินสดนิ่ง' },
+    { sym: 'HP', name: 'Helmerich & Payne', logo: 'hp', tv: 'NYSE:HP', why: 'ขุดเจาะน้ำมัน สัญญาระยะยาว' },
+    { sym: 'COST', name: 'Costco', logo: 'costco', tv: 'NASDAQ:COST', why: 'สมาชิก+ของถูก คนแน่นทุกวิกฤต' }
   ];
   var CACHE_KEY = 'et1shield-cache-v1';
   var CACHE_MS = 5 * 60 * 1000;
   var FX_FALLBACK = 33.6;
-  // สแนปช็อตอ้างอิง 8 ต.ค. 2569 (ใช้เฉพาะตอนสดพัง+ไม่มีแคช)
-  var SNAP = { WMT: { price: 110.56, prev: 108.16, chg: 2.40, pct: 2.22 } };
+  // สแนปช็อตอ้างอิง 16 ต.ค. 2569 (ใช้เฉพาะตอนสดพัง+ไม่มีแคช) — verify ผ่าน scanner API ตรง
+  var SNAP = { WMT: { price: 117.87, prev: 116.16, chg: 1.71, pct: 1.47 } };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
@@ -86,7 +86,7 @@
     var cls = p.chg > 0 ? 'stock-up' : (p.chg < 0 ? 'stock-down' : 'stock-flat');
     var arrow = p.chg > 0 ? '▲' : (p.chg < 0 ? '▼' : '–');
     var thb = p.price != null ? p.price * fx : null;
-    return '<tr><td><span class="stock-sym">' + esc(w.sym) + '<small>' + esc(w.name) + ' · ' + esc(w.why) + '</small></span></td>' +
+    return '<tr><td><span class="stock-sym"><img class="co-logo" decoding="async" src="logos/us/' + esc(w.logo || w.sym.toLowerCase()) + '.png" alt="' + esc(w.name) + '" onerror="this.remove()"><span class="co-tx">' + esc(w.sym) + '<small>' + esc(w.name) + ' · ' + esc(w.why) + '</small></span></span></td>' +
       '<td><span class="stock-price">$' + fmtN(p.price, 2) + '</span><div class="stock-hl">≈ ' + fmtN(thb, 0) + ' ฿</div></td>' +
       '<td><span class="' + cls + '">' + arrow + ' ' + fmtN(p.chg, 2) + ' (' + fmtN(p.pct, 2) + '%)</span>' +
       (p.live ? '' : '<div class="stock-hl">○ ราคาแคช</div>') + '</td></tr>';

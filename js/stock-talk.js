@@ -37,12 +37,12 @@
     { sym: 'ETH',  name: 'Ethereum',  crypto: true, cg: 'ethereum', bn: 'ETHUSDT',  desc: 'แพลตฟอร์ม smart contract — เหวี่ยงตาม BTC' }
   ];
   var CACHE_KEY = 'aom-stock-cache-v1';
-  var HOLD_KEY = 'aom-stock-hold-v4'; // v4: พอร์ต DIME 11 ตัวคาลิเบรตตรง snapshot ล่าสุด (รีเฟรชราคาสด TradingView)
+  var HOLD_KEY = 'aom-stock-hold-v4'; // v4 + migrate 15 ต.ค. 69: ตัด AMD/ASML/MRVL/LITE/NTAP เติม META (รีเฟรชราคาสด TradingView)
   var CACHE_MS = 60 * 1000; // รีเฟรชราคาสดทุก 1 นาที — เหมือน Dime (แคชกันยิงถี่)
   var FETCH_TIMEOUT = 12000;
   var FALLBACK_FX = 33.53;
-  // ราคาอ้างอิงล่าสุด (ใช้เฉพาะตอนออฟไลน์สนิท) — ตรงกับ snapshot Dime 11 ตัว
-  var FALLBACK = { QQQI: 56.60, AMD: 590.77, MU: 1086.16, DELL: 580.76, MRVL: 267.32, NVDA: 226.51, ASML: 1759.29, AMAT: 519.46, VRT: 243.88, TSM: 473.28, AAPL: 335.98, TSLA: 377.17, MSFT: 528.67, AMZN: 259.24, META: 724.67, AVGO: 355.37, CRWD: 263.08, PLTR: 207.27, PENG: 78.83, LITE: 983.00, COST: 959.76, NTAP: 237.70, BTC: 83218, ETH: 2560 };
+  // ราคาอ้างอิงล่าสุด (ใช้เฉพาะตอนออฟไลน์สนิท) — สแนปช็อต TradingView + CoinGecko 16 ต.ค. 2569 (verify ผ่าน API ตรง)
+  var FALLBACK = { QQQI: 54.90, AMD: 562.23, MU: 931.24, DELL: 473.39, MRVL: 241.24, NVDA: 217.23, ASML: 1657.44, AMAT: 430.01, VRT: 214.75, TSM: 422.25, AAPL: 342.00, TSLA: 362.44, MSFT: 539.44, AMZN: 254.76, META: 736.72, AVGO: 344.33, CRWD: 244.57, PLTR: 200.50, PENG: 61.86, LITE: 869.54, COST: 978.01, NTAP: 214.70, BTC: 82053, ETH: 2440.3 };
 
   var state = { prices: {}, fx: FALLBACK_FX, fxLive: false, ts: null, stale: true, loading: false, src: { stock: null, crypto: null, fx: null } };
 
@@ -235,26 +235,44 @@
     });
   }
 
-  /* ---------- พอร์ต DIME จริง (11 ตัวคาลิเบรตตรง snapshot ล่าสุด — มูลค่ารวม ~$401.37 ต้นทุน ~$406.74) ---------- */
+  /* ---------- พอร์ต DIME จริง (7 ตัว — ขาย AMD/ASML/MRVL/LITE/NTAP ออก 15 ต.ค. 69 + เข้า META 3,000฿ — อ้างอิงราคาสด 16 ต.ค. 69: มูลค่า ~$394 ต้นทุน ~$417) ---------- */
   function defaultHold() {
     return [
       { sym: 'NVDA', qty: 0.45301, avg: 236.82 },
       { sym: 'AVGO', qty: 0.1719, avg: 351.6 },
       { sym: 'CRWD', qty: 0.15262, avg: 265.69 },
-      { sym: 'PENG', qty: 0.40672, avg: 72.7 },
+      { sym: 'PENG', qty: 1.1171, avg: 72.7 }, // ปรับ 15 ต.ค. 2569 — มูลค่า 2,539 ฿ @ ~$67.59
       { sym: 'PLTR', qty: 0.15275, avg: 193.58 },
-      { sym: 'NTAP', qty: 0.1244, avg: 237.94 },
-      { sym: 'ASML', qty: 0.01668, avg: 1777.58 },
-      { sym: 'MRVL', qty: 0.1031, avg: 286.81 },
-      { sym: 'AMD',  qty: 0.04579, avg: 645.77 },
-      { sym: 'LITE', qty: 0.01081, avg: 1111.01 },
-      { sym: 'COST', qty: 0.01007, avg: 886.79 }
+      { sym: 'COST', qty: 0.01007, avg: 886.79 },
+      { sym: 'META', qty: 0.121, avg: 737.54 }
     ];
   }
+  var SOLD_OUT = ['AMD', 'ASML', 'MRVL', 'LITE', 'NTAP']; // ขายออก 15 ต.ค. 2569
   function getHold() {
     try {
       var raw = localStorage.getItem(HOLD_KEY);
-      if (raw) { var a = JSON.parse(raw); if (Array.isArray(a) && a.length) return a; }
+      if (raw) {
+        var a = JSON.parse(raw);
+        if (Array.isArray(a) && a.length) {
+          // ย้ายพอร์ต 15 ต.ค. 69: ตัดตัวที่ขายออก + เติม META ถ้ายังไม่มี
+          var kept = a.filter(function (x) { return x && SOLD_OUT.indexOf(x.sym) < 0; });
+          var changed = kept.length !== a.length;
+          if (!kept.some(function (x) { return x && x.sym === 'META'; })) {
+            kept.push({ sym: 'META', qty: 0.121, avg: 737.54 });
+            changed = true;
+          }
+          if (changed) saveHold(kept);
+          // แพตช์ครั้งเดียว 15 ต.ค. 69: PENG เป็น 1.1171 หุ้น (มูลค่า 2,539 ฿)
+          try {
+            if (!localStorage.getItem('aom-mig-peng-hold-20251015')) {
+              var pg = kept.filter(function (x) { return x && x.sym === 'PENG'; })[0];
+              if (pg) { pg.qty = 1.1171; saveHold(kept); }
+              localStorage.setItem('aom-mig-peng-hold-20251015', '1');
+            }
+          } catch (e) {}
+          return kept;
+        }
+      }
     } catch (e) {}
     // migrate ครั้งเดียวจาก key เก่า (v3/v2): คงจำนวน/ทุนที่ผู้ใช้แก้ไว้ + พกหุ้นส่วนเกินมาด้วย
     var def = defaultHold();
@@ -270,7 +288,7 @@
           }
         });
         old.forEach(function (o) {
-          if (o && o.sym && !def.some(function (h) { return h.sym === o.sym; })) def.push(o);
+          if (o && o.sym && SOLD_OUT.indexOf(o.sym) < 0 && !def.some(function (h) { return h.sym === o.sym; })) def.push(o);
         });
       }
     } catch (e) {}
@@ -310,6 +328,10 @@
   }
 
   /* ---------- เรนเดอร์ ---------- */
+  var WATCH_LOGO = { QQQI: 'qqqi', AMD: 'amd', MU: 'micron', DELL: 'dell', MRVL: 'marvell',
+    NVDA: 'nvidia', ASML: 'asml', AMAT: 'applied-materials', VRT: 'vertiv', TSM: 'tsmc',
+    AAPL: 'apple', TSLA: 'tesla', MSFT: 'microsoft', AMZN: 'amazon', META: 'meta',
+    AVGO: 'broadcom', BTC: 'bitcoin', ETH: 'ethereum' };
   function chgClass(p) { return p.chg > 0 ? 'stock-up' : (p.chg < 0 ? 'stock-down' : 'stock-flat'); }
   function chgArrow(p) { return p.chg > 0 ? '▲' : (p.chg < 0 ? '▼' : '–'); }
   function fmtVol(v) {
@@ -352,7 +374,10 @@
     var hl = (p.high != null || p.low != null)
       ? '<div class="stock-hl">H ' + fmtN(p.high, dec) + ' · L ' + fmtN(p.low, dec) + (p.vol != null ? ' · V ' + fmtVol(p.vol) : '') + '</div>'
       : (p.live ? '' : '<div class="stock-hl">○ ราคาแคช</div>');
-    return '<tr><td><span class="stock-sym">' + w.sym + '<small>' + esc(w.name) + '</small></span></td>' +
+    var logo = WATCH_LOGO[w.sym]
+      ? '<img class="co-logo" src="logos/us/' + WATCH_LOGO[w.sym] + '.png" alt="' + esc(w.name) + '" decoding="async" onerror="this.remove()">'
+      : '';
+    return '<tr><td><span class="stock-sym">' + logo + '<span class="co-tx">' + w.sym + '<small>' + esc(w.name) + '</small></span></span></td>' +
       '<td><span class="stock-price">$' + fmtN(p.price, dec) + '</span><div class="stock-hl">≈ ' + fmtInt(thb) + ' ฿</div></td>' +
       '<td><span class="' + chgClass(p) + '">' + chgArrow(p) + ' ' + fmtN(p.chg, dec) + ' (' + fmtN(p.pct) + '%)</span>' + hl + '</td></tr>';
   }

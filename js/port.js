@@ -4,21 +4,21 @@
   var MONEY_KEY = 'aom-money-v5';
   var MONEY_WALLET = 'dime-us';
 
-  var DEFAULT_FX = 33.65;
-  // ข้อมูลตั้งต้นจากภาพ (price US$, qty, cap/income/curr ฿)
+  var DEFAULT_FX = 33.53;
+  // สแนปช็อต TradingView 16 ต.ค. 2569 (verify ผ่าน scanner API ตรง — ค่าตรงกับรูปหุ้นรายวัน 15 ต.ค.)
+  // price = ตลาดล้วน (อัปเดตได้) · qty/cap/inc/curr = ของจริงผู้ใช้ ห้ามแตะ
+  // พอร์ตปัจจุบัน 7 ตัว (หลังขาย AMD/ASML/MRVL/LITE/NTAP ออก + เข้า META — 15 ต.ค. 2569)
   var DEFAULTS = [
-    { sym: 'NVDA', market: 'NASDAQ', name: 'NVIDIA Corp', price: 237.47, qty: 0.4533, cap: 0, inc: 0, curr: 0.70, logo: 'N', color: '#76b900', domain: 'nvidia.com' },
-    { sym: 'AVGO', market: 'NASDAQ', name: 'Broadcom Inc', price: 376.51, qty: 0.1716, cap: 0, inc: 0, curr: 0.42, logo: 'A', color: '#cc092f', domain: 'broadcom.com' },
-    { sym: 'CRWD', market: 'NASDAQ', name: 'Crowdstrike Holdings Inc - Ordinary Shares - Class A', price: 265.44, qty: 0.1529, cap: 0, inc: 0, curr: 0.26, logo: 'C', color: '#e01f26', domain: 'crowdstrike.com' },
-    { sym: 'ASML', market: 'NASDAQ', name: 'ASML Holding NV - New York Shares', price: 1804.96, qty: 0.0167, cap: 0, inc: 0, curr: 0.20, logo: 'A', color: '#00a0df', domain: 'asml.com' },
-    { sym: 'PLTR', market: 'NASDAQ', name: 'Palantir Technologies Inc - Ordinary Shares - Class A', price: 194.12, qty: 0.1531, cap: 0, inc: 0, curr: 0.19, logo: 'P', color: '#4258d0', domain: 'palantir.com' },
-    { sym: 'AMD', market: 'NASDAQ', name: 'Advanced Micro Devices Inc.', price: 645.86, qty: 0.0458, cap: 0, inc: 0, curr: 0.19, logo: 'A', color: '#ed1c24', domain: 'amd.com' },
-    { sym: 'MRVL', market: 'NASDAQ', name: 'Marvell Technology Inc', price: 284.68, qty: 0.1035, cap: 0, inc: 0, curr: 0.19, logo: 'M', color: '#c8102e', domain: 'marvell.com' },
-    { sym: 'PENG', market: 'NASDAQ', name: 'Penguin Solutions Inc.', price: 72.61, qty: 0.4054, cap: 0, inc: 0, curr: 0.19, logo: 'P', color: '#14b8a6', domain: 'penguinsolutions.com' },
-    { sym: 'LITE', market: 'NASDAQ', name: 'Lumentum Holdings Inc', price: 1111.07, qty: 0.0108, cap: 0, inc: 0, curr: 0.08, logo: 'L', color: '#9ca3af', domain: 'lumentum.com' },
-    { sym: 'COST', market: 'NASDAQ', name: 'Costco Wholesale Corp', price: 942.25, qty: 0.0101, cap: 0, inc: 0, curr: 0.06, logo: 'C', color: '#005daa', domain: 'costco.com' },
-    { sym: 'NTAP', market: 'NASDAQ', name: 'NetApp Inc', price: 237.34, qty: 0.1247, cap: 0, inc: 0, curr: 0, logo: 'N', color: '#0083c1', domain: 'netapp.com' } // เพิ่ม 12 ต.ค. 2569 — ซื้อ ~1,000 ฿ ≈ $29.60 ≈ 0.1247 หุ้น @ ~$237
+    { sym: 'NVDA', market: 'NASDAQ', name: 'NVIDIA Corp', price: 217.23, qty: 0.4533, cap: 0, inc: 0, curr: 0.70, logo: 'N', color: '#76b900', domain: 'nvidia.com' },
+    { sym: 'AVGO', market: 'NASDAQ', name: 'Broadcom Inc', price: 344.33, qty: 0.1716, cap: 0, inc: 0, curr: 0.42, logo: 'A', color: '#cc092f', domain: 'broadcom.com' },
+    { sym: 'CRWD', market: 'NASDAQ', name: 'Crowdstrike Holdings Inc - Ordinary Shares - Class A', price: 244.57, qty: 0.1529, cap: 0, inc: 0, curr: 0.26, logo: 'C', color: '#e01f26', domain: 'crowdstrike.com' },
+    { sym: 'PLTR', market: 'NASDAQ', name: 'Palantir Technologies Inc - Ordinary Shares - Class A', price: 200.50, qty: 0.1531, cap: 0, inc: 0, curr: 0.19, logo: 'P', color: '#4258d0', domain: 'palantir.com' },
+    { sym: 'PENG', market: 'NASDAQ', name: 'Penguin Solutions Inc.', price: 61.86, qty: 1.1171, cap: 0, inc: 0, curr: 0.19, logo: 'P', color: '#14b8a6', domain: 'penguinsolutions.com' }, // สด 16 ต.ค. 2569 — ตรงกับรูปหุ้นรายวัน 15 ต.ค.
+    { sym: 'COST', market: 'NASDAQ', name: 'Costco Wholesale Corp', price: 978.01, qty: 0.0101, cap: 0, inc: 0, curr: 0.06, logo: 'C', color: '#005daa', domain: 'costco.com' },
+    { sym: 'META', market: 'NASDAQ', name: 'Meta Platforms Inc', price: 736.72, qty: 0.121, cap: 0, inc: 0, curr: 0, logo: 'M', color: '#0082fb', domain: 'meta.com' } // เข้า 15 ต.ค. 2569 — ซื้อ 3,000 ฿ ≈ 0.121 หุ้น
   ];
+  // ขายออกแล้ว (ไม่แสดงในพอร์ต): AMD, ASML, MRVL, LITE, NTAP — 15 ต.ค. 2569
+  var SOLD = ['AMD', 'ASML', 'MRVL', 'LITE', 'NTAP'];
 
   var section = document.getElementById('port-snap');
   if (!section) return;
@@ -39,6 +39,21 @@
     var s = load();
     if (s && Array.isArray(s.stocks) && s.stocks.length) {
       if (typeof s.fx !== 'number' || !(s.fx > 0)) s.fx = DEFAULT_FX;
+      // ย้ายพอร์ต 15 ต.ค. 69: ตัดตัวที่ขายออก (AMD/ASML/MRVL/LITE/NTAP) + เติม META ถ้ายังไม่มี
+      var before = s.stocks.length;
+      s.stocks = s.stocks.filter(function (st) { return SOLD.indexOf(st.sym) < 0; });
+      if (!s.stocks.some(function (st) { return st.sym === 'META'; })) {
+        s.stocks.push(JSON.parse(JSON.stringify(DEFAULTS.filter(function (x) { return x.sym === 'META'; })[0])));
+      }
+      if (s.stocks.length !== before) save(s);
+      // แพตช์ครั้งเดียว 15 ต.ค. 69: PENG เป็นมูลค่า 2,539 ฿ ≈ 1.1171 หุ้น
+      try {
+        if (!localStorage.getItem('aom-mig-peng-20251015')) {
+          var pg = s.stocks.filter(function (st) { return st.sym === 'PENG'; })[0];
+          if (pg) { pg.qty = 1.1171; save(s); }
+          localStorage.setItem('aom-mig-peng-20251015', '1');
+        }
+      } catch (e) {}
       // เติมฟิลด์ใหม่ (domain/logo/color) จาก default โดยไม่ทับค่าที่ผู้ใช้แก้ (price/qty/cap/inc/curr)
       s.stocks.forEach(function (st) {
         var def = DEFAULTS.filter(function (x) { return x.sym === st.sym; })[0];
@@ -52,7 +67,9 @@
       });
       return s;
     }
-    return { fx: DEFAULT_FX, stocks: JSON.parse(JSON.stringify(DEFAULTS)), updatedAt: null };
+    // fresh (ยังไม่เคยเซฟ): ใช้ DEFAULTS ที่ตรงพอร์ตปัจจุบันแล้ว — กันเหนียวกรองตัวที่ขายออกอีกชั้น
+    var fresh = JSON.parse(JSON.stringify(DEFAULTS)).filter(function (st) { return SOLD.indexOf(st.sym) < 0; });
+    return { fx: DEFAULT_FX, stocks: fresh, updatedAt: null };
   }
   function logoUrl(s) {
     // ใช้ไฟล์โลโก้จริงจากโฟลเดอร์ logos/ ก่อน ถ้าไม่มีค่อย fallback เป็น favicon จาก domain
