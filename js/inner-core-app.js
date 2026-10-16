@@ -22,6 +22,8 @@
       ['interests', 'skills', 'projects', 'values', 'direction', 'quests', 'focus'].forEach(function (k) { if (!isObj(o[k])) o[k] = b[k]; });
       if (!Array.isArray(o.journal)) o.journal = [];
       if (!Array.isArray(o.archive)) o.archive = [];
+      if (!Array.isArray(o.customs)) o.customs = [];
+      if (!isObj(o.desires)) o.desires = {};
       if (!isObj(o.statement)) o.statement = b.statement;
       return o;
     } catch (e) { return blankStore(); }
@@ -36,7 +38,7 @@
     var x = m[st] || m.UNKNOWN;
     return '<span class="tag ' + x[0] + '">' + x[1] + '</span>';
   }
-  function intById(id) { return D().interests.filter(function (x) { return x.id === id; })[0] || null; }
+  function intById(id) { return allInterests().filter(function (x) { return x.id === id; })[0] || null; }
   function userStatus(id) { return (S.interests[id] && S.interests[id].status) || (intById(id) ? intById(id).seedStatus : 'UNKNOWN'); }
 
   function paintStats() {
@@ -124,30 +126,144 @@
   function vInterests() {
     var p = params(), openId = p.get('open');
     var h = '';
-    if (openId) {
-      var s = intById(openId);
-      if (s) {
-        var u = S.interests[openId] || {};
-        h += '<section class="card"><a class="btn small ghost" href="?tab=interests">← กลับรายการ</a>' +
-          '<h2 style="margin-top:10px"><span class="em">💜</span> ' + esc(s.name) + '</h2>' +
-          '<p class="sub">' + statusTag(userStatus(openId)) + '</p>' +
-          '<div class="drawer"><b>🔎 สัญญาณที่พบ</b><br>' + esc(s.evidence) +
-          '<br><br><b>? ยังไม่ทราบ</b><br>' + esc(s.unknown) +
-          '<br><br><b>💬 คำถามสำรวจ</b><br>' + esc(s.question) +
-          (u.notes ? '<br><br><b>✎ โน้ตของฉัน</b><br>' + esc(u.notes) : '') + '</div></section>';
-      } else {
-        h += '<div class="empty">ไม่เจอหัวข้อนี้ — <a href="?tab=interests">กลับรายการ</a></div>';
-      }
-    }
+    if (openId) h += interestDetail(openId);
     var groups = ['CREATE', 'BUILD', 'EXPLORE', 'SHARE', 'LIVE'];
     h += groups.map(function (g) {
-      var list = D().interests.filter(function (x) { return x.group === g; });
+      var list = allInterests().filter(function (x) { return x.group === g; });
       return '<section class="card"><h2><span class="em">🗂️</span> ' + g + ' <span class="ev">(' + list.length + ')</span></h2><div class="kv">' +
         list.map(function (x) { return interestCard(x, true); }).join('') + '</div></section>';
     }).join('');
+    h += priorityBlock();
+    h += '<section class="card"><h2><span class="em">➕</span> เพิ่มความสนใจของฉัน</h2>' +
+      '<div class="form"><label>ชื่อ<input id="niName" maxlength="60" placeholder="เช่น ทำซาวด์ประกอบเกม"></label>' +
+      '<label>กลุ่ม<select id="niGroup"><option>CREATE</option><option>BUILD</option><option>EXPLORE</option><option>SHARE</option><option>LIVE</option></select></label>' +
+      '<label>หลักฐาน/ที่มา<input id="niEv" maxlength="200" placeholder="เคยทำ/เจอมาจากไหน"></label>' +
+      '<div><button class="btn small" id="niAdd">เพิ่ม</button></div></div></section>';
     return h;
   }
 
+  function interestDetail(openId) {
+    var s = allInterests().filter(function (x) { return x.id === openId; })[0];
+    if (!s) return '<div class="empty">ไม่เจอหัวข้อนี้ — <a href="?tab=interests">กลับรายการ</a></div>';
+    var u = S.interests[openId] || {};
+    var st = u.status || s.seedStatus || 'UNKNOWN';
+    var r = u.ratings || {};
+    var opts = STATUS_LIST.map(function (x) {
+      return '<option value="' + x + '"' + (st === x ? ' selected' : '') + '>' + x + ' — ' + ST_TH[x] + '</option>';
+    }).join('');
+    var axes = AXES.map(function (a) {
+      var v = +r[a[0]] || 0;
+      var o = '<option value="0">ยังไม่ทราบ</option>' + [1, 2, 3, 4, 5].map(function (n) {
+        return '<option value="' + n + '"' + (v === n ? ' selected' : '') + '>' + n + '</option>';
+      }).join('');
+      return '<label>' + a[1] + '<select data-ax="' + a[0] + '">' + o + '</select></label>';
+    }).join('');
+    var isCustom = (S.customs || []).some(function (x) { return x.id === openId; });
+    return '<section class="card"><a class="btn small ghost" href="?tab=interests">← กลับรายการ</a>' +
+      '<h2 style="margin-top:10px"><span class="em">💜</span> ' + esc(s.name) + '</h2>' +
+      '<p class="sub">' + statusTag(st) + '</p>' +
+      '<div class="drawer"><b>🔎 สัญญาณที่พบ</b><br>' + esc(s.evidence || '—') +
+      '<br><br><b>? ยังไม่ทราบ</b><br>' + esc(s.unknown || '—') +
+      '<br><br><b>💬 คำถามสำรวจ</b><br>' + esc(s.question || '—') + '</div>' +
+      '<div class="form"><label>สถานะ<select id="iStatus">' + opts + '</select></label>' + axes +
+      '<label>✎ โน้ต<textarea id="iNotes" rows="2">' + esc(u.notes || '') + '</textarea></label>' +
+      '<div class="rowbtns"><button class="btn small" id="iSave">💾 บันทึก</button>' +
+      (isCustom ? '<button class="btn small ghost" id="iDel">ลบ (ยืนยัน)</button>' : '') + '</div></div></section>';
+  }
+
+  function priorityBlock() {
+    function avgFor(id, keys) {
+      var r = (S.interests[id] || {}).ratings || {};
+      var vs = keys.map(function (k) { return +r[k] || 0; }).filter(function (v) { return v > 0; });
+      if (!vs.length) return null;
+      return Math.round((vs.reduce(function (a, b) { return a + b; }, 0) / vs.length) * 10) / 10;
+    }
+    var love = allInterests().map(function (s) { return { s: s, v: avgFor(s.id, ['enjoyment', 'meaning']) }; }).filter(function (x) { return x.v !== null; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 5);
+    var strat = allInterests().map(function (s) { return { s: s, v: avgFor(s.id, ['practical', 'longterm']) }; }).filter(function (x) { return x.v !== null; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 5);
+    var li = love.length ? love.map(function (x) { return '<div class="kbox"><b>' + esc(x.s.name) + '</b><small>รัก ' + x.v + '/5 (จาก enjoyment+meaning)</small></div>'; }).join('') : '<div class="empty">ให้คะแนน enjoyment/meaning ก่อน อันดับจะขึ้นตรงนี้ (ไม่เดาแทน)</div>';
+    var si = strat.length ? strat.map(function (x) { return '<div class="kbox"><b>' + esc(x.s.name) + '</b><small>กลยุทธ์ ' + x.v + '/5 (จาก practical+longterm)</small></div>'; }).join('') : '<div class="empty">ให้คะแนน practical/longterm ก่อน</div>';
+    var overlap = love.map(function (x) { return x.s.id; }).filter(function (id) { return strat.some(function (y) { return y.s.id === id; }); });
+    var ov = overlap.length ? overlap.map(function (id) { var s = allInterests().filter(function (x) { return x.id === id; })[0]; return esc(s ? s.name : id); }).join(' · ') : '— (ยังไม่มีจุดร่วม ต้องเก็บคะแนนเพิ่ม)';
+    return '<section class="card"><h2><span class="em">⚖️</span> จัดอันดับจากข้อมูลของฉัน</h2>' +
+      '<p class="sub">คำนวณเฉพาะแกนที่ให้คะแนนแล้ว — ช่องไหนว่างแสดงว่าไม่พอ ไม่ใส่ศูนย์แทน</p>' +
+      '<h3 style="color:#fff;margin:8px 0">❤️ รักที่สุด</h3><div class="kv">' + li + '</div>' +
+      '<h3 style="color:#fff;margin:12px 0 8px">🎯 สำคัญเชิงกลยุทธ์</h3><div class="kv">' + si + '</div>' +
+      '<div class="note" style="margin-top:12px">🔗 <b>จุดตัด:</b> ' + ov + '</div></section>';
+  }
+
+  function bindInterests() {
+    var sv = document.querySelector('#iSave');
+    if (sv) sv.addEventListener('click', function () {
+      var p = params(), id = p.get('open');
+      if (!id) return;
+      var cur = S.interests[id] || {};
+      cur.status = document.querySelector('#iStatus').value;
+      cur.ratings = cur.ratings || {};
+      document.querySelectorAll('[data-ax]').forEach(function (el) {
+        var v = +el.value || 0;
+        if (v > 0) cur.ratings[el.getAttribute('data-ax')] = v;
+        else delete cur.ratings[el.getAttribute('data-ax')];
+      });
+      cur.notes = (document.querySelector('#iNotes').value || '').trim();
+      S.interests[id] = cur;
+      save(S); render();
+    });
+    var del = document.querySelector('#iDel');
+    if (del) del.addEventListener('click', function () {
+      var p = params(), id = p.get('open');
+      if (!id || !confirm('ลบ “' + id + '” ออกจากลิสต์ใช่ไหม? (กู้ไม่ได้)')) return;
+      delete S.interests[id];
+      S.customs = (S.customs || []).filter(function (x) { return x.id !== id; });
+      save(S); location.search = '?tab=interests';
+    });
+    var add = document.querySelector('#niAdd');
+    if (add) add.addEventListener('click', function () {
+      var nm = (document.querySelector('#niName').value || '').trim();
+      if (!nm) return;
+      var id = 'u' + Date.now();
+      (S.customs = S.customs || []).push({ id: id, name: nm, group: document.querySelector('#niGroup').value, seedStatus: 'UNKNOWN', evidence: (document.querySelector('#niEv').value || '').trim() || 'ผู้ใช้เพิ่มเอง', unknown: 'รอสำรวจ', question: 'อะไรคือสิ่งแรกที่อยากลองกับเรื่องนี้?' });
+      save(S); render();
+    });
+  }
+
+  function vDesires() {
+    var cats = [['A', 'สิ่งที่รัก/ชอบทำ'], ['B', 'สิ่งที่อยากสร้าง'], ['C', 'ประสบการณ์ที่อยากมี'], ['D', 'คนที่อยากเป็น'], ['E', 'สิ่งที่อยากมอบให้โลก'], ['F', 'สิ่งที่อยากเลิกทำ']];
+    var ds = S.desires || {};
+    var h = cats.map(function (c) {
+      var items = ds[c[0]] || [];
+      var li = items.length ? '<ul>' + items.map(function (t, i) {
+        return '<li>' + esc(t) + ' <button class="btn small ghost" data-ddel="' + c[0] + ':' + i + '">ลบ</button></li>';
+      }).join('') + '</ul>' : '<div class="empty">ยังว่าง — เพิ่มข้อแรกได้เลย ไม่ต้องครบ</div>';
+      return '<section class="card"><h2><span class="em">🔥</span> ' + c[0] + ' · ' + c[1] + '</h2>' + li +
+        '<div class="form"><label>เพิ่ม<input id="din-' + c[0] + '" maxlength="140"></label><div><button class="btn small" data-dadd="' + c[0] + '">เพิ่ม</button></div></div></section>';
+    }).join('');
+    h += '<section class="card"><h2><span class="em">❓</span> คำถามช่วยแยกแยะ</h2><ul>' +
+      D().questions.desire.map(function (q) { return '<li>' + esc(q) + '</li>'; }).join('') + '</ul></section>';
+    return h;
+  }
+
+  function bindDesires() {
+    document.querySelectorAll('[data-dadd]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.getAttribute('data-dadd');
+        var inp = document.querySelector('#din-' + k);
+        var v = (inp.value || '').trim();
+        if (!v) return;
+        S.desires = S.desires || {};
+        S.desires[k] = S.desires[k] || [];
+        S.desires[k].push(v);
+        save(S); render();
+      });
+    });
+    document.querySelectorAll('[data-ddel]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var parts = b.getAttribute('data-ddel').split(':');
+        if (!confirm('ลบข้อนี้ใช่ไหม?')) return;
+        S.desires[parts[0]].splice(+parts[1], 1);
+        save(S); render();
+      });
+    });
+  }
   function searchBlock() {
     var q = norm(($('q').value || '').trim());
     if (!q) return '';
@@ -160,6 +276,17 @@
   }
   function todoShell(name) {
     return '<section class="card"><h2><span class="em">🚧</span> ' + esc(name) + '</h2><div class="empty">โมดูลนี้อยู่ในแผน Task ถัดไป — โครงมาแล้ว เนื้อหาตามมา (ไม่แสดงของปลอม)</div></section>';
+  }
+
+  var AXES = [['curiosity', 'ความอยากรู้'], ['enjoyment', 'ความสุขตอนทำ'], ['persistence', 'ความเต็มใจฝึก'], ['longterm', 'อยากทำระยะยาว'], ['energy', 'พลังที่ได้'], ['meaning', 'ความหมายต่อชีวิต'], ['practical', 'ใช้ได้จริง'], ['evidence', 'หลักฐานลงมือ']];
+  var STATUS_LIST = ['WISHLIST', 'EXPLORING', 'LEARNING', 'PRACTICING', 'PROJECT', 'MASTERED', 'PAUSED', 'CONFIRMED', 'SIGNAL', 'HYPOTHESIS', 'UNKNOWN'];
+  var ST_TH = { WISHLIST: 'อยากเรียน', EXPLORING: 'กำลังสำรวจ', LEARNING: 'กำลังเรียน', PRACTICING: 'กำลังฝึก', PROJECT: 'ทำโปรเจกต์', MASTERED: 'เชี่ยวชาญแล้ว', PAUSED: 'หยุดพัก', CONFIRMED: 'ยืนยันแล้ว', SIGNAL: 'สัญญาณที่พบ', HYPOTHESIS: 'สมมติฐาน', UNKNOWN: 'ยังไม่ทราบ' };
+  function allInterests() { return D().interests.concat(S.customs || []); }
+  function allInterests() { return D().interests.concat(S.customs || []); }
+  function avgRated(r) {
+    var vs = AXES.map(function (a) { return +((r || {})[a[0]]) || 0; }).filter(function (v) { return v > 0; });
+    if (vs.length < 2) return null;
+    return Math.round((vs.reduce(function (a, b) { return a + b; }, 0) / vs.length) * 10) / 10;
   }
 
   /* ---------- router ---------- */
@@ -176,7 +303,8 @@
     });
     var view = $('view');
     if (tab === 'overview') { view.innerHTML = searchBlock() + vOverview(); bindOverview(); return; }
-    if (tab === 'interests') { view.innerHTML = vInterests(); return; }
+    if (tab === 'interests') { view.innerHTML = vInterests(); bindInterests(); return; }
+    if (tab === 'desires') { view.innerHTML = vDesires(); bindDesires(); return; }
     var titles = { interests: 'ความสนใจ', desires: 'อยากทำที่สุด', skills: 'ทักษะ', projects: 'โปรเจกต์', values: 'ค่านิยม', direction: 'ทิศชีวิต', archive: 'คลังตัวตน' };
     view.innerHTML = todoShell(titles[tab] || tab);
   }
