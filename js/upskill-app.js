@@ -11,14 +11,20 @@
   function bySlug(slug) { return skills().filter(function (s) { return s.slug === slug; })[0] || null; }
 
   function blankStore() { return { status: {}, minutes: {}, updated: {}, sessions: [], reflections: [], projectLinks: [], bookmarks: [], target: null }; }
+  function isObj(o) { return o && typeof o === 'object' && !Array.isArray(o); }
   function load() {
     try {
       var raw = localStorage.getItem(KEY);
       if (!raw) return blankStore();
       var o = JSON.parse(raw);
-      if (!o || typeof o !== 'object' || !o.status) return blankStore();
-      ['minutes', 'updated', 'sessions', 'reflections', 'projectLinks', 'bookmarks'].forEach(function (k) {
-        if (!o[k]) o[k] = blankStore()[k];
+      if (!isObj(o)) return blankStore();
+      var b = blankStore();
+      // schema ผิด type (เช่น เจอ string แทน object/array) → รีเซ็ตเฉพาะ key นั้น ไม่ crash
+      if (!isObj(o.status)) o.status = b.status;
+      if (!isObj(o.minutes)) o.minutes = b.minutes;
+      if (!isObj(o.updated)) o.updated = b.updated;
+      ['sessions', 'reflections', 'projectLinks', 'bookmarks'].forEach(function (k) {
+        if (!Array.isArray(o[k])) o[k] = b[k];
       });
       return o;
     } catch (e) { return blankStore(); }

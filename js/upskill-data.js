@@ -40,12 +40,12 @@
         },
         history: [
           { year: '1989–1990', title: 'World Wide Web ถือกำเนิดที่ CERN', text: 'Tim Berners-Lee เสนอระบบเอกสารเชื่อมโยงกันผ่านอินเทอร์เน็ต แล้วสร้างเบราว์เซอร์ + เซิร์ฟเวอร์ตัวแรก — เว็บจึงเริ่มเป็นเอกสารอ่านได้อย่างเดียว', ref: 'https://home.web.cern.ch/' },
-          { year: '1993', title: 'Mosaic: เบราว์เซอร์กราฟิกตัวแรกที่แพร่หลาย', text: 'NCSA Mosaic แสดงรูปภาพในหน้าเว็บได้ ทำให้คนทั่วไปเริ่มใช้เว็บ — จุดเริ่มเว็บเชิงพาณิชย์', ref: '' },
+          { year: '1993', title: 'Mosaic: เบราว์เซอร์กราฟิกตัวแรกที่แพร่หลาย', text: 'NCSA Mosaic แสดงรูปภาพในหน้าเว็บได้ ทำให้คนทั่วไปเริ่มใช้เว็บ — จุดเริ่มเว็บเชิงพาณิชย์', ref: 'https://www.ncsa.illinois.edu/' },
           { year: '1995', title: 'JavaScript เกิดใน 10 วัน', text: 'Brendan Eich สร้างภาษาสคริปต์ให้ Netscape เพื่อให้หน้าเว็บโต้ตอบได้ — ภาษาที่เคยถูกดูแคลนกลายเป็นภาษากลางของเว็บ', ref: 'https://brendaneich.com/' },
           { year: '1996', title: 'CSS แยกหน้าตาออกจากเนื้อหา', text: 'CSS Level 1 ให้สไตล์ (สี ฟอนต์ เลย์เอาต์) แยกจากโครงสร้าง HTML — งานออกแบบเว็บกลายเป็นวิชาชีพ', ref: 'https://www.w3.org/' },
           { year: '2005', title: 'Git: ระบบเวอร์ชันของ Linus Torvalds', text: 'Torvalds เขียน Git มาดูแลเคอร์เนลลินุกซ์ — กลายเป็นมาตรฐานเก็บโค้ดของโลก ร่วมงานกันได้โดยไม่เหยียบเท้ากัน', ref: 'https://git-scm.com/' },
           { year: '2009', title: 'Node.js: JavaScript ฝั่งเซิร์ฟเวอร์', text: 'Ryan Dahl เอา V8 engine มารันนอกเบราว์เซอร์ — ภาษาเดียวเขียนได้ทั้งหน้าบ้านหลังบ้าน เกิดยุค full-stack JS', ref: 'https://nodejs.org/' },
-          { year: '2010', title: 'Responsive Web Design', text: 'Ethan Marcotte เสนอออกแบบเว็บให้ยืดหยุ่นตามขนาดจอ — ยุคมือถือทำให้ "รองรับทุกจอ" เป็นข้อบังคับ', ref: '' },
+          { year: '2010', title: 'Responsive Web Design', text: 'Ethan Marcotte เสนอออกแบบเว็บให้ยืดหยุ่นตามขนาดจอ — ยุคมือถือทำให้ "รองรับทุกจอ" เป็นข้อบังคับ', ref: 'https://alistapart.com/article/responsive-web-design/' },
           { year: '2013', title: 'React: UI แบบ component', text: 'ทีม Facebook เปิด React ให้คิด UI เป็นชิ้นส่วนประกอบกันได้ — วิธีสร้างเว็บแอปสมัยใหม่เปลี่ยนถาวร', ref: 'https://react.dev/' }
         ],
         fundamentals: [
