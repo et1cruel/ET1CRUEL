@@ -25,5 +25,14 @@
   "desc": "แทรปดาร์ก 808 หนัก เหมาะทำบีทท็อป",
   "file": "music/traplite-dark-60.mp3",
   "engine": "genmusic-numpy"
+ },
+ {
+  "id": "a-129-solarcell",
+  "mood": "solarcell",
+  "bpm": 129,
+  "dur": 211,
+  "desc": "บีท 129 BPM — Solarcell (งานจริง et1cruel)",
+  "file": "music/a-129-solarcell.mp3",
+  "engine": "et1cruel"
  }
 ]
