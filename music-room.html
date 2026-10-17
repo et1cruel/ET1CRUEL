@@ -47,7 +47,7 @@ header.hero p{color:var(--muted);font-size:16px;margin-top:10px}
 .card h2{font-size:21px;color:#fff;font-family:'Chakra Petch',sans-serif;display:flex;gap:10px;align-items:center}
 .card .sub{color:var(--muted);font-size:14.5px;margin:4px 0 12px}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
-.kbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg2)}
+.kbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg2);overflow-wrap:anywhere;word-break:break-word;min-width:0}
 .kbox b{color:#fff;display:block;margin-bottom:4px}
 .kbox small{color:var(--muted);font-size:13px;display:block}
 .tag{font-family:'Chakra Petch',sans-serif;font-size:11.5px;border:1px solid var(--vio);color:#C4B5FD;border-radius:999px;padding:3px 11px;display:inline-block;margin:2px 4px 2px 0;cursor:pointer}
@@ -60,7 +60,8 @@ header.hero p{color:var(--muted);font-size:16px;margin-top:10px}
 .form label{font-size:13px;font-weight:700;color:var(--muted);display:grid;gap:5px}
 .form input,.form select,.form textarea{border:1px solid var(--line);background:#080A10;color:var(--ink);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14.5px;width:100%}
 .empty{text-align:center;color:var(--muted);padding:26px;border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
-.ev{font-size:13px;color:var(--muted)}
+.ev{font-size:13px;color:var(--muted);overflow-wrap:anywhere;word-break:break-word}
+.stmt,.drawer,.card,.sec,.tl li{overflow-wrap:anywhere;word-break:break-word;min-width:0}
 .sec{border-top:1px solid var(--line);padding:18px 0;scroll-margin-top:110px}
 .sec h3{font-size:18px;color:#fff;font-family:'Chakra Petch',sans-serif;margin-bottom:8px}
 .tl{list-style:none;display:grid;gap:8px;padding:0}
@@ -103,19 +104,19 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
   <p>ไม่ต้องเก่งก่อน ไม่ต้องเสร็จ ไม่ต้องมีคนฟัง — แค่อยากสนุกอีกครั้งก็พอ</p>
 </header>
 
-<div id="tabs" role="tablist">
-  <button data-tab="hall" class="on">🏠 ห้องโถง</button>
-  <button data-tab="origin">🌱 จุดเริ่ม</button>
-  <button data-tab="universe">🌌 จักรวาลเสียง</button>
-  <button data-tab="archive">🎼 งานที่ทำมา</button>
-  <button data-tab="sanctuary">🔥 ห้องเล่น</button>
-  <button data-tab="letters">💌 จดหมาย</button>
-  <button data-tab="compass">🧭 เข็มทิศ</button>
-  <button data-tab="listening">🎧 ฟังเพลง</button>
-  <button data-tab="notes">📓 โน้ต</button>
+<div id="tabs" role="tablist" aria-label="ห้องต่างๆ ในห้องเพลง">
+  <button role="tab" aria-selected="true" data-tab="hall" class="on">🏠 ห้องโถง</button>
+  <button role="tab" aria-selected="false" data-tab="origin">🌱 จุดเริ่ม</button>
+  <button role="tab" aria-selected="false" data-tab="universe">🌌 จักรวาลเสียง</button>
+  <button role="tab" aria-selected="false" data-tab="archive">🎼 งานที่ทำมา</button>
+  <button role="tab" aria-selected="false" data-tab="sanctuary">🔥 ห้องเล่น</button>
+  <button role="tab" aria-selected="false" data-tab="letters">💌 จดหมาย</button>
+  <button role="tab" aria-selected="false" data-tab="compass">🧭 เข็มทิศ</button>
+  <button role="tab" aria-selected="false" data-tab="listening">🎧 ฟังเพลง</button>
+  <button role="tab" aria-selected="false" data-tab="notes">📓 โน้ต</button>
 </div>
 
-<div id="view"></div>
+<div id="view" role="tabpanel" aria-live="polite"></div>
 
 <div class="allow">You are allowed to become someone new without abandoning everything that made you feel alive.<small>คุณเติบโตไปเป็นคนใหม่ได้ โดยไม่ต้องทิ้งทุกสิ่งที่เคยทำให้คุณรู้สึกมีชีวิต</small></div>
 <div style="text-align:center"><button class="btn" id="againBtn">OPEN A SOUND AND BEGIN AGAIN</button></div>
@@ -126,7 +127,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
 <button id="returnFab">🎵 กลับมาหาเพลง</button>
 <div id="returnBox" role="dialog" aria-label="กลับมาหาเพลง"></div>
 
-<script src="js/music-room-data.js?v=1"></script>
-<script src="js/music-room-app.js?v=1"></script>
+<script src="js/music-room-data.js?v=2"></script>
+<script src="js/music-room-app.js?v=2"></script>
 </body>
 </html>

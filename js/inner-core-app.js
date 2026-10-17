@@ -10,23 +10,82 @@
   function isObj(o) { return o && typeof o === 'object' && !Array.isArray(o); }
 
   function blankStore() {
-    return { v: 1, statement: { text: '', status: 'HYPOTHESIS', updatedAt: null }, interests: {}, skills: {}, projects: {}, values: {}, direction: {}, journal: [], quests: {}, focus: { main: '', subs: [] }, archive: [] };
+    return { v: 1, statement: { text: '', status: 'HYPOTHESIS', updatedAt: null }, interests: {}, skills: {}, projects: {}, values: {}, direction: {}, journal: [], quests: {}, focus: { main: '', subs: [] }, archive: [], customs: [], desires: {}, style: {}, tradeoffs: [] };
+  }
+  /* ---- sanitize: กันข้อมูลเสีย/ไฟล์นำเข้าที่ผิดรูป (ไม่ให้ห้องว่างเปล่าหรือ throw) ---- */
+  function strArr(a) { return (Array.isArray(a) ? a : []).filter(function (x) { return typeof x === 'string'; }); }
+  function strMap(o) {
+    var r = {};
+    if (isObj(o)) Object.keys(o).forEach(function (k) { if (typeof o[k] === 'string') r[k] = o[k]; });
+    return r;
+  }
+  function objMap(o) {
+    var r = {};
+    if (isObj(o)) Object.keys(o).forEach(function (k) { if (isObj(o[k])) r[k] = o[k]; });
+    return r;
+  }
+  function itemArr(a, fields) {
+    return (Array.isArray(a) ? a : []).filter(isObj).map(function (x) {
+      var o = {};
+      fields.forEach(function (f) {
+        var v = x[f];
+        if (f === 'ts') o.ts = (+v || 0);
+        else o[f] = (v == null) ? '' : String(v);
+      });
+      return o;
+    });
   }
   function sanitize(o) {
-    var b = blankStore();
-    if (!isObj(o)) return b;
-    ['interests', 'skills', 'projects', 'values', 'direction', 'quests', 'focus'].forEach(function (k) { if (!isObj(o[k])) o[k] = b[k]; });
-    if (!isObj(o.statement)) o.statement = b.statement;
-    if (typeof o.statement.text !== 'string') o.statement.text = '';
-    if (!Array.isArray(o.journal)) o.journal = [];
-    if (!Array.isArray(o.archive)) o.archive = [];
-    if (!Array.isArray(o.customs)) o.customs = [];
-    if (!isObj(o.desires)) o.desires = {};
-    if (!isObj(o.style)) o.style = {};
-    if (!Array.isArray(o.focus.subs)) o.focus.subs = [];
-    if (typeof o.focus.main !== 'string') o.focus.main = '';
-    Object.keys(o.interests).forEach(function (k) { if (!isObj(o.interests[k])) o.interests[k] = {}; });
-    return o;
+    if (!isObj(o)) return blankStore();
+    var s = {};
+    s.v = 1;
+    s.statement = {
+      text: (isObj(o.statement) && typeof o.statement.text === 'string') ? o.statement.text : '',
+      status: (isObj(o.statement) && typeof o.statement.status === 'string') ? o.statement.status : 'HYPOTHESIS',
+      updatedAt: (isObj(o.statement) && +o.statement.updatedAt) || null
+    };
+    s.focus = {
+      main: (isObj(o.focus) && typeof o.focus.main === 'string') ? o.focus.main : '',
+      subs: (isObj(o.focus) ? strArr(o.focus.subs) : []).slice(0, 2)
+    };
+    s.direction = strMap(o.direction);
+    s.style = strMap(o.style);
+    s.values = objMap(o.values);
+    s.skills = objMap(o.skills);
+    s.projects = objMap(o.projects);
+    s.quests = objMap(o.quests);
+    s.journal = itemArr(o.journal, ['type', 'text', 'ts']);
+    s.archive = itemArr(o.archive, ['text', 'source', 'ts']);
+    s.tradeoffs = itemArr(o.tradeoffs, ['a', 'b', 'note']);
+    s.customs = (Array.isArray(o.customs) ? o.customs : []).filter(isObj).map(function (c) {
+      return {
+        id: String(c.id || ''), name: (c.name == null ? '' : String(c.name)),
+        th: (c.th == null ? '' : String(c.th)), group: String(c.group || 'CREATE'),
+        evidence: (c.evidence == null ? '' : String(c.evidence)),
+        unknown: (c.unknown == null ? '' : String(c.unknown)),
+        seedStatus: String(c.seedStatus || 'UNKNOWN'), custom: true
+      };
+    }).filter(function (c) { return c.id && c.name; });
+    s.interests = {};
+    if (isObj(o.interests)) Object.keys(o.interests).forEach(function (k) {
+      var v = o.interests[k];
+      if (!isObj(v)) return;
+      var ratings = {};
+      if (isObj(v.ratings)) Object.keys(v.ratings).forEach(function (ax) {
+        var n = +v.ratings[ax];
+        if (n > 0) ratings[ax] = n;
+      });
+      s.interests[k] = {
+        status: typeof v.status === 'string' ? v.status : '',
+        ratings: ratings,
+        notes: typeof v.notes === 'string' ? v.notes : '',
+        ts: +v.ts || 0
+      };
+    });
+    var d = isObj(o.desires) ? o.desires : {};
+    s.desires = {};
+    ['A', 'B', 'C', 'D', 'E', 'F'].forEach(function (k) { s.desires[k] = strArr(d[k]); });
+    return s;
   }
   function load() {
     try {
@@ -39,6 +98,8 @@
   var S = load();
 
   function params() { try { return new URLSearchParams(location.search); } catch (e) { return { get: function () { return null; } }; } }
+  var seq = 0;
+  function uid(p) { seq++; return (p || 'x') + Date.now().toString(36) + seq.toString(36); }
   function fmtDate(ts) { try { return new Date(ts).toLocaleString('th-TH', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
   function statusTag(st) {
     var m = { CONFIRMED: ['confirmed', '✓ ยืนยันแล้ว'], SIGNAL: ['signal', '◉ สัญญาณที่พบ'], HYPOTHESIS: ['hypo', '? สมมติฐาน'], UNKNOWN: ['unknown', '? ยังไม่ทราบ'] };
@@ -72,14 +133,14 @@
     var st = S.statement.text || defaultStatement();
     var isDefault = !S.statement.text;
     var top = D().interests.slice(0, 6).map(function (s) {
-      return '<div class="kbox"><b>' + esc(s.name) + '</b>' + statusTag(userStatus(s.id)) + '<small>' + esc(s.evidence).slice(0, 90) + '</small></div>';
+      return '<div class="kbox"><b>' + esc(s.name) + '</b>' + statusTag(userStatus(s.id)) + '<small>' + esc(String(s.evidence || '').slice(0, 90)) + '</small></div>';
     }).join('');
     var f = S.focus;
     var focusH = (f.main || f.subs.length)
       ? '<div class="kbox"><b>🎯 ' + esc(f.main || '—') + '</b><small>รอง: ' + esc(f.subs.join(' · ') || '—') + '</small></div>'
       : '<div class="empty">ยังไม่ตั้งโฟกัส — เลือกโฟกัสหลัก 1 + รองไม่เกิน 2 ได้ด้านล่าง</div>';
     var unknowns = D().interests.filter(function (s) { return userStatus(s.id) !== 'CONFIRMED'; }).slice(0, 4).map(function (s) {
-      return '<div class="kbox"><b>?' + esc(s.name) + '</b><small>' + esc(s.unknown).slice(0, 90) + '</small><div class="rowbtns"><a class="btn small ghost" href="?tab=interests&open=' + esc(s.id) + '">สำรวจ →</a></div></div>';
+      return '<div class="kbox"><b>?' + esc(s.name) + '</b><small>' + esc(String(s.unknown || '').slice(0, 90)) + '</small><div class="rowbtns"><a class="btn small ghost" href="?tab=interests&open=' + esc(s.id) + '">สำรวจ →</a></div></div>';
     }).join('');
     return '<section class="card"><h2><span class="em">◈</span> THE CORE — ฉันเป็นใคร (จากหลักฐาน)</h2>' +
       '<div class="stmt">“' + esc(st) + '”<br>' + statusTag(S.statement.status || 'HYPOTHESIS') + ' <span class="ev">อัปเดต ' + esc(S.statement.updatedAt ? fmtDate(S.statement.updatedAt) : 'ยังไม่เคย') + '</span></div>' +
@@ -125,7 +186,7 @@
 
   function interestCard(s, withLink) {
     return '<div class="kbox"><b>' + esc(s.name) + '</b>' + statusTag(userStatus(s.id)) +
-      '<small>' + esc(s.evidence).slice(0, 110) + '</small>' +
+      '<small>' + esc(String(s.evidence || '').slice(0, 110)) + '</small>' +
       (withLink ? '<div class="rowbtns"><a class="btn small ghost" href="?tab=interests&open=' + esc(s.id) + '">เปิดดู →</a></div>' : '') + '</div>';
   }
   function norm(x) { return String(x || '').toLowerCase().replace(/[\s_]+/g, ''); }
@@ -155,9 +216,13 @@
     var u = S.interests[openId] || {};
     var st = u.status || s.seedStatus || 'UNKNOWN';
     var r = u.ratings || {};
-    var opts = STATUS_LIST.map(function (x) {
-      return '<option value="' + x + '"' + (st === x ? ' selected' : '') + '>' + x + ' — ' + ST_TH[x] + '</option>';
-    }).join('');
+    var LIFE = ['WISHLIST', 'EXPLORING', 'LEARNING', 'PRACTICING', 'PROJECT', 'MASTERED', 'PAUSED'];
+    var EVID = ['CONFIRMED', 'SIGNAL', 'HYPOTHESIS', 'UNKNOWN'];
+    var opts = '<optgroup label="ขั้นของการลงมือ (เดินหน้าได้เรื่อยๆ)">' +
+      LIFE.map(function (x) { return '<option value="' + x + '"' + (st === x ? ' selected' : '') + '>' + x + ' — ' + ST_TH[x] + '</option>'; }).join('') +
+      '</optgroup><optgroup label="ระดับหลักฐาน (มีแค่หลักฐานเท่านั้นที่เลื่อนได้)">' +
+      EVID.map(function (x) { return '<option value="' + x + '"' + (st === x ? ' selected' : '') + '>' + x + ' — ' + ST_TH[x] + '</option>'; }).join('') +
+      '</optgroup>';
     var axes = AXES.map(function (a) {
       var v = +r[a[0]] || 0;
       var o = '<option value="0">ยังไม่ทราบ</option>' + [1, 2, 3, 4, 5].map(function (n) {
@@ -205,7 +270,6 @@
       if (!id) return;
       var cur = isObj(S.interests[id]) ? S.interests[id] : {};
       cur.status = document.querySelector('#iStatus').value;
-      cur.status = document.querySelector('#iStatus').value;
       cur.ratings = cur.ratings || {};
       document.querySelectorAll('[data-ax]').forEach(function (el) {
         var v = +el.value || 0;
@@ -219,7 +283,9 @@
     var del = document.querySelector('#iDel');
     if (del) del.addEventListener('click', function () {
       var p = params(), id = p.get('open');
-      if (!id || !confirm('ลบ “' + id + '” ออกจากลิสต์ใช่ไหม? (กู้ไม่ได้)')) return;
+      if (!id) return;
+      var nmShow = (intById(id) || {}).name || id;
+      if (!confirm('ลบ “' + nmShow + '” ออกจากลิสต์ใช่ไหม? (กู้ไม่ได้)')) return;
       delete S.interests[id];
       S.customs = (S.customs || []).filter(function (x) { return x.id !== id; });
       save(S); location.search = '?tab=interests';
@@ -228,7 +294,7 @@
     if (add) add.addEventListener('click', function () {
       var nm = (document.querySelector('#niName').value || '').trim();
       if (!nm) return;
-      var id = 'u' + Date.now();
+      var id = uid('u');
       (S.customs = S.customs || []).push({ id: id, name: nm, group: document.querySelector('#niGroup').value, seedStatus: 'UNKNOWN', evidence: (document.querySelector('#niEv').value || '').trim() || 'ผู้ใช้เพิ่มเอง', unknown: 'รอสำรวจ', question: 'อะไรคือสิ่งแรกที่อยากลองกับเรื่องนี้?' });
       save(S); render();
     });
@@ -275,36 +341,28 @@
   function searchBlock() {
     var q = norm(($('q').value || '').trim());
     if (!q) return '';
-    var hits = D().interests.filter(function (s) {
-      return norm((s.th || '') + ' ' + s.name + ' ' + s.evidence + ' ' + s.id).indexOf(q) >= 0;
+    var hits = allInterests().filter(function (s) {
+      return norm((s.th || '') + ' ' + s.name + ' ' + (s.evidence || '') + ' ' + s.id).indexOf(q) >= 0;
     }).slice(0, 12);
     if (!hits.length) return '<section class="card"><div class="empty">ไม่เจอ “' + esc($('q').value) + '” — ลองคำอื่น</div></section>';
     return '<section class="card"><h2><span class="em">🔍</span> ผลการค้นหา (' + hits.length + ')</h2><div class="kv">' +
       hits.map(function (s) { return interestCard(s, true); }).join('') + '</div></section>';
   }
-  function todoShell(name) {
-    return '<section class="card"><h2><span class="em">🚧</span> ' + esc(name) + '</h2><div class="empty">โมดูลนี้อยู่ในแผน Task ถัดไป — โครงมาแล้ว เนื้อหาตามมา (ไม่แสดงของปลอม)</div></section>';
-  }
-
   var AXES = [['curiosity', 'ความอยากรู้'], ['enjoyment', 'ความสุขตอนทำ'], ['persistence', 'ความเต็มใจฝึก'], ['longterm', 'อยากทำระยะยาว'], ['energy', 'พลังที่ได้'], ['meaning', 'ความหมายต่อชีวิต'], ['practical', 'ใช้ได้จริง'], ['evidence', 'หลักฐานลงมือ']];
-  var STATUS_LIST = ['WISHLIST', 'EXPLORING', 'LEARNING', 'PRACTICING', 'PROJECT', 'MASTERED', 'PAUSED', 'CONFIRMED', 'SIGNAL', 'HYPOTHESIS', 'UNKNOWN'];
   var ST_TH = { WISHLIST: 'อยากเรียน', EXPLORING: 'กำลังสำรวจ', LEARNING: 'กำลังเรียน', PRACTICING: 'กำลังฝึก', PROJECT: 'ทำโปรเจกต์', MASTERED: 'เชี่ยวชาญแล้ว', PAUSED: 'หยุดพัก', CONFIRMED: 'ยืนยันแล้ว', SIGNAL: 'สัญญาณที่พบ', HYPOTHESIS: 'สมมติฐาน', UNKNOWN: 'ยังไม่ทราบ' };
   function allInterests() { return D().interests.concat(S.customs || []); }
-  function allInterests() { return D().interests.concat(S.customs || []); }
-  function avgRated(r) {
-    var vs = AXES.map(function (a) { return +((r || {})[a[0]]) || 0; }).filter(function (v) { return v > 0; });
-    if (vs.length < 2) return null;
-    return Math.round((vs.reduce(function (a, b) { return a + b; }, 0) / vs.length) * 10) / 10;
-  }
 
   var VLEVELS = ['สำคัญมาก', 'สำคัญ', 'กลางๆ', 'ไม่เกี่ยว', 'ยังไม่แน่ใจ'];
+  function levelOpts(list, cur) {
+    return '<option value="">— ยังไม่ระบุ</option>' + list.map(function (l) { return '<option' + (cur === l ? ' selected' : '') + '>' + l + '</option>'; }).join('');
+  }
   function vValues() {
     var h = '<section class="card"><h2><span class="em">⚖️</span> ค่านิยมของฉัน</h2><p class="sub">เลือกเองทุกข้อ — ไม่เลือกคือไม่นับ ไม่เดาแทน</p><div class="kv">' +
       D().values.map(function (v) {
         var u = S.values[v.id] || {};
         return '<div class="kbox"><b>' + esc(v.name) + '</b><small>' + esc(v.desc) + '</small>' +
           '<div class="form"><label>ความสำคัญ<select data-vimp="' + esc(v.id) + '">' +
-          VLEVELS.map(function (l) { return '<option' + (u.importance === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label>' +
+          levelOpts(VLEVELS, u.importance) + '</select></label>' +
           '<label style="flex-direction:row;align-items:center;gap:8px;display:flex"><input type="checkbox" data-vconf="' + esc(v.id) + '"' + (u.confirmed ? ' checked' : '') + ' style="width:auto"> นี่คือฉันจริงๆ</label></div></div>';
       }).join('') + '</div><div class="rowbtns"><button class="btn small" id="vSave">💾 บันทึกค่านิยม</button></div></section>';
     var to = (S.tradeoffs || []);
@@ -324,7 +382,8 @@
       document.querySelectorAll('[data-vimp]').forEach(function (el) {
         var id = el.getAttribute('data-vimp');
         S.values[id] = S.values[id] || {};
-        S.values[id].importance = el.value;
+        if (el.value) S.values[id].importance = el.value;
+        else delete S.values[id].importance; // ไม่เลือก = ไม่นับ (ไม่เดาแทน)
       });
       document.querySelectorAll('[data-vconf]').forEach(function (el) {
         var id = el.getAttribute('data-vconf');
@@ -366,7 +425,7 @@
       DAREAS.map(function (a) {
         var v = (S.direction || {})[a[0]] || '';
         return '<div class="kbox"><b>' + a[1] + '</b><div class="form"><label>ระดับ<select data-darea="' + a[0] + '">' +
-          DLEVELS.map(function (l) { return '<option' + (v === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label></div></div>';
+          levelOpts(DLEVELS, v) + '</select></label></div></div>';
       }).join('') + '</div><div class="rowbtns"><button class="btn small" id="dSave">💾 บันทึกทิศชีวิต</button></div></section>';
     h += '<section class="card"><h2><span class="em">⚙️</span> สไตล์ทำงาน/เรียนรู้ของฉัน</h2><p class="sub">เปลี่ยนได้เสมอ ไม่ใช่ป้ายถาวร</p><div class="kv">' +
       STYLEQ.map(function (q) {
@@ -380,7 +439,10 @@
     var ds = document.querySelector('#dSave');
     if (ds) ds.addEventListener('click', function () {
       S.direction = S.direction || {};
-      document.querySelectorAll('[data-darea]').forEach(function (el) { S.direction[el.getAttribute('data-darea')] = el.value; });
+      document.querySelectorAll('[data-darea]').forEach(function (el) {
+        if (el.value) S.direction[el.getAttribute('data-darea')] = el.value;
+        else delete S.direction[el.getAttribute('data-darea')];
+      });
       save(S); render();
     });
     var ss = document.querySelector('#sSave');
@@ -423,13 +485,17 @@
     var open = params().get('open');
     if (open && open.indexOf('skill:') === 0) {
       var nm = open.slice(6);
-      var r = (S.skills || {})[nm] || {};
+      var r = (S.skills || {})[nm];
+      if (!r) {
+        h += '<section class="card"><div class="empty">ไม่เจอทักษะ “' + esc(nm) + '” ในรายการที่ติดตาม — <a href="?tab=skills">กลับไปเลือกทักษะ</a></div></section>';
+      } else {
       h += '<section class="card"><h2><span class="em">📝</span> ประเมิน: ' + esc(nm) + '</h2>' +
         '<div class="form"><label>ระดับตอนนี้<select id="skLevel">' + SKLV.map(function (l) { return '<option' + ((r.level || 'Not Assessed') === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label>' +
         '<label>อยากไปถึง<select id="skGoal"><option value="">—</option>' + SKGOAL.map(function (l) { return '<option' + (r.goal === l ? ' selected' : '') + '>' + l + '</option>'; }).join('') + '</select></label>' +
         '<label>หลักฐาน (ทำอะไรมา)<textarea id="skEv" rows="2">' + esc(r.evidence || '') + '</textarea></label>' +
         '<label>ก้าวต่อไป<input id="skNext" maxlength="140" value="' + esc(r.next || '') + '"></label>' +
         '<div><button class="btn small" id="skSave">💾 บันทึก</button></div></div></section>';
+      }
     }
     h += '<section class="card"><h2><span class="em">➕</span> เพิ่มทักษะ</h2><div class="form"><label>ชื่อทักษะ<input id="skName" maxlength="60"></label><div><button class="btn small" id="skAdd">เพิ่ม</button></div></div></section>';
     return h;
@@ -478,17 +544,24 @@
     var open = params().get('open');
     var eh = '';
     if (open && open.indexOf('proj:') === 0) {
-      var nm = open.slice(5), p = mine[nm] || { status: 'EXPERIMENT' };
+      var nm = open.slice(5);
+      var seedNames = {};
+      (D().projectSeeds || []).forEach(function (s) { seedNames[s.name] = 1; });
+      if (!mine[nm] && !seedNames[nm]) {
+        eh = '<section class="card"><div class="empty">ไม่เจอโปรเจกต์ “' + esc(nm) + '” — <a href="?tab=projects">กลับไปหน้าโปรเจกต์</a></div></section>';
+      } else {
+      var p = mine[nm] || { status: 'EXPERIMENT' };
       eh = '<section class="card"><h2><span class="em">📝</span> ' + esc(nm) + '</h2><div class="form">' +
         '<label>คำอธิบาย<textarea id="pDesc" rows="2">' + esc(p.desc || '') + '</textarea></label>' +
         '<label>สถานะ<select id="pStatus">' + PST.map(function (s) { return '<option' + (p.status === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select></label>' +
         '<label>ก้าวต่อไป<input id="pNext" maxlength="140" value="' + esc(p.next || '') + '"></label>' +
         '<div class="rowbtns"><button class="btn small" id="pSave">💾 บันทึก</button> <button class="btn small ghost" id="pDel">ลบ</button></div></div></section>';
+      }
     }
     var qs = S.quests || {}, qk = Object.keys(qs);
     var qh = qk.length ? '<ul class="tl">' + qk.map(function (k) {
       var q = qs[k];
-      return '<li><b>' + esc(q.title) + '</b> <span class="tag ' + (q.status === 'done' ? 'confirmed' : 'hypo') + '">' + esc(q.status) + '</span><br><small>' + esc(q.timeframe) + (q.reflection ? ' · ' + esc(q.reflection).slice(0, 80) : '') + '</small> ' +
+      return '<li><b>' + esc(q.title) + '</b> <span class="tag ' + (q.status === 'done' ? 'confirmed' : 'hypo') + '">' + esc(q.status) + '</span><br><small>' + esc(q.timeframe) + (q.reflection ? ' · ' + esc(String(q.reflection).slice(0, 80)) : '') + '</small> ' +
         (q.status === 'done' ? '' : '<button class="btn small ghost" data-qdone="' + esc(k) + '">สำเร็จ ✓</button>') + '</li>';
     }).join('') + '</ul>' : '<div class="empty">ยังไม่มี quest — ตั้งการทดลองเล็กๆ ข้อแรกด้านล่าง</div>';
     return '<section class="card"><h2><span class="em">🛰️</span> โปรเจกต์</h2><p class="sub">ห้องจริงในเว็บ</p>' + seedH + '<p class="sub" style="margin-top:10px">ที่ฉันติดตาม</p>' + mh + eh +
@@ -574,18 +647,30 @@
     });
     items.sort(function (a, b) { return b.ts - a.ts; });
     var h = items.length ? '<ul class="tl">' + items.map(function (it) {
-      return '<li><b class="yr num">' + esc(fmtDate(it.ts)) + '</b><b>' + esc(it.h) + '</b><br>' + esc(it.t).slice(0, 200) + '</li>';
+      return '<li><b class="yr num">' + esc(fmtDate(it.ts)) + '</b><b>' + esc(it.h) + '</b><br>' + esc(String(it.t || '').slice(0, 200)) + '</li>';
     }).join('') + '</ul>' : '<div class="empty">ยังว่างเปล่า — ทุกอย่างที่บันทึกจะกลายเป็น timeline ตรงนี้ (ไม่แก้ประวัติเก่า)</div>';
-    return '<section class="card"><h2><span class="em">📓</span> Journal + Archive Timeline</h2>' + h +
+    var bank = (D().questions || {});
+    var pickQ = function (kind, n) {
+      var arr = (bank[kind] || []).map(function (q) { return (q && q.text) ? q.text : String(q || ''); }).filter(Boolean);
+      if (!arr.length) return null;
+      return arr[Math.floor(Date.now() / 864e5) % arr.length];
+    };
+    var qDaily = pickQ('daily'), qWeekly = pickQ('weekly'), qMonthly = pickQ('monthly');
+    var promptH = '<div class="sec"><h3>🧭 คำถามชวนคิด (ไม่บังคับ — ข้ามได้)</h3>' +
+      (qDaily ? '<div class="kbox"><b>วันนี้</b><small>' + esc(qDaily) + '</small></div>' : '') +
+      (qWeekly ? '<div class="kbox"><b>สัปดาห์นี้</b><small>' + esc(qWeekly) + '</small></div>' : '') +
+      (qMonthly ? '<div class="kbox"><b>เดือนนี้</b><small>' + esc(qMonthly) + '</small></div>' : '') +
+      '<p class="ev">ใช้เป็นจุดเริ่มเขียน journal ได้ — ไม่ต้องตอบให้ครบ ไม่มีคะแนน</p></div>';
+    return '<section class="card"><h2><span class="em">📓</span> Journal + Archive Timeline</h2>' + h + promptH +
       '<div class="form"><label>✍️ บันทึกสะท้อน<input id="jText" maxlength="500" placeholder="วันนี้ค้นพบอะไรเกี่ยวกับตัวเอง?"></label>' +
       '<div><button class="btn small" id="jAdd">บันทึก journal</button></div>' +
       '<label>📌 เหตุการณ์ตัวตน (มีวันที่)<input id="aText" maxlength="200" placeholder="เช่น เริ่มทำบีทแรก"></label>' +
       '<label>วันที่<input id="aDate" type="date"></label>' +
       '<div><button class="btn small ghost" id="aAdd">เพิ่มเหตุการณ์ (ต้องมีวันที่)</button></div>' +
-      '<div class="rowbtns"><button class="btn small ghost" id="expJson">⬇ Export JSON</button> ' +
-      '<button class="btn small ghost" id="expMd">⬇ Export Markdown</button> ' +
+      '<div class="rowbtns"><button class="btn small ghost" id="expJson">⬇ Export JSON (สำรองเต็ม)</button> ' +
+      '<button class="btn small ghost" id="expMd">⬇ Export Markdown (อ่านง่าย ไม่ครบ)</button> ' +
       '<label class="btn small ghost" style="cursor:pointer">⬆ Import JSON<input id="impFile" type="file" accept=".json" hidden></label></div>' +
-      '<p class="ev">ข้อมูลอยู่ในเบราว์เซอร์เครื่องนี้เท่านั้น · Export สำรองไว้ก่อนล้างข้อมูลเว็บ</p></div></section>';
+      '<p class="ev">ข้อมูลอยู่ในเบราว์เซอร์เครื่องนี้เท่านั้น · JSON = สำรองเต็ม (ใช้กู้) · Markdown = สรุปสำหรับอ่าน · Import จะเขียนทับทั้งหมด (มีคำยืนยัน)</p></div></section>';
   }
   function bindArchive() {
     var ja = document.querySelector('#jAdd');
@@ -642,7 +727,7 @@
       (contra.length ? '<p class="sub" style="margin-top:8px">⚠️ ที่สังเกต (ไม่ใช่คำตัดสิน):</p><ul><li>' + contra.map(esc).join('</li><li>') + '</li></ul>' : '') + '</section>';
   }
   function exportJSON() {
-    var blob = new Blob([JSON.stringify({ app: 'inner-core', v: 1, exportedAt: new Date().toISOString(), data: S }, null, 2)], { type: 'application/json' });
+    var blob = new Blob([JSON.stringify({ app: 'inner-core', v: 1, exportedAt: new Date().toISOString(), data: sanitize(S) }, null, 2)], { type: 'application/json;charset=utf-8' });
     dl(blob, 'inner-core-backup.json');
   }
   function exportMD() {
@@ -686,7 +771,7 @@
     D().interests.filter(function (s) { return userStatus(s.id) !== 'CONFIRMED'; }).slice(0, 10).forEach(function (s) {
       L.push('- ' + s.name + ': ' + s.question);
     });
-    var blob = new Blob([L.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    var blob = new Blob(['\ufeff' + L.join('\n')], { type: 'text/markdown;charset=utf-8' });
     dl(blob, 'inner-core.md');
   }
   function dl(blob, name) {
@@ -715,14 +800,15 @@
         try {
           var o = JSON.parse(r.result);
           var d = (o && o.app === 'inner-core' && o.data) ? o.data : null;
-          if (!d || typeof d !== 'object') throw new Error('bad-schema');
+          if (!d || typeof d !== 'object' || Array.isArray(d)) throw new Error('bad-schema');
           d = sanitize(d);
           if (!d.statement || !d.interests || !d.focus || !Array.isArray(d.journal)) throw new Error('bad-schema');
           var n = Object.keys(d.interests).length + Object.keys(d.skills || {}).length + d.journal.length;
-          if (!confirm('นำเข้าข้อมูล ' + n + ' รายการ? (จะเขียนทับของเดิมทั้งหมด)')) return;
+          if (!confirm('นำเข้าข้อมูล ' + n + ' รายการ? (จะเขียนทับของเดิมทั้งหมด)')) { fi.value = ''; return; }
           S = d;
           save(S); render();
-        } catch (e) { alert('ไฟล์นี้ใช้ไม่ได้: ต้องเป็นไฟล์ inner-core-backup.json ที่ export จากห้องนี้'); }
+          fi.value = '';
+        } catch (e) { alert('ไฟล์นี้ใช้ไม่ได้: ต้องเป็นไฟล์ inner-core-backup.json ที่ export จากห้องนี้'); fi.value = ''; }
       };
       r.readAsText(f);
     });
@@ -738,24 +824,36 @@
       return;
     }
     document.querySelectorAll('#tabs button').forEach(function (b) {
-      b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      var on = b.getAttribute('data-tab') === tab;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     var view = $('view');
-    if (tab === 'overview') { view.innerHTML = discoveryBlock() + searchBlock() + vOverview(); bindOverview(); bindDiscovery(); return; }
-    if (tab === 'interests') { view.innerHTML = vInterests(); bindInterests(); return; }
-    if (tab === 'desires') { view.innerHTML = vDesires(); bindDesires(); return; }
-    if (tab === 'values') { view.innerHTML = vValues(); bindValues(); return; }
-    if (tab === 'direction') { view.innerHTML = vDirection(); bindDirection(); return; }
-    if (tab === 'skills') { view.innerHTML = vSkills(); bindSkills(); return; }
-    if (tab === 'projects') { view.innerHTML = vProjects(); bindProjects(); return; }
-    if (tab === 'archive') { view.innerHTML = vArchive(); bindArchive(); bindExport(); return; }
-    var titles = { interests: 'ความสนใจ', desires: 'อยากทำที่สุด', skills: 'ทักษะ', projects: 'โปรเจกต์', values: 'ค่านิยม', direction: 'ทิศชีวิต', archive: 'คลังตัวตน' };
-    view.innerHTML = todoShell(titles[tab] || tab);
+    try {
+      var pre = searchBlock();
+      if (tab === 'overview') { view.innerHTML = pre + discoveryBlock() + vOverview(); bindOverview(); bindDiscovery(); return; }
+      if (tab === 'interests') { view.innerHTML = pre + vInterests(); bindInterests(); return; }
+      if (tab === 'desires') { view.innerHTML = pre + vDesires(); bindDesires(); return; }
+      if (tab === 'values') { view.innerHTML = pre + vValues(); bindValues(); return; }
+      if (tab === 'direction') { view.innerHTML = pre + vDirection(); bindDirection(); return; }
+      if (tab === 'skills') { view.innerHTML = pre + vSkills(); bindSkills(); return; }
+      if (tab === 'projects') { view.innerHTML = pre + vProjects(); bindProjects(); return; }
+      view.innerHTML = pre + vArchive(); bindArchive(); bindExport();
+    } catch (e) {
+      // ข้อมูลเสียจนวาดไม่ได้ → อย่าทิ้งหน้าจอว่าง บอกตามตรงแล้วให้เริ่มใหม่/กู้จากไฟล์
+      S = blankStore();
+      save(S);
+      view.innerHTML = '<section class="card"><div class="empty">ข้อมูล Inner Core เสียหาย — เริ่มจากห้องว่างให้ก่อน<br>' +
+        'กู้จากไฟล์สำรองได้ที่แท็บ “คลังตัวตน” → Import JSON<br>' +
+        '<div class="rowbtns"><a class="btn small" href="?tab=archive">ไปแท็บคลังตัวตน</a> <a class="btn small ghost" href="?tab=overview">กลับภาพรวม</a></div></div></section>';
+    }
   }
 
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { location.search = '?tab=' + b.getAttribute('data-tab'); });
   });
+  var q0 = params().get('q');
+  if (q0 && !$('q').value) $('q').value = q0;
   $('q').addEventListener('input', render);
 
   render();

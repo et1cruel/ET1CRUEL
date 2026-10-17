@@ -45,7 +45,7 @@ header.hero p{color:#E2E8FA;font-size:16.5px;margin:10px auto 0;max-width:68ch}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .toolbar input{flex:1;min-width:180px;border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 13px;font-family:inherit;font-size:14.5px}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
-.kbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card)}
+.kbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card);overflow-wrap:anywhere;word-break:break-word;min-width:0}
 .kbox b{color:#fff;display:block;margin-bottom:4px}
 .kbox small{color:var(--muted);font-size:13px;display:block}
 .tag{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:700;border-radius:999px;padding:3px 11px;letter-spacing:.04em;display:inline-block;margin:2px 4px 2px 0}
@@ -65,7 +65,8 @@ header.hero p{color:#E2E8FA;font-size:16.5px;margin:10px auto 0;max-width:68ch}
 .form label{font-size:13px;font-weight:700;color:var(--muted);display:grid;gap:5px}
 .form input,.form select,.form textarea{border:1px solid #3d4666;background:#080A10;color:#fff;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14.5px;width:100%}
 .empty{text-align:center;color:var(--muted);padding:26px;border:1.5px dashed #3d4666;border-radius:14px;grid-column:1/-1}
-.ev{font-size:13px;color:var(--muted)}
+.ev{font-size:13px;color:var(--muted);overflow-wrap:anywhere;word-break:break-word}
+.stmt,.drawer,.card,.sec,.tl li,#view,.kbox{overflow-wrap:anywhere;word-break:break-word;min-width:0}
 .ev b{color:var(--cyan)}
 .tl{list-style:none;display:grid;gap:8px;padding:0}
 .tl li{border:1px solid var(--line);border-left:4px solid var(--vio);border-radius:10px;padding:10px 14px;background:var(--card);font-size:15px}
@@ -99,25 +100,25 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
   <div class="stat"><small>✎ JOURNAL</small><strong class="num" id="stJrn">0</strong><span>บันทึกสะท้อน</span></div>
 </div>
 
-<div id="tabs" role="tablist">
-  <button data-tab="overview" class="on">🏠 ภาพรวม</button>
-  <button data-tab="interests">💜 ความสนใจ</button>
-  <button data-tab="desires">🔥 อยากทำที่สุด</button>
-  <button data-tab="skills">🌳 ทักษะ</button>
-  <button data-tab="projects">🛰️ โปรเจกต์</button>
-  <button data-tab="values">⚖️ ค่านิยม</button>
-  <button data-tab="direction">🧭 ทิศชีวิต</button>
-  <button data-tab="archive">📜 คลังตัวตน</button>
+<div id="tabs" role="tablist" aria-label="ห้องต่างๆ ของ Inner Core">
+  <button role="tab" aria-selected="true" data-tab="overview" class="on">🏠 ภาพรวม</button>
+  <button role="tab" aria-selected="false" data-tab="interests">💜 ความสนใจ</button>
+  <button role="tab" aria-selected="false" data-tab="desires">🔥 อยากทำที่สุด</button>
+  <button role="tab" aria-selected="false" data-tab="skills">🌳 ทักษะ</button>
+  <button role="tab" aria-selected="false" data-tab="projects">🛰️ โปรเจกต์</button>
+  <button role="tab" aria-selected="false" data-tab="values">⚖️ ค่านิยม</button>
+  <button role="tab" aria-selected="false" data-tab="direction">🧭 ทิศชีวิต</button>
+  <button role="tab" aria-selected="false" data-tab="archive">📜 คลังตัวตน</button>
 </div>
 
-<div class="toolbar"><input id="q" placeholder="ค้นหาทุกอย่าง… beat / AI / สัก"></div>
+<div class="toolbar"><input id="q" placeholder="ค้นหาทุกอย่าง… beat / AI / สัก" aria-label="ค้นหาความสนใจ"></div>
 
-<div id="view"></div>
+<div id="view" role="tabpanel" aria-live="polite"></div>
 
 <footer>INNER CORE · LIFE OS · หลักฐานก่อนป้าย 🎭</footer>
 </div>
 
-<script src="js/inner-core-data.js?v=1"></script>
-<script src="js/inner-core-app.js?v=1"></script>
+<script src="js/inner-core-data.js?v=2"></script>
+<script src="js/inner-core-app.js?v=2"></script>
 </body>
 </html>

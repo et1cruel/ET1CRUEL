@@ -11,41 +11,80 @@
   function bkk(ts) { try { return new Date(ts == null ? Date.now() : ts).toLocaleString('th-TH', { timeZone: 'Asia/Bangkok', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
 
   function blankStore() {
-    return { origins: {}, artists: [], tracks: [], sounds: [], tags: [], searching: [], archive: [], ideas: [], diary: [], letters: [], connections: [], compass: {}, playlist: [], favs: [], notes: [], daily: [] };
+    return { origins: {}, artists: [], tracks: [], sounds: [], tags: [], searching: [], archive: [], ideas: [], diary: [], letters: [], connections: [], compass: {}, favs: [], notes: [], daily: [] };
+  }
+  /* ---- sanitize: ข้อมูลจาก localStorage/ไฟล์นำเข้า ต้องไม่ทำให้ห้องพัง ---- */
+  function strArr(a) { return (Array.isArray(a) ? a : []).filter(function (x) { return typeof x === 'string'; }); }
+  function strMap(o) {
+    var r = {};
+    if (isObj(o)) Object.keys(o).forEach(function (k) { if (typeof o[k] === 'string') r[k] = o[k]; });
+    return r;
+  }
+  function itemArr(a, fields) {
+    return (Array.isArray(a) ? a : []).filter(isObj).map(function (x, i) {
+      var o = {};
+      fields.forEach(function (f) {
+        var v = x[f];
+        if (f === 'ts') o.ts = (+v || 0);
+        else if (f === 'rest') o.rest = !!v;
+        else o[f] = (v == null) ? '' : String(v);
+      });
+      if (fields.indexOf('id') >= 0 && !o.id) o.id = 'a' + i;
+      return o;
+    });
+  }
+  function sanitize(o) {
+    var s = isObj(o) ? o : {};
+    var origins = {};
+    if (isObj(s.origins)) Object.keys(s.origins).forEach(function (k) {
+      var v = s.origins[k];
+      if (isObj(v)) origins[k] = { text: (v.text == null ? '' : String(v.text)), ts: (+v.ts || 0) };
+    });
+    return {
+      origins: origins,
+      artists: strArr(s.artists), tracks: strArr(s.tracks), sounds: strArr(s.sounds),
+      tags: strArr(s.tags), searching: strArr(s.searching),
+      archive: itemArr(s.archive, ['id', 'title', 'date', 'idea', 'status', 'url', 'note', 'uploadName']),
+      ideas: itemArr(s.ideas, ['text', 'status', 'note', 'ts']),
+      diary: itemArr(s.diary, ['text', 'ts']),
+      letters: itemArr(s.letters, ['title', 'text', 'openAt', 'ts']),
+      connections: strArr(s.connections),
+      compass: strMap(s.compass),
+      favs: strArr(s.favs),
+      notes: itemArr(s.notes, ['text', 'ts']),
+      daily: itemArr(s.daily, ['text', 'ts', 'rest'])
+    };
   }
   function load() {
     try {
       var raw = localStorage.getItem(KEY);
       if (!raw) return blankStore();
-      var o = JSON.parse(raw);
-      if (!isObj(o)) return blankStore();
-      var b = blankStore();
-      Object.keys(b).forEach(function (k) {
-        if (Array.isArray(b[k])) { if (!Array.isArray(o[k])) o[k] = []; }
-        else if (!isObj(o[k])) o[k] = b[k];
-      });
-      return o;
+      return sanitize(JSON.parse(raw));
     } catch (e) { return blankStore(); }
   }
   function save(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }
   var S = load();
 
   function params() { try { return new URLSearchParams(location.search); } catch (e) { return { get: function () { return null; } }; } }
-  function uid(p) { return (p || 'x') + Date.now().toString(36); }
+  var seq = 0;
+  function uid(p) { seq++; return (p || 'x') + Date.now().toString(36) + seq.toString(36); }
 
   /* ---------- gate ---------- */
   function gate() {
     var g = $('gate');
     var seen = false;
     try { seen = !!localStorage.getItem(SEEN); } catch (e) {}
-    if (seen) { g.style.display = 'none'; return; }
+    // ถ้ามี ?tab= ในลิงก์ แปลว่าตั้งใจเข้าห้องอยู่แล้ว — ห้ามกั้นด้วยประตูที่จำไม่ได้
+    // (กรณี localStorage ถูกบล็อก ประตูจะไม่วนซ้ำ เพราะปุ่มพาไป ?tab= ทุกครั้ง)
+    if (seen || params().get('tab') !== null) { g.style.display = 'none'; return; }
     function go(tab) {
-      try { localStorage.setItem(SEEN, '1'); } catch (e) {}
-      g.classList.add('away');
-      setTimeout(function () { g.style.display = 'none'; }, 850);
-      if (tab) location.search = '?tab=' + tab;
+      var ok = false;
+      try { localStorage.setItem(SEEN, '1'); ok = true; } catch (e) {}
+      if (!ok) g.style.display = 'none';
+      else g.classList.add('away');
+      location.search = '?tab=' + (tab || 'hall');
     }
-    $('enterBtn').addEventListener('click', function () { go(''); });
+    $('enterBtn').addEventListener('click', function () { go('hall'); });
     $('listenBtn').addEventListener('click', function () { go('listening'); });
   }
 
@@ -66,8 +105,9 @@
     h += D().origins.map(function (o) {
       var mine = (S.origins || {})[o.id] || {};
       var txt = mine.text !== undefined ? mine.text : o.answer;
+      var prov = (o.answer && (mine.text === undefined)) ? '<p class="ev">มาจากโน้ต/ภาพที่คุณส่งไว้ — แก้ให้เป็นคำของคุณได้เลย</p>' : '';
       return '<div class="sec" id="org-' + o.id + '"><h3>' + o.no + ' — ' + esc(o.title) + '</h3>' +
-        '<p class="sub">' + esc(o.prompt) + '</p>' +
+        '<p class="sub">' + esc(o.prompt) + '</p>' + prov +
         '<div class="form"><label>คำตอบของฉัน<textarea rows="3" data-org="' + o.id + '">' + esc(txt) + '</textarea></label></div></div>';
     }).join('');
     h += '<div class="rowbtns"><button class="btn small" id="orgSave">💾 บันทึกทั้งหมด</button></div>';
@@ -168,25 +208,42 @@
 
   /* ---------- archive ---------- */
   var ASTAT = ['Idea', 'Demo', 'WIP', 'Finished', 'Released'];
+  var BLOBS = {}; /* ไฟล์ที่แนบในเซสชันนี้ — เก็บในหน่วยความจำเท่านั้น ไม่ลง localStorage/ไฟล์สำรอง */
+  function isAudioUrl(u) { return /^blob:|\.(mp3|wav|ogg|m4a|aac|flac|webm|opus)([?#]|$)/i.test(String(u || '')); }
   function audioFor(a) {
-    if (a.url) return '<audio controls preload="none" src="' + esc(a.url) + '"></audio>';
-    if (a.uploadName) return '<p class="ev">🎵 ไฟล์ “' + esc(a.uploadName) + '” อยู่ในเซสชันนี้ (แนบใหม่ทุกครั้งที่เปิด — ไม่ได้บันทึกไฟล์ลงเครื่อง)</p>';
+    var src = a.url || BLOBS[a.id] || '';
+    if (src && isAudioUrl(src)) return '<audio controls preload="none" data-aid="' + esc(a.id) + '" src="' + esc(src) + '"></audio>';
+    if (a.uploadName) return '<p class="ev">🎵 เคยแนบไฟล์ “' + esc(a.uploadName) + '” — ไฟล์แนบอยู่ได้แค่ในเซสชันนั้น ไม่ได้ถูกบันทึกลงเครื่อง แนบใหม่ถ้าอยากฟัง</p>';
+    if (a.url) return '<p class="ev">🔗 ลิงก์ “' + esc(a.url) + '” ไม่ใช่ไฟล์เสียงที่เล่นในหน้านี้ได้</p>';
     return '';
   }
   function vArchive(filter) {
+    var fStat = params().get('st') || '';
     var list = S.archive.slice().sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    if (fStat) list = list.filter(function (a) { return (a.status || 'Idea') === fStat; });
     if (filter) {
       var q = filter.toLowerCase();
       list = list.filter(function (a) { return ((a.title || '') + ' ' + (a.idea || '')).toLowerCase().indexOf(q) >= 0; });
     }
     var h = '<section class="card"><h2><span class="em">🎼</span> My Sound, My Timeline</h2>' +
       '<p class="sub">เดโมที่ไม่เคยปล่อยก็มีที่อยู่ตรงนี้ — คุณค่าไม่ได้วัดที่สถานะ</p>' +
+      '<div class="rowbtns">' + ASTAT.concat(['']).map(function (s) {
+        var onNow = s ? fStat === s : !fStat;
+        return '<a class="btn small ' + (onNow ? '' : 'ghost') + '" href="?tab=archive' + (s ? '&st=' + encodeURIComponent(s) : '') + (filter ? '&q=' + encodeURIComponent(filter) : '') + '">' + (s || 'ทั้งหมด') + '</a>';
+      }).join(' ') + '</div>' +
       '<div class="form"><label>🔍 ค้นหา<input id="arcQ" value="' + esc(filter || '') + '" maxlength="60"></label></div>';
     h += list.length ? '<ul class="tl">' + list.map(function (a) {
       return '<li><b class="yr num">' + esc(a.date || '—') + '</b><b>' + esc(a.title || '(ไม่มีชื่อ)') + '</b> <span class="tag">' + esc(a.status || 'Idea') + '</span><br>' +
-        '<small>' + esc(a.idea || '').slice(0, 120) + '</small>' + audioFor(a) +
-        '<div class="rowbtns"><button class="btn small ghost" data-aopen="' + a.id + '">เปิดบันทึก →</button></div></li>';
-    }).join('') + '</ul>' : '<div class="empty">ยังไม่มีงานชิ้นไหน — เพิ่มชิ้นแรกด้านล่างได้เลย (ไอเดียก็ได้)</div>';
+        '<small>' + esc((a.idea || '').slice(0, 120)) + '</small>' + audioFor(a) +
+        '<div class="rowbtns"><button class="btn small ghost" data-aopen="' + esc(a.id) + '">เปิดบันทึก →</button></div></li>';
+    }).join('') + '</ul>' : '<div class="empty">ยังไม่มีงานชิ้นไหน' + (fStat || filter ? 'ที่ตรงกับที่กรองอยู่' : ' — เพิ่มชิ้นแรกด้านล่างได้เลย (ไอเดียก็ได้)') + '</div>';
+    var playable = S.archive.filter(function (a) { return isAudioUrl(a.url) || isAudioUrl(BLOBS[a.id]); });
+    if (playable.length) {
+      var pick = playable[Math.floor(Date.now() / 864e5) % playable.length];
+      h += '<section class="card"><h2><span class="em">⏳</span> LISTEN TO WHO I WAS</h2>' +
+        '<p class="sub">สุ่มงานเก่าของคุณขึ้นมาฟัง — ไม่ต้องตัดสิน ไม่ต้องแก้อะไร แค่ฟัง (เปลี่ยนชิ้นทุกวัน)</p>' +
+        '<div class="kbox"><b>' + esc(pick.title || '(ไม่มีชื่อ)') + '</b><small>' + esc(pick.date || '—') + (pick.status ? ' · ' + esc(pick.status) : '') + '</small>' + audioFor(pick) + '</div></section>';
+    }
     h += '<div class="sec"><h3>＋ เพิ่มงาน</h3><div class="form">' +
       '<label>ชื่อเพลง<input id="aTitle" maxlength="80"></label>' +
       '<label>วันที่<input id="aDate" type="date"></label>' +
@@ -194,6 +251,7 @@
       '<label>แนวคิดเบื้องหลัง<textarea id="aIdea" rows="2"></textarea></label>' +
       '<label>ลิงก์เพลง (ถ้ามี)<input id="aUrl" placeholder="https://…"></label>' +
       '<label>หรือแนบไฟล์เสียง<input id="aFile" type="file" accept="audio/*"></label>' +
+      '<p class="ev">ไฟล์ที่แนบใช้ฟังได้เฉพาะในเซสชันนี้ (ไม่เก็บไฟล์ลงเครื่อง) — ถ้าอยากเก็บถาวรให้วางไฟล์ในโฟลเดอร์ music/ แล้วใส่ลิงก์</p>' +
       '<div><button class="btn small" id="aAdd">เก็บเข้าคลัง</button></div></div></div></section>';
     var oid = params().get('open');
     if (oid) {
@@ -204,6 +262,8 @@
           (a.idea ? '<p><b>แนวคิด:</b> ' + esc(a.idea) + '</p>' : '') + audioFor(a) +
           '<div class="form"><label>บันทึกจากตัวเองในวันที่สร้าง<textarea id="aNote" rows="2">' + esc(a.note || '') + '</textarea></label>' +
           '<div class="rowbtns"><button class="btn small" id="aNoteSave">💾 บันทึก</button> <button class="btn small ghost" id="aDel">ลบงานนี้</button></div></div></section>';
+      } else {
+        h += '<section class="card"><div class="empty">ไม่เจองานชิ้นนี้ — <a href="?tab=archive">กลับไปคลังเพลง</a></div></section>';
       }
     }
     return h;
@@ -213,12 +273,21 @@
     if (q) q.addEventListener('input', function () {
       clearTimeout(window.__arct);
       window.__arct = setTimeout(function () {
-        var url = '?tab=archive' + (q.value.trim() ? '&q=' + encodeURIComponent(q.value.trim()) : '');
+        var st = params().get('st') || '';
+        var url = '?tab=archive' + (st ? '&st=' + encodeURIComponent(st) : '') + (q.value.trim() ? '&q=' + encodeURIComponent(q.value.trim()) : '');
         history.replaceState(null, '', url);
         render();
         var nq = $('arcQ');
         if (nq) { nq.focus(); nq.setSelectionRange(nq.value.length, nq.value.length); }
       }, 400);
+    });
+    document.querySelectorAll('audio[data-aid]').forEach(function (au) {
+      au.addEventListener('error', function () {
+        var p = document.createElement('p');
+        p.className = 'ev';
+        p.textContent = 'เปิดไฟล์นี้ไม่ได้ — ตรวจลิงก์อีกครั้ง';
+        if (au.parentNode) au.parentNode.replaceChild(p, au);
+      });
     });
     var add = $('aAdd');
     if (add) add.addEventListener('click', function () {
@@ -226,11 +295,12 @@
       if (!t && !$('aIdea').value.trim()) return;
       var item = { id: uid('a'), title: t || '(ไม่มีชื่อ)', date: $('aDate').value || '', status: $('aStatus').value, idea: ($('aIdea').value || '').trim(), url: ($('aUrl').value || '').trim(), ts: Date.now() };
       var f = $('aFile').files && $('aFile').files[0];
-      if (f) item.uploadName = f.name;
-      try {
-        if (f) item.blobUrl = URL.createObjectURL(f);
-      } catch (e) {}
+      if (f) {
+        item.uploadName = f.name;
+        try { BLOBS[item.id] = URL.createObjectURL(f); } catch (e) {}
+      }
       S.archive.push(item);
+      try { S = sanitize(S); } catch (e) {}
       save(S); render();
     });
     var ns = $('aNoteSave');
@@ -269,7 +339,7 @@
       '<div class="sec"><h3>🎲 One Sound</h3><p>คืนนี้ลองเริ่มจาก: <b id="oneSound">' + esc(ONE_SOUNDS[Math.floor(Math.random() * ONE_SOUNDS.length)]) + '</b></p>' +
       '<div class="rowbtns"><button class="btn small ghost" id="oneMore">สุ่มใหม่</button></div></div>' +
       '<div class="sec"><h3>⏱️ Fifteen-Minute Session (ไม่บังคับ)</h3>' +
-      '<p class="num" id="timerShow" style="font-size:32px">15:00</p>' +
+      '<p class="num" id="timerShow" style="font-size:32px">' + esc(timerText()) + '</p>' +
       '<div class="rowbtns"><button class="btn small" id="tStart">เริ่ม 15 นาที</button> <button class="btn small ghost" id="tStop">หยุด</button></div>' +
       '<p class="ev">หมดเวลาแล้วจะทำต่อ หยุด หรือบันทึกไอเดียก็ได้ — ไม่มีคะแนน</p></div>' +
       '<div class="sec"><h3>🌊 Sound Diary</h3>' + dh +
@@ -280,7 +350,32 @@
       '<label>โน้ตสั้นๆ<input id="ideaNote" maxlength="140"></label>' +
       '<div><button class="btn small" id="ideaAdd">เก็บไว้แบบไม่ตัดสิน</button></div></div></div></section>';
   }
-  var timerH = null;
+  var timerH = null, timerEnd = 0, timerMsg = '';
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function timerText() {
+    if (timerEnd > 0) {
+      var left = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
+      return pad2(Math.floor(left / 60)) + ':' + pad2(left % 60);
+    }
+    return timerMsg || '15:00';
+  }
+  function paintTimer() {
+    var show = $('timerShow');
+    var left = Math.max(0, Math.ceil((timerEnd - Date.now()) / 1000));
+    if (show) show.textContent = pad2(Math.floor(left / 60)) + ':' + pad2(left % 60);
+    if (left <= 0) {
+      if (timerH) { clearInterval(timerH); timerH = null; }
+      timerEnd = 0;
+      timerMsg = 'หมดเวลาแล้ว — จะทำต่อ หยุด หรือจดไอเดียก็ได้ 🤍';
+      var s2 = $('timerShow');
+      if (s2) s2.textContent = timerMsg;
+    }
+  }
+  function stopTimer(msg) {
+    if (timerH) { clearInterval(timerH); timerH = null; }
+    timerEnd = 0;
+    timerMsg = msg || '';
+  }
   function bindSanctuary() {
     var om = $('oneMore');
     if (om) om.addEventListener('click', function () {
@@ -289,23 +384,15 @@
     var st = $('tStart');
     if (st) st.addEventListener('click', function () {
       if (timerH) return;
-      var left = 15 * 60;
-      var show = $('timerShow');
-      timerH = setInterval(function () {
-        left--;
-        var m = Math.floor(left / 60), s = left % 60;
-        if (show) show.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-        if (left <= 0) {
-          clearInterval(timerH); timerH = null;
-          if (show) show.textContent = 'หมดเวลาแล้ว — จะทำต่อ หยุด หรือจดไอเดียก็ได้ 🤍';
-        }
-      }, 1000);
+      timerMsg = '';
+      timerEnd = Date.now() + 15 * 60000;
+      paintTimer();
+      timerH = setInterval(paintTimer, 1000);
     });
     var sp = $('tStop');
     if (sp) sp.addEventListener('click', function () {
-      if (timerH) { clearInterval(timerH); timerH = null; }
-      var show = $('timerShow');
-      if (show) show.textContent = 'หยุดแล้ว — พักได้ ไม่ผิดอะไร';
+      stopTimer('หยุดแล้ว — พักได้ ไม่ผิดอะไร');
+      render();
     });
     var sd = $('sdAdd');
     if (sd) sd.addEventListener('click', function () {
@@ -453,8 +540,11 @@
     }
     var lib = [];
     (S.archive || []).forEach(function (a) {
-      var src = a.url || a.blobUrl || '';
-      lib.push({ id: 'arc:' + a.id, title: a.title || '(ไม่มีชื่อ)', sub: (a.status || '') + ' · งานของฉัน', src: src });
+      var src = a.url || BLOBS[a.id] || '';
+      var sub = (a.status || '') + ' · งานของฉัน';
+      if (src && !isAudioUrl(src)) src = '';
+      if (!src && (a.uploadName || a.url)) sub += ' · ไม่มีไฟล์เสียงที่เล่นได้';
+      lib.push({ id: 'arc:' + a.id, title: a.title || '(ไม่มีชื่อ)', sub: sub, src: src });
     });
     fetch('music/tracks.json').then(function (r) { return r.json(); }).then(function (ts) {
       (ts || []).forEach(function (t) {
@@ -465,8 +555,16 @@
     paint(lib);
     var on = $('drOn'), off = $('drOff');
     function stopDrone() {
-      if (drone) { try { drone.stop(); } catch (e) {} try { drone.close(); } catch (e) {} drone = null; }
+      if (drone) { try { drone.stop(); } catch (e) {} drone = null; }
     }
+    document.querySelectorAll('#libList audio').forEach(function (au) {
+      au.addEventListener('error', function () {
+        var p = document.createElement('p');
+        p.className = 'ev';
+        p.textContent = 'เปิดไฟล์นี้ไม่ได้ — ตรวจลิงก์/ตำแหน่งไฟล์อีกครั้ง';
+        if (au.parentNode) au.parentNode.replaceChild(p, au);
+      });
+    });
     if (on) on.addEventListener('click', function () {
       stopDrone();
       try {
@@ -482,12 +580,17 @@
           o.connect(f); o.start();
         });
         f.connect(g); g.connect(ctx.destination);
-        drone = { stop: function () { ctx.close(); }, close: function () {}, ctx: ctx, gain: g };
+        drone = { stop: function () { try { ctx.close(); } catch (e) {} }, ctx: ctx, gain: g };
         var vol = $('drVol');
-        if (vol) vol.addEventListener('input', function () { g.gain.value = (+vol.value || 0) / 100 * 0.15; });
+        if (vol && vol.getAttribute('data-bound') !== '1') {
+          vol.setAttribute('data-bound', '1');
+          vol.addEventListener('input', function () {
+            if (drone && drone.gain) drone.gain.gain.value = (+vol.value || 0) / 100 * 0.15;
+          });
+        }
       } catch (e) { alert('เบราว์เซอร์นี้เปิดเสียงสังเคราะห์ไม่ได้'); }
     });
-    if (off) off.addEventListener('click', stopDrone);
+    if (off) off.addEventListener('click', function () { stopDrone(); });
   }
 
   /* ---------- notes + daily ---------- */
@@ -511,10 +614,10 @@
       '<div><button class="btn small" id="dAdd">บันทึกวันนี้</button></div></div></section>' +
       '<section class="card"><h2><span class="em">🔐</span> สำรองข้อมูลห้องนี้</h2>' +
       '<p class="sub">ข้อมูลอยู่ในเบราว์เซอร์เครื่องนี้เท่านั้น — Export เก็บไว้ก่อนล้างข้อมูลเว็บ</p>' +
-      '<div class="rowbtns"><button class="btn small ghost" id="mExpJson">⬇ Export JSON</button> ' +
-      '<button class="btn small ghost" id="mExpMd">⬇ Export Markdown</button> ' +
+      '<div class="rowbtns"><button class="btn small ghost" id="mExpJson">⬇ Export JSON (สำรองเต็ม)</button> ' +
+      '<button class="btn small ghost" id="mExpMd">⬇ Export Markdown (อ่านง่าย ไม่ครบ)</button> ' +
       '<label class="btn small ghost" style="cursor:pointer">⬆ Import JSON<input id="mImpFile" type="file" accept=".json,application/json" hidden></label></div>' +
-      '<p class="ev">Import จะเขียนทับข้อมูลเดิมทั้งหมด (มีคำยืนยันก่อนทับ) · ไฟล์เพลงที่แนบจะไม่ถูกเก็บในไฟล์สำรอง</p></section>';
+      '<p class="ev">Markdown = สรุปสำหรับอ่าน ไม่มีทุกฟิลด์ · JSON = สำรองเต็ม ใช้กู้ข้อมูล · Import จะเขียนทับทั้งหมด (มีคำยืนยัน) · ไฟล์เพลงที่แนบไม่ถูกเก็บในไฟล์สำรอง</p></section>';
   }
   function bindNotes() {
     var na = $('nAdd');
@@ -559,8 +662,7 @@
           var o = D().returnOptions[+b.getAttribute('data-rgo')];
           box.classList.remove('open');
           if (o.id === 'idk') {
-            location.search = '?tab=sanctuary';
-            setTimeout(function () { alert('ไม่เป็นไร คุณไม่จำเป็นต้องรู้ว่าจะสร้างอะไรในตอนนี้ — เราเริ่มจากการฟังสักเพลงก็ได้'); }, 600);
+            location.search = '?tab=sanctuary&msg=idk';
           } else if (o.go === 'hall') {
             location.search = '?tab=hall';
           } else {
@@ -591,7 +693,7 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
   }
   function exportJSON() {
-    dl(new Blob([JSON.stringify({ app: 'musicroom', v: 1, exportedAt: new Date().toISOString(), data: S }, null, 2)], { type: 'application/json' }), 'music-room-backup.json');
+    dl(new Blob([JSON.stringify({ app: 'musicroom', v: 1, exportedAt: new Date().toISOString(), data: sanitize(S) }, null, 2)], { type: 'application/json;charset=utf-8' }), 'music-room-backup.json');
   }
   function exportMD() {
     var L = [];
@@ -638,16 +740,11 @@
       try {
         var o = JSON.parse(r.result);
         var d = (o && o.app === 'musicroom' && o.data) ? o.data : null;
-        if (!d || typeof d !== 'object') throw new Error('bad-schema');
-        var b = blankStore();
-        Object.keys(b).forEach(function (k) {
-          if (Array.isArray(b[k])) { if (!Array.isArray(d[k])) d[k] = []; }
-          else if (!isObj(d[k])) d[k] = b[k];
-        });
-        if (!isObj(d.origins)) d.origins = {};
-        var n = d.archive.length + d.letters.length + d.ideas.length + d.notes.length + d.daily.length;
+        if (!d || typeof d !== 'object' || Array.isArray(d)) throw new Error('bad-schema');
+        var clean = sanitize(d);
+        var n = clean.archive.length + clean.letters.length + clean.ideas.length + clean.notes.length + clean.daily.length + clean.diary.length;
         if (!confirm('นำเข้าข้อมูล ' + n + ' รายการ? (จะเขียนทับของเดิมทั้งหมด)')) { done('cancelled'); return; }
-        S = d;
+        S = clean;
         save(S); render();
         done('ok');
       } catch (e) {
@@ -679,21 +776,35 @@
       return;
     }
     document.querySelectorAll('#tabs button').forEach(function (b) {
-      b.classList.toggle('on', b.getAttribute('data-tab') === tab);
+      var on = b.getAttribute('data-tab') === tab;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
     });
     bindReturn();
     bindAgain();
     var view = $('view');
-    var q = (p.get('q') || '').trim().toLowerCase();
-    if (tab === 'hall') { view.innerHTML = vHall(); var hr = $('hallReturn'); if (hr) hr.addEventListener('click', function () { $('returnFab').click(); }); }
-    else if (tab === 'origin') { view.innerHTML = vOrigin(); bindOrigin(); }
-    else if (tab === 'universe') { view.innerHTML = vUniverse(); bindUniverse(); }
-    else if (tab === 'archive') { view.innerHTML = vArchive(q); bindArchive(); }
-    else if (tab === 'sanctuary') { view.innerHTML = vSanctuary(); bindSanctuary(); }
-    else if (tab === 'letters') { view.innerHTML = vLetters(); bindLetters(); }
-    else if (tab === 'compass') { view.innerHTML = vCompass(); bindCompass(); }
-    else if (tab === 'listening') { view.innerHTML = vListening(); bindListening(); }
-    else if (tab === 'notes') { view.innerHTML = vNotes(); bindNotes(); bindExportRoom(); }
+    var q = (p.get('q') || '').trim();
+    try {
+      if (tab === 'hall') { view.innerHTML = vHall(); var hr = $('hallReturn'); if (hr) hr.addEventListener('click', function () { $('returnFab').click(); }); }
+      else if (tab === 'origin') { view.innerHTML = vOrigin(); bindOrigin(); }
+      else if (tab === 'universe') { view.innerHTML = vUniverse(); bindUniverse(); }
+      else if (tab === 'archive') { view.innerHTML = vArchive(q); bindArchive(); }
+      else if (tab === 'sanctuary') { view.innerHTML = vSanctuary(); bindSanctuary(); }
+      else if (tab === 'letters') { view.innerHTML = vLetters(); bindLetters(); }
+      else if (tab === 'compass') { view.innerHTML = vCompass(); bindCompass(); }
+      else if (tab === 'listening') { view.innerHTML = vListening(); bindListening(); }
+      else if (tab === 'notes') { view.innerHTML = vNotes(); bindNotes(); bindExportRoom(); }
+      if (p.get('msg') === 'idk') {
+        view.insertAdjacentHTML('afterbegin', '<section class="card"><h2><span class="em">🤍</span> ไม่เป็นไร</h2><p>คุณไม่จำเป็นต้องรู้ว่าจะสร้างอะไรในตอนนี้ — เริ่มจากการฟังสักเพลงก็ได้</p><div class="rowbtns"><a class="btn small" href="?tab=listening">🎧 ไปฟังเพลง</a></div></section>');
+      }
+    } catch (e) {
+      // ข้อมูลเสียจนวาดไม่ได้ — อย่าทิ้งหน้าจอว่าง: บอกตามตรงแล้วให้เริ่มใหม่/กู้จากไฟล์
+      S = blankStore();
+      save(S);
+      view.innerHTML = '<section class="card"><div class="empty">ข้อมูลในห้องนี้เสียหาย — เริ่มจากห้องว่างให้ก่อน<br>' +
+        'ถ้ามีไฟล์สำรอง (music-room-backup.json) กู้ได้ที่แท็บ “โน้ต” → Import JSON<br>' +
+        '<div class="rowbtns"><a class="btn small" href="?tab=notes">ไปแท็บโน้ต/สำรองข้อมูล</a> <a class="btn small ghost" href="?tab=hall">กลับห้องโถง</a></div></div></section>';
+    }
   }
 
   document.querySelectorAll('#tabs button').forEach(function (b) {
