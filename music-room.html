@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE ROOM WHERE MY MUSIC LIVES · et1cruel</title>
+<meta name="description" content="ห้องดนตรีส่วนตัวของ et1cruel — กลับมาสนุกกับเพลงได้ทุกเมื่อ โดยไม่มีอะไรมารอทวง">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#09090D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090D; --bg2:#0E0E16; --card:#14141B; --card2:#1B1B25; --ink:#F2F0EB; --muted:#A6A4B3; --line:#30303D;
+  --vio:#8B5CF6; --cyan:#9FD8FF; --grn:#C6F36A;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai',sans-serif;font-size:17px;line-height:1.9}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.045) 1px,transparent 1.5px);background-size:26px 26px}
+body::after{content:'';position:fixed;left:50%;top:-20vmax;width:70vmax;height:70vmax;transform:translateX(-50%);pointer-events:none;z-index:0;
+  background:radial-gradient(closest-side,rgba(139,92,246,.10),transparent 70%)}
+.wrap{max-width:960px;margin:0 auto;padding:24px 22px 90px;position:relative;z-index:1}
+.num{font-family:'Chakra Petch','IBM Plex Sans Thai',sans-serif}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+#gate{position:fixed;inset:0;z-index:50;background:#050508;display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity .8s}
+#gate.away{opacity:0;pointer-events:none}
+#gate .inner{max-width:620px;text-align:center;animation:rise 1.6s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#gate h1{font-family:'Chakra Petch',sans-serif;font-size:clamp(22px,4.5vw,32px);line-height:1.8;font-weight:600;color:var(--ink)}
+#gate .sub{color:var(--cyan);margin:14px 0 26px;font-size:16px}
+#gate .rowbtns{justify-content:center}
+.topbar{position:sticky;top:12px;z-index:20;display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:rgba(20,20,27,.92);border:1px solid var(--line);border-radius:14px;padding:12px 18px}
+.topbar a{color:var(--cyan);text-decoration:none;font-weight:700;font-size:15px;border:1px solid var(--line);border-radius:10px;padding:8px 14px;background:#0B0D14}
+.topbar .t{font-family:'Chakra Petch',sans-serif;font-size:13.5px;color:var(--muted);letter-spacing:.06em}
+header.hero{margin:30px 0 6px;text-align:center}
+header.hero .kick{font-family:'Chakra Petch',sans-serif;font-size:11.5px;letter-spacing:.3em;color:var(--vio);font-weight:700}
+header.hero h1{font-size:clamp(28px,5vw,42px);line-height:1.4;font-family:'Chakra Petch',sans-serif;font-weight:700}
+header.hero p{color:var(--muted);font-size:16px;margin-top:10px}
+#tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+#tabs button{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:10px;padding:9px 14px;font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
+#tabs button.on{background:var(--vio);border-color:var(--vio);color:#0B0D14}
+#tabs button:hover{border-color:var(--vio);color:#fff}
+#tabs button.on:hover{color:#0B0D14}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;margin:20px 0;padding:24px;scroll-margin-top:90px}
+.card h2{font-size:21px;color:#fff;font-family:'Chakra Petch',sans-serif;display:flex;gap:10px;align-items:center}
+.card .sub{color:var(--muted);font-size:14.5px;margin:4px 0 12px}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.kbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg2)}
+.kbox b{color:#fff;display:block;margin-bottom:4px}
+.kbox small{color:var(--muted);font-size:13px;display:block}
+.tag{font-family:'Chakra Petch',sans-serif;font-size:11.5px;border:1px solid var(--vio);color:#C4B5FD;border-radius:999px;padding:3px 11px;display:inline-block;margin:2px 4px 2px 0;cursor:pointer}
+.tag.on{background:var(--vio);color:#0B0D14}
+.rowbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14.5px;border-radius:12px;padding:11px 22px;cursor:pointer;border:1px solid var(--vio);background:var(--vio);color:#0B0D14;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:#C4B5FD}
+.btn.small{padding:7px 13px;font-size:12.5px}
+.form{display:grid;gap:8px;margin-top:10px}
+.form label{font-size:13px;font-weight:700;color:var(--muted);display:grid;gap:5px}
+.form input,.form select,.form textarea{border:1px solid var(--line);background:#080A10;color:var(--ink);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14.5px;width:100%}
+.empty{text-align:center;color:var(--muted);padding:26px;border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
+.ev{font-size:13px;color:var(--muted)}
+.sec{border-top:1px solid var(--line);padding:18px 0;scroll-margin-top:110px}
+.sec h3{font-size:18px;color:#fff;font-family:'Chakra Petch',sans-serif;margin-bottom:8px}
+.tl{list-style:none;display:grid;gap:8px;padding:0}
+.tl li{border:1px solid var(--line);border-left:4px solid var(--vio);border-radius:10px;padding:10px 14px;background:var(--bg2);font-size:15px}
+.tl .yr{font-family:'Chakra Petch',sans-serif;color:var(--cyan);margin-right:8px}
+audio{width:100%;margin-top:8px}
+#returnFab{position:fixed;right:18px;bottom:18px;z-index:40;border-radius:999px;padding:13px 20px;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;background:var(--vio);color:#0B0D14;border:none;cursor:pointer;box-shadow:0 8px 30px rgba(139,92,246,.45)}
+#returnBox{position:fixed;right:18px;bottom:76px;z-index:40;width:min(330px,90vw);background:var(--card2);border:1px solid var(--vio);border-radius:16px;padding:16px;display:none}
+#returnBox.open{display:block}
+#returnBox button.opt{display:block;width:100%;text-align:left;margin:6px 0;background:var(--bg2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px;cursor:pointer}
+#returnBox button.opt:hover{border-color:var(--vio)}
+footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+.allow{border:1px solid var(--grn);border-radius:14px;padding:20px;text-align:center;margin:26px 0;font-size:17px}
+.allow small{display:block;color:var(--muted);font-size:14px;margin-top:6px}
+@media(max-width:560px){.card{padding:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#gate .inner{animation:none}#gate{transition:none}}
+</style>
+</head>
+<body>
+<div id="gate" role="dialog" aria-label="ทางเข้าห้องดนตรี">
+  <div class="inner">
+    <h1>ก่อนที่คุณจะสร้างสิ่งอื่นให้โลกใบนี้<br>ขอให้มีพื้นที่เล็กๆ สำหรับสิ่งที่คุณสร้างขึ้นเพื่อหัวใจของตัวเอง</h1>
+    <p class="sub">Welcome back, et1cruel.<br>This room belongs to the music you carry.</p>
+    <div class="rowbtns">
+      <button class="btn" id="enterBtn">ENTER MY MUSIC ROOM</button>
+      <button class="btn ghost" id="listenBtn">I JUST WANT TO LISTEN</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="topbar">
+  <a href="./index.html">← LIFE OS</a>
+  <span class="t">ET1CRUEL · REMEMBER WHY YOU STARTED</span>
+</div>
+
+<header class="hero">
+  <div class="kick">THE ROOM WHERE MY MUSIC LIVES</div>
+  <h1>ห้องของเสียง<br>ที่ยังเป็นของฉัน</h1>
+  <p>ไม่ต้องเก่งก่อน ไม่ต้องเสร็จ ไม่ต้องมีคนฟัง — แค่อยากสนุกอีกครั้งก็พอ</p>
+</header>
+
+<div id="tabs" role="tablist">
+  <button data-tab="hall" class="on">🏠 ห้องโถง</button>
+  <button data-tab="origin">🌱 จุดเริ่ม</button>
+  <button data-tab="universe">🌌 จักรวาลเสียง</button>
+  <button data-tab="archive">🎼 งานที่ทำมา</button>
+  <button data-tab="sanctuary">🔥 ห้องเล่น</button>
+  <button data-tab="letters">💌 จดหมาย</button>
+  <button data-tab="compass">🧭 เข็มทิศ</button>
+  <button data-tab="listening">🎧 ฟังเพลง</button>
+  <button data-tab="notes">📓 โน้ต</button>
+</div>
+
+<div id="view"></div>
+
+<div class="allow">You are allowed to become someone new without abandoning everything that made you feel alive.<small>คุณเติบโตไปเป็นคนใหม่ได้ โดยไม่ต้องทิ้งทุกสิ่งที่เคยทำให้คุณรู้สึกมีชีวิต</small></div>
+<div style="text-align:center"><button class="btn" id="againBtn">OPEN A SOUND AND BEGIN AGAIN</button></div>
+
+<footer>MUSIC ROOM · et1cruel · ห้องนี้ไม่มีคะแนน ไม่มีเส้นตาย</footer>
+</div>
+
+<button id="returnFab">🎵 กลับมาหาเพลง</button>
+<div id="returnBox" role="dialog" aria-label="กลับมาหาเพลง"></div>
+
+<script src="js/music-room-data.js?v=1"></script>
+<script src="js/music-room-app.js?v=1"></script>
+</body>
+</html>
