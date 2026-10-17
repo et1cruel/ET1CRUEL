@@ -125,7 +125,7 @@
     }).join('') || '<div class="empty">เพิ่มทักษะที่อยากเรียน แล้วคำแนะนำจะขึ้นตรงนี้</div>';
     var j = S.reflections.slice().sort(function (a, b) { return b.ts - a.ts; }).slice(0, 3);
     var jh = j.length ? j.map(function (r) {
-      var sk = bySlug(r.skill); return '<div class="kbox"><b>' + esc(sk ? sk.nameTh : r.skill) + '</b><small>' + esc(fmtDate(r.ts)) + '</small><div>' + esc(r.text).slice(0, 140) + '</div></div>';
+      var sk = bySlug(r.skill); return '<div class="kbox"><b>' + esc(sk ? sk.nameTh : r.skill) + '</b><small>' + esc(fmtDate(r.ts)) + '</small><div>' + esc(String(r.text || '').slice(0, 140)) + '</div></div>';
     }).join('') : '<div class="empty">ยังไม่มีบันทึก — เขียน reflection แรกจากหน้าทักษะได้เลย</div>';
     return '<section class="card"><h2><span class="em">▶️</span> เรียนค้างไว้</h2><div class="kv">' + cont + '</div></section>' +
       vWeekly() +
@@ -139,6 +139,14 @@
     var g = list.length ? list.map(cardHTML).join('') : '<div class="empty">ไม่เจอทักษะที่ค้นหา — ลองล้างคำค้น</div>';
     return '<section class="card"><h2><span class="em">' + (kingdom === 'tech' ? '🔧' : '🎨') + '</span> ' + title + '</h2>' +
       '<p class="sub">กดการ์ดเพื่อเข้าหน้าทักษะ</p><div class="grid">' + g + '</div></section>';
+  }
+
+  /* ค้นหาข้ามอาณาจักร — ใช้เมื่อช่องค้นหามีคำ (ทั้งพิมพ์สดและ ?q= ใน URL) */
+  function vSearch() {
+    var list = filterSkills(skills());
+    var g = list.length ? list.map(cardHTML).join('') : '<div class="empty">ไม่เจอทักษะที่ค้นหา — ลองคำอื่น หรือ <a href="?tab=overview">กลับภาพรวม</a></div>';
+    return '<section class="card"><h2><span class="em">🔍</span> ผลการค้นหา (' + list.length + ')</h2>' +
+      '<p class="sub">ค้นทั้ง Technology และ Art · <a href="?tab=overview">ล้างคำค้น</a></p><div class="grid">' + g + '</div></section>';
   }
 
   function vMine() {
@@ -305,6 +313,7 @@
   }
 
   /* ---------- router ---------- */
+  var qHydrated = false;
   function render() {
     paintStats();
     var p = params();
@@ -316,17 +325,26 @@
       bindDetail(slug);
       return;
     }
-    var tab = p.get('tab') || 'overview';
+    var TABLIST = ['overview', 'tech', 'art', 'mine', 'tree', 'projects', 'journal', 'resources'];
+    var reqTab = p.get('tab') || 'overview';
+    var tab = TABLIST.indexOf(reqTab) >= 0 ? reqTab : 'overview';
+    var badTab = tab !== reqTab;
+    var q0 = (p.get('q') || '').trim();
+    var qLive = ($('q').value || '').trim();
+    if (q0 && !qHydrated && !qLive) { $('q').value = q0; qLive = q0; }
+    qHydrated = true;
     document.querySelectorAll('#tabs button').forEach(function (b) {
       b.classList.toggle('on', b.getAttribute('data-tab') === tab);
     });
-    if (tab === 'tech' || tab === 'art') view.innerHTML = vGrid(tab);
-    else if (tab === 'mine') { view.innerHTML = vMine(); bindMine(); }
-    else if (tab === 'tree') view.innerHTML = vTree();
-    else if (tab === 'projects') view.innerHTML = vProjects();
-    else if (tab === 'journal') view.innerHTML = vJournal();
-    else if (tab === 'resources') view.innerHTML = vResources();
-    else view.innerHTML = vOverview();
+    view.innerHTML = badTab ? '<div class="empty">ไม่เจอแท็บ “' + esc(reqTab) + '” — แสดงภาพรวมให้ก่อน</div>' : '';
+    if (qLive) { view.innerHTML += vSearch(); bindCards(); return; }
+    if (tab === 'tech' || tab === 'art') view.innerHTML += vGrid(tab);
+    else if (tab === 'mine') { view.innerHTML += vMine(); bindMine(); }
+    else if (tab === 'tree') view.innerHTML += vTree();
+    else if (tab === 'projects') view.innerHTML += vProjects();
+    else if (tab === 'journal') view.innerHTML += vJournal();
+    else if (tab === 'resources') view.innerHTML += vResources();
+    else view.innerHTML += vOverview();
     bindCards();
   }
 
@@ -379,10 +397,22 @@
   document.querySelectorAll('#tabs button').forEach(function (b) {
     b.addEventListener('click', function () { location.search = '?tab=' + b.getAttribute('data-tab'); });
   });
-  $('q').addEventListener('input', function () {
-    var p = params();
-    if (!p.get('skill')) render();
+  var qEl = $('q');
+  function searchToGrid() {
+    var v = (qEl.value || '').trim();
+    qHydrated = true;
+    if (params().get('skill')) {
+      if (v) location.search = '?q=' + encodeURIComponent(v);
+      return;
+    }
+    render();
+  }
+  qEl.addEventListener('input', function () {
+    qHydrated = true;
+    if (!params().get('skill')) render();
   });
+  qEl.addEventListener('change', searchToGrid);
+  qEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') searchToGrid(); });
   $('fStatus').addEventListener('change', render);
 
   render();
