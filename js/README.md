@@ -29,7 +29,8 @@
 | `ambient.js` | index.html | เสียงธรรมชาติ (หลีกทางให้ fx/audio.js เมื่อ V2 ขึ้น) |
 | `knowledge.js` | index.html | การ์ดเกร็ดความรู้ |
 | `knowledge-data.js` | index.html | ข้อมูลเกร็ดความรู้ 80 ข้อ |
-| `life-graph.js` | index.html | Life Graph, timeline, milestone editor, local persistence + export |
+| `life-graph-data.js` | index.html | ข้อมูลตั้งต้น Life Graph V2: 14 หมวด, 12 บทชีวิต, ปี 2547–2569 และเหตุการณ์จริง 47 รายการ (ทุกตัวมีที่มา ห้ามแต่งปี) |
+| `life-graph.js` | index.html | Life Graph V2: ไทม์ไลน์รายปี, กราฟชีวิต, แผงรายละเอียด, เพิ่ม/แก้/ลบ, ค้นหา/กรอง, นำเข้า–ส่งออก JSON, local persistence (`et1cruel.life-graph.v2` + migrate จาก v1) |
 | `knowledge-orbit.js` | (ยังไม่มีหน้าเรียก) | วงโคจรความรู้ 1200 facts — รอเจ้าของเลือกตำแหน่ง (ห้าม auto-เสียบ) |
 | `site-polish.js` | 13 หน้า (ทุกห้องหลัก) | โปแลนด์กลาง: memory map, nav, polish |
 | `create-ai-app.js` | create-ai.html | แอปห้อง CREATE AI |
