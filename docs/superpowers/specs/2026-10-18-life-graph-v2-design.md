@@ -111,7 +111,9 @@ Chapters เป็น **ค่าคงที่ในโค้ด** (`js/life-g
   endDate: null,
   startYearCE: null,              // null เมื่อไม่มีปีที่ยืนยัน
   endYearCE: null,
-  datePrecision: 'estimated_range',// exact_date|exact_year|estimated_year|estimated_range|school_period|age_based|unknown
+  startMonthCE: null,             // 1–12 เมื่อความแม่นยำเป็นระดับเดือน/ช่วง
+  endMonthCE: null,
+  datePrecision: 'estimated_range',// exact_date|exact_month|exact_year|exact_range|estimated_year|estimated_range|school_period|age_based|unknown
   dateStatus: 'needs_confirmation',// confirmed|estimated|needs_confirmation|unknown
   dateSource: 'user_reported',     // user_reported|project_record|imported_record|derived_estimate
   sourceReference: 'timeline.html §2', // อ้างไฟล์/ส่วนที่มา

@@ -17,7 +17,7 @@
 - **ห้ามลบ/ทับข้อมูลที่ผู้ใช้สร้างหรือแก้** (`createdAt != null` หรือ `userEdited === true`) ทุกกรณี
 - 14 categories canonical: `Personal, Football, Music, Education, Work, Finance, Technology, Coding, AI, Robotics, Content Creation, Business, Personal Growth, Future Goals` — ห้ามเพิ่ม/เปลี่ยนชื่อ
 - 12 chapters canonical: `childhood, football, music-origin, learning-struggle, education, work, music-production, coding-software, ai-automation, robotics, current-life, future-goals` — ห้ามเพิ่ม/เปลี่ยน
-- `datePrecision` ∈ `exact_date|exact_year|estimated_year|estimated_range|school_period|age_based|unknown`
+- `datePrecision` ∈ `exact_date|exact_month|exact_year|exact_range|estimated_year|estimated_range|school_period|age_based|unknown` · เดือน (1–12) เก็บที่ `startMonthCE`/`endMonthCE`
 - `dateStatus` ∈ `confirmed|estimated|needs_confirmation|unknown` · `dateSource` ∈ `user_reported|project_record|imported_record|derived_estimate`
 - `selfAssessmentScore` = 1–10 (ผู้ใช้กรอกเองเท่านั้น, ห้าม seed) · ค่า > 10 จาก V1 → ติด `legacyScale:true` ห้ามแปลงเงียบ
 - `importance` (1–3) และ `narrativeLevel` (0–100) = การจัดวางเชิงภาพ ต้องมี label กำกับว่าของจริงใน UI ทุกที่
