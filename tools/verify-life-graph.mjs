@@ -50,12 +50,12 @@ export function runStatic(rootDir) {
     const core = coreStart >= 0 ? sw.slice(coreStart, sw.indexOf('];', coreStart)) : '';
     check('sw.js defines CORE', core.length > 0);
 
-    ['css/life-graph.css?v=3', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=3'].forEach(function (p) {
+    ['css/life-graph.css?v=4', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=4'].forEach(function (p) {
       check('CORE precaches ' + p, core.indexOf("'" + p + "'") >= 0);
       check('index.html requests ' + p + ' (page and precache must agree)', html.indexOf(p) >= 0);
     });
     // เวอร์ชัน asset ที่ bump ไปต้องไม่ทิ้ง URL เก่าค้างใน precache (cache ใหม่จะไม่มีไฟล์ที่หน้าเว็บเรียก)
-    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2'].forEach(function (p) {
+    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2', 'css/life-graph.css?v=3', 'js/life-graph.js?v=3'].forEach(function (p) {
       check('no stale ' + p + ' left in the precache', core.indexOf("'" + p + "'") < 0 && html.indexOf(p) < 0, p);
     });
     // neo-brutal ต้องตรงกับที่หน้าเว็บเรียกจริง ไม่งั้น offline จะไม่มี stylesheet หลัก
@@ -336,6 +336,99 @@ export async function run(page, ctx) {
     ok('Enter on a future dot opens its detail', await page.locator('#lg-detail').isVisible());
     ok('the future dot detail is marked as a future goal', /อนาคต/.test(await page.locator('#lg-detail').innerText()));
     await page.click('[data-close-detail]');
+  });
+
+  /* ---------- ข้อความต้องอ่านออกจริง + badge ห้ามตกบรรทัด ---------- */
+  await step('readable text and badge layout', async () => {
+    // บล็อกนี้เป็นธีมเข้ม (--lg-ink = สีอ่อนเกือบขาว) ถ้าองค์ไหนหลงเหลือพื้นหลังธีมสว่าง
+    // ตัวอักษรจะขาวชนขาว อ่านไม่ออก — เคยเกิดจริงกับ .lg-notice, #lg-detail, .lg-map-node,
+    // และปุ่ม .lg-danger จึงตรวจทุกมุมมอง ไม่ใช่แค่มุมมองที่กำลังเปิดอยู่
+    const scan = () => page.evaluate(() => {
+      const parse = c => { const m = String(c).match(/rgba?\(([^)]+)\)/); if (!m) return null;
+        const p = m[1].split(',').map(s => parseFloat(s)); return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 }; };
+      const lum = c => 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
+      const out = [];
+      document.querySelectorAll('#life-graph *').forEach(el => {
+        const c = parse(getComputedStyle(el).backgroundColor);
+        if (!(c && c.a > 0.5 && c.r > 195 && c.g > 190 && c.b > 180)) return;   // ไม่ใช่พื้นหลังสว่าง -> ข้าม
+        const r = el.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        const fg = parse(getComputedStyle(el).color);
+        const delta = Math.abs(lum(fg) - lum(c));
+        // input/select ของธีมเว็บเป็นพื้นขาว + ตัวอักษรเข้มโดยทั่วไปทั้งเว็บ (อ่านออก) -> ตัดออก
+        const tag = el.tagName;
+        if (delta < 90 && tag !== 'SELECT' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+          out.push(String(el.className || tag) + ' ' + getComputedStyle(el).color + ' on ' +
+            `rgb(${c.r}, ${c.g}, ${c.b})` + ' Δ' + Math.round(delta));
+        }
+      });
+      return out;
+    });
+
+    for (const view of ['timeline', 'graph', 'chapters', 'map']) {
+      await page.click('[data-lg-view="' + view + '"]');
+      await page.waitForTimeout(220);
+      const bad = await scan();
+      ok('no unreadable light-background text in the ' + view + ' view', bad.length === 0, bad.join(' | '));
+    }
+
+    // badge ต้องอยู่บรรทัดแรกเดียวกับข้อความ meta ไม่ใช่หล่นไปบรรทัดใหม่หรือโดนขอบตัด
+    await page.click('[data-lg-view="timeline"]');
+    await page.fill('#lg-search', '');
+    await page.click('[data-all-years]');
+    await page.waitForTimeout(300);
+    const metas = await page.evaluate(() => {
+      const out = [];
+      document.querySelectorAll('#lg-content .lg-event-meta').forEach(p => {
+        const badges = [...p.querySelectorAll('.lg-badge, .lg-carried')];
+        if (!badges.length) return;
+        const pr = p.getBoundingClientRect();
+        const card = p.closest('.lg-event');
+        const cr = card ? card.getBoundingClientRect() : pr;
+        out.push({
+          metas: p.textContent.trim().slice(0, 40),
+          pTop: pr.top, cardRight: cr.right,
+          badges: badges.map(e => { const r = e.getBoundingClientRect(); return { t: e.textContent.trim(), top: r.top, right: r.right, w: r.width }; })
+        });
+      });
+      return out;
+    });
+    ok('timeline has cards carrying badges to test', metas.length > 0, metas.length + ' metas');
+    const dropped = [], clipped = [], zero = [];
+    metas.forEach(m => m.badges.forEach(b => {
+      if (b.top > m.pTop + 4) dropped.push(b.t);
+      if (b.right > m.cardRight + 1) clipped.push(b.t + ' right=' + Math.round(b.right) + ' card=' + Math.round(m.cardRight));
+      if (!b.w) zero.push(b.t);
+    }));
+    ok('badges stay on the meta line instead of dropping to a new one', dropped.length === 0, dropped.join(', '));
+    ok('badges are not clipped by the card edge', clipped.length === 0, clipped.join(' | '));
+    ok('every badge renders with a real width', zero.length === 0, zero.join(', '));
+    ok('a known badge ("ต้องยืนยัน" / "โดยประมาณ") is among them',
+      metas.some(m => m.badges.some(b => /ต้องยืนยัน|โดยประมาณ|ปัจจุบัน|อนาคต/.test(b.t))),
+      metas.map(m => m.badges.map(b => b.t).join('+')).join(' / '));
+
+    // ตารางข้อมูลในแผงรายละเอียดต้องเป็นกริด 2 คอลัมน์ "เสมอ" — เดิม CSS เขียนเป็น .lg-detail-head+dl
+    // (พี่น้องติดกัน) พอใน markup มี .lg-conflict กั้นระหว่าง head กับ dl ตารางก็ล่มเป็นแนวตั้งทั้งแผง
+    const warnCard = page.locator('#lg-content .lg-event').filter({ has: page.locator('.lg-badge-warn') }).first();
+    if (await warnCard.count()) {
+      await warnCard.locator('.lg-actions [data-open]').click();
+      await page.waitForTimeout(280);
+      const dl = await page.evaluate(() => {
+        const row = document.querySelector('#lg-detail .lg-detail-fields .lg-detail-row');
+        if (!row) return null;
+        const cs = getComputedStyle(row);
+        const dt = row.querySelector('dt'), dd = row.querySelector('dd');
+        return { display: cs.display, cols: cs.gridTemplateColumns,
+          dtTop: dt ? dt.getBoundingClientRect().top : null, ddTop: dd ? dd.getBoundingClientRect().top : null };
+      });
+      ok('each detail field row renders as a 2-column grid even with a conflict banner present',
+        !!dl && dl.display === 'grid' && dl.cols.trim().split(/\s+/).length === 2, JSON.stringify(dl));
+      ok('field label and value sit side by side, not stacked',
+        !!dl && dl.dtTop != null && Math.abs(dl.dtTop - dl.ddTop) < 6, JSON.stringify(dl));
+      await page.click('[data-close-detail]');
+    } else {
+      ok('a record with a conflict banner exists to test the field grid', false, 'no .lg-badge-warn card found');
+    }
   });
 
   /* ---------- ความซื่อสัตย์ของแผงรายละเอียด ---------- */

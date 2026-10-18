@@ -581,13 +581,12 @@
           return a2.actualX - b3.actualX;
         })[0];
       });
-      var run = [], prevYear = null;
-      yearlyPoints.forEach(function (q) {
-        if (prevYear !== null && q.year === prevYear + 1) run.push(q.id);
-        else { if (run.length > 1) segments.push(run); run = [q.id]; }
-        prevYear = q.year;
-      });
-      if (run.length > 1) segments.push(run);
+      /* โหมด A ลากเส้นเดียวต่อเนื่องจากปีแรกถึงปีสุดท้าย "ข้าม" ปีที่ไม่มีบันทึกด้วย
+       * (ผู้ใช้ทักว่า ค.ศ. 2004–2021 ไม่มีเส้นเลย เพราะเดิมตัดเส้นทุกครั้งที่เจอปีว่าง)
+       * y ในโหมด A เป็นการจัดวางเชิงภาพ ไม่ใช่คะแนน จึงไม่มีอะไรถูกแต่งขึ้นเมื่อลากผ่านปีว่าง —
+       * ต่างจากโอมด B ที่ y คือคะแนนจริง ช่องว่างจึงยังต้องตัดเส้น (ดู test "must break the line")
+       * สิ่งที่ห้ามคือการ "แต่งจุดปลอม" ของปีที่ไม่มีบันทึก จุดบนเส้นมีแค่ปีที่มี record จริง */
+      if (yearlyPoints.length > 1) segments.push(yearlyPoints.map(function (q) { return q.id; }));
     } else {
       var byYear = {};
       points.forEach(function (q) { (byYear[q.year] = byYear[q.year] || []).push(q.id); });
@@ -825,7 +824,7 @@
       '<div class="lg-event-copy">' +
       '<button type="button" class="lg-event-open" data-open="' + esc(r.id) + '">' + esc(r.title) + '</button>' +
       '<p>' + (r.description ? esc(r.description) : '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>') + '</p>' +
-      '<p class="lg-event-meta">' + meta + badges + '</p>' +
+      '<p class="lg-event-meta"><span class="lg-meta-text">' + meta + '</span>' + badges + '</p>' +
       '<div class="lg-actions"><button type="button" class="lg-btn" data-open="' + esc(r.id) + '">รายละเอียด</button></div>' +
       '</div></article>';
   }

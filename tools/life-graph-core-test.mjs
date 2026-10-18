@@ -105,6 +105,27 @@ assert.equal(S2.points.length, 3);
 assert.equal(S2.segments.length, 2, 'a gap in scored years must break the line, never bridge it');
 assert.equal(S2.hasScores, true);
 
+// ---- โหมด A: เส้นต้องลากต่อเนื่อง "ข้าม" ปีที่ไม่มีบันทึก ----
+// y ในโหมด A เป็นการจัดวางเชิงภาพ ไม่ใช่คะแนน จึงไม่มีอะไรถูกแต่งขึ้นเมื่อลากผ่านปีว่าง
+// (ต่างจากโหมด B ด้านบน ที่ y คือคะแนนจริง ช่องว่างจึงต้องตัดเส้น) — ผู้ใช้ทักมาว่า ค.ศ. 2004–2021 ไม่มีเส้นเลย
+var narr = C.graphLayout(D.seeds, { mode: 'narrative', minYear: D.yearRange[0], maxYear: D.yearRange[1] });
+var pById = {};
+narr.points.forEach(function (p) { pById[p.id] = p; });
+var lineYears = [];
+narr.segments.forEach(function (seg) { seg.forEach(function (id) { if (pById[id]) lineYears.push(pById[id].year); }); });
+assert.ok(lineYears.length > 0, 'โหมด A ต้องมีเส้น');
+var histYears = narr.points.map(function (p) { return p.year; });
+assert.equal(Math.min.apply(null, lineYears), Math.min.apply(null, histYears),
+  'เส้นโหมด A ต้องเริ่มที่ปีที่มีบันทึกแรก (2004)');
+assert.equal(Math.max.apply(null, lineYears), Math.max.apply(null, histYears),
+  'เส้นโหมด A ต้องจบบที่ปีที่มีบันทึกล่าสุด');
+[2004, 2015, 2018].forEach(function (y) {
+  assert.ok(lineYears.indexOf(y) >= 0, 'ปี ' + y + ' ต้องอยู่บนเส้น — ผู้ใช้รายงานว่าช่วง 2004–2021 ไม่มีเส้น');
+});
+// ข้ามปีว่างต้องไม่สร้างจุดปลอมขึ้นมาบนเส้น
+assert.ok(lineYears.indexOf(2005) < 0 && lineYears.indexOf(2010) < 0,
+  'ปีที่ไม่มีบันทึกต้องไม่ถูกแต่งจุดขึ้นบนเส้น — ลากผ่านได้ แต่ห้ามมีจุดปลอม');
+
 // ---- normalizeRecord must preserve unknown fields instead of dropping them ----
 const kept = C.normalizeRecord({ id: 'x', title: 't', category: 'Nonsense', datePrecision: 'nope', evidenceNote: 'legacy field', userEdited: true });
 assert.equal(kept.category, 'Personal', 'unknown category falls back to Personal');
