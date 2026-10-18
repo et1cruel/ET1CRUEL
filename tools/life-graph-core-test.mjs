@@ -151,4 +151,91 @@ Lg.points.forEach(function (p) {
     'ป้าย "' + p.label + '" ถูกขอบกราฟตัด (กลางที่ ' + Math.round(cxp) + ', ครึ่งกว้าง ' + Math.round(w / 2) + ', ความกว้างกราฟ ' + Lg.width + ')');
 });
 
+// ---- ความกว้างป้ายชื่อ: ใช้โมเดลเดียวกับที่เลย์เอาต์ใช้ตัดสินการทับกัน (ก่อนหน้านี้เลย์เอาต์ใช้ค่าคงที่ 132
+//      ซึ่งแคบกว่าข้อความจริง ~200px ทำให้ป้ายที่อยู่ห่างกัน 140px ยังทับกันจริงบนจอ) ----
+assert.equal(typeof C.labelBoxWidth, 'function', 'ต้องมีตัวคำนวณความกว้างป้ายที่ใช้ร่วมกันทั้งเลย์เอาต์และเทสต์');
+assert.ok(C.labelBoxWidth('ก'.repeat(40)) > C.labelBoxWidth('กก'), 'ป้ายยาวต้องกว้างกว่าป้ายสั้น');
+assert.ok(C.labelBoxWidth('ก'.repeat(500)) <= 240, 'ความกว้างป้ายต้องมีเพดาน ไม่บานไม่จำกัด');
+assert.ok(C.labelBoxWidth('') >= 40, 'ป้ายว่างยังต้องมีความกว้างขั้นต่ำ');
+
+// ---- ป้ายชื่อบนกราฟ: ต้องอยู่ติดจุดของตัวเอง (leader สั้น) และซ่อนเมื่อที่ว่างไม่พอ ----
+// ต้นเหตุของ "โยงกันมั่ว": เลย์เอาต์เดิมผลักป้ายไปได้ไกลสุดขอบกราฟ ทำให้เส้นโยงยาวข้ามกราฟ
+const Lp = C.graphLayout(D.seeds, { mode: 'narrative', minYear: D.yearRange[0], maxYear: D.yearRange[1] });
+const visibleLabels = Lp.points.filter(p => p.labelSide !== 'hidden');
+assert.ok(visibleLabels.length > 0, 'ต้องมีป้ายที่แสดงจริงบนกราฟ');
+assert.equal(Lp.hiddenLabelCount, Lp.points.filter(p => p.labelSide === 'hidden').length, 'hiddenLabelCount ต้องตรงกับจำนวนที่ซ่อนจริง');
+visibleLabels.forEach(function (p) {
+  var reach = Math.hypot((p.labelX == null ? p.x : p.labelX) - p.x, (p.labelY == null ? p.y : p.labelY) - p.y);
+  /* ขอบเขตจริงของเลย์เอาต์: แนวนอนถูกจำกัดไม่ให้หลุดพล็อต (ครึ่งป้ายกว้างสุด 105) + แนวตั้งไม่เกิน 2 ชั้น (72) */
+  assert.ok(reach <= 135, 'ป้าย "' + p.id + '" ถูกลากไปไกลจากจุดของตัวเอง ' + Math.round(reach) + 'px (ต้องไม่เกิน 135px)');
+});
+for (var li = 0; li < visibleLabels.length; li++) {
+  for (var lj = li + 1; lj < visibleLabels.length; lj++) {
+    var la = visibleLabels[li], lb = visibleLabels[lj];
+    if (la.labelSide !== lb.labelSide || Math.abs(la.labelY - lb.labelY) >= 20) continue;
+    var need = (C.labelBoxWidth(la.label) + C.labelBoxWidth(lb.label)) / 2 + 4;
+    assert.ok(Math.abs(la.labelX - lb.labelX) >= need,
+      'ป้าย "' + la.id + '" กับ "' + lb.id + '" ทับกัน (ห่าง ' + Math.round(Math.abs(la.labelX - lb.labelX)) + 'px ต้อง >= ' + Math.round(need) + 'px)');
+  }
+}
+// ป้ายกว้างสุดต้องยังไม่ถูกขอบกราฟตัด (นับทั้งบรรทัดชื่อและบรรทัดวันที่)
+Lp.points.forEach(function (p) {
+  if (p.labelSide === 'hidden') return;
+  var w = Math.max(C.labelBoxWidth(p.label), C.labelBoxWidth(p.dateLabel));
+  var cxp = p.labelX == null ? p.x : p.labelX;
+  assert.ok(cxp - w / 2 >= -0.5 && cxp + w / 2 <= Lp.width + 0.5,
+    'ป้าย "' + p.id + '" ถูกขอบกราฟตัด (กลาง ' + Math.round(cxp) + ' ครึ่งกว้าง ' + Math.round(w / 2) + ' ของ ' + Lp.width + ')');
+});
+// ผู้ใช้สั่ง "แสดง label ทั้งหมด" -> ต้องไม่ซ่อนป้ายใดเลย
+var Lforced = C.graphLayout(D.seeds, { mode: 'narrative', minYear: D.yearRange[0], maxYear: D.yearRange[1], width: 900, height: 340, forceAllLabels: true });
+assert.equal(Lforced.hiddenLabelCount, 0, 'เมื่อสั่งแสดง label ทั้งหมด ต้องไม่ซ่อนป้ายใด');
+assert.ok(Lforced.points.every(function (p) { return p.labelSide !== 'hidden'; }));
+
+// ---- เคสพื้นที่แคบ: ต้อง "ซ่อนแล้วรายงาน" ไม่ใช่วางป้ายทับกัน ----
+var Lc = C.graphLayout(D.seeds, { mode: 'narrative', minYear: D.yearRange[0], maxYear: D.yearRange[1], width: 900, height: 340 });
+var crowded = Lc.points.filter(p => p.labelSide !== 'hidden');
+assert.ok(Lc.hiddenLabelCount > 0, 'บนพื้นที่แคบต้องซ่อนป้ายบางส่วน — ถ้าไม่ซ่อนเลยแปลว่าวางป้ายทับกัน');
+for (var ci = 0; ci < crowded.length; ci++) {
+  for (var cj = ci + 1; cj < crowded.length; cj++) {
+    var ca = crowded[ci], cb = crowded[cj];
+    if (ca.labelSide !== cb.labelSide || Math.abs(ca.labelY - cb.labelY) >= 20) continue;
+    assert.ok(Math.abs(ca.labelX - cb.labelX) >= (C.labelBoxWidth(ca.label) + C.labelBoxWidth(cb.label)) / 2 + 4,
+      'บนพื้นที่แคบ ป้าย "' + ca.id + '" กับ "' + cb.id + '" ทับกัน');
+  }
+}
+crowded.forEach(function (p) {
+  assert.ok(Math.hypot(p.labelX - p.x, p.labelY - p.y) <= 135, 'บนพื้นที่แคบ ป้าย "' + p.id + '" ถูกลากไกลจากจุดของตัวเอง');
+});
+
+// ---- จุดที่ตกตำแหน่งเดียวกันเป๊ะ: โหมด A ต้องกระจายให้เห็นครบ (y คือการจัดวางเชิงภาพ ไม่ใช่คะแนน) ----
+// ---- แต่โหมด B ห้ามขยับจุด เพราะ y คือคะแนนที่ผู้ใช้กรอกเอง ----
+for (var ai = 0; ai < Lp.points.length; ai++) {
+  for (var aj = ai + 1; aj < Lp.points.length; aj++) {
+    var pa = Lp.points[ai], pb = Lp.points[aj];
+    assert.ok(Math.hypot(pa.x - pb.x, pa.y - pb.y) >= 7,
+      'จุด "' + pa.id + '" กับ "' + pb.id + '" ทับกันเป๊ะในโหมด A — ต้องกระจายแนวตั้ง');
+  }
+}
+S2.points.forEach(function (p) {
+  var expectedY = S2.bounds.bottom - p.level * (S2.bounds.bottom - S2.bounds.top);
+  assert.ok(Math.abs(p.y - expectedY) < 0.001, 'โหมด B ห้ามขยับ y ของคะแนนจริง (' + p.id + ')');
+});
+
+// ---- เป้าหมายอนาคตที่ยังไม่กำหนดปี: ห้ามวาดลงบนแกนเวลา ----
+const futureGoals = Lp.futurePoints.filter(function (f) { return f.projected; });
+assert.ok(futureGoals.length > 0, 'มีเป้าหมายที่ยังไม่กำหนดปีในข้อมูลจริง');
+futureGoals.forEach(function (f) {
+  assert.ok(f.x > Lp.bounds.right + 1,
+    'เป้าหมายที่ยังไม่กำหนดปี "' + f.id + '" ต้องอยู่ขวาของพล็อต (x=' + Math.round(f.x) + ' ต้อง > ' + Math.round(Lp.bounds.right) + ') จึงจะไม่ดูเหมือนถูกกำหนดปี');
+});
+futureGoals.forEach(function (f) {
+  assert.ok(f.y >= Lp.bounds.top - 0.5 && f.y <= Lp.bounds.bottom + 0.5, 'เป้าหมาย "' + f.id + '" ต้องอยู่ในความสูงของพล็อต');
+  Lp.points.forEach(function (p) {
+    assert.ok(Math.hypot(f.x - p.x, f.y - p.y) >= 8, 'วงกลมเป้าหมาย "' + f.id + '" ทับจุดเหตุการณ์จริง "' + p.id + '"');
+  });
+});
+// เส้นประอนาคตต้องลากจาก "จุดปัจจุบัน" ไม่ใช่จากจุดขวาสุดเฉย ๆ
+assert.ok(Lp.futureAnchor && Lp.futureAnchor.id, 'ต้องระบุจุดตั้งต้นของเส้นอนาคต');
+assert.equal(Lp.futureAnchor.isCurrent, true, 'เส้นอนาคตต้องเริ่มจากจุดปัจจุบัน (สีเขียว)');
+
 console.log('OK core');

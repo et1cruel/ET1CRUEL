@@ -46,6 +46,20 @@
     return Array.isArray(r) && r.length === 2 ? r : [2004, 2026];
   }
 
+  /* ปีปัจจุบันต้องอยู่ในตรรกะบริสุทธิ์ เพราะ graphLayout ใช้ตัดสินว่าป้ายควรอยู่บนหรือล่างจุด
+   * (เดิม NOW_YEAR ประกาศอยู่ในชั้น DOM ทำให้ node มองไม่เห็น แล้ว node กับเบราว์เซอร์คำนวณคนละแบบ) */
+  function nowYearCE() {
+    var n = Number(data().nowYearCE);
+    return isFinite(n) && n > 1900 ? n : new Date().getFullYear();
+  }
+
+  /* ความกว้างกล่องป้ายชื่อ ใช้ทั้งตอนวางป้ายและตอนตรวจว่าป้ายทับกัน
+   * 7 หน่วย/ตัวอักษรคือค่าที่วัดจากการเรนเดอร์จริง (ป้าย 30 ตัวอักษรกว้างราว 200 หน่วยในกราฟ)
+   * ถ้าใช้ค่าคงที่แคบกว่านี้ ป้ายที่ห่างกัน 140px จะยังทับกันจริงบนจอ */
+  function labelBoxWidth(text) {
+    return clamp(String(text == null ? '' : text).length * 7, 48, 210);
+  }
+
   function validRecord(r) {
     return !!r && typeof r === 'object' && typeof r.id === 'string' && r.id.trim() !== '' && typeof r.title === 'string' && r.title.trim() !== '';
   }
@@ -409,11 +423,16 @@
     var minYear = opts.minYear != null ? Number(opts.minYear) : yr[0];
     var maxYear = opts.maxYear != null ? Number(opts.maxYear) : yr[1];
     if (!(maxYear > minYear)) maxYear = minYear + 1;
-    var width = opts.width || 900, height = opts.height || 340;
-    var left = 64, right = width - 54, top = 38, bottom = height - 72;
+    /* ขนาดกราฟ: ใหญ่พอให้อ่านได้จริง (เดิม 900×340 ทำให้จุด 2023–2026 อัดกันจนป้ายทับกัน)
+     * ค่าขวาเผื่อที่ว่างสำหรับ "คอลัมน์อนาคต" แยกนอกแกนเวลา */
+    var width = opts.width || 1280, height = opts.height || 680;
+    var left = 70, right = width - 92, top = 46, bottom = height - 88;
 
     function xFor(y, frac) { return left + ((Number(y) + frac) - minYear) / (maxYear - minYear) * (right - left); }
     function cx(v) { return clamp(v, 0, width); }
+    /* จุดเหตุการณ์ต้องอยู่ภายในพล็อต: เหตุการณ์ปลายปี 2569 มี frac เกือบ 1 จึงคำนวณเลยขอบขวาได้
+     * ถ้าปล่อยไว้ จุดจะไปทับคอลัมน์เป้าหมายอนาคตที่อยู่นอกพล็อต */
+    function plotX(v) { return clamp(v, left, right); }
 
     var points = [], undated = [], futurePoints = [], i;
     for (i = 0; i < list.length; i++) {
@@ -428,12 +447,12 @@
       var frac = 0.5;
       if (r.startDate) frac = ((Number(r.startDate.slice(5, 7)) - 1) + (Number(r.startDate.slice(8, 10)) - 1) / 30) / 12;
       else if (r.startMonthCE != null) frac = (Number(r.startMonthCE) - 1) / 12;
-      var x = cx(xFor(r.startYearCE, frac));
+      var x = plotX(xFor(r.startYearCE, frac));
       var lvl = mode === 'self' ? scoreLevel(r) : narrativeLevel(r);
       return {
-        id: r.id, x: x, y: bottom - lvl * (bottom - top), level: lvl,
+        id: r.id, x: x, actualX: x, y: bottom - lvl * (bottom - top), level: lvl,
         year: Number(r.startYearCE), endYear: r.endYearCE == null ? null : Number(r.endYearCE),
-        spanX: (r.endYearCE != null && Number(r.endYearCE) > Number(r.startYearCE)) ? cx(xFor(r.endYearCE, 0.5)) : null,
+        spanX: (r.endYearCE != null && Number(r.endYearCE) > Number(r.startYearCE)) ? plotX(xFor(r.endYearCE, 0.5)) : null,
         isCurrent: !!r.isCurrent, hasExactDate: !!r.startDate,
         isRange: r.endYearCE != null && Number(r.endYearCE) > Number(r.startYearCE),
         isEstimated: r.dateStatus === 'estimated' || r.datePrecision === 'estimated_year' || r.datePrecision === 'estimated_range' || r.datePrecision === 'needs_confirmation',
@@ -445,20 +464,71 @@
     function futurePoint(r) {
       var lvl = narrativeLevel(r);
       var yv = bottom - lvl * (bottom - top);
-      var x = r.startYearCE == null ? null : cx(xFor(r.startYearCE, 0.5));
-      return { id: r.id, x: x, projected: x == null, y: yv, level: lvl, label: r.title, labelSide: 'above', year: r.startYearCE == null ? null : Number(r.startYearCE), isGoal: r.type === 'goal', dateLabel: formatDateRange(r), record: r };
+      var x = r.startYearCE == null ? null : plotX(xFor(r.startYearCE, 0.5));
+      return { id: r.id, x: x, actualX: x, projected: x == null, y: yv, level: lvl, label: r.title, labelSide: 'above', year: r.startYearCE == null ? null : Number(r.startYearCE), isGoal: r.type === 'goal', dateLabel: formatDateRange(r), record: r };
     }
 
-    /* label anti-overlap: เรียงตาม x แล้ววางบน/ล่าง ถ้ายังทับให้ซ่อน (นับเป็น hiddenLabelCount) */
-    points.sort(function (a, b) { return a.x - b.x; });
+    /* ── กันจุดทับกัน ────────────────────────────────────────────────────────
+     * เหตุการณ์ปีเดียวกัน บทเดียวกัน น้ำหนักเท่ากัน จะได้พิกัดเดียวกันเป๊ะ แล้วมีจุดซ่อนทับกันจริง
+     * โหมด A แก้ได้ เพราะ y เป็น "การจัดวางเชิงภาพ ไม่ใช่คะแนนชีวิต" (มี label กำกับใน UI)
+     * โหมด B ห้ามแตะเด็ดขาด เพราะ y คือคะแนนที่ผู้ใช้กรอกเอง */
+    var dodgedCount = 0;
+    /* ระยะห่างขั้นต่ำของจุด: ต้องมากกว่ารัศมีจุด(5) + รัศมีจุดอนาคต(6) + ขอบ จึงจะไม่ดูเป็นจุดเดียวกัน */
+    var MIN_MARKER_GAP = 16;
+    if (mode === 'narrative') {
+      var axisPoints = points.concat(futurePoints.filter(function (f) { return f.actualX != null; }));
+      axisPoints.sort(function (a, b) { return a.actualX - b.actualX || a.y - b.y; });
+      var columns = [];
+      axisPoints.forEach(function (p) {
+        var col = columns.length ? columns[columns.length - 1] : null;
+        if (!col || p.actualX - col.maxX > MIN_MARKER_GAP) {
+          col = { pts: [], maxX: p.actualX };
+          columns.push(col);
+        }
+        col.maxX = Math.max(col.maxX, p.actualX);
+        col.pts.push(p);
+      });
+      columns.forEach(function (col) {
+        if (col.pts.length < 2) return;
+        var crowded = false;
+        for (var a = 0; a < col.pts.length && !crowded; a++) {
+          for (var b = a + 1; b < col.pts.length; b++) {
+            if (Math.hypot(col.pts[a].actualX - col.pts[b].actualX, col.pts[a].y - col.pts[b].y) < MIN_MARKER_GAP) { crowded = true; break; }
+          }
+        }
+        if (!crowded) return;
+        col.pts.sort(function (x1, x2) { return x1.y - x2.y || (x1.id < x2.id ? -1 : 1); });
+        var n = col.pts.length;
+        var center = col.pts.reduce(function (s, q) { return s + q.y; }, 0) / n;
+        var height2 = Math.min(bottom - top, n * MIN_MARKER_GAP);
+        var startY = clamp(center - height2 / 2, top, Math.max(top, bottom - height2));
+        col.pts.forEach(function (q, idx) {
+          q.y = startY + idx * (n === 1 ? 0 : height2 / (n - 1));
+          q.dodged = true;
+          dodgedCount++;
+        });
+      });
+    }
+
+    /* ── ป้ายชื่อบนกราฟ ─────────────────────────────────────────────────────
+     * สเปกข้อ 8/90: เรียงตาม x แล้ว "ข้าม" ป้ายที่กล่องทับกัน + สลับบน/ล่าง + toggle "แสดง label ทั้งหมด"
+     * กฎที่ต้องยึด: ป้ายต้องอยู่ติดจุดของตัวเองเสมอ ถ้าที่ข้างจุดไม่พอให้ซ่อนแล้วรายงานจำนวน
+     * (เวอร์ชันที่ผลักป้ายไปจนสุดขอบกราฟทำให้เส้นโยงยาวข้ามกราฟทั้งใบ — นั่นคืออาการ "โยงกันมั่ว") */
+    points.sort(function (a, b) { return a.actualX - b.actualX || a.y - b.y; });
     var boxes = [], hidden = 0;
-    function boxFor(p, side) {
-      var w = Math.min(150, Math.max(52, String(p.label || '').length * 7));
-      var h = 26;
-      /* ป้ายริมขอบจะถูกดันกลับเข้าในกรอบ SVG เพื่อไม่ให้ขอบตัดข้อความ */
-      var x1 = clamp(p.x - w / 2, 0, Math.max(0, width - w));
-      var y1 = side === 'above' ? p.y - 12 - h : p.y + 12;
-      return { x1: x1, x2: x1 + w, y1: y1, y2: y1 + h, cx: x1 + w / 2 };
+    var force = !!opts.forceAllLabels;
+    var LABEL_H = 30, LANE_GAP = 30, H_STEP = 40;
+    /* ปกติป้ายไม่ถูกดันแนวนอนเลย (leader สั้นติดจุด) — โหมด "แสดงทั้งหมด" ดันได้เพื่อให้ครบทุกป้าย */
+    var laneLimit = force ? Math.max(2, Math.floor((height - top - 40) / LANE_GAP)) : 2;
+    var hTries = force ? 10 : 0;
+    var labelLeftBound = left, labelRightBound = force ? width - 2 : right;   /* ป้ายไม่ล้ำออกไปทับคอลัมน์อนาคต */
+    function labelBox(p, side, lane, shift) {
+      var w = Math.max(labelBoxWidth(p.label), labelBoxWidth(p.dateLabel));
+      var gap = 12 + lane * LANE_GAP;
+      var yTop = side === 'above' ? p.y - gap - LABEL_H : p.y + gap;
+      yTop = clamp(yTop, 2, Math.max(2, height - LABEL_H - 2));
+      var x1 = clamp(p.x - w / 2 + (shift || 0) * H_STEP, labelLeftBound, Math.max(labelLeftBound, labelRightBound - w));
+      return { x1: x1, x2: x1 + w, y1: yTop, y2: yTop + LABEL_H, cx: x1 + w / 2, side: side, lane: lane };
     }
     function hits(b) {
       for (var j = 0; j < boxes.length; j++) {
@@ -467,19 +537,57 @@
       }
       return false;
     }
-    var force = !!opts.forceAllLabels;
     for (i = 0; i < points.length; i++) {
-      var p = points[i];
-      if (force) { p.labelSide = 'above'; var fa = boxFor(p, 'above'); p.labelX = fa.cx; boxes.push(fa); continue; }
-      var a = boxFor(p, 'above'), b2 = boxFor(p, 'below');
-      if (!hits(a)) { p.labelSide = 'above'; p.labelX = a.cx; boxes.push(a); }
-      else if (!hits(b2)) { p.labelSide = 'below'; p.labelX = b2.cx; boxes.push(b2); }
-      else { p.labelSide = 'hidden'; hidden++; }
+      var pt = points[i];
+      var sideOrder = pt.year < nowYearCE() ? ['above', 'below'] : ['below', 'above'];
+      var chosen = null;
+      for (var lane = 0; lane <= laneLimit && !chosen; lane++) {
+        for (var sk = 0; sk < 2 && !chosen; sk++) {
+          for (var hx = 0; hx <= hTries && !chosen; hx++) {
+            var shifts = hx === 0 ? [0] : [hx, -hx];
+            for (var hs = 0; hs < shifts.length && !chosen; hs++) {
+              var cand = labelBox(pt, sideOrder[sk], lane, shifts[hs]);
+              if (!hits(cand)) chosen = cand;
+            }
+          }
+        }
+      }
+      /* โหมด "แสดงทั้งหมด" สัญญาว่าจะไม่ซ่อนป้าย: ถ้าจริง ๆ แล้วไม่มีที่ว่าง ก็ยังวางให้เห็น (ยอมให้ทับกัน)
+       * ดีกว่าซ่อนเงียบ ๆ เพราะผู้ใช้กดปุ่มนี้เพื่อดูให้ครบ */
+      if (!chosen && force) chosen = labelBox(pt, 'above', 0, 0);
+      if (chosen) {
+        pt.labelSide = chosen.side;
+        pt.labelLane = chosen.lane;
+        pt.labelX = chosen.cx;
+        pt.labelY = chosen.side === 'above' ? chosen.y2 : chosen.y1;
+        boxes.push(chosen);
+      } else {
+        pt.labelSide = 'hidden';
+        hidden++;
+      }
     }
 
     var segments = [];
     if (mode === 'narrative') {
-      if (points.length) segments.push(points.map(function (q) { return q.id; }));
+      /* หนึ่งจุดแทนหนึ่งปี: เลือก milestone เด่นสุดของปีนั้น เส้นจะได้ไม่ลนลานไปมาอยู่ในปีเดียว
+       * ทุก record ยังมีจุดของตัวเองครบ — เฉพาะ "เส้น" ที่ใช้ปีละหนึ่งจุด */
+      var byNarrativeYear = {};
+      points.forEach(function (q) { (byNarrativeYear[q.year] = byNarrativeYear[q.year] || []).push(q); });
+      var narrativeYears = Object.keys(byNarrativeYear).map(Number).sort(function (a2, b3) { return a2 - b3; });
+      var yearlyPoints = narrativeYears.map(function (y) {
+        return byNarrativeYear[y].slice().sort(function (a2, b3) {
+          if (!!a2.isCurrent !== !!b3.isCurrent) return a2.isCurrent ? -1 : 1;
+          if (Number(a2.record.importance) !== Number(b3.record.importance)) return Number(b3.record.importance) - Number(a2.record.importance);
+          return a2.actualX - b3.actualX;
+        })[0];
+      });
+      var run = [], prevYear = null;
+      yearlyPoints.forEach(function (q) {
+        if (prevYear !== null && q.year === prevYear + 1) run.push(q.id);
+        else { if (run.length > 1) segments.push(run); run = [q.id]; }
+        prevYear = q.year;
+      });
+      if (run.length > 1) segments.push(run);
     } else {
       var byYear = {};
       points.forEach(function (q) { (byYear[q.year] = byYear[q.year] || []).push(q.id); });
@@ -491,6 +599,36 @@
         prev = y;
       });
       if (cur) segments.push(cur);
+    }
+
+    /* ── เป้าหมายอนาคตที่ยังไม่กำหนดปี ──────────────────────────────────────
+     * ต้องไม่ถูกวาดลงบนแกนเวลา (กฎ "ห้ามเดาปี") จึงวางเป็นคอลัมน์แยกนอกพล็อตทางขวา
+     * และลากเส้นประเส้นเดียวจาก "จุดปัจจุบัน" ไปหาคอลัมน์ แทนการลากเส้นจากทุกเป้าหมาย
+     * (เดิมลาก 9 เส้นจากจุดขวาสุด ทำให้เส้นพาดผ่านจุดจริงทั้งก้อน) */
+    var projected = futurePoints.filter(function (f) { return f.projected; });
+    var futureColumn = null;
+    if (projected.length) {
+      projected.sort(function (a, b) { return b.level - a.level || (a.id < b.id ? -1 : 1); });
+      /* คอลัมน์ต้องอยู่ขวาของเส้นปีสุดท้ายจริง ๆ ไม่ใช่แค่ขวาของขอบพล็อต (ป้ายปี 2026 อยู่นอกขอบขวาอยู่แล้ว) */
+      var colX = Math.min(width - 14, Math.max(right + 30, xFor(maxYear, 0.5) + 22));
+      var nF = projected.length;
+      /* เว้นช่องพอให้อ่านเป็น "รายการ" ไม่ใช่โซ่จุดติดกัน — แต่ไม่เกินความสูงของพล็อต */
+      var GOAL_ROW = 34;
+      var colSpan = Math.min(bottom - top - 24, Math.max(GOAL_ROW * (nF - 1), 40));
+      var colTop = clamp((top + bottom) / 2 - colSpan / 2, top + 8, Math.max(top + 8, bottom - colSpan - 8));
+      projected.forEach(function (f, idx) {
+        f.x = colX;
+        f.y = nF === 1 ? top + (bottom - top) / 2 : colTop + idx * (colSpan / (nF - 1));
+        f.columnIndex = idx;
+      });
+      futureColumn = { x: colX, top: projected[0].y, bottom: projected[nF - 1].y, count: nF };
+    }
+    var futureAnchor = null;
+    if (futurePoints.length) {
+      var anchorPt = null;
+      for (i = 0; i < points.length; i++) { if (points[i].isCurrent) { anchorPt = points[i]; break; } }
+      if (!anchorPt && points.length) anchorPt = points[points.length - 1];
+      if (anchorPt) futureAnchor = { id: anchorPt.id, x: anchorPt.actualX, y: anchorPt.y, isCurrent: !!anchorPt.isCurrent };
     }
 
     var years = [], span = maxYear - minYear;
@@ -515,6 +653,7 @@
     return {
       mode: mode, points: points, segments: segments, undated: undated, futurePoints: futurePoints,
       years: years, width: width, height: height, hiddenLabelCount: hidden,
+      futureAnchor: futureAnchor, futureColumn: futureColumn, dodgedCount: dodgedCount,
       hasScores: list.some(hasScore),
       bounds: { left: left, right: right, top: top, bottom: bottom, minYear: minYear, maxYear: maxYear },
       yAxisNote: mode === 'self'
@@ -562,7 +701,7 @@
     sortChronological: sortChronological, recordsForYear: recordsForYear,
     undatedRecords: undatedRecords, futureRecords: futureRecords,
     formatYear: formatYear, formatDateRange: formatDateRange,
-    narrativeLevel: narrativeLevel, hasScore: hasScore,
+    narrativeLevel: narrativeLevel, hasScore: hasScore, labelBoxWidth: labelBoxWidth, nowYearCE: nowYearCE,
     graphLayout: graphLayout,
     saveState: saveState, loadState: loadState
   };
@@ -580,7 +719,7 @@
   var CHS = Array.isArray(D.chapters) ? D.chapters : [];
   var YEARS = (Array.isArray(D.yearRange) && D.yearRange.length === 2) ? D.yearRange : [2004, 2026];
   var CHILDHOOD = (Array.isArray(D.childhoodRange) && D.childhoodRange.length === 2) ? D.childhoodRange : [2004, 2017];
-  var NOW_YEAR = D.nowYearCE || new Date().getFullYear();
+  var NOW_YEAR = nowYearCE();   /* ปีปัจจุบันนิยามในตรรกะบริสุทธิ์ (core) ที่เดียว เพื่อให้ node กับเบราว์เซอร์ตรงกัน */
   var NOT_RECORDED = 'ยังไม่ได้บันทึก';
 
   var PREC_LABEL = {
@@ -788,7 +927,12 @@
 
   function graphView() {
     tips = {};
-    var L = C.graphLayout(state.records, { mode: state.mode, minYear: YEARS[0], maxYear: YEARS[1], forceAllLabels: state.labels });
+    /* กราฟผูกกับความกว้างที่มีจริง (ไม่ยืม viewBox แคบ ๆ แล้วบวมด้วย CSS) เพื่อให้ตัวอักษรแสดงเต็มขนาด
+     * แต่ล็อกขอบไว้ ไม่ให้เล็กเกินอ่านหรือใหญ่เกินจอ */
+    var fit = function (v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
+    var chartWidth = Math.round(fit((root.clientWidth || 1280) - 34, 1040, 1600));
+    var chartHeight = Math.round(fit(chartWidth * 0.54, 560, 880));
+    var L = C.graphLayout(state.records, { mode: state.mode, minYear: YEARS[0], maxYear: YEARS[1], forceAllLabels: state.labels, width: chartWidth, height: chartHeight });
     var recById = {};
     state.records.forEach(function (r) { recById[r.id] = r; });
     var b = L.bounds;
@@ -814,19 +958,27 @@
       s += '<path class="lg-history-line" d="' + pts.map(function (p, i) { return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ') + '"/>';
     });
 
-    var last = L.points.length ? L.points[L.points.length - 1] : null;
-    /* เป้าหมายที่ยังไม่กำหนดปีถูกวางเป็นคอลัมน์ทางขวา — ต้องยัดให้อยู่ในกรอบพล็อต
-     * ไม่ให้ไหลลงไปทับแถวป้ายปีด้านล่าง */
-    var projectedCount = L.futurePoints.filter(function (f) { return f.projected; }).length;
-    var projSpace = Math.min(30, Math.max(14, (b.bottom - b.top - 34) / Math.max(1, projectedCount)));
-    var projIndex = 0;
+    /* ── อนาคต ──────────────────────────────────────────────────────────────
+     * เหตุการณ์อนาคตที่ "มีวันที่" อยู่บนแกนเวลาตามจริง ส่วนเป้าหมายที่ยังไม่กำหนดปี
+     * ต้องอยู่นอกแกนเวลา (กฎห้ามเดาปี) จึงเป็นคอลัมน์ทางขวา มีเส้นประเส้นเดียวจากจุดปัจจุบัน
+     * เดิมลากเส้นจากจุดขวาสุดไปทุกเป้าหมาย ทำให้เส้นพาดผ่านจุดจริงทั้งก้อน */
+    var anchor = L.futureAnchor;
+    var col = L.futureColumn;
+    if (anchor && col) {
+      /* เส้นเชื่อมเส้นเดียว: ออกจากจุดปัจจุบันไปทางขวาแบบ "ข้องอ" (ไม่ทแยงผ่านจุดจริง)
+       * แล้วต่อกับแกนตั้งของคอลัมน์เป้าหมายที่อยู่นอกแกนเวลา */
+      s += '<line class="lg-future-line" x1="' + (anchor.x + 12).toFixed(1) + '" y1="' + anchor.y.toFixed(1) +
+        '" x2="' + col.x.toFixed(1) + '" y2="' + anchor.y.toFixed(1) + '"/>';
+      s += '<line class="lg-future-spine" x1="' + col.x.toFixed(1) + '" y1="' + Math.min(col.top, anchor.y).toFixed(1) +
+        '" x2="' + col.x.toFixed(1) + '" y2="' + Math.max(col.bottom, anchor.y).toFixed(1) + '"/>';
+      /* ป้ายกำกับใต้คอลัมน์ เพื่อไม่ให้เป็นจุดปริศนา — ชื่อเป้าหมายดูได้จาก hover/แตะ และจากกล่อง FUTURE QUESTS ด้านล่าง
+       * ชิดขอบขวา (ไม่ center บนคอลัมน์) เพราะคอลัมน์อยู่ชิดขอบกราฟ ถ้า center จะถูกตัดขาด */
+      s += '<text class="lg-future-col-label" x="' + (L.width - 4) + '" y="' + (col.bottom + 24).toFixed(1) + '" text-anchor="end">เป้าหมายที่ยังไม่กำหนดปี</text>';
+    }
     L.futurePoints.forEach(function (f) {
-      var fx = f.x == null ? (b.right - 12) : f.x;
-      var fy = f.projected ? (b.top + 30 + (projIndex++) * projSpace) : f.y;
       var fr = recById[f.id];
       if (fr) tips[f.id] = tipHtml(fr, { future: true });
-      s += '<line class="lg-future-line" x1="' + (last ? last.x.toFixed(1) : b.left) + '" y1="' + (last ? last.y.toFixed(1) : (b.bottom - 12)) + '" x2="' + fx.toFixed(1) + '" y2="' + fy.toFixed(1) + '"/>';
-      s += '<circle class="lg-future-dot" data-id="' + esc(f.id) + '" data-open="' + esc(f.id) + '" data-tip-id="' + esc(f.id) + '" tabindex="0" role="button" aria-label="' + esc(f.label + ' · เป้าหมายอนาคต ยังไม่กำหนดปี') + '" cx="' + fx.toFixed(1) + '" cy="' + fy.toFixed(1) + '" r="6"/>';
+      s += '<circle class="lg-future-dot' + (f.projected ? ' is-projected' : '') + '" data-id="' + esc(f.id) + '" data-open="' + esc(f.id) + '" data-tip-id="' + esc(f.id) + '" tabindex="0" role="button" aria-label="' + esc(f.label + (f.projected ? ' · เป้าหมายอนาคต ยังไม่กำหนดปี' : ' · อนาคต · ' + f.dateLabel)) + '" cx="' + f.x.toFixed(1) + '" cy="' + f.y.toFixed(1) + '" r="6"/>';
     });
 
     L.points.forEach(function (p) {
@@ -835,10 +987,13 @@
       s += '<circle class="lg-chart-point' + (p.isCurrent ? ' is-current' : '') + '" data-id="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (p.isCurrent ? 7 : 5) + '"/>';
       if (p.labelSide !== 'hidden') {
         var lx = p.labelX == null ? p.x : p.labelX;
-        var ly = p.labelSide === 'above' ? p.y - 24 : p.y + 32;
-        var label = p.label.length > 24 ? p.label.slice(0, 23) + '…' : p.label;
-        s += '<text class="lg-point-label" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle">' + esc(label) + '</text>';
-        s += '<text class="lg-point-year" x="' + lx.toFixed(1) + '" y="' + (ly + 12).toFixed(1) + '" text-anchor="middle">' + esc(p.dateLabel) + '</text>';
+        /* p.labelY คือขอบของกล่องป้ายที่ชิดจุด (above = ขอบล่าง, below = ขอบบน)
+         * สองบรรทัดถูกจัดวางพร้อมกับตอนกันทับกัน จึงไม่มีการเดาตำแหน่งที่นี่ */
+        var lyName = p.labelSide === 'above' ? p.labelY - 17 : p.labelY + 13;
+        var lyDate = p.labelSide === 'above' ? p.labelY - 4 : p.labelY + 26;
+        var label = p.label.length > 30 ? p.label.slice(0, 29) + '…' : p.label;
+        s += '<text class="lg-point-label" x="' + lx.toFixed(1) + '" y="' + lyName.toFixed(1) + '" text-anchor="middle">' + esc(label) + '</text>';
+        s += '<text class="lg-point-year" x="' + lx.toFixed(1) + '" y="' + lyDate.toFixed(1) + '" text-anchor="middle">' + esc(p.dateLabel) + '</text>';
       }
       s += '<circle class="lg-hit" data-open="' + esc(p.id) + '" data-tip-id="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="11"/>';
       s += '<circle class="lg-hit-wrap" data-open="' + esc(p.id) + '" data-tip-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="' + esc(p.label + ' · ' + p.dateLabel) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="15"/>';
@@ -868,6 +1023,12 @@
       '<span class="lg-legend-item"><span class="lg-legend-band"></span> แถบจาง = ช่วงวัยเด็ก</span>' +
       '</div>';
     h += '<p class="lg-graph-note">' + esc(L.yAxisNote) + ' · แกนนอนคือเวลา พ.ศ. (ค.ศ.) และตำแหน่งของเหตุการณ์ที่ยังไม่ยืนยันปีจะไม่ถูกเดาลงบนแกน</p>';
+    if (state.mode === 'narrative') {
+      h += '<p class="lg-graph-note">เส้นเชื่อมปีละหนึ่งเหตุการณ์หลัก (milestone เด่นสุดของปีนั้น) — เหตุการณ์อื่นยังแสดงเป็นจุดครบทุกอัน</p>';
+      if (L.dodgedCount > 0) {
+        h += '<p class="lg-graph-note">มี ' + L.dodgedCount + ' เหตุการณ์ที่ตำแหน่งตกทับกันเป๊ะ ถูกกระจายแนวตั้งเล็กน้อยเพื่อให้เห็นครบทุกจุด</p>';
+      }
+    }
     if (L.hiddenLabelCount > 0 && !state.labels) {
       h += '<p class="lg-graph-hidden-note">ซ่อน label อีก ' + L.hiddenLabelCount + ' จุด เพื่อไม่ให้ทับกัน — กด "แสดง label ทั้งหมด" เพื่อดูครบ</p>';
     }

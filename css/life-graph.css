@@ -131,3 +131,18 @@
 #life-graph .lg-future-dot:focus{outline:none;stroke-width:3.5}
 #life-graph .lg-future-dot:focus-visible{outline:2px solid #a8d5ff;outline-offset:2px}
 #life-graph .lg-undated-count{color:#8e9aab;font-weight:400}
+
+/* ───────── Life Graph — แก้อาการ "โยงกันมั่ว" ─────────
+ * 1) เดิมเส้นประอนาคตถูกลากจากจุดขวาสุดไปทุกเป้าหมาย (9 เส้น) ทำให้เส้นพาดผ่านจุดจริงทั้งก้อน
+ *    -> เปลี่ยนเป็นเส้นเชื่อมเส้นเดียวจากจุดปัจจุบัน + แกนตั้งของคอลัมน์เป้าหมายที่อยู่นอกแกนเวลา
+ * 2) จุดเป้าหมายเป็นสีเขียว ขัดกับ legend ที่เขียนว่า "เขียว = ปัจจุบัน"
+ *    -> จุดอนาคตเป็นวงกลมโปร่งเส้นประสีฟ้า ตรงกับ swatch "เส้นประ = เป้าหมายอนาคต" */
+#life-graph .lg-future-spine{stroke:#398fe5;stroke-width:2;stroke-dasharray:5 5;opacity:.6}
+#life-graph .lg-future-dot{fill:none;stroke:#398fe5;stroke-width:2;stroke-dasharray:4 3}
+#life-graph .lg-future-dot.is-projected{stroke-width:2.5}
+#life-graph .lg-future-col-label{fill:#9ca9bd;font-size:11px;font-weight:700;letter-spacing:.02em}
+
+/* ขยายพื้นที่กราฟให้โชว์เต็ม ๆ: viewBox ใหญ่ขึ้นและห้ามย่อจนตัวอักษรอ่านไม่ออกบนจอแคบ */
+#life-graph .lg-stock-chart{min-width:1000px}
+#life-graph .lg-chart-scroll{padding-bottom:2px}
+@media(max-width:700px){#life-graph .lg-stock-chart{min-width:820px}}

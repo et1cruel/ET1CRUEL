@@ -50,10 +50,18 @@ export function runStatic(rootDir) {
     const core = coreStart >= 0 ? sw.slice(coreStart, sw.indexOf('];', coreStart)) : '';
     check('sw.js defines CORE', core.length > 0);
 
-    ['css/life-graph.css?v=2', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=2'].forEach(function (p) {
+    ['css/life-graph.css?v=3', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=3'].forEach(function (p) {
       check('CORE precaches ' + p, core.indexOf("'" + p + "'") >= 0);
       check('index.html requests ' + p + ' (page and precache must agree)', html.indexOf(p) >= 0);
     });
+    // เวอร์ชัน asset ที่ bump ไปต้องไม่ทิ้ง URL เก่าค้างใน precache (cache ใหม่จะไม่มีไฟล์ที่หน้าเว็บเรียก)
+    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2'].forEach(function (p) {
+      check('no stale ' + p + ' left in the precache', core.indexOf("'" + p + "'") < 0 && html.indexOf(p) < 0, p);
+    });
+    // neo-brutal ต้องตรงกับที่หน้าเว็บเรียกจริง ไม่งั้น offline จะไม่มี stylesheet หลัก
+    const nbHtml = (html.match(/css\/neo-brutal\.css\?v=(\d+)/) || [])[1];
+    const nbCore = (core.match(/css\/neo-brutal\.css\?v=(\d+)/) || [])[1];
+    check('index.html and the precache agree on css/neo-brutal.css version', nbHtml && nbHtml === nbCore, 'html v' + nbHtml + ' vs precache v' + nbCore);
     check('the unversioned v1 script tag is gone', html.indexOf('js/life-graph.js"') < 0);
 
     const paths = [...core.matchAll(/'([^']+)'/g)].map(function (x) { return x[1]; });
@@ -261,6 +269,44 @@ export async function run(page, ctx) {
     ok('no chart text is cut off by the chart edge', geom.outside.length === 0, geom.outside.join(' | '));
     ok('the current year (2569 / 2026) is always ticked', geom.currentYearTick);
     ok('future goal markers stay inside the plotting area', geom.futureDotsOutside.length === 0, 'below the plot: ' + geom.futureDotsOutside.join(', '));
+
+    // เรขาคณิตของ "เส้นโยง": จุดที่ทับกันเป๊ะ และเส้นประอนาคตที่ลากข้ามจุดจริง คือสิ่งที่ผู้ใช้เห็นเป็นความมั่ว
+    const links = await page.evaluate(() => {
+      const num = el => k => Number(el.getAttribute(k));
+      const points = [...document.querySelectorAll('.lg-chart-point')].map(el => ({ id: el.getAttribute('data-id'), x: num(el)('cx'), y: num(el)('cy'), r: num(el)('r') }));
+      const dots = [...document.querySelectorAll('.lg-future-dot')].map(el => ({ id: el.getAttribute('data-id'), x: num(el)('cx'), y: num(el)('cy'), r: num(el)('r'), projected: el.classList.contains('is-projected') }));
+      const lines = [...document.querySelectorAll('.lg-future-line')].map(el => ({ x1: num(el)('x1'), y1: num(el)('y1'), x2: num(el)('x2'), y2: num(el)('y2') }));
+      const d = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+      const stacked = [];
+      for (let i = 0; i < points.length; i++) for (let j = i + 1; j < points.length; j++) if (d(points[i], points[j]) < 7) stacked.push(points[i].id + ' บน ' + points[j].id);
+      const dotOnMarker = [];
+      dots.forEach(f => points.forEach(p => { if (d(f, p) < f.r + p.r + 2) dotOnMarker.push(f.id + ' บน ' + p.id); }));
+      const segDist = (p, s) => {
+        const vx = s.x2 - s.x1, vy = s.y2 - s.y1, wx = p.x - s.x1, wy = p.y - s.y1;
+        const L = vx * vx + vy * vy || 1;
+        let t = Math.max(0, Math.min(1, (wx * vx + wy * vy) / L));
+        return Math.hypot(p.x - (s.x1 + t * vx), p.y - (s.y1 + t * vy));
+      };
+      const lineOverMarker = [];
+      lines.forEach((s, si) => points.forEach(p => { if (segDist(p, s) < p.r + 1) lineOverMarker.push('line' + si + ' ผ่าน ' + p.id); }));
+      const gridX = [...document.querySelectorAll('.lg-grid-vertical')].map(l => Number(l.getAttribute('x1')));
+      const plotRight = Math.max(...gridX);
+      const projectedDots = dots.filter(f => f.projected);
+      return {
+        stacked, dotOnMarker, lineOverMarker,
+        plotRight: Math.round(plotRight),
+        projectedCount: projectedDots.length,
+        offAxisFailures: projectedDots.filter(f => !(f.x > plotRight + 1)).map(f => f.id + '@' + Math.round(f.x)),
+        anchors: lines.length
+      };
+    });
+    ok('no two event markers sit on top of each other', links.stacked.length === 0, links.stacked.join(' | '));
+    ok('future dashed lines never cut through real event markers', links.lineOverMarker.length === 0, links.lineOverMarker.join(' | '));
+    ok('future goal dots never sit on real event markers', links.dotOnMarker.length === 0, links.dotOnMarker.join(' | '));
+    ok('undated future goals are drawn off the time axis, right of the last tick',
+      links.offAxisFailures.length === 0, 'plot right edge ' + links.plotRight + ' — ' + links.offAxisFailures.join(', '));
+    ok('undated future goals are actually drawn', links.projectedCount >= 1, links.projectedCount + ' projected goals');
+    ok('the future is drawn as one connector to the goal column, not a fan of crossing lines', links.anchors <= 3, links.anchors + ' future lines');
 
     const content = await page.locator('#lg-content').innerText();
     ok('legend carries all four pinned meanings', /ฟ้า/.test(content) && /เขียว/.test(content) && /เส้นประ/.test(content) && /แถบจาง/.test(content));
