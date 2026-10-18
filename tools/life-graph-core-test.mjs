@@ -123,4 +123,32 @@ const loaded = C.loadState();
 assert.equal(loaded.v2, null);
 assert.equal(loaded.v1, null);
 
+// ---- ตำแหน่งป้ายปีบนแกน X: ต้องไม่ทับกัน และต้องไม่ถูกขอบกราฟตัด ----
+var Lg = C.graphLayout(D.seeds, { mode: 'narrative', minYear: D.yearRange[0], maxYear: D.yearRange[1] });
+assert.ok(Lg.years.length >= 4, 'แกน X ต้องมีป้ายปีหลายตัว');
+for (var ti = 1; ti < Lg.years.length; ti++) {
+  var ta = Lg.years[ti - 1], tb = Lg.years[ti];
+  var need = (String(ta.label).length * 7 + String(tb.label).length * 7) / 2;
+  assert.ok(tb.x - ta.x >= need,
+    'ป้ายปี "' + ta.label + '" กับ "' + tb.label + '" ทับกัน (ห่าง ' + Math.round(tb.x - ta.x) + 'px แต่ต้อง >= ' + need + 'px)');
+}
+Lg.years.forEach(function (t) {
+  var w = String(t.label).length * 7;
+  var anchor = t.anchor || 'middle';
+  var x1 = anchor === 'end' ? t.x - w : (anchor === 'start' ? t.x : t.x - w / 2);
+  var x2 = anchor === 'end' ? t.x : (anchor === 'start' ? t.x + w : t.x + w / 2);
+  assert.ok(x1 >= 0 && x2 <= Lg.width,
+    'ป้ายปี "' + t.label + '" ถูกขอบกราฟตัด (' + Math.round(x1) + '..' + Math.round(x2) + ' ของความกว้าง ' + Lg.width + ')');
+});
+assert.equal(Lg.years[Lg.years.length - 1].year, D.yearRange[1], 'ป้ายปีสุดท้ายต้องเป็นปีปัจจุบันเสมอ');
+
+// ---- ป้ายชื่อจุดที่แสดงอยู่ ต้องอยู่ในกรอบ SVG ไม่ถูกขอบตัด ----
+Lg.points.forEach(function (p) {
+  if (p.labelSide === 'hidden') return;
+  var w = Math.min(150, Math.max(52, String(p.label || '').length * 7));
+  var cxp = p.labelX == null ? p.x : p.labelX;
+  assert.ok(cxp - w / 2 >= 0 && cxp + w / 2 <= Lg.width,
+    'ป้าย "' + p.label + '" ถูกขอบกราฟตัด (กลางที่ ' + Math.round(cxp) + ', ครึ่งกว้าง ' + Math.round(w / 2) + ', ความกว้างกราฟ ' + Lg.width + ')');
+});
+
 console.log('OK core');

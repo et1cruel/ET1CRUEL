@@ -455,8 +455,10 @@
     function boxFor(p, side) {
       var w = Math.min(150, Math.max(52, String(p.label || '').length * 7));
       var h = 26;
+      /* ป้ายริมขอบจะถูกดันกลับเข้าในกรอบ SVG เพื่อไม่ให้ขอบตัดข้อความ */
+      var x1 = clamp(p.x - w / 2, 0, Math.max(0, width - w));
       var y1 = side === 'above' ? p.y - 12 - h : p.y + 12;
-      return { x1: p.x - w / 2, x2: p.x + w / 2, y1: y1, y2: y1 + h };
+      return { x1: x1, x2: x1 + w, y1: y1, y2: y1 + h, cx: x1 + w / 2 };
     }
     function hits(b) {
       for (var j = 0; j < boxes.length; j++) {
@@ -468,10 +470,10 @@
     var force = !!opts.forceAllLabels;
     for (i = 0; i < points.length; i++) {
       var p = points[i];
-      if (force) { p.labelSide = 'above'; boxes.push(boxFor(p, 'above')); continue; }
+      if (force) { p.labelSide = 'above'; var fa = boxFor(p, 'above'); p.labelX = fa.cx; boxes.push(fa); continue; }
       var a = boxFor(p, 'above'), b2 = boxFor(p, 'below');
-      if (!hits(a)) { p.labelSide = 'above'; boxes.push(a); }
-      else if (!hits(b2)) { p.labelSide = 'below'; boxes.push(b2); }
+      if (!hits(a)) { p.labelSide = 'above'; p.labelX = a.cx; boxes.push(a); }
+      else if (!hits(b2)) { p.labelSide = 'below'; p.labelX = b2.cx; boxes.push(b2); }
       else { p.labelSide = 'hidden'; hidden++; }
     }
 
@@ -493,8 +495,22 @@
 
     var years = [], span = maxYear - minYear;
     var step = span <= 6 ? 1 : (span <= 12 ? 2 : (span <= 24 ? 4 : 5));
+    function tickW(y) { return String(formatYear(y)).length * 7; } /* ประมาณความกว้างป้ายปี (หน่วยเดียวกับ viewBox) */
     for (var t = minYear; t <= maxYear; t += step) years.push({ x: cx(xFor(t, 0.5)), year: t, label: formatYear(t) });
-    if (years.length && years[years.length - 1].year !== maxYear) years.push({ x: cx(xFor(maxYear, 0.5)), year: maxYear, label: formatYear(maxYear) });
+    /* ป้ายปีปัจจุบันสำคัญที่สุด: ถ้าใส่แล้วทับป้ายก่อนหน้า ให้ตัดป้ายก่อนหน้าออกแทนการทับกัน */
+    if (years.length && years[years.length - 1].year !== maxYear) {
+      var lastX = cx(xFor(maxYear, 0.5));
+      var prevTick = years[years.length - 1];
+      if (lastX - prevTick.x < (tickW(maxYear) + tickW(prevTick.year)) / 2) years.pop();
+      years.push({ x: lastX, year: maxYear, label: formatYear(maxYear) });
+    }
+    /* ป้ายริมกราฟ: เลื่อนจุดยึดข้อความไม่ให้ถูกขอบ SVG ตัด */
+    years.forEach(function (tk) {
+      var w = tickW(tk.year);
+      if (tk.x + w / 2 > width) tk.anchor = 'end';
+      else if (tk.x - w / 2 < 0) tk.anchor = 'start';
+      else tk.anchor = 'middle';
+    });
 
     return {
       mode: mode, points: points, segments: segments, undated: undated, futurePoints: futurePoints,
@@ -675,11 +691,11 @@
       '</div></article>';
   }
 
-  function undatedSection(list, heading) {
-    return '<section class="lg-undated"><h3>' + esc(heading) + '</h3>' +
-      '<p class="lg-graph-note">เหตุการณ์กลุ่มนี้ยังไม่มีปีที่ยืนยันได้ จึงไม่ถูกวางบนแกนเวลา และระบบไม่เดาปีให้</p>' +
+  function undatedSection(list) {
+    return '<section class="lg-undated"><h3>ปีไม่ระบุ · Undated Milestones <span class="lg-undated-count">(' + list.length + ')</span></h3>' +
+      '<p class="lg-graph-note">เหตุการณ์กลุ่มนี้ยังไม่มีปีที่ยืนยันได้ จึงไม่ถูกวางบนแกนเวลา และระบบไม่เดาปีให้ — เปิดดูรายละเอียดได้เหมือนเหตุการณ์อื่น</p>' +
       '<div class="lg-undated-grid">' + list.map(function (r) {
-        return '<button type="button" class="lg-undated-item" data-open="' + esc(r.id) + '"><b>' + esc(r.title) + '</b><small>' + esc(catLabel(r.category)) + ' · ' + esc(chapterLabel(r.chapterId)) + '</small></button>';
+        return '<button type="button" class="lg-undated-item" data-open="' + esc(r.id) + '" data-tip-id="' + esc(r.id) + '"><b>' + esc(r.title) + '</b><small>' + esc(catLabel(r.category)) + ' · ' + esc(chapterLabel(r.chapterId)) + '</small></button>';
       }).join('') + '</div></section>';
   }
 
@@ -706,7 +722,7 @@
       }
       if (state.year === 'all') {
         var und = C.undatedRecords(list);
-        if (und.length) h += undatedSection(und, 'Undated — เหตุการณ์ที่ยังไม่ยืนยันปี');
+        if (und.length) h += undatedSection(und);
       }
     }
     if (state.year === 'all' || state.year === 'future') {
@@ -748,8 +764,33 @@
   }
 
   /* ── กราฟชีวิตแบบสต็อก ── */
+  /* ข้อความ tooltip ต่อ record ถูกสร้างตอนวาดกราฟ แล้วให้ handler อ่านผ่าน data-tip-id
+   * (ไม่ยัด HTML ลง attribute เพื่อไม่ให้ escape เพี้ยน) */
+  var tips = {};
+  function tipHtml(r, opts) {
+    var precisionNote = '';
+    if (r.datePrecision === 'exact_year' || r.datePrecision === 'estimated_year') precisionNote = 'ระบุเป็นปี (ไม่ทราบเดือน/วัน)';
+    else if (r.datePrecision === 'school_period') precisionNote = 'ระบุเป็นช่วงชั้น/ปีการศึกษา';
+    else if (r.datePrecision === 'age_based') precisionNote = 'ระบุจากช่วงอายุ';
+    else if (r.datePrecision === 'exact_month' || r.datePrecision === 'estimated_month') precisionNote = 'ระบุเป็นเดือน';
+    var flags = [];
+    if (r.isCurrent) flags.push('ปัจจุบัน · ยังดำเนินอยู่');
+    if (r.isFuture || (opts && opts.future)) flags.push('เป้าหมายอนาคต · ยังไม่เกิดขึ้น');
+    if (r.dateStatus === 'estimated') flags.push('วันที่ประมาณการ');
+    if (r.dateStatus === 'needs_confirmation') flags.push('ต้องยืนยัน');
+    return '<b>' + esc(r.title) + '</b>' +
+      '<span>' + esc(C.formatDateRange(r)) + '</span>' +
+      (precisionNote ? '<em>' + esc(precisionNote) + '</em>' : '') +
+      '<span>' + esc(catLabel(r.category)) + '</span>' +
+      (flags.length ? '<i>' + esc(flags.join(' · ')) + '</i>' : '');
+  }
+  function graphTip() { return '<div class="lg-chart-tip" id="lg-chart-tip" role="tooltip" hidden></div>'; }
+
   function graphView() {
+    tips = {};
     var L = C.graphLayout(state.records, { mode: state.mode, minYear: YEARS[0], maxYear: YEARS[1], forceAllLabels: state.labels });
+    var recById = {};
+    state.records.forEach(function (r) { recById[r.id] = r; });
     var b = L.bounds;
     function xAt(y) { return b.left + (y - b.minYear) / (b.maxYear - b.minYear) * (b.right - b.left); }
     var s = '<svg class="lg-stock-chart" viewBox="0 0 ' + L.width + ' ' + L.height + '" width="' + L.width + '" height="' + L.height + '" role="img" aria-label="กราฟเส้นทางชีวิต เทียบเวลา พ.ศ. และ ค.ศ.">';
@@ -763,7 +804,7 @@
     }
     L.years.forEach(function (t) {
       s += '<line class="lg-grid-vertical" x1="' + t.x.toFixed(1) + '" y1="' + b.top + '" x2="' + t.x.toFixed(1) + '" y2="' + b.bottom + '"/>';
-      s += '<text class="lg-axis-label" x="' + t.x.toFixed(1) + '" y="' + (b.bottom + 22) + '" text-anchor="middle">' + esc(t.label) + '</text>';
+      s += '<text class="lg-axis-label" x="' + t.x.toFixed(1) + '" y="' + (b.bottom + 22) + '" text-anchor="' + (t.anchor || 'middle') + '">' + esc(t.label) + '</text>';
     });
     s += '<text class="lg-axis-title" x="' + b.left + '" y="' + (b.top - 12) + '">' + (state.mode === 'self' ? 'คะแนนประเมินตนเอง 1–10 (คุณกรอกเอง)' : 'การเปลี่ยนแปลงของชีวิต (ตำแหน่งเชิงภาพ ไม่ใช่คะแนน)') + '</text>';
 
@@ -774,23 +815,33 @@
     });
 
     var last = L.points.length ? L.points[L.points.length - 1] : null;
-    L.futurePoints.forEach(function (f, idx) {
+    /* เป้าหมายที่ยังไม่กำหนดปีถูกวางเป็นคอลัมน์ทางขวา — ต้องยัดให้อยู่ในกรอบพล็อต
+     * ไม่ให้ไหลลงไปทับแถวป้ายปีด้านล่าง */
+    var projectedCount = L.futurePoints.filter(function (f) { return f.projected; }).length;
+    var projSpace = Math.min(30, Math.max(14, (b.bottom - b.top - 34) / Math.max(1, projectedCount)));
+    var projIndex = 0;
+    L.futurePoints.forEach(function (f) {
       var fx = f.x == null ? (b.right - 12) : f.x;
-      var fy = f.projected ? (b.top + 34 + idx * 30) : f.y;
+      var fy = f.projected ? (b.top + 30 + (projIndex++) * projSpace) : f.y;
+      var fr = recById[f.id];
+      if (fr) tips[f.id] = tipHtml(fr, { future: true });
       s += '<line class="lg-future-line" x1="' + (last ? last.x.toFixed(1) : b.left) + '" y1="' + (last ? last.y.toFixed(1) : (b.bottom - 12)) + '" x2="' + fx.toFixed(1) + '" y2="' + fy.toFixed(1) + '"/>';
-      s += '<circle class="lg-future-dot" data-id="' + esc(f.id) + '" cx="' + fx.toFixed(1) + '" cy="' + fy.toFixed(1) + '" r="6"><title>' + esc(f.label) + ' · เป้าหมายอนาคต ยังไม่กำหนดปี</title></circle>';
+      s += '<circle class="lg-future-dot" data-id="' + esc(f.id) + '" data-open="' + esc(f.id) + '" data-tip-id="' + esc(f.id) + '" tabindex="0" role="button" aria-label="' + esc(f.label + ' · เป้าหมายอนาคต ยังไม่กำหนดปี') + '" cx="' + fx.toFixed(1) + '" cy="' + fy.toFixed(1) + '" r="6"/>';
     });
 
     L.points.forEach(function (p) {
-      s += '<circle class="lg-chart-point' + (p.isCurrent ? ' is-current' : '') + '" data-id="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (p.isCurrent ? 7 : 5) + '"><title>' + esc(p.label) + ' · ' + esc(p.dateLabel) + '</title></circle>';
+      var pr = recById[p.id];
+      if (pr) tips[p.id] = tipHtml(pr);
+      s += '<circle class="lg-chart-point' + (p.isCurrent ? ' is-current' : '') + '" data-id="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (p.isCurrent ? 7 : 5) + '"/>';
       if (p.labelSide !== 'hidden') {
+        var lx = p.labelX == null ? p.x : p.labelX;
         var ly = p.labelSide === 'above' ? p.y - 24 : p.y + 32;
         var label = p.label.length > 24 ? p.label.slice(0, 23) + '…' : p.label;
-        s += '<text class="lg-point-label" x="' + p.x.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle">' + esc(label) + '</text>';
-        s += '<text class="lg-point-year" x="' + p.x.toFixed(1) + '" y="' + (ly + 12).toFixed(1) + '" text-anchor="middle">' + esc(p.dateLabel) + '</text>';
+        s += '<text class="lg-point-label" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle">' + esc(label) + '</text>';
+        s += '<text class="lg-point-year" x="' + lx.toFixed(1) + '" y="' + (ly + 12).toFixed(1) + '" text-anchor="middle">' + esc(p.dateLabel) + '</text>';
       }
-      s += '<circle class="lg-hit" data-open="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="11"/>';
-      s += '<circle class="lg-hit-wrap" data-open="' + esc(p.id) + '" tabindex="0" role="button" aria-label="' + esc(p.label + ' · ' + p.dateLabel) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="15"/>';
+      s += '<circle class="lg-hit" data-open="' + esc(p.id) + '" data-tip-id="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="11"/>';
+      s += '<circle class="lg-hit-wrap" data-open="' + esc(p.id) + '" data-tip-id="' + esc(p.id) + '" tabindex="0" role="button" aria-label="' + esc(p.label + ' · ' + p.dateLabel) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="15"/>';
     });
     s += '</svg>';
 
@@ -804,24 +855,24 @@
       '<p class="lg-mode-note">โหมดปัจจุบัน: ' + (state.mode === 'self' ? 'B — คะแนนประเมินตนเอง 1–10 ที่คุณกรอกเอง (ว่างไว้ได้ ไม่มีผลต่อข้อมูลจริง)' : 'A — ตำแหน่งแนวตั้งจัดวางตามบทชีวิตและความสำคัญ ไม่ใช่คะแนนวัดคุณภาพชีวิต') + '</p>';
 
     if (state.mode === 'self' && !L.hasScores) {
-      h += '<p class="lg-score-notice">โหมด B วาดได้เฉพาะคะแนนประเมินตนเอง 1–10 ที่คุณกรอกเอง — ตอนนี้ยังไม่มีคะแนนประเมินตนเองที่บันทึกไว้ จึงยังไม่มีเส้นให้วาด และระบบจะไม่เดาคะแนนให้</p>';
+      h += '<p class="lg-score-notice">ยังไม่มีคะแนนประเมินตนเอง — กรอกได้ที่ปุ่มแก้ไข (โหมด B วาดเฉพาะคะแนน 1–10 ที่คุณกรอกเอง ระบบจะไม่เดาคะแนนให้)</p>';
     } else if (state.mode === 'self') {
       h += '<p class="lg-graph-note">วาดจากคะแนนที่คุณกรอกเอง ' + L.points.length + ' จุด — เส้นจะขาดตรงช่วงปีที่ไม่มีคะแนน ไม่มีการลากเชื่อมข้ามช่องว่าง</p>';
     }
 
-    h += '<div class="lg-trajectory"><div class="lg-chart-scroll">' + s + '</div></div>';
+    h += '<div class="lg-trajectory"><div class="lg-chart-scroll">' + s + '</div>' + graphTip() + '</div>';
     h += '<div class="lg-legend">' +
-      '<span class="lg-legend-item"><span class="lg-legend-line"></span> เหตุการณ์ที่เกิดขึ้นแล้ว</span>' +
-      '<span class="lg-legend-item"><span class="lg-legend-key" style="background:#14b88a"></span> ปัจจุบัน — ยังดำเนินอยู่</span>' +
-      '<span class="lg-legend-item"><span class="lg-legend-dashed"></span> เป้าหมายอนาคต — ยังไม่เกิดขึ้น</span>' +
-      '<span class="lg-legend-item"><span class="lg-legend-band"></span> ช่วงวัยเด็ก 2547–2560 (2004–2017)</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-line"></span> ฟ้า = เหตุการณ์ในอดีต</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-key" style="background:#14b88a"></span> เขียว = ปัจจุบัน</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-dashed"></span> เส้นประ = เป้าหมายอนาคต (ยังไม่เกิดขึ้น)</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-band"></span> แถบจาง = ช่วงวัยเด็ก</span>' +
       '</div>';
     h += '<p class="lg-graph-note">' + esc(L.yAxisNote) + ' · แกนนอนคือเวลา พ.ศ. (ค.ศ.) และตำแหน่งของเหตุการณ์ที่ยังไม่ยืนยันปีจะไม่ถูกเดาลงบนแกน</p>';
     if (L.hiddenLabelCount > 0 && !state.labels) {
       h += '<p class="lg-graph-hidden-note">ซ่อน label อีก ' + L.hiddenLabelCount + ' จุด เพื่อไม่ให้ทับกัน — กด "แสดง label ทั้งหมด" เพื่อดูครบ</p>';
     }
     var und = C.undatedRecords(state.records);
-    if (und.length) h += undatedSection(und, 'Undated — เหตุการณ์ที่ยังไม่ยืนยันปี (' + und.length + ')');
+    if (und.length) h += undatedSection(und);
     var fut = C.futureRecords(state.records);
     if (fut.length) h += futureSection(fut);
     return h;
@@ -1123,6 +1174,40 @@
     try { var v = localStorage.getItem(C.KEY_V1_FOCUS); if (v) cur.textContent = v; } catch (e) {}
   }
 
+  /* ── tooltip มืดของกราฟ (hover + โฟกัสคีย์บอร์ด ใช้เส้นทางเดียวกัน) ── */
+  function showTip(el) {
+    var tip = byId('lg-chart-tip');
+    if (!tip || !el || !el.getAttribute) return;
+    var key = el.getAttribute('data-tip-id');
+    var html = key ? tips[key] : null;
+    if (!html) return;
+    var wrap = tip.parentElement;
+    if (!wrap) return;
+    tip.innerHTML = html;
+    tip.hidden = false;
+    var r = el.getBoundingClientRect();
+    var w = wrap.getBoundingClientRect();
+    var mid = r.left - w.left + r.width / 2;
+    var tw = tip.offsetWidth;
+    tip.style.left = Math.min(Math.max(6, w.width - tw - 6), Math.max(6, mid - tw / 2)) + 'px';
+    tip.style.top = Math.max(2, r.top - w.top - tip.offsetHeight - 10) + 'px';
+  }
+  function hideTip() {
+    var tip = byId('lg-chart-tip');
+    if (tip) { tip.hidden = true; tip.innerHTML = ''; }
+  }
+  function tipTarget(ev) {
+    return (ev.target && ev.target.closest) ? ev.target.closest('[data-tip-id]') : null;
+  }
+  function onTipOver(ev) { var el = tipTarget(ev); if (el) showTip(el); }
+  function onTipOut(ev) {
+    var el = tipTarget(ev);
+    if (!el) return;
+    var to = tipTarget({ target: ev.relatedTarget });
+    if (to && to.getAttribute('data-tip-id') === el.getAttribute('data-tip-id')) return; // ย้ายระหว่างวงในวงนอกของจุดเดียวกัน
+    hideTip();
+  }
+
   /* ── เหตุการณ์คลิก/คีย์บอร์ด ── */
   function onClick(ev) {
     var t = ev.target && ev.target.closest ? ev.target.closest('[data-lg-view],[data-lg-year],[data-prev-year],[data-next-year],[data-today],[data-all-years],[data-lg-mode],[data-lg-labels],[data-open],[data-close-detail],[data-add],[data-edit],[data-delete],[data-export],[data-import],[data-focus],[data-cancel]') : null;
@@ -1221,6 +1306,10 @@
   byId('lg-form').addEventListener('submit', onFormSubmit);
   root.addEventListener('click', onClick);
   root.addEventListener('keydown', onKeydown);
+  root.addEventListener('pointerover', onTipOver);
+  root.addEventListener('pointerout', onTipOut);
+  root.addEventListener('focusin', onTipOver);
+  root.addEventListener('focusout', onTipOut);
   render();
   if (firstVisit) notice('เริ่มจากชุดข้อมูลตั้งต้น ' + state.records.length + ' รายการ ทุกช่องที่ยังไม่มีข้อมูลจะแสดงว่า "' + NOT_RECORDED + '" และปีที่ยังไม่มีบันทึกจะไม่ถูกเติมให้');
 })();

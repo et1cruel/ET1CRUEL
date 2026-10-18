@@ -204,6 +204,94 @@ export async function run(page, ctx) {
     await page.click('[data-close-detail]');
   });
 
+  /* ---------- สี/คำอธิบาย/tooltip/เป้าคีย์บอร์ด ตามสเปกที่ตรึงไว้ ---------- */
+  await step('graph palette, legend, tooltip, keyboard targets', async () => {
+    await page.click('[data-lg-view="graph"]');
+    await page.waitForSelector('svg.lg-stock-chart');
+
+    // ค่าที่เบราว์เซอร์คำนวณจริง ไม่ใช่แค่ชื่อคลาส
+    const line = await page.$eval('.lg-history-line', el => getComputedStyle(el).stroke);
+    ok('history line is the spec blue', line === 'rgb(57, 143, 229)', line);
+    const cur = await page.$eval('.lg-chart-point.is-current', el => getComputedStyle(el).fill);
+    ok('current point is the spec green', cur === 'rgb(20, 184, 138)', cur);
+    const fd = await page.$eval('.lg-future-dot', el => ({ fill: getComputedStyle(el).fill, dash: getComputedStyle(el).strokeDasharray }));
+    ok('future dot is hollow', fd.fill === 'none', fd.fill);
+    ok('future dot outline is dashed', /\d\s+\d/.test(fd.dash) || fd.dash !== 'none', fd.dash);
+    const wrapFill = await page.$eval('.lg-hit-wrap', el => getComputedStyle(el).fill);
+    ok('the point hit area paints nothing over the marker', wrapFill === 'none', wrapFill);
+    const band = await page.$eval('.lg-chapter-band', el => getComputedStyle(el).fill);
+    ok('childhood band is a faint tint, not a solid block', /rgba\(.*0\.0\d\)/.test(band) || /rgba\(.*0\.1/.test(band), band);
+
+    // เรขาคณิตของข้อความบนกราฟ: ไม่ทับกัน และไม่ถูกขอบตัด (ตรวจที่ขนาดที่เรนเดอร์จริง)
+    const geom = await page.evaluate(() => {
+      const svg = document.querySelector('svg.lg-stock-chart');
+      const clip = document.querySelector('.lg-chart-scroll').getBoundingClientRect();
+      const collect = sel => [...document.querySelectorAll(sel)].map(e => { const r = e.getBoundingClientRect(); return { t: e.textContent, x: r.x, y: r.y, w: r.width, h: r.height }; });
+      const collide = list => {
+        const bad = [];
+        for (let i = 0; i < list.length; i++) for (let j = i + 1; j < list.length; j++) {
+          const a = list[i], b = list[j];
+          if (a.x < b.x + b.w - 1 && b.x < a.x + a.w - 1 && a.y < b.y + b.h - 1 && b.y < a.y + a.h - 1) bad.push(a.t + ' ⟂ ' + b.t);
+        }
+        return bad;
+      };
+      const axes = collect('.lg-axis-label'), labels = collect('.lg-point-label'), years = collect('.lg-point-year');
+      const all = axes.concat(labels, years);
+      return {
+        axes: axes.length,
+        axisCollisions: collide(axes),
+        labelCollisions: collide(labels),
+        yearCollisions: collide(years),
+        outside: all.filter(o => o.x < clip.x - 1 || o.x + o.w > clip.x + clip.width + 1).map(o => o.t),
+        currentYearTick: axes.some(a => /2569 \(2026\)/.test(a.t)),
+        futureDotsOutside: (() => {
+          const ys = [...document.querySelectorAll('.lg-gridline')].map(l => Number(l.getAttribute('y1')));
+          const top = Math.min.apply(null, ys), bottom = Math.max.apply(null, ys);
+          return [...document.querySelectorAll('.lg-future-dot')]
+            .map(d => Number(d.getAttribute('cy')))
+            .filter(cy => cy < top - 0.5 || cy > bottom + 0.5)
+            .map(cy => Math.round(cy));
+        })()
+      };
+    });
+    ok('year ticks are drawn', geom.axes >= 4, '' + geom.axes);
+    ok('year tick labels never overlap', geom.axisCollisions.length === 0, geom.axisCollisions.join(' | '));
+    ok('point name labels never overlap', geom.labelCollisions.length === 0, geom.labelCollisions.join(' | '));
+    ok('point date labels never overlap', geom.yearCollisions.length === 0, geom.yearCollisions.join(' | '));
+    ok('no chart text is cut off by the chart edge', geom.outside.length === 0, geom.outside.join(' | '));
+    ok('the current year (2569 / 2026) is always ticked', geom.currentYearTick);
+    ok('future goal markers stay inside the plotting area', geom.futureDotsOutside.length === 0, 'below the plot: ' + geom.futureDotsOutside.join(', '));
+
+    const content = await page.locator('#lg-content').innerText();
+    ok('legend carries all four pinned meanings', /ฟ้า/.test(content) && /เขียว/.test(content) && /เส้นประ/.test(content) && /แถบจาง/.test(content));
+    ok('undated heading uses the pinned wording', content.indexOf('ปีไม่ระบุ · Undated Milestones') >= 0, content.slice(0, 300));
+    ok('the pinned vertical-axis sentence is present verbatim', content.indexOf('ตำแหน่งแนวตั้งเป็นการจัดวางเชิงภาพ ไม่ใช่คะแนนชีวิตที่วัดจริง') >= 0);
+
+    const tip = page.locator('#lg-chart-tip');
+    ok('tooltip starts hidden', !(await tip.isVisible()));
+    await page.hover('.lg-hit-wrap[data-tip-id="football-age11"]');
+    await page.waitForTimeout(150);
+    ok('tooltip appears on hover', await tip.isVisible());
+    const tipText = await tip.innerText();
+    ok('tooltip names the event', /ฟุตบอล/.test(tipText), tipText);
+    ok('tooltip annotates that the date is year-only', /ระบุเป็นปี/.test(tipText), tipText);
+    const tipBg = await tip.evaluate(el => getComputedStyle(el).backgroundColor);
+    const rgb = tipBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    ok('tooltip is dark', !!rgb && Math.max(+rgb[1], +rgb[2], +rgb[3]) < 70, tipBg);
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(120);
+    ok('tooltip hides again when the pointer leaves', !(await tip.isVisible()));
+
+    const dot = await page.$('.lg-future-dot');
+    await dot.focus();
+    ok('future dot is keyboard focusable', await dot.evaluate(el => el === document.activeElement));
+    ok('focusing a future dot also shows its tooltip', await tip.isVisible());
+    await page.keyboard.press('Enter');
+    ok('Enter on a future dot opens its detail', await page.locator('#lg-detail').isVisible());
+    ok('the future dot detail is marked as a future goal', /อนาคต/.test(await page.locator('#lg-detail').innerText()));
+    await page.click('[data-close-detail]');
+  });
+
   /* ---------- ความซื่อสัตย์ของแผงรายละเอียด ---------- */
   await step('detail panel honesty', async () => {
     await page.click('[data-lg-view="timeline"]');
