@@ -145,7 +145,16 @@ body:not(.intro-ready) .header,body:not(.intro-ready) .planet-list,body:not(.int
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): body ถูกย้อมเป็นหมึกเข้มบนกระดาษครีม แต่ main.experience เป็นพื้นวิดีโอเข้ม
+     → ตัวหนังสือทั้งหมดกลายเป็นดำบนดำ (คอนทราสต์ ~1.0) มองไม่เห็น → คืนสีขาวในฉาก */
+  body .experience{color:#fff!important}
+  body .preloader-count{color:#fff!important}
+  body .experience .planet-item{color:#fff!important}
+  body .experience .loading{color:#fff!important}
+  body .experience .portal-heading strong,body .experience .portal-heading span{color:#fff!important}
+  </style>
 </head>
 <body>
 <main class="experience" data-planet="mars">

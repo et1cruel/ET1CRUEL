@@ -656,7 +656,26 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
 <script defer src="js/command-console.js?v=6"></script>
 <script defer src="js/reactive-lens.js"></script>
 <script defer src="js/site-polish.js?v=3"></script>
-<link rel="stylesheet" href="css/neo-brutal.css?v=17">
+<link rel="stylesheet" href="css/neo-brutal.css?v=18">
+<link rel="stylesheet" href="css/life-graph.css">
+<script defer src="js/life-graph.js"></script>
+<style>
+/* FIX (neo-brutal): จุดที่ยังกลืนพื้น — ไอคอนคลังทองพื้นมืดบนการ์ดขาว,
+   ปุ่มสุ่มเกร็ดเขียวนีออนบนพื้นขาว และราคาหุ้นในแถบ .plan-pill ที่พื้นเป็นกรมท่าเข้ม */
+body.site-polish .treas-head .ticon{background:#fff!important;border:3px solid #131313!important}
+body.site-polish #know-rand{background:#fff!important;color:#131313!important;border:3px solid #131313!important;box-shadow:3px 3px 0 #131313!important}
+body.site-polish .plan-pill .stock-up{color:#6EE7B7!important}
+body.site-polish .plan-pill .stock-down{color:#FF9AA9!important}
+body.site-polish .plan-pill b{color:#fff!important}
+body.site-polish .pb-h{color:#0a7a44!important;border-color:#0a7a44!important}
+body.site-polish .pb-ret b{color:#0a7a44!important}
+body.site-polish .plan-line > b{color:#131313!important}
+body.site-polish .diary-moods button{background:#fff!important;border:3px solid #131313!important}
+body.site-polish .gacha-stat small{color:#4a4a46!important}
+body.site-polish .gacha-pity{color:#4a4a46!important}
+body.site-polish .gacha-pity b{color:#131313!important}
+body.site-polish section.card h5{color:#131313!important}
+</style>
 </head>
 <body class="site-polish">
 <canvas id="bg3d"></canvas>
@@ -719,6 +738,52 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
     </div>
   </div>
 </div>
+
+<section id="life-graph" aria-labelledby="lg-heading">
+  <div class="lg-top"><span class="lg-eyebrow">ET1CRUEL / PERSONAL LIFE UNIVERSE</span><time class="lg-date" id="lg-today"></time></div>
+  <h2 id="lg-heading">กราฟชีวิตของฉัน</h2>
+  <p class="lg-subtitle">ทุกจุดคือช่วงเวลาหนึ่งของชีวิต ทุกเส้นคือเรื่องราวที่พาฉันมาถึงวันนี้</p>
+  <p class="lg-support">เส้นทางชีวิตส่วนบุคคล · LIFE TRAJECTORY ไม่ใช่ข้อมูลหุ้นหรือคะแนนวัดคุณภาพชีวิต</p>
+  <div class="lg-stats" aria-label="สรุปชีวิต">
+    <div class="lg-stat"><small>ช่วงชีวิตที่บันทึกแล้ว</small><strong id="lg-stat-years">—</strong></div>
+    <div class="lg-stat"><small>จำนวน Milestones</small><strong id="lg-milestones">—</strong></div>
+    <div class="lg-stat"><small>จำนวนบทชีวิต</small><strong id="lg-chapters">—</strong></div>
+    <div class="lg-stat"><small>เป้าหมายที่กำลังดำเนินการ</small><strong id="lg-active">—</strong></div>
+    <div class="lg-stat"><small>ปีปัจจุบัน · พ.ศ.</small><strong id="lg-age">—</strong></div>
+  </div>
+  <p class="lg-notice" id="lg-notice" role="status" hidden></p>
+  <div class="lg-toolbar" aria-label="เครื่องมือกราฟชีวิต">
+    <div class="lg-modes" role="group" aria-label="มุมมอง"><button type="button" data-lg-view="timeline" aria-pressed="true" class="is-active">Timeline</button><button type="button" data-lg-view="graph" aria-pressed="false">Life Graph</button><button type="button" data-lg-view="map" aria-pressed="false">Life Map</button></div>
+    <select id="lg-category" aria-label="กรองตามหมวดหมู่"><option value="all">ทุกหมวด</option><option value="Music">Music</option><option value="Education">Education</option><option value="Work">Work</option><option value="Technology">Technology</option><option value="AI">AI</option><option value="Finance">Finance</option><option value="Personal Growth">Personal Growth</option><option value="Future Goals">Future Goals</option></select>
+    <input id="lg-search" type="search" placeholder="ค้นหาเหตุการณ์ / tag…" aria-label="ค้นหาเหตุการณ์และแท็ก">
+    <span class="lg-result-count" id="lg-result-count" aria-live="polite"></span>
+    <button type="button" class="lg-btn lg-primary" data-add>＋ เพิ่มบันทึก</button>
+    <button type="button" class="lg-btn" data-export>ส่งออก JSON</button>
+  </div>
+  <div id="lg-content" aria-live="polite"></div>
+  <aside id="lg-detail" hidden aria-label="รายละเอียดเหตุการณ์"></aside>
+  <div class="lg-bottom">
+    <article class="lg-focus"><h3>🎯 CURRENT FOCUS · เป้าหมายตั้งต้น แก้ไขได้</h3><p id="lg-focus-text">สร้างรายได้ที่มั่นคงจากทักษะด้านเทคโนโลยี AI และงานสร้างสรรค์ โดยไม่ทอดทิ้งดนตรี</p><span class="lg-goal">เป้ารายได้ 20,000 บาท/เดือน</span><p style="margin-top:8px">Music · et1cruel &nbsp;|&nbsp; Technology · สร้างโปรเจ็กต์จริง &nbsp;|&nbsp; AI · ทดลองระบบที่ช่วยงาน &nbsp;|&nbsp; Robotics · เป้าหมายระยะยาว</p><button type="button" class="lg-btn" data-focus style="margin-top:10px">แก้ไข Primary Focus</button></article>
+    <article class="lg-money"><h3>💰 FINANCIAL LIFE TRACKER</h3><p>เป้าหมายรายได้: 20,000 บาท/เดือน</p><p style="margin-top:6px">รายได้ / ค่าใช้จ่าย / เงินออม: <b>ต้องอัปเดตข้อมูลล่าสุด</b></p><p style="margin-top:6px">ไม่มีการนำยอดการเงินเก่ามาแสดงเป็นยอดปัจจุบัน</p></article>
+  </div>
+  <div class="lg-future"><h3>🧭 FUTURE QUESTS · เป้าหมายตั้งต้น ไม่ใช่ข้อผูกมัด</h3><div class="lg-future-grid"><div><b>🎵 Music</b>สร้างผลงานต่อเนื่อง · พัฒนาเสียง et1cruel</div><div><b>✦ Creative Business</b>เปลี่ยนทักษะเป็นรายได้ · สร้าง Portfolio</div><div><b>⌘ Software</b>สร้าง Web App · เรียนรู้ Backend, Database และ Deploy</div><div><b>🤖 AI & Robotics</b>สร้าง AI tools ที่ใช้ได้จริง · เรียนพื้นฐานหุ่นยนต์และทำ Prototype</div></div></div>
+  <p class="lg-quote">“MY LIFE IS NOT JUST A TIMELINE. IT IS A WORLD I AM BUILDING.”</p>
+  <dialog id="lg-dialog" aria-labelledby="lg-dialog-title"><form id="lg-form" method="dialog"><h3 id="lg-dialog-title">เพิ่มบันทึกชีวิต</h3><input type="hidden" name="id"><div class="lg-form-grid">
+    <label class="lg-form-field wide">ชื่อเหตุการณ์<input name="title" required maxlength="120"></label>
+    <label class="lg-form-field wide">เรื่องราว<textarea name="description" maxlength="1200"></textarea></label>
+    <label class="lg-form-field">หมวดหมู่<select name="category"></select></label>
+    <label class="lg-form-field">ชนิดข้อมูล<select name="type"><option value="milestone">Milestone</option><option value="chapter">Chapter</option><option value="goal">Goal</option></select></label>
+    <label class="lg-form-field">วันที่ (ไม่บังคับ)<input name="date" type="date"></label>
+    <label class="lg-form-field">ปีสิ้นสุด (ไม่บังคับ)<input name="endDate" type="number" min="1900" max="2200" placeholder="เช่น 2018"></label>
+    <label class="lg-form-field">ตำแหน่งเชิงเรื่องราว (ไม่บังคับ)<input name="storyLevel" type="number" min="0" max="100" placeholder="วางตำแหน่ง 0–100 ไม่ใช่คะแนนชีวิต"></label>
+    <label class="lg-form-field">ประเมินตนเอง (ไม่บังคับ)<input name="selfAssessmentScore" type="number" min="0" max="100" placeholder="คะแนนที่คุณประเมินเอง"></label>
+    <label class="lg-form-field">ความแม่นยำของวันที่<select name="datePrecision"><option value="unknown">ปีไม่ระบุ</option><option value="exact">วัน/เดือน/ปี</option><option value="month">เดือน</option><option value="year">ปี</option><option value="approximate">โดยประมาณ</option><option value="age">ช่วงอายุ</option><option value="school-stage">ระดับชั้น</option></select></label>
+    <label class="lg-form-field">สถานะข้อมูล<select name="status"><option value="verified">ยืนยันแล้ว</option><option value="user-reported">ผู้ใช้เล่า / รายละเอียดรอยืนยัน</option><option value="planned">วางแผน</option><option value="exploring">กำลังสำรวจ</option><option value="in-progress">กำลังทำ</option><option value="completed">เสร็จแล้ว</option></select></label>
+    <label class="lg-form-field">บทชีวิตที่เชื่อมโยง<select name="chapterId"><option value="">ไม่ระบุบท</option><option value="childhood">จุดเริ่มต้น</option><option value="turning-point">จุดเปลี่ยน</option><option value="learning-struggle">เรียนรู้ผ่านข้อจำกัด</option><option value="education-experiments">การเรียนและทดลอง</option><option value="music-artist">เส้นทางศิลปิน</option><option value="creative-technology">เทคโนโลยีสร้างสรรค์</option><option value="ai-builder">AI Builder</option><option value="robotics-future">Robotics & Future Engineering</option><option value="life-os">Life OS</option></select></label>
+    <label class="lg-form-field">Tags (คั่นด้วยจุลภาค)<input name="tags" placeholder="ดนตรี, learning"></label>
+    <label class="lg-form-field wide">แหล่งที่มา / หมายเหตุ<textarea name="evidenceNote" maxlength="600"></textarea></label>
+  </div><div class="lg-dialog-actions"><button type="button" data-cancel>ยกเลิก</button><button type="submit">บันทึก</button></div></form></dialog>
+</section>
 
 <div class="cover-video"><video controls preload="metadata" playsinline src="tweet.mp4"></video></div>
 
@@ -802,6 +867,7 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
   <a href="./pillars.html">🧭 8 หลัก <span class="n">4+4 ↗</span></a>
   <a href="./video.html">🎬 Genvideo <span class="n">EP1 ↗</span></a>
   <a href="#genpic">🖼️ GenPic <span class="n">NEW</span></a>
+  <a href="./plan-content.html">📋 แผน Content <span class="n">PLAN</span></a>
   <div class="nav-group">📓 ไดอารี่</div>
   <a href="#diary">📓 ไดอารี่รายวัน <span class="n" id="navDiary">NEW</span></a>
   <a href="./growth.html">🌱 การเติบโต <span class="n">LOG ↗</span></a>

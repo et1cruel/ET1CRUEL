@@ -93,7 +93,18 @@
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): หน้านี้ออกแบบเป็นท้องฟ้าดาว (ตัวหนังสือสว่าง) แต่ neo ย้อมพื้นเป็นกระดาษครีม
+     → คืนพื้นเข้มให้ธีมดาว แล้วคงการ์ดขาว/หมึกเข้มของ neo ไว้ */
+  body.site-polish{background-color:#07070b!important;background-image:none!important;color:#EAEAF6!important}
+  /* บนการ์ดขาว: ชื่อไฟล์ + ป้าย MP3/WAV เดิมเป็นสีสว่าง → กลืนพื้นขาว */
+  body.site-polish .card .meta{color:#3d3d3b!important}
+  body.site-polish .card .badge.mp3{background:#fef3c7!important;border-color:#a16207!important;color:#a16207!important}
+  body.site-polish .card .badge.wav{background:#e0f2fe!important;border-color:#0369a1!important;color:#0369a1!important}
+  body.site-polish .card .title{color:#131313!important}
+  body.site-polish .card .load-err{color:#b91c1c!important}
+  </style>
 </head>
 <body class="site-polish">
 <div class="sky" aria-hidden="true"><div class="stars"></div><div class="moon"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>

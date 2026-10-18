@@ -20,14 +20,27 @@
 /* Growth page headings: keep strong ink contrast on the neo-brutal paper/card surfaces. */
 body.site-polish .hero .eyebrow{color:#131313!important;background:#fff!important;border:2px solid #131313!important;text-shadow:none!important}
 body.site-polish .hero h1,body.site-polish .hero h1 span{color:#131313!important;text-shadow:none!important}
-body.site-polish .formbox h2,body.site-polish .entries h2{color:#131313!important;font-size:21px!important;font-weight:700!important;line-height:1.45;text-shadow:none!important}
-body.site-polish .formbox .sub,body.site-polish .entries .sub{color:#33312c!important;font-weight:600!important}
+/* FIX: .formbox/.entries เป็นแผงโซลิดเข้ม (gradient #161D29→#10141D) ไม่ใช่การ์ดขาว
+   เดิมบังคับหัวข้อเป็นหมึกเข้ม = ดำบนดำ (คอนทราสต์ ~1.0) มองไม่เห็น → กลับเป็นตัวสว่างบนแผงเข้ม */
+body.site-polish .formbox h2,body.site-polish .entries h2{color:#F4F6FB!important;font-size:21px!important;font-weight:700!important;line-height:1.45;text-shadow:none!important}
+body.site-polish .formbox .sub,body.site-polish .entries .sub{color:#A8B2C9!important;font-weight:600!important}
 
 .entry-search{margin:0 0 12px}.entry-search label{display:block;font-size:12px;color:#c5cee1;margin-bottom:5px}.entry-search input{width:100%;border:1px solid #39445c;border-radius:9px;background:#0b1018;color:var(--text);padding:10px 12px;font:400 14px 'IBM Plex Sans Thai',sans-serif;outline:none;transition:border-color .18s,box-shadow .18s}.entry-search input:focus{border-color:var(--mint);box-shadow:0 0 0 3px #8df0b119}.entry-search input::placeholder{color:#7d8aa2}.search-empty{margin:12px 0 0;padding:12px;border:1px dashed #39445c;border-radius:9px;color:var(--muted);font-size:13px;text-align:center}.search-empty[hidden]{display:none}
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): ช่องว่าง/ลิงก์บนพื้นครีม-เหลือง อ่านไม่เห็น (ขาวบนขาว, เทาบนครีม) */
+  body.site-polish .empty{background:#fff!important;border:3px dashed #131313!important}
+  body.site-polish .empty b{color:#131313!important;font-weight:700!important}
+  body.site-polish .empty,body.site-polish .entry-list .muted{color:#33312c!important}
+  body.site-polish .privacy{color:#131313!important;font-weight:700!important}
+  body.site-polish .brand{color:#131313!important}
+  body.site-polish .back{color:#33312c!important;font-weight:700!important}
+  body.site-polish .back:hover{color:#131313!important}
+  body.site-polish .search-empty{color:#33312c!important;font-weight:600!important}
+  </style>
 </head>
 <body class="site-polish">
 <main class="shell">

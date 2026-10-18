@@ -104,7 +104,35 @@ footer a{color:var(--gold);text-decoration:none;font-weight:700}
 </style>
 <link rel="stylesheet" href="../css/site-polish.css">
 <script defer src="../js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="../css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="../css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): section เป็นการ์ดขาวแล้ว แต่ label / type-tag / ชิป ยังเป็นสีสว่างของธีมมืด */
+  body.site-polish .iform label,body.site-polish .addrow label,body.site-polish label{color:#2e2c28!important}
+  /* หัวข้อลอยบนลายพื้นหลัง → ยกขึ้นการ์ดขาวให้อ่านชัด */
+  body.site-polish .wrap > h1{background:#fff!important;color:#131313!important;border:4px solid #131313!important;border-radius:16px!important;box-shadow:6px 6px 0 #131313!important;padding:12px 18px!important;display:inline-block}
+  body.site-polish h1 .tag{color:#131313!important;text-shadow:none!important}
+  body.site-polish .wrap > .sub{background:#fff!important;color:#2e2c28!important;border:3px solid #131313!important;border-radius:12px!important;box-shadow:4px 4px 0 #131313!important;padding:7px 14px!important;display:inline-block}
+  /* footer เป็นแถบหมึกเข้มของ neo-brutal อยู่แล้ว → ปล่อยให้ตัวหนังสือขาวตามเดิม */
+  body.site-polish footer{color:#fff!important}
+  body.site-polish footer a{color:#FFE08A!important}
+  body.site-polish td.amt{color:#0a7a44!important}
+  body.site-polish .type-tag{background:#fff!important}
+  body.site-polish .t-beat{color:#0a7a44!important;border-color:#0a7a44!important}
+  body.site-polish .t-com{color:#0f766e!important;border-color:#0f766e!important}
+  body.site-polish .t-teach{color:#1d4ed8!important;border-color:#1d4ed8!important}
+  body.site-polish .t-setup{color:#92400e!important;border-color:#92400e!important}
+  body.site-polish .t-mix{color:#6d28d9!important;border-color:#6d28d9!important}
+  body.site-polish .t-other{color:#3d3d3b!important;border-color:#131313!important}
+  body.site-polish .bchip{background:#131313!important;color:#fff!important;border-color:#131313!important}
+  body.site-polish .bchip b{color:#FFE08A!important}
+  body.site-polish .goal-item{background:#fff!important;border:3px solid #131313!important}
+  body.site-polish .goal-item span,body.site-polish .goal-item span b{color:#131313!important}
+  body.site-polish .goal-item.done span{color:#5a5a58!important}
+  body.site-polish .goal-item button{color:#6b6b67!important}
+  body.site-polish .pbar{background:#fff!important;border:3px solid #131313!important}
+  body.site-polish td button{color:#131313!important;background:#fff!important;border:3px solid #131313!important;border-radius:8px;font-weight:700;padding:3px 10px;cursor:pointer}
+  body.site-polish td[colspan]{color:#4a4a46!important}
+  </style>
 </head>
 <body class="site-polish">
 <div class="wrap">

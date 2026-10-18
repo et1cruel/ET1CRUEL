@@ -13,6 +13,7 @@
   --br-lav:#B8A9FF;
   --br-sky:#87D6FF;
   --br-peach:#FFB38A;
+  --br-nav:#FF2D9D; /* หัวกลุ่ม nav — เด่นกว่าเหลืองเดิม */
   --br-card:#FFFFFF;
   --br-cream:#FFF9EC;
   --shadow:6px 6px 0 #131313 !important;
@@ -453,7 +454,7 @@ body.page-upgrade .setrow .lab small{color:#5a5a58 !important}
    root cause: .nav,.nav-group ได้พื้นขาว แต่ตัวหนังสือยังเป็นสีขาว/เขียวนีออน
    จากธีมดาร์ก → คอนทราสต์ 1.0–1.7:1 มองไม่เห็น จึงบังคับเป็นหมึกบนเหลือง + เงาแข็ง */
 body .nav .nav-group,body .nav-group{
-  background:var(--br-yellow) !important;color:var(--br-ink) !important;
+  background:var(--br-nav) !important;color:var(--br-ink) !important;
   text-shadow:none !important;
   border:3px solid var(--br-ink) !important;border-radius:10px !important;
   box-shadow:3px 3px 0 var(--br-ink) !important;

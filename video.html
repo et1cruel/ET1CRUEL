@@ -31,7 +31,21 @@ h1{font-size:30px;margin:6px 0 2px}
 .soon{border:1.5px dashed #3d4666;border-radius:18px;padding:22px;color:var(--muted);text-align:center}
 footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px}
 </style>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): .vcard ยังเป็นพื้นเข้ม #12141D แต่ body ถูกย้อมเป็นหมึกเข้ม
+     → หัวข้อ EP ดำบนดำ (คอนทราสต์ ~1.0) มองไม่เห็น → คืนตัวสว่างบนการ์ดเข้ม */
+  .vcard{color:#F4F6FB!important}
+  .vcard h2{color:#F4F6FB!important}
+  .vcard .desc,.vcard .src{color:#AAB4CC!important}
+  .vcard .meta span{color:#4ADE80!important;border-color:#166534!important}
+  /* ตัวหนังสือบนกระดาษครีมให้เป็นหมึกเข้ม + ยกหัวข้อขึ้นการ์ดขาว กันจมกับลายพื้นหลัง */
+  .wrap > h1{background:#fff!important;color:#131313!important;border:4px solid #131313!important;border-radius:16px!important;box-shadow:6px 6px 0 #131313!important;padding:12px 18px!important;display:inline-block}
+  .wrap > .sub{background:#fff!important;color:#2e2c28!important;border:3px solid #131313!important;border-radius:12px!important;box-shadow:4px 4px 0 #131313!important;padding:7px 14px!important;display:inline-block;font-weight:600!important}
+  .top a.back{background:#fff!important;color:#131313!important;border:3px solid #131313!important;border-radius:10px!important;box-shadow:3px 3px 0 #131313!important;padding:6px 12px!important}
+  .soon{color:#33312c!important;background:#fff!important;border:3px dashed #131313!important}
+  .soon a{color:#0a7a44!important;font-weight:700!important}
+  </style>
 </head>
 <body>
 <div class="wrap">

@@ -98,7 +98,7 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
 <style>
 /* FIX: หัวข้อห้องหุ้นบนการ์ดขาว — เดิมตัวขาวบนขาวมองไม่เห็น */
 header.hero h1{color:#131313!important;font-size:42px!important;font-weight:800!important;text-shadow:3px 3px 0 #fff!important}
@@ -112,6 +112,15 @@ body header.hero h1 span{background:#131313!important;color:#FFC900!important;pa
 .scard .dhead .cnt{background:#131313!important;color:#fff!important;border:none!important;font-size:12px!important}
 .scard .notebox{color:#23211d!important;font-weight:600!important}
 .scard::before{background:#FFC900!important;width:6px!important}
+/* FIX: hero p / label ฟอร์ม / .dateprev / .note .num ยังเป็นสีสว่างของธีมมืดบนพื้นขาว-เหลือง */
+body.site-polish header.hero p{color:#2e2c28!important;font-weight:600!important}
+body.site-polish header.hero p b{background:#131313!important;color:#fff!important;padding:0 6px;border-radius:5px;font-weight:700!important}
+body.site-polish form.add label{color:#23211d!important}
+body.site-polish .dateprev{background:#fff!important;border:3px solid #131313!important;color:#23211d!important}
+body.site-polish .dateprev b{color:#0a7a44!important}
+body.site-polish .dateprev .num{color:#4a4a46!important}
+body.site-polish .note .num{background:#fff!important;color:#131313!important;border:2px solid #131313!important}
+body.site-polish .note b{color:#FFE08A!important}
 </style>
 </head>
 <body class="site-polish">

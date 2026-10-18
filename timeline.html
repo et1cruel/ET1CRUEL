@@ -133,7 +133,24 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px;font-
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): details.card ถูกย้อมเป็นการ์ดขาว แต่ h3/p/li/td เดิมยังเป็นตัวสว่าง
+     → ขาวบนขาว (คอนทราสต์ ~1.0–1.3) มองไม่เห็น → กลับเป็นหมึกเข้มบนการ์ดขาว */
+  body.site-polish details.card h3,body.site-polish details.card h4,body.site-polish details.card h5{color:#131313!important;text-shadow:none!important}
+  body.site-polish details.card p,body.site-polish details.card li,body.site-polish details.card li b,body.site-polish details.card td,body.site-polish details.card summary p{color:#23211d!important;text-shadow:none!important}
+  body.site-polish details.card a{color:#131313!important}
+  body.site-polish details.card .tag{color:#0a7a44!important;background:#fff!important;border:2px solid #131313!important;box-shadow:2px 2px 0 #131313!important}
+  body.site-polish .tlcount{color:#33312c!important;font-weight:600!important}
+  body.site-polish .tlempty{color:#33312c!important;background:#fff!important;border:3px dashed #131313!important}
+  /* กล่องเป้าหมาย .goal + ไฮไลต์ในตาราง ยังเป็นสีสว่างของธีมมืดบนการ์ดขาว */
+  body.site-polish .goal{background:#fff!important;border:3px solid #131313!important}
+  body.site-polish .goal small{color:#4a4a46!important}
+  body.site-polish .goal strong{color:#0a7a44!important}
+  body.site-polish .goal .how,body.site-polish .goal .how b{color:#23211d!important}
+  body.site-polish table.tl td b.hi{color:#b91c1c!important}
+  body.site-polish details.card .axis b{color:#131313!important}
+  </style>
 </head>
 <body class="site-polish">
 <div class="wrap">

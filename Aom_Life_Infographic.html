@@ -250,7 +250,37 @@
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): หน้านี้ออกแบบธีมมืด (ตัวสว่าง + การ์ดแก้วใส) แต่ neo ย้อมพื้นเป็นกระดาษครีม
+     → ตัวสว่างกลืนพื้น และการ์ดใสทำให้เห็นภาพวิหารทะลุจนอ่านไม่ออก
+     วิธีแก้: พลิกตัวแปรธีมของการ์ดเป็นโทนกระดาษ-หมึกเข้ม และทำการ์ดแก้วให้ทึบขาว */
+  body.site-polish{
+    --ink:#131313; --ink-soft:#2e2c28; --faint:#4a4a46; --line:#131313;
+    --cy:#0e7490; --vi:#6d28d9; --pk:#be185d; --glass:#ffffff;
+  }
+  body.site-polish .glass{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  body.site-polish .gtext{background:none!important;color:#131313!important}
+  body.site-polish .ev .tt{color:#131313!important}
+  body.site-polish .chart .cbar .val{color:#131313!important}
+  body.site-polish .income{background:#fff!important;border:2px dashed #131313!important}
+  body.site-polish .income .ih{color:#131313!important}
+  /* การ์ดย่อยที่ตั้งหัวข้อเป็น #fff ไว้ (เดิมอยู่บนพื้นมืด) → กลืนพื้นขาวของการ์ด */
+  body.site-polish .album .ah,body.site-polish .tbox .th,body.site-polish .mt b,
+  body.site-polish .rig b,body.site-polish .proj .pn,body.site-polish .lf .lh,
+  body.site-polish .goal .gt,body.site-polish .zone .zh{color:#131313!important}
+  body.site-polish .proj .pt b{color:#92400e!important}
+  body.site-polish .proj .st.live{color:#047857!important;background:#D1FAE5!important;border:2px solid #047857!important}
+  body.site-polish .album{background:#fff!important}
+  body.site-polish .tbox,body.site-polish .mt,body.site-polish .lf,
+  body.site-polish .proj,body.site-polish .goal{background:#fff!important}
+  /* hero เหลือง: subtitle/desc/ชิป ให้เป็นหมึกเข้ม */
+  body.site-polish .hero .jp{color:#131313!important;text-shadow:none!important}
+  body.site-polish .hero .desc{color:#2e2c28!important}
+  body.site-polish .hero .desc b{background:#131313!important;color:#fff!important;padding:0 6px;border-radius:5px}
+  body.site-polish .hero .tg{background:#fff!important;border:2px solid #131313!important;color:#2e2c28!important}
+  body.site-polish .hero .tg b{color:#131313!important}
+  </style>
 </head>
 <body class="site-polish">
 <div class="aurora"><b></b><b></b><b></b><b></b></div>

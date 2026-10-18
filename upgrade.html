@@ -365,7 +365,19 @@ body.noanim *,body.noanim *::before,body.noanim *::after{animation:none!importan
 </style>
 <link rel="stylesheet" href="css/site-polish.css">
 <script defer src="js/site-polish.js?v=3"></script>
-  <link rel="stylesheet" href="css/neo-brutal.css?v=15">
+  <link rel="stylesheet" href="css/neo-brutal.css?v=18">
+  <style>
+  /* FIX (neo-brutal): hero เหลือง/การ์ดขาว แต่ตัวหนังสือยังเป็นสีสว่างของธีมมืด → กลืนพื้น */
+  body.page-upgrade .hero .over{color:#131313!important}
+  body.page-upgrade .hero .over::before{background:linear-gradient(90deg,transparent,#131313)!important}
+  body.page-upgrade .tagline{color:#131313!important}
+  body.page-upgrade .cardhead .em{color:#131313!important}
+  body.page-upgrade .sub b{color:#131313!important}
+  body.page-upgrade #cNext{color:#131313!important}
+  /* .trow ยังคงเป็นแผงเข้ม (neo ไม่ได้ย้อมขาว) → ตัวหนังสือต้องสว่าง ไม่ใช่หมึก */
+  body.page-upgrade .trow b{color:#F4F6FB!important}
+  body.page-upgrade .trow small{color:#B7C1D4!important}
+  </style>
 </head>
 <body class="site-polish page-upgrade">
 <div class="bg-fx" aria-hidden="true"></div>
