@@ -508,6 +508,34 @@
     };
   }
 
+  /* localStorage ถูกแตะเฉพาะสองฟังก์ชันนี้ และห่อ try/catch เสมอ
+   * ถ้าเบราว์เซอร์ปิดที่จัดเก็บไว้ ให้คืนเหตุผลแทนการโยน error เงียบ ๆ */
+  function saveState(state) {
+    try {
+      if (typeof localStorage === 'undefined') return { ok: false, reason: 'no-storage' };
+      var payload = {
+        version: 2,
+        savedAt: new Date().toISOString(),
+        records: (state && Array.isArray(state.records)) ? state.records : [],
+        deletedSeedIds: (state && Array.isArray(state.deletedSeedIds)) ? state.deletedSeedIds : [],
+        meta: (state && state.meta) ? state.meta : {}
+      };
+      localStorage.setItem(KEY_V2, JSON.stringify(payload));
+      return { ok: true, bytes: JSON.stringify(payload).length };
+    } catch (e) {
+      return { ok: false, reason: String((e && e.message) || e) };
+    }
+  }
+  function loadState() {
+    try {
+      if (typeof localStorage === 'undefined') return { v2: null, v1: null };
+      var v2 = localStorage.getItem(KEY_V2);
+      return { v2: v2, v1: v2 == null ? localStorage.getItem(KEY_V1) : localStorage.getItem(KEY_V1) };
+    } catch (e) {
+      return { v2: null, v1: null, error: String((e && e.message) || e) };
+    }
+  }
+
   window.ET1LIFE_CORE = {
     KEY_V2: KEY_V2, KEY_V1: KEY_V1, KEY_V1_FOCUS: KEY_V1_FOCUS,
     CH_BASE: CH_BASE, THAI_MONTHS: THAI_MONTHS,
@@ -519,10 +547,680 @@
     undatedRecords: undatedRecords, futureRecords: futureRecords,
     formatYear: formatYear, formatDateRange: formatDateRange,
     narrativeLevel: narrativeLevel, hasScore: hasScore,
-    graphLayout: graphLayout
+    graphLayout: graphLayout,
+    saveState: saveState, loadState: loadState
   };
 
   if (typeof document === 'undefined') return;
 
-  /* ── ชั้น DOM (Task 3–5) จะถูกเพิ่มในคอมมิตถัดไป ── */
+  /* ─────────────────────────── ชั้น DOM ─────────────────────────── */
+  var root = document.getElementById('life-graph');
+  if (!root) return;
+
+  var C = window.ET1LIFE_CORE;
+  var D = (window.ET1LIFE_DATA && typeof window.ET1LIFE_DATA === 'object') ? window.ET1LIFE_DATA : {};
+  var CATS = Array.isArray(D.categories) ? D.categories : [];
+  var CATNAMES = (D.categoryNames && typeof D.categoryNames === 'object') ? D.categoryNames : {};
+  var CHS = Array.isArray(D.chapters) ? D.chapters : [];
+  var YEARS = (Array.isArray(D.yearRange) && D.yearRange.length === 2) ? D.yearRange : [2004, 2026];
+  var CHILDHOOD = (Array.isArray(D.childhoodRange) && D.childhoodRange.length === 2) ? D.childhoodRange : [2004, 2017];
+  var NOW_YEAR = D.nowYearCE || new Date().getFullYear();
+  var NOT_RECORDED = 'ยังไม่ได้บันทึก';
+
+  var PREC_LABEL = {
+    exact_date: 'วัน/เดือน/ปี (แน่นอน)', exact_month: 'เดือน (แน่นอน)', exact_year: 'ปี (แน่นอน)', exact_range: 'ช่วงปี (แน่นอน)',
+    estimated_year: 'ปี (ประมาณ)', estimated_range: 'ช่วงปี (ประมาณ)', school_period: 'ช่วงระดับชั้น / ปีการศึกษา',
+    age_based: 'ช่วงอายุ', unknown: 'ปีไม่ระบุ'
+  };
+  var DST_LABEL = { confirmed: 'ยืนยันแล้ว', estimated: 'ประมาณการ', needs_confirmation: 'ต้องยืนยัน', unknown: 'ยังไม่ทราบ' };
+  var DSRC_LABEL = { user_reported: 'ผู้ใช้เล่าเอง', project_record: 'บันทึกในโปรเจกต์', imported_record: 'นำเข้า', derived_estimate: 'คำนวณจากข้อมูลอื่น' };
+
+  var state = {
+    records: [], deletedSeedIds: [], meta: {},
+    view: 'timeline', mode: 'narrative', year: 'all', category: 'all', query: '', selected: null, labels: false
+  };
+  var noticeTimer = null;
+
+  function byId(id) { return document.getElementById(id); }
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function chapterOf(id) { for (var i = 0; i < CHS.length; i++) if (CHS[i].id === id) return CHS[i]; return null; }
+  function chapterLabel(id) { var c = chapterOf(id); return c ? (c.titleTh + ' · ' + c.title) : 'ไม่ระบุบท'; }
+  function catLabel(c) { return CATNAMES[c] ? (CATNAMES[c] + ' · ' + c) : String(c || 'ไม่ระบุหมวด'); }
+  function isSeedId(id) { return (D.seeds || []).some(function (s) { return s.id === id; }); }
+  function nowIso() { return new Date().toISOString(); }
+
+  function notice(text) {
+    var el = byId('lg-notice');
+    if (!el) return;
+    el.textContent = text;
+    el.hidden = false;
+    if (noticeTimer) clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(function () { el.hidden = true; }, 9000);
+  }
+
+  function save(msg) {
+    var res = C.saveState({ records: state.records, deletedSeedIds: state.deletedSeedIds, meta: state.meta });
+    if (!res.ok) {
+      notice('บันทึกลงเครื่องไม่สำเร็จ (' + res.reason + ') — บันทึกยังอยู่แต่จะหายเมื่อปิดแท็บ แนะนำให้กด "ส่งออก JSON" เก็บไว้');
+    } else if (msg) notice(msg);
+    return res.ok;
+  }
+
+  /* ── โหลด: v2 → migrate v1 → seed (ไม่เขียนทับเมื่ออ่านไม่ได้) ── */
+  var firstVisit = false;
+  function load() {
+    var ls = { v2: null, v1: null };
+    try { ls = C.loadState(); } catch (e) { /* ที่จัดเก็บถูกปิด: ใช้ seed ต่อไป */ }
+    firstVisit = !ls.v2 && !ls.v1;
+    var st = C.readState(ls.v2, ls.v1, D);
+    state.records = st.records;
+    state.deletedSeedIds = st.deletedSeedIds;
+    state.meta = st.meta;
+    if (st.meta.source === 'v1') save(st.notice || 'ย้ายข้อมูลจาก v1 แล้ว');
+    else if (st.notice) notice(st.notice);
+  }
+
+  function filtered() {
+    var q = String(state.query || '').trim().toLowerCase();
+    return state.records.filter(function (r) {
+      if (state.category !== 'all' && r.category !== state.category) return false;
+      if (!q) return true;
+      var hay = [r.title, r.description, r.whatChanged, r.reflection, r.notes, r.sourceReference, r.conflictNote,
+        (r.tags || []).join(' '), (r.relatedSkills || []).join(' '), (r.relatedProjectIds || []).join(' ')].join(' ').toLowerCase();
+      return hay.indexOf(q) >= 0;
+    });
+  }
+
+  function yearRecords(list, y) {
+    return list.filter(function (r) {
+      if (r.isFuture || r.startYearCE == null) return false;
+      var s = Number(r.startYearCE);
+      var e = r.endYearCE == null ? s : Number(r.endYearCE);
+      return s <= y && y <= e;
+    }).sort(function (a, b) {
+      var am = a.startMonthCE == null ? 1 : Number(a.startMonthCE);
+      var bm = b.startMonthCE == null ? 1 : Number(b.startMonthCE);
+      return am - bm;
+    });
+  }
+  function timelineYears(list) {
+    var out = [];
+    for (var y = YEARS[0]; y <= YEARS[1]; y++) {
+      var recs = yearRecords(list, y);
+      if (recs.length) out.push({ year: y, records: recs });
+    }
+    return out;
+  }
+  function emptyYearText(y) {
+    if (y >= CHILDHOOD[0] && y <= CHILDHOOD[1]) return 'ไม่มีเหตุการณ์ที่บันทึกไว้ในปีนี้ — ช่วงวัยเด็ก';
+    return 'ไม่มีเหตุการณ์ที่บันทึกไว้ในปีนี้';
+  }
+
+  /* ── การ์ดเหตุการณ์ ── */
+  function card(r, carriedFrom) {
+    var meta = esc(C.formatDateRange(r)) + ' · ' + esc(catLabel(r.category)) + ' · ' + esc(chapterLabel(r.chapterId));
+    var badges = '';
+    if (carriedFrom != null) badges += ' <span class="lg-carried">ต่อเนื่องจาก ' + esc(C.formatYear(carriedFrom)) + '</span>';
+    if (r.isCurrent) badges += ' <span class="lg-badge lg-badge-current">ปัจจุบัน</span>';
+    if (r.isFuture) badges += ' <span class="lg-badge lg-badge-future">อนาคต — ยังไม่เกิดขึ้น</span>';
+    if (r.conflictNote) badges += ' <span class="lg-badge lg-badge-warn">ต้องยืนยัน</span>';
+    if (r.dateStatus === 'estimated' || r.datePrecision === 'estimated_year' || r.datePrecision === 'estimated_range') badges += ' <span class="lg-badge lg-badge-est">โดยประมาณ</span>';
+    return '<article class="lg-event' + (carriedFrom != null ? ' lg-event-carried' : '') + '" data-id="' + esc(r.id) + '">' +
+      '<div class="lg-event-copy">' +
+      '<button type="button" class="lg-event-open" data-open="' + esc(r.id) + '">' + esc(r.title) + '</button>' +
+      '<p>' + (r.description ? esc(r.description) : '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>') + '</p>' +
+      '<p class="lg-event-meta">' + meta + badges + '</p>' +
+      '<div class="lg-actions"><button type="button" class="lg-btn" data-open="' + esc(r.id) + '">รายละเอียด</button></div>' +
+      '</div></article>';
+  }
+
+  function undatedSection(list, heading) {
+    return '<section class="lg-undated"><h3>' + esc(heading) + '</h3>' +
+      '<p class="lg-graph-note">เหตุการณ์กลุ่มนี้ยังไม่มีปีที่ยืนยันได้ จึงไม่ถูกวางบนแกนเวลา และระบบไม่เดาปีให้</p>' +
+      '<div class="lg-undated-grid">' + list.map(function (r) {
+        return '<button type="button" class="lg-undated-item" data-open="' + esc(r.id) + '"><b>' + esc(r.title) + '</b><small>' + esc(catLabel(r.category)) + ' · ' + esc(chapterLabel(r.chapterId)) + '</small></button>';
+      }).join('') + '</div></section>';
+  }
+
+  function futureSection(list) {
+    return '<section class="lg-future-goals"><h3>เป้าหมายอนาคต — ยังไม่เกิดขึ้น (ไม่นับเป็นประวัติ)</h3>' +
+      '<div class="lg-future-goals-grid">' + list.map(function (r) {
+        return '<button type="button" class="lg-future-goal" data-open="' + esc(r.id) + '"><span><b>' + esc(r.title) + '</b><small>' + esc(catLabel(r.category)) + ' · ' + esc(r.status) + ' · ' + esc(C.formatDateRange(r)) + '</small></span></button>';
+      }).join('') + '</div></section>';
+  }
+
+  function timelineView(list) {
+    var h = '';
+    if (state.year !== 'future') {
+      var groups = timelineYears(list);
+      if (typeof state.year === 'number') groups = groups.filter(function (g) { return g.year === state.year; });
+      groups.forEach(function (g) {
+        h += '<section class="lg-year-group" data-year="' + g.year + '"><header class="lg-year-group-head"><h3>' + esc(C.formatYear(g.year)) + '</h3><small>' + g.records.length + ' เหตุการณ์</small></header><div class="lg-year-group-body">';
+        g.records.forEach(function (r) { h += card(r, Number(r.startYearCE) === g.year ? null : Number(r.startYearCE)); });
+        h += '</div></section>';
+      });
+      if (!groups.length && typeof state.year === 'number') {
+        var total = C.recordsForYear(state.records, state.year).length;
+        h += '<p class="lg-empty">' + (total ? ('มีเหตุการณ์ในปีนี้ ' + total + ' รายการ แต่ไม่ตรงกับตัวกรองหรือคำค้นปัจจุบัน') : esc(emptyYearText(state.year))) + '</p>';
+      }
+      if (state.year === 'all') {
+        var und = C.undatedRecords(list);
+        if (und.length) h += undatedSection(und, 'Undated — เหตุการณ์ที่ยังไม่ยืนยันปี');
+      }
+    }
+    if (state.year === 'all' || state.year === 'future') {
+      var fut = C.futureRecords(list);
+      if (fut.length) h += futureSection(fut);
+      else if (state.year === 'future') h += '<p class="lg-empty">ยังไม่มีเป้าหมายอนาคตที่บันทึกไว้</p>';
+    }
+    if (!h) h = '<p class="lg-empty">ไม่มีเหตุการณ์ที่ตรงกับตัวกรองตอนนี้</p>';
+    return h;
+  }
+
+  function chaptersView() {
+    var list = filtered();
+    var h = '<p class="lg-chapters-note">บทชีวิตเป็น "หมวดจัดระเบียบ" เพื่ออ่านภาพรวม — ไม่ใช่ข้ออ้างว่ามีวันเริ่ม–สิ้นสุดที่แน่นอน และไม่ได้แปลว่าชีวิตเดินเป็นขั้นบันได</p><div class="lg-chapter-grid">';
+    CHS.forEach(function (c) {
+      var recs = list.filter(function (r) { return r.chapterId === c.id && !r.isFuture; });
+      var ys = recs.map(function (r) { return r.startYearCE; }).filter(function (y) { return y != null; }).sort(function (a, b) { return a - b; });
+      var span = ys.length ? (ys[0] === ys[ys.length - 1] ? C.formatYear(ys[0]) : C.formatYear(ys[0]) + ' – ' + C.formatYear(ys[ys.length - 1])) : 'ปีไม่ระบุ';
+      h += '<article class="lg-chapter-card"><h4>' + esc(c.title) + ' · ' + esc(c.titleTh) + '</h4>' +
+        '<p class="lg-chapter-meta">' + esc(span) + ' · ' + recs.length + ' เหตุการณ์</p>' +
+        '<p>' + esc(c.description || '') + '</p>' +
+        '<ul class="lg-chapter-events">' + (recs.length ? recs.map(function (r) {
+          return '<li><button type="button" class="lg-chapter-event" data-open="' + esc(r.id) + '">' + esc(r.title) + '<small>' + esc(C.formatDateRange(r)) + '</small></button></li>';
+        }).join('') : '<li class="lg-chapter-none">ยังไม่มีเหตุการณ์ที่บันทึกไว้ในบทนี้</li>') + '</ul></article>';
+    });
+    return h + '</div>';
+  }
+
+  function mapView() {
+    var list = filtered();
+    var h = '<div class="lg-map">';
+    CHS.forEach(function (c) {
+      var n = list.filter(function (r) { return r.chapterId === c.id; }).length;
+      h += '<div class="lg-map-node' + (n ? '' : ' is-empty') + '"><b>' + esc(c.titleTh) + '</b><small>' + esc(c.title) + ' · ' + n + ' เหตุการณ์</small></div>';
+    });
+    h += '</div><p class="lg-map-note">แผนที่แนวคิด — แสดงความเชื่อมโยงของบทชีวิต ไม่ใช่ลำดับความสำเร็จ ไม่ใช่คะแนนทักษะ และไม่ใช่วันที่ที่ยืนยันแล้ว</p>';
+    h += '<div class="lg-year-group-body">' + list.map(function (r) { return card(r); }).join('') + '</div>';
+    return h;
+  }
+
+  /* ── กราฟชีวิตแบบสต็อก ── */
+  function graphView() {
+    var L = C.graphLayout(state.records, { mode: state.mode, minYear: YEARS[0], maxYear: YEARS[1], forceAllLabels: state.labels });
+    var b = L.bounds;
+    function xAt(y) { return b.left + (y - b.minYear) / (b.maxYear - b.minYear) * (b.right - b.left); }
+    var s = '<svg class="lg-stock-chart" viewBox="0 0 ' + L.width + ' ' + L.height + '" width="' + L.width + '" height="' + L.height + '" role="img" aria-label="กราฟเส้นทางชีวิต เทียบเวลา พ.ศ. และ ค.ศ.">';
+    var bx = Math.max(b.left, xAt(CHILDHOOD[0]));
+    var bw = Math.max(0, Math.min(b.right, xAt(CHILDHOOD[1] + 1)) - bx);
+    s += '<rect class="lg-chapter-band" x="' + bx.toFixed(1) + '" y="' + b.top + '" width="' + bw.toFixed(1) + '" height="' + (b.bottom - b.top) + '"><title>ช่วงวัยเด็ก 2547–2560 (2004–2017)</title></rect>';
+    s += '<text class="lg-chapter-band-label" x="' + (bx + 8).toFixed(1) + '" y="' + (b.top + 16) + '">ช่วงวัยเด็ก · ไม่ใช่ช่องว่างข้อมูล</text>';
+    for (var gi = 0; gi <= 4; gi++) {
+      var gy = b.top + (b.bottom - b.top) * gi / 4;
+      s += '<line class="lg-gridline" x1="' + b.left + '" y1="' + gy.toFixed(1) + '" x2="' + b.right + '" y2="' + gy.toFixed(1) + '"/>';
+    }
+    L.years.forEach(function (t) {
+      s += '<line class="lg-grid-vertical" x1="' + t.x.toFixed(1) + '" y1="' + b.top + '" x2="' + t.x.toFixed(1) + '" y2="' + b.bottom + '"/>';
+      s += '<text class="lg-axis-label" x="' + t.x.toFixed(1) + '" y="' + (b.bottom + 22) + '" text-anchor="middle">' + esc(t.label) + '</text>';
+    });
+    s += '<text class="lg-axis-title" x="' + b.left + '" y="' + (b.top - 12) + '">' + (state.mode === 'self' ? 'คะแนนประเมินตนเอง 1–10 (คุณกรอกเอง)' : 'การเปลี่ยนแปลงของชีวิต (ตำแหน่งเชิงภาพ ไม่ใช่คะแนน)') + '</text>';
+
+    L.segments.forEach(function (seg) {
+      var pts = seg.map(function (id) { return L.points.filter(function (p) { return p.id === id; })[0]; }).filter(Boolean);
+      if (pts.length < 2) return;
+      s += '<path class="lg-history-line" d="' + pts.map(function (p, i) { return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ') + '"/>';
+    });
+
+    var last = L.points.length ? L.points[L.points.length - 1] : null;
+    L.futurePoints.forEach(function (f, idx) {
+      var fx = f.x == null ? (b.right - 12) : f.x;
+      var fy = f.projected ? (b.top + 34 + idx * 30) : f.y;
+      s += '<line class="lg-future-line" x1="' + (last ? last.x.toFixed(1) : b.left) + '" y1="' + (last ? last.y.toFixed(1) : (b.bottom - 12)) + '" x2="' + fx.toFixed(1) + '" y2="' + fy.toFixed(1) + '"/>';
+      s += '<circle class="lg-future-dot" data-id="' + esc(f.id) + '" cx="' + fx.toFixed(1) + '" cy="' + fy.toFixed(1) + '" r="6"><title>' + esc(f.label) + ' · เป้าหมายอนาคต ยังไม่กำหนดปี</title></circle>';
+    });
+
+    L.points.forEach(function (p) {
+      s += '<circle class="lg-chart-point' + (p.isCurrent ? ' is-current' : '') + '" data-id="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="' + (p.isCurrent ? 7 : 5) + '"><title>' + esc(p.label) + ' · ' + esc(p.dateLabel) + '</title></circle>';
+      if (p.labelSide !== 'hidden') {
+        var ly = p.labelSide === 'above' ? p.y - 24 : p.y + 32;
+        var label = p.label.length > 24 ? p.label.slice(0, 23) + '…' : p.label;
+        s += '<text class="lg-point-label" x="' + p.x.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle">' + esc(label) + '</text>';
+        s += '<text class="lg-point-year" x="' + p.x.toFixed(1) + '" y="' + (ly + 12).toFixed(1) + '" text-anchor="middle">' + esc(p.dateLabel) + '</text>';
+      }
+      s += '<circle class="lg-hit" data-open="' + esc(p.id) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="11"/>';
+      s += '<circle class="lg-hit-wrap" data-open="' + esc(p.id) + '" tabindex="0" role="button" aria-label="' + esc(p.label + ' · ' + p.dateLabel) + '" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="15"/>';
+    });
+    s += '</svg>';
+
+    var h = '<div class="lg-graph-tools">' +
+      '<div class="lg-modes" role="group" aria-label="โหมดแกนตั้ง">' +
+      '<button type="button" data-lg-mode="narrative" aria-pressed="' + (state.mode === 'narrative') + '"' + (state.mode === 'narrative' ? ' class="is-active"' : '') + '>โหมด A · การจัดวางเชิงภาพ</button>' +
+      '<button type="button" data-lg-mode="self" aria-pressed="' + (state.mode === 'self') + '"' + (state.mode === 'self' ? ' class="is-active"' : '') + '>โหมด B · คะแนนประเมินตนเอง 1–10</button>' +
+      '</div>' +
+      '<button type="button" class="lg-btn" data-lg-labels aria-pressed="' + (state.labels ? 'true' : 'false') + '">' + (state.labels ? 'ย่อ label กลับ' : 'แสดง label ทั้งหมด') + '</button>' +
+      '</div>' +
+      '<p class="lg-mode-note">โหมดปัจจุบัน: ' + (state.mode === 'self' ? 'B — คะแนนประเมินตนเอง 1–10 ที่คุณกรอกเอง (ว่างไว้ได้ ไม่มีผลต่อข้อมูลจริง)' : 'A — ตำแหน่งแนวตั้งจัดวางตามบทชีวิตและความสำคัญ ไม่ใช่คะแนนวัดคุณภาพชีวิต') + '</p>';
+
+    if (state.mode === 'self' && !L.hasScores) {
+      h += '<p class="lg-score-notice">โหมด B วาดได้เฉพาะคะแนนประเมินตนเอง 1–10 ที่คุณกรอกเอง — ตอนนี้ยังไม่มีคะแนนประเมินตนเองที่บันทึกไว้ จึงยังไม่มีเส้นให้วาด และระบบจะไม่เดาคะแนนให้</p>';
+    } else if (state.mode === 'self') {
+      h += '<p class="lg-graph-note">วาดจากคะแนนที่คุณกรอกเอง ' + L.points.length + ' จุด — เส้นจะขาดตรงช่วงปีที่ไม่มีคะแนน ไม่มีการลากเชื่อมข้ามช่องว่าง</p>';
+    }
+
+    h += '<div class="lg-trajectory"><div class="lg-chart-scroll">' + s + '</div></div>';
+    h += '<div class="lg-legend">' +
+      '<span class="lg-legend-item"><span class="lg-legend-line"></span> เหตุการณ์ที่เกิดขึ้นแล้ว</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-key" style="background:#14b88a"></span> ปัจจุบัน — ยังดำเนินอยู่</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-dashed"></span> เป้าหมายอนาคต — ยังไม่เกิดขึ้น</span>' +
+      '<span class="lg-legend-item"><span class="lg-legend-band"></span> ช่วงวัยเด็ก 2547–2560 (2004–2017)</span>' +
+      '</div>';
+    h += '<p class="lg-graph-note">' + esc(L.yAxisNote) + ' · แกนนอนคือเวลา พ.ศ. (ค.ศ.) และตำแหน่งของเหตุการณ์ที่ยังไม่ยืนยันปีจะไม่ถูกเดาลงบนแกน</p>';
+    if (L.hiddenLabelCount > 0 && !state.labels) {
+      h += '<p class="lg-graph-hidden-note">ซ่อน label อีก ' + L.hiddenLabelCount + ' จุด เพื่อไม่ให้ทับกัน — กด "แสดง label ทั้งหมด" เพื่อดูครบ</p>';
+    }
+    var und = C.undatedRecords(state.records);
+    if (und.length) h += undatedSection(und, 'Undated — เหตุการณ์ที่ยังไม่ยืนยันปี (' + und.length + ')');
+    var fut = C.futureRecords(state.records);
+    if (fut.length) h += futureSection(fut);
+    return h;
+  }
+
+  /* ── ตัวกรองปี ── */
+  function renderChips() {
+    var box = byId('lg-years');
+    if (!box) return;
+    var h = '';
+    for (var y = YEARS[0]; y <= YEARS[1]; y++) {
+      var n = C.recordsForYear(state.records, y).length;
+      var active = state.year === y;
+      h += '<button type="button" class="lg-year-chip' + (n ? '' : ' is-empty') + (active ? ' is-active' : '') + '" data-lg-year="' + y + '" aria-pressed="' + active + '"' + (n ? '' : ' aria-describedby="lg-years-help"') + '>' + esc(C.formatYear(y)) + '<i aria-hidden="true">' + (n || '—') + '</i></button>';
+    }
+    var fn = C.futureRecords(state.records).length;
+    var factive = state.year === 'future';
+    h += '<button type="button" class="lg-year-chip lg-year-chip-future' + (factive ? ' is-active' : '') + '" data-lg-year="future" aria-pressed="' + factive + '">อนาคต · Future<i aria-hidden="true">' + fn + '</i></button>';
+    box.innerHTML = h;
+  }
+
+  function renderYearDetail() {
+    var box = byId('lg-year-detail');
+    if (!box) return;
+    if (state.year === 'all') { box.hidden = true; box.innerHTML = ''; return; }
+    var h = '';
+    if (state.year === 'future') {
+      var fut = C.futureRecords(state.records);
+      h += '<div class="lg-year-head"><h3>อนาคต · Future</h3><small>' + fut.length + ' เป้าหมาย · ยังไม่เกิดขึ้น จึงไม่นับเป็นประวัติ</small></div>';
+      h += fut.length
+        ? '<ul class="lg-year-list">' + fut.map(function (r) { return '<li><button type="button" class="lg-chapter-event" data-open="' + esc(r.id) + '">' + esc(r.title) + '<small>' + esc(C.formatDateRange(r)) + ' · ' + esc(r.status) + '</small></button></li>'; }).join('') + '</ul>'
+        : '<p class="lg-empty-year">ยังไม่มีเป้าหมายอนาคตที่บันทึกไว้</p>';
+      box.innerHTML = h;
+      box.hidden = false;
+      return;
+    }
+    var y = Number(state.year);
+    var inYear = yearRecords(state.records, y);
+    h += '<div class="lg-year-head"><h3>พ.ศ. ' + (y + 543) + ' (' + y + ')</h3><small>อายุ ' + (y - 2004) + ' ปี (คิดจากปีเกิด 2547) · ' + inYear.length + ' เหตุการณ์</small></div>';
+    if (inYear.length) {
+      h += '<ul class="lg-year-list">' + inYear.map(function (r) {
+        var carried = Number(r.startYearCE) !== y;
+        return '<li><button type="button" class="lg-chapter-event" data-open="' + esc(r.id) + '">' + esc(r.title) +
+          (carried ? ' <span class="lg-carried">ต่อเนื่องจาก ' + esc(C.formatYear(r.startYearCE)) + '</span>' : '') +
+          '<small>' + esc(C.formatDateRange(r)) + ' · ' + esc(catLabel(r.category)) + '</small></button></li>';
+      }).join('') + '</ul>';
+      var cats = {};
+      inYear.forEach(function (r) { cats[r.category] = (cats[r.category] || 0) + 1; });
+      h += '<div class="lg-year-cats">' + Object.keys(cats).map(function (k) { return '<span class="lg-year-cat">' + esc(catLabel(k)) + ' × ' + cats[k] + '</span>'; }).join('') + '</div>';
+    } else {
+      h += '<p class="lg-empty-year">' + esc(emptyYearText(y)) + '</p>';
+      h += (y >= CHILDHOOD[0] && y <= CHILDHOOD[1])
+        ? '<p class="lg-empty-year-note">ช่วงวัยเด็กไม่ใช่ช่องว่างข้อมูล — ไม่ต้องสร้างเหตุการณ์ย้อนหลังเพื่อให้ครบ</p>'
+        : '<p class="lg-empty-year-note">ถ้ามีเหตุการณ์จริงในปีนี้ เพิ่มได้จากปุ่ม "เพิ่มบันทึก" ด้านบน — ระบบจะไม่เติมให้เอง</p>';
+    }
+    box.innerHTML = h;
+    box.hidden = false;
+  }
+
+  /* ── แผงรายละเอียด ── */
+  function row(k, v) { return '<div class="lg-detail-row"><dt>' + esc(k) + '</dt><dd>' + v + '</dd></div>'; }
+  function textSection(title, text) {
+    return '<div class="lg-detail-section"><h4>' + esc(title) + '</h4><p>' + (text ? esc(text) : '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>') + '</p></div>';
+  }
+  function renderDetail() {
+    var box = byId('lg-detail');
+    if (!box) return;
+    var r = state.selected ? state.records.filter(function (x) { return x.id === state.selected; })[0] : null;
+    if (!r) { box.hidden = true; box.innerHTML = ''; return; }
+    var badges = '';
+    if (r.isCurrent) badges += '<span class="lg-badge lg-badge-current">ปัจจุบัน · ยังดำเนินอยู่</span>';
+    if (r.isFuture) badges += '<span class="lg-badge lg-badge-future">อนาคต · ยังไม่เกิดขึ้น</span>';
+    if (r.dateStatus === 'needs_confirmation') badges += '<span class="lg-badge lg-badge-warn">ต้องยืนยัน</span>';
+    if (r.dateStatus === 'estimated' || r.datePrecision === 'estimated_year' || r.datePrecision === 'estimated_range') badges += '<span class="lg-badge lg-badge-est">โดยประมาณ</span>';
+    if (isSeedId(r.id)) badges += '<span class="lg-badge">ชุดข้อมูลตั้งต้น</span>';
+    badges += '<span class="lg-badge">' + esc(catLabel(r.category)) + '</span>';
+
+    var h = '<div class="lg-detail-head"><h3>' + esc(r.title) + '</h3><div class="lg-detail-badges">' + badges + '</div></div>';
+    if (r.conflictNote) h += '<div class="lg-conflict"><b>ข้อมูลขัดแย้ง — ต้องยืนยัน</b>' + esc(r.conflictNote) + '</div>';
+    if (r.legacyScale) h += '<div class="lg-legacy-score">คะแนนประเมินตนเองเดิมคือ ' + esc(r.selfAssessmentScore) + ' ซึ่งอยู่นอกสเกล 1–10 ของระบบนี้ ระบบไม่แปลงให้เงียบ ๆ — กรอกใหม่ถ้าต้องการให้แสดงบนกราฟ</div>';
+
+    h += '<dl class="lg-detail-fields">' +
+      row('ปี พ.ศ.', r.startYearCE == null ? '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>' : esc(String(Number(r.startYearCE) + 543))) +
+      row('ปี ค.ศ.', r.startYearCE == null ? '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>' : esc(String(r.startYearCE))) +
+      row('วัน / ช่วงเวลา', esc(C.formatDateRange(r))) +
+      row('ความแม่นยำของวันที่', esc(PREC_LABEL[r.datePrecision] || r.datePrecision)) +
+      row('ความน่าเชื่อถือของวันที่', esc(DST_LABEL[r.dateStatus] || r.dateStatus)) +
+      row('ที่มาของวันที่', esc(DSRC_LABEL[r.dateSource] || r.dateSource)) +
+      row('Life Chapter', esc(chapterLabel(r.chapterId))) +
+      row('Event Category', esc(catLabel(r.category))) +
+      row('สถานะ', esc(r.status)) +
+      '</dl>';
+
+    h += '<div class="lg-detail-section"><h4>Description</h4><p>' + (r.description ? esc(r.description) : '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>') + '</p></div>';
+    h += textSection('What Changed — อะไรเปลี่ยนไป', r.whatChanged);
+    h += '<div class="lg-detail-section"><h4>Related Skills</h4><p>' + (r.relatedSkills.length ? esc(r.relatedSkills.join(' · ')) : '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>') + '</p></div>';
+    h += '<div class="lg-detail-section"><h4>Related Projects</h4><p>' + (r.relatedProjectIds.length ? esc(r.relatedProjectIds.join(' · ')) : '<span class="lg-unrecorded">' + NOT_RECORDED + '</span>') + '</p></div>';
+    h += textSection('Personal Reflection — สะท้อนตัวเอง', r.reflection);
+    h += textSection('Evidence / Source', r.sourceReference);
+    h += textSection('User Notes', r.notes);
+    if (r.tags.length) h += '<div class="lg-detail-section"><h4>Tags</h4><p>' + esc(r.tags.join(' · ')) + '</p></div>';
+    h += '<div class="lg-actions"><button type="button" class="lg-btn lg-primary" data-edit>แก้ไข</button><button type="button" class="lg-btn lg-danger" data-delete>ลบ</button><button type="button" class="lg-btn" data-close-detail>ปิด</button></div>';
+    h += '<p class="lg-truth-note">ช่องที่ยังไม่มีข้อมูลจะแสดง "' + NOT_RECORDED + '" เสมอ ระบบจะไม่แต่งเรื่องหรือเดาปีแทนคุณ</p>';
+    box.innerHTML = h;
+    box.hidden = false;
+  }
+
+  function openDetail(id) {
+    state.selected = id;
+    renderDetail();
+    var box = byId('lg-detail');
+    if (box && !box.hidden && box.scrollIntoView) box.scrollIntoView({ block: 'nearest' });
+  }
+
+  /* ── ฟอร์มเพิ่ม/แก้ไข ── */
+  function populateSelects() {
+    var f = byId('lg-form');
+    if (!f) return;
+    var cs = f.elements.category;
+    if (cs && cs.options.length <= 1) {
+      CATS.forEach(function (c) { var o = document.createElement('option'); o.value = c; o.textContent = catLabel(c); cs.appendChild(o); });
+    }
+    var ch = f.elements.chapterId;
+    if (ch && ch.options.length <= 1) {
+      CHS.forEach(function (c) { var o = document.createElement('option'); o.value = c.id; o.textContent = c.titleTh + ' · ' + c.title; ch.appendChild(o); });
+    }
+    var fl = byId('lg-category');
+    if (fl && fl.options.length <= 1) {
+      CATS.forEach(function (c) { var o = document.createElement('option'); o.value = c; o.textContent = catLabel(c); fl.appendChild(o); });
+    }
+  }
+
+  function setVal(f, name, v) { if (f.elements[name]) f.elements[name].value = (v == null ? '' : v); }
+
+  function openForm(rec) {
+    var f = byId('lg-form');
+    if (!f) return;
+    populateSelects();
+    f.reset();
+    byId('lg-dialog-title').textContent = rec ? 'แก้ไขบันทึกชีวิต' : 'เพิ่มบันทึกชีวิต';
+    setVal(f, 'id', rec ? rec.id : '');
+    setVal(f, 'title', rec ? rec.title : '');
+    setVal(f, 'description', rec ? rec.description : '');
+    setVal(f, 'category', rec ? rec.category : 'Personal');
+    setVal(f, 'type', rec ? rec.type : 'milestone');
+    setVal(f, 'startDate', rec ? rec.startDate : '');
+    setVal(f, 'endDate', rec ? rec.endDate : '');
+    setVal(f, 'startYearCE', rec ? rec.startYearCE : '');
+    setVal(f, 'endYearCE', rec ? rec.endYearCE : '');
+    setVal(f, 'startMonthCE', rec ? rec.startMonthCE : '');
+    setVal(f, 'endMonthCE', rec ? rec.endMonthCE : '');
+    setVal(f, 'datePrecision', rec ? rec.datePrecision : 'unknown');
+    setVal(f, 'dateStatus', rec ? rec.dateStatus : 'unknown');
+    setVal(f, 'dateSource', rec ? rec.dateSource : 'user_reported');
+    setVal(f, 'status', rec ? rec.status : 'user-reported');
+    setVal(f, 'importance', rec ? rec.importance : 2);
+    setVal(f, 'narrativeLevel', rec ? rec.narrativeLevel : '');
+    setVal(f, 'selfAssessmentScore', rec ? rec.selfAssessmentScore : '');
+    setVal(f, 'chapterId', rec ? rec.chapterId : '');
+    setVal(f, 'relatedSkills', rec ? (rec.relatedSkills || []).join(', ') : '');
+    setVal(f, 'relatedProjectIds', rec ? (rec.relatedProjectIds || []).join(', ') : '');
+    setVal(f, 'whatChanged', rec ? rec.whatChanged : '');
+    setVal(f, 'reflection', rec ? rec.reflection : '');
+    setVal(f, 'sourceReference', rec ? rec.sourceReference : '');
+    setVal(f, 'notes', rec ? rec.notes : '');
+    setVal(f, 'conflictNote', rec ? rec.conflictNote : '');
+    setVal(f, 'tags', rec ? (rec.tags || []).join(', ') : '');
+    byId('lg-dialog').showModal();
+  }
+
+  function readForm(f) {
+    var id = f.elements.id.value;
+    var old = id ? state.records.filter(function (r) { return r.id === id; })[0] : null;
+    var num = function (v) { return v === '' || v == null ? null : Number(v); };
+    var rec = {
+      id: id || ('milestone-' + nowIso() + '-' + Math.random().toString(36).slice(2, 7)),
+      title: f.elements.title.value.trim(),
+      description: f.elements.description.value.trim(),
+      category: f.elements.category.value,
+      chapterId: f.elements.chapterId.value,
+      type: f.elements.type.value,
+      status: f.elements.status.value,
+      importance: f.elements.importance.value,
+      startDate: f.elements.startDate.value || null,
+      endDate: f.elements.endDate.value || null,
+      startYearCE: num(f.elements.startYearCE.value),
+      endYearCE: num(f.elements.endYearCE.value),
+      startMonthCE: num(f.elements.startMonthCE.value),
+      endMonthCE: num(f.elements.endMonthCE.value),
+      datePrecision: f.elements.datePrecision.value,
+      dateStatus: f.elements.dateStatus.value,
+      dateSource: f.elements.dateSource.value,
+      sourceReference: f.elements.sourceReference.value.trim() || null,
+      conflictNote: f.elements.conflictNote.value.trim() || null,
+      narrativeLevel: num(f.elements.narrativeLevel.value),
+      selfAssessmentScore: num(f.elements.selfAssessmentScore.value),
+      relatedSkills: f.elements.relatedSkills.value,
+      relatedProjectIds: f.elements.relatedProjectIds.value,
+      whatChanged: f.elements.whatChanged.value.trim(),
+      reflection: f.elements.reflection.value.trim(),
+      notes: f.elements.notes.value.trim(),
+      tags: f.elements.tags.value,
+      isFuture: f.elements.type.value === 'goal' && !f.elements.startYearCE.value && !f.elements.startDate.value,
+      isCurrent: old ? !!old.isCurrent : false,
+      isAnchor: old ? !!old.isAnchor : false,
+      legacyScale: old ? !!old.legacyScale : false,
+      createdAt: old ? old.createdAt : nowIso(),
+      updatedAt: nowIso(),
+      userEdited: true,
+      migratedFrom: old ? old.migratedFrom : null
+    };
+    return C.normalizeRecord(rec);
+  }
+
+  function onFormSubmit(ev) {
+    ev.preventDefault();
+    var f = byId('lg-form');
+    if (!String(f.elements.title.value || '').trim()) {
+      notice('ต้องมีชื่อเหตุการณ์ก่อนบันทึก');
+      f.elements.title.focus();
+      return;
+    }
+    var rec = readForm(f);
+    var idx = -1;
+    for (var i = 0; i < state.records.length; i++) if (state.records[i].id === rec.id) idx = i;
+    if (idx >= 0) state.records[idx] = rec; else state.records.push(rec);
+    state.selected = rec.id;
+    state.view = 'timeline';
+    state.query = '';
+    var s = byId('lg-search'); if (s) s.value = '';
+    if (typeof state.year === 'number' || state.year === 'future') state.year = 'all';
+    byId('lg-dialog').close();
+    save(idx >= 0 ? 'แก้ไขบันทึกแล้ว' : 'เพิ่มบันทึกแล้ว');
+    render();
+  }
+
+  function deleteSelected() {
+    var r = state.records.filter(function (x) { return x.id === state.selected; })[0];
+    if (!r) return;
+    if (!window.confirm('ยืนยันลบบันทึก "' + r.title + '" ? การลบย้อนกลับไม่ได้ และบันทึกตั้งต้นจะไม่ถูกสร้างกลับมาให้อีก')) return;
+    state.records = state.records.filter(function (x) { return x.id !== r.id; });
+    if (isSeedId(r.id) && state.deletedSeedIds.indexOf(r.id) < 0) state.deletedSeedIds.push(r.id);
+    state.selected = null;
+    save('ลบบันทึกแล้ว');
+    render();
+  }
+
+  function exportJson() {
+    var payload = {
+      version: 2, app: 'ET1CRUEL Life Graph', exportedAt: nowIso(),
+      records: state.records, deletedSeedIds: state.deletedSeedIds, meta: state.meta
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    var d = new Date();
+    a.href = url;
+    a.download = 'et1cruel-life-graph-' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { try { document.body.removeChild(a); URL.revokeObjectURL(url); } catch (e) {} }, 1500);
+  }
+
+  function onImportFile(ev) {
+    var input = ev.target;
+    var file = input.files && input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onerror = function () { notice('อ่านไฟล์ไม่สำเร็จ'); input.value = ''; };
+    reader.onload = function () {
+      var res = C.validateImport(String(reader.result));
+      input.value = '';
+      if (!res.ok) { notice('นำเข้าไม่สำเร็จ: ' + res.reason); return; }
+      if (!window.confirm('นำเข้าข้อมูล ' + res.payload.records.length + ' รายการ จะรวมกับข้อมูลเดิมที่มีอยู่ — ยืนยัน?')) {
+        notice('ยกเลิกการนำเข้าแล้ว — ข้อมูลเดิมไม่ถูกแตะ');
+        return;
+      }
+      var merged = C.importIntoState({ records: state.records, deletedSeedIds: state.deletedSeedIds }, res.payload);
+      state.records = merged.state.records;
+      state.deletedSeedIds = merged.state.deletedSeedIds;
+      save('นำเข้าแล้ว: เพิ่มใหม่ ' + merged.added + ' รายการ, อัปเดต ' + merged.updated + ' รายการ');
+      render();
+    };
+    reader.readAsText(file);
+  }
+
+  function editFocus() {
+    var cur = byId('lg-focus-text');
+    var next = window.prompt('แก้ไข Primary Focus', cur ? cur.textContent : '');
+    if (next == null) return;
+    var v = String(next).trim();
+    if (!v) return;
+    if (cur) cur.textContent = v;
+    try { localStorage.setItem(C.KEY_V1_FOCUS, v); } catch (e) { notice('บันทึก Focus ไม่สำเร็จ (ที่จัดเก็บของเบราว์เซอร์ถูกปิด)'); }
+  }
+  function loadFocus() {
+    var cur = byId('lg-focus-text');
+    if (!cur) return;
+    try { var v = localStorage.getItem(C.KEY_V1_FOCUS); if (v) cur.textContent = v; } catch (e) {}
+  }
+
+  /* ── เหตุการณ์คลิก/คีย์บอร์ด ── */
+  function onClick(ev) {
+    var t = ev.target && ev.target.closest ? ev.target.closest('[data-lg-view],[data-lg-year],[data-prev-year],[data-next-year],[data-today],[data-all-years],[data-lg-mode],[data-lg-labels],[data-open],[data-close-detail],[data-add],[data-edit],[data-delete],[data-export],[data-import],[data-focus],[data-cancel]') : null;
+    if (!t || !root.contains(t)) return;
+    if (t.hasAttribute('data-lg-view')) { state.view = t.getAttribute('data-lg-view'); state.selected = null; render(); return; }
+    if (t.hasAttribute('data-lg-year')) {
+      var v = t.getAttribute('data-lg-year');
+      state.year = v === 'future' ? 'future' : Number(v);
+      render();
+      return;
+    }
+    if (t.hasAttribute('data-prev-year') || t.hasAttribute('data-next-year')) {
+      var delta = t.hasAttribute('data-prev-year') ? -1 : 1;
+      var cur = typeof state.year === 'number' ? state.year : YEARS[1];
+      state.year = Math.min(YEARS[1], Math.max(YEARS[0], cur + delta));
+      render();
+      return;
+    }
+    if (t.hasAttribute('data-today')) { state.year = YEARS[1]; render(); return; }
+    if (t.hasAttribute('data-all-years')) { state.year = 'all'; render(); return; }
+    if (t.hasAttribute('data-lg-mode')) { state.mode = t.getAttribute('data-lg-mode') === 'self' ? 'self' : 'narrative'; render(); return; }
+    if (t.hasAttribute('data-lg-labels')) { state.labels = !state.labels; render(); return; }
+    if (t.hasAttribute('data-open')) { ev.preventDefault(); openDetail(t.getAttribute('data-open')); return; }
+    if (t.hasAttribute('data-close-detail')) { state.selected = null; renderDetail(); return; }
+    if (t.hasAttribute('data-add')) { openForm(null); return; }
+    if (t.hasAttribute('data-edit')) {
+      var r = state.records.filter(function (x) { return x.id === state.selected; })[0];
+      if (r) openForm(r);
+      return;
+    }
+    if (t.hasAttribute('data-delete')) { deleteSelected(); return; }
+    if (t.hasAttribute('data-export')) { exportJson(); return; }
+    if (t.hasAttribute('data-import')) { byId('lg-import-file').click(); return; }
+    if (t.hasAttribute('data-focus')) { editFocus(); return; }
+    if (t.hasAttribute('data-cancel')) { byId('lg-dialog').close(); return; }
+  }
+
+  function onKeydown(ev) {
+    if (ev.key !== 'Enter' && ev.key !== ' ' && ev.key !== 'Spacebar') return;
+    var t = ev.target;
+    if (t && t.getAttribute && t.getAttribute('data-open')) {
+      ev.preventDefault();
+      openDetail(t.getAttribute('data-open'));
+    }
+  }
+
+  /* ── วาดทุกส่วน ── */
+  function renderStats() {
+    var ys = {};
+    state.records.forEach(function (r) { if (!r.isFuture && r.startYearCE != null) ys[r.startYearCE] = true; });
+    var yn = Object.keys(ys).length;
+    byId('lg-stat-years').textContent = yn ? yn + ' ปี' : 'ยังไม่มีปีที่ยืนยัน';
+    byId('lg-milestones').textContent = state.records.filter(function (r) { return !r.isFuture; }).length + ' รายการ';
+    byId('lg-chapters').textContent = CHS.length + ' บท';
+    byId('lg-active').textContent = state.records.filter(function (r) { return r.isFuture || r.type === 'goal'; }).length + ' เป้าหมาย';
+    byId('lg-age').textContent = String(NOW_YEAR + 543);
+  }
+  function renderToday() {
+    var d = new Date();
+    var el = byId('lg-today');
+    if (!el) return;
+    el.textContent = d.getDate() + ' ' + C.THAI_MONTHS[d.getMonth()] + ' ' + (d.getFullYear() + 543);
+    el.setAttribute('datetime', d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()));
+  }
+  function renderViewButtons() {
+    var btns = root.querySelectorAll('[data-lg-view]');
+    for (var i = 0; i < btns.length; i++) {
+      var on = btns[i].getAttribute('data-lg-view') === state.view;
+      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (on) btns[i].classList.add('is-active'); else btns[i].classList.remove('is-active');
+    }
+  }
+  function render() {
+    renderToday();
+    renderStats();
+    renderChips();
+    renderYearDetail();
+    var list = filtered();
+    byId('lg-result-count').textContent = list.length + ' / ' + state.records.length + ' รายการ';
+    var box = byId('lg-content');
+    if (state.view === 'graph') box.innerHTML = graphView();
+    else if (state.view === 'chapters') box.innerHTML = chaptersView();
+    else if (state.view === 'map') box.innerHTML = mapView();
+    else box.innerHTML = timelineView(list);
+    renderDetail();
+    renderViewButtons();
+  }
+
+  /* ── เริ่มทำงาน ── */
+  populateSelects();
+  loadFocus();
+  load();
+  byId('lg-category').addEventListener('change', function (e) { state.category = e.target.value; render(); });
+  byId('lg-search').addEventListener('input', function (e) { state.query = e.target.value; render(); });
+  byId('lg-import-file').addEventListener('change', onImportFile);
+  byId('lg-form').addEventListener('submit', onFormSubmit);
+  root.addEventListener('click', onClick);
+  root.addEventListener('keydown', onKeydown);
+  render();
+  if (firstVisit) notice('เริ่มจากชุดข้อมูลตั้งต้น ' + state.records.length + ' รายการ ทุกช่องที่ยังไม่มีข้อมูลจะแสดงว่า "' + NOT_RECORDED + '" และปีที่ยังไม่มีบันทึกจะไม่ถูกเติมให้');
 })();

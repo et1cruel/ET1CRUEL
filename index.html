@@ -657,8 +657,9 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
 <script defer src="js/reactive-lens.js"></script>
 <script defer src="js/site-polish.js?v=3"></script>
 <link rel="stylesheet" href="css/neo-brutal.css?v=18">
-<link rel="stylesheet" href="css/life-graph.css">
-<script defer src="js/life-graph.js"></script>
+<link rel="stylesheet" href="css/life-graph.css?v=2">
+<script defer src="js/life-graph-data.js?v=2"></script>
+<script defer src="js/life-graph.js?v=2"></script>
 <style>
 /* FIX (neo-brutal): จุดที่ยังกลืนพื้น — ไอคอนคลังทองพื้นมืดบนการ์ดขาว,
    ปุ่มสุ่มเกร็ดเขียวนีออนบนพื้นขาว และราคาหุ้นในแถบ .plan-pill ที่พื้นเป็นกรมท่าเข้ม */
@@ -753,13 +754,24 @@ body.site-polish section.card h5{color:#131313!important}
   </div>
   <p class="lg-notice" id="lg-notice" role="status" hidden></p>
   <div class="lg-toolbar" aria-label="เครื่องมือกราฟชีวิต">
-    <div class="lg-modes" role="group" aria-label="มุมมอง"><button type="button" data-lg-view="timeline" aria-pressed="true" class="is-active">Timeline</button><button type="button" data-lg-view="graph" aria-pressed="false">Life Graph</button><button type="button" data-lg-view="map" aria-pressed="false">Life Map</button></div>
-    <select id="lg-category" aria-label="กรองตามหมวดหมู่"><option value="all">ทุกหมวด</option><option value="Music">Music</option><option value="Education">Education</option><option value="Work">Work</option><option value="Technology">Technology</option><option value="AI">AI</option><option value="Finance">Finance</option><option value="Personal Growth">Personal Growth</option><option value="Future Goals">Future Goals</option></select>
+    <div class="lg-modes" role="group" aria-label="มุมมอง"><button type="button" data-lg-view="timeline" aria-pressed="true" class="is-active">Timeline</button><button type="button" data-lg-view="graph" aria-pressed="false">Life Graph</button><button type="button" data-lg-view="chapters" aria-pressed="false">Life Chapters</button><button type="button" data-lg-view="map" aria-pressed="false">Life Map</button></div>
+    <select id="lg-category" aria-label="กรองตามหมวดหมู่"><option value="all">ทุกหมวด</option></select>
     <input id="lg-search" type="search" placeholder="ค้นหาเหตุการณ์ / tag…" aria-label="ค้นหาเหตุการณ์และแท็ก">
     <span class="lg-result-count" id="lg-result-count" aria-live="polite"></span>
     <button type="button" class="lg-btn lg-primary" data-add>＋ เพิ่มบันทึก</button>
     <button type="button" class="lg-btn" data-export>ส่งออก JSON</button>
+    <button type="button" class="lg-btn" data-import>นำเข้า JSON</button>
+    <input type="file" id="lg-import-file" accept="application/json,.json" hidden aria-label="เลือกไฟล์ JSON ที่จะนำเข้า">
   </div>
+  <nav class="lg-yearnav" aria-label="นำทางตามปี">
+    <button type="button" class="lg-btn lg-yearstep" data-prev-year aria-label="ปีก่อนหน้า">‹ ปีก่อนหน้า</button>
+    <div id="lg-years" class="lg-years" role="group" aria-label="เลือกปีในไทม์ไลน์"></div>
+    <button type="button" class="lg-btn lg-yearstep" data-next-year aria-label="ปีถัดไป">ปีถัดไป ›</button>
+    <button type="button" class="lg-btn" data-today>วันนี้</button>
+    <button type="button" class="lg-btn" data-all-years>ทุกปี</button>
+  </nav>
+  <p class="lg-years-help" id="lg-years-help">ปี 2547–2560 (2004–2017) คือช่วงวัยเด็ก · ปีที่ยังไม่มีบันทึกจะแสดงตามจริงว่าไม่มีข้อมูล ไม่มีการเติมเหตุการณ์ให้ และไม่ถือเป็นช่องว่างที่ต้องรีบกรอก</p>
+  <section id="lg-year-detail" class="lg-year-detail" hidden aria-live="polite"></section>
   <div id="lg-content" aria-live="polite"></div>
   <aside id="lg-detail" hidden aria-label="รายละเอียดเหตุการณ์"></aside>
   <div class="lg-bottom">
@@ -773,15 +785,28 @@ body.site-polish section.card h5{color:#131313!important}
     <label class="lg-form-field wide">เรื่องราว<textarea name="description" maxlength="1200"></textarea></label>
     <label class="lg-form-field">หมวดหมู่<select name="category"></select></label>
     <label class="lg-form-field">ชนิดข้อมูล<select name="type"><option value="milestone">Milestone</option><option value="chapter">Chapter</option><option value="goal">Goal</option></select></label>
-    <label class="lg-form-field">วันที่ (ไม่บังคับ)<input name="date" type="date"></label>
-    <label class="lg-form-field">ปีสิ้นสุด (ไม่บังคับ)<input name="endDate" type="number" min="1900" max="2200" placeholder="เช่น 2018"></label>
-    <label class="lg-form-field">ตำแหน่งเชิงเรื่องราว (ไม่บังคับ)<input name="storyLevel" type="number" min="0" max="100" placeholder="วางตำแหน่ง 0–100 ไม่ใช่คะแนนชีวิต"></label>
-    <label class="lg-form-field">ประเมินตนเอง (ไม่บังคับ)<input name="selfAssessmentScore" type="number" min="0" max="100" placeholder="คะแนนที่คุณประเมินเอง"></label>
-    <label class="lg-form-field">ความแม่นยำของวันที่<select name="datePrecision"><option value="unknown">ปีไม่ระบุ</option><option value="exact">วัน/เดือน/ปี</option><option value="month">เดือน</option><option value="year">ปี</option><option value="approximate">โดยประมาณ</option><option value="age">ช่วงอายุ</option><option value="school-stage">ระดับชั้น</option></select></label>
+    <label class="lg-form-field">วันที่เริ่ม (ค.ศ. — ไม่บังคับ)<input name="startDate" type="date"></label>
+    <label class="lg-form-field">วันที่สิ้นสุด (ค.ศ. — ไม่บังคับ)<input name="endDate" type="date"></label>
+    <label class="lg-form-field">ปีเริ่ม (ค.ศ.)<input name="startYearCE" type="number" min="1900" max="2200" placeholder="เช่น 2015"></label>
+    <label class="lg-form-field">ปีสิ้นสุด (ค.ศ.)<input name="endYearCE" type="number" min="1900" max="2200" placeholder="เช่น 2021"></label>
+    <label class="lg-form-field">เดือนเริ่ม 1–12<input name="startMonthCE" type="number" min="1" max="12" placeholder="ไม่บังคับ"></label>
+    <label class="lg-form-field">เดือนสิ้นสุด 1–12<input name="endMonthCE" type="number" min="1" max="12" placeholder="ไม่บังคับ"></label>
+    <label class="lg-form-field">ความแม่นยำของวันที่<select name="datePrecision"><option value="unknown">ปีไม่ระบุ</option><option value="exact_date">วัน/เดือน/ปี (แน่นอน)</option><option value="exact_month">เดือน (แน่นอน)</option><option value="exact_year">ปี (แน่นอน)</option><option value="exact_range">ช่วงปี (แน่นอน)</option><option value="estimated_year">ปี (ประมาณ)</option><option value="estimated_range">ช่วงปี (ประมาณ)</option><option value="school_period">ช่วงระดับชั้น / ปีการศึกษา</option><option value="age_based">ช่วงอายุ</option></select></label>
+    <label class="lg-form-field">ความน่าเชื่อถือของวันที่<select name="dateStatus"><option value="unknown">ยังไม่ทราบ</option><option value="confirmed">ยืนยันแล้ว</option><option value="estimated">ประมาณการ</option><option value="needs_confirmation">ต้องยืนยัน</option></select></label>
+    <label class="lg-form-field">ที่มาของวันที่<select name="dateSource"><option value="user_reported">ผู้ใช้เล่าเอง</option><option value="project_record">บันทึกในโปรเจกต์</option><option value="imported_record">นำเข้า</option><option value="derived_estimate">คำนวณจากข้อมูลอื่น</option></select></label>
     <label class="lg-form-field">สถานะข้อมูล<select name="status"><option value="verified">ยืนยันแล้ว</option><option value="user-reported">ผู้ใช้เล่า / รายละเอียดรอยืนยัน</option><option value="planned">วางแผน</option><option value="exploring">กำลังสำรวจ</option><option value="in-progress">กำลังทำ</option><option value="completed">เสร็จแล้ว</option></select></label>
-    <label class="lg-form-field">บทชีวิตที่เชื่อมโยง<select name="chapterId"><option value="">ไม่ระบุบท</option><option value="childhood">จุดเริ่มต้น</option><option value="turning-point">จุดเปลี่ยน</option><option value="learning-struggle">เรียนรู้ผ่านข้อจำกัด</option><option value="education-experiments">การเรียนและทดลอง</option><option value="music-artist">เส้นทางศิลปิน</option><option value="creative-technology">เทคโนโลยีสร้างสรรค์</option><option value="ai-builder">AI Builder</option><option value="robotics-future">Robotics & Future Engineering</option><option value="life-os">Life OS</option></select></label>
+    <label class="lg-form-field">ความสำคัญเชิงการจัดวาง (1–3)<select name="importance"><option value="1">1 · รายละเอียดประกอบ</option><option value="2" selected>2 · เหตุการณ์ทั่วไป</option><option value="3">3 · จุดเปลี่ยนสำคัญ</option></select></label>
+    <label class="lg-form-field">ตำแหน่งเชิงเรื่องราว 0–100<input name="narrativeLevel" type="number" min="0" max="100" placeholder="ใช้จัดวางบนกราฟ ไม่ใช่คะแนนชีวิต"></label>
+    <label class="lg-form-field">ประเมินตนเอง 1–10<input name="selfAssessmentScore" type="number" min="1" max="10" placeholder="คุณกรอกเองเท่านั้น"></label>
+    <label class="lg-form-field">บทชีวิตที่เชื่อมโยง<select name="chapterId"><option value="">ไม่ระบุบท</option></select></label>
+    <label class="lg-form-field wide">ทักษะที่เกี่ยวข้อง (คั่นด้วยจุลภาค)<input name="relatedSkills" placeholder="Python, Guitar"></label>
+    <label class="lg-form-field wide">โปรเจกต์ที่เกี่ยวข้อง (คั่นด้วยจุลภาค)<input name="relatedProjectIds" placeholder="life-os-build"></label>
+    <label class="lg-form-field wide">What Changed — อะไรเปลี่ยนไป<textarea name="whatChanged" maxlength="800"></textarea></label>
+    <label class="lg-form-field wide">Personal Reflection — สะท้อนตัวเอง (ระบบไม่แต่งให้)<textarea name="reflection" maxlength="800"></textarea></label>
+    <label class="lg-form-field wide">หลักฐาน / ที่มา (Evidence)<textarea name="sourceReference" maxlength="600"></textarea></label>
+    <label class="lg-form-field wide">บันทึกของฉัน (User Notes)<textarea name="notes" maxlength="800"></textarea></label>
+    <label class="lg-form-field wide">ข้อมูลขัดแย้ง / ต้องยืนยัน<textarea name="conflictNote" maxlength="600"></textarea></label>
     <label class="lg-form-field">Tags (คั่นด้วยจุลภาค)<input name="tags" placeholder="ดนตรี, learning"></label>
-    <label class="lg-form-field wide">แหล่งที่มา / หมายเหตุ<textarea name="evidenceNote" maxlength="600"></textarea></label>
   </div><div class="lg-dialog-actions"><button type="button" data-cancel>ยกเลิก</button><button type="submit">บันทึก</button></div></form></dialog>
 </section>
 

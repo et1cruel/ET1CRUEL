@@ -17,3 +17,96 @@
 
 
 #life-graph .lg-hit-wrap{cursor:pointer;outline:none}#life-graph .lg-hit{fill:transparent;stroke:transparent;stroke-width:2}#life-graph .lg-hit-wrap:focus .lg-hit{stroke:#a8d5ff;stroke-dasharray:3 3}#life-graph .lg-hit-wrap:focus-visible{outline:none}
+
+/* ─── LIFE GRAPH V2 ─────────────────────────────────────────────────────────
+   เพิ่มต่อท้ายเท่านั้น ของเดิมทั้งหมดยังอยู่ (ห้ามรื้อ)                        */
+#life-graph .lg-yearnav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
+#life-graph .lg-yearstep{white-space:nowrap}
+#life-graph .lg-years{display:flex;gap:6px;flex-wrap:wrap;flex:1 1 320px;min-width:0}
+#life-graph .lg-year-chip{display:inline-flex;align-items:center;gap:6px;background:#141a24;border:1px solid #333e50;color:#cfd9e8;border-radius:999px;padding:6px 11px;font:600 12px 'IBM Plex Sans Thai',sans-serif;white-space:nowrap}
+#life-graph .lg-year-chip i{font-style:normal;font-size:10px;opacity:.75;border-left:1px solid #3b475c;padding-left:6px}
+#life-graph .lg-year-chip:hover{border-color:#4d6180;background:#182130}
+#life-graph .lg-year-chip.is-empty{color:#8b97a8;border-style:dashed}
+#life-graph .lg-year-chip.is-empty i{opacity:.5}
+#life-graph .lg-year-chip.is-active{background:#173d65;border-color:#4a9bf0;color:#dcecff}
+#life-graph .lg-year-chip-future{border-color:#3f5a44;color:#c9e6cf}
+#life-graph .lg-year-chip-future.is-active{background:#1d4a2c;border-color:#4ec06f;color:#dff7e4}
+#life-graph .lg-years-help{font-size:12px;color:#8e9aab;margin:2px 0 12px;max-width:92ch}
+#life-graph .lg-year-detail{background:#0d1016;border:1px solid #27303c;border-radius:12px;padding:14px 16px;margin:0 0 14px}
+#life-graph .lg-year-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 6px}
+#life-graph .lg-year-head h3{margin:0;font-size:20px;color:#fff}
+#life-graph .lg-year-head small{color:#9ca9bd;font-size:12px}
+#life-graph .lg-year-cats{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 0}
+#life-graph .lg-year-cat{font-size:11px;border:1px solid #35415a;border-radius:999px;padding:2px 8px;color:#a8b6c9}
+#life-graph .lg-year-list{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+#life-graph .lg-year-list li{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:14px}
+#life-graph .lg-carried{font-size:11px;border:1px dashed #6b7a90;border-radius:999px;padding:1px 7px;color:#9fb0c6}
+#life-graph .lg-empty-year{margin:6px 0 0;font-size:14px;color:#b9c4d4}
+#life-graph .lg-empty-year-note{margin:4px 0 0;font-size:12px;color:#8e9aab}
+#life-graph .lg-year-group{margin:0 0 22px;min-width:0}
+#life-graph .lg-year-group-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid #293344;padding-bottom:5px;margin:0 0 10px}
+#life-graph .lg-year-group-head h3{margin:0;font-size:17px;color:#fff}
+#life-graph .lg-year-group-head small{font-size:12px;color:#9ca9bd}
+#life-graph .lg-year-group-body{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#life-graph .lg-timeline-undated,#life-graph .lg-timeline-future{margin:0 0 20px}
+#life-graph .lg-timeline-undated h3,#life-graph .lg-timeline-future h3{font-size:16px;color:#fff;margin:0 0 8px}
+#life-graph .lg-event-carried{border-left-style:dashed!important}
+#life-graph .lg-chapters-note{font-size:13px;color:#9ca9bd;margin:0 0 12px;max-width:92ch}
+#life-graph .lg-chapter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+#life-graph .lg-chapter-card{background:#171c26;border:1px solid #2b3545;border-radius:12px;padding:14px;min-width:0}
+#life-graph .lg-chapter-card h4{margin:0 0 4px;font-size:15px;color:#fff}
+#life-graph .lg-chapter-meta{font-size:12px;color:#9ca9bd;margin:0 0 6px}
+#life-graph .lg-chapter-card p{font-size:13px;color:#c4cfdd;margin:0 0 8px}
+#life-graph .lg-chapter-events{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+#life-graph .lg-chapter-event{width:100%;text-align:left;background:#111721;border:1px solid #303a4a;color:#dbe4f0;border-radius:8px;padding:7px 9px;font-size:13px}
+#life-graph .lg-chapter-event:hover{border-color:#4a9bf0}
+#life-graph .lg-chapter-event small{display:block;color:#93a1b4;font-size:11px;margin-top:2px}
+#life-graph .lg-chapter-none{font-size:13px;color:#8e9aab}
+#life-graph .lg-graph-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 10px}
+#life-graph .lg-mode-note{font-size:13px;color:#b9c4d4;margin:8px 0 0}
+#life-graph .lg-legend{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:#b9c4d4}
+#life-graph .lg-legend-item{display:inline-flex;align-items:center;gap:6px}
+#life-graph .lg-legend-key{width:14px;height:14px;border-radius:50%;display:inline-block}
+#life-graph .lg-legend-line{width:20px;height:0;border-top:3px solid #398fe5;display:inline-block}
+#life-graph .lg-legend-dashed{width:20px;height:0;border-top:3px dashed #398fe5;display:inline-block}
+#life-graph .lg-legend-band{width:20px;height:12px;background:rgba(80,165,255,.18);border:1px solid #2c4a6b;display:inline-block}
+#life-graph .lg-chapter-band{fill:rgba(80,165,255,.07);stroke:#24354a;stroke-width:1}
+#life-graph .lg-chapter-band-label{fill:#7f8ea6;font:11px 'IBM Plex Sans Thai',sans-serif}
+#life-graph .lg-future-line{stroke:#398fe5;stroke-width:2;stroke-dasharray:5 5;opacity:.85}
+#life-graph .lg-future-dot{fill:none;stroke:#14b88a;stroke-width:2;stroke-dasharray:4 3}
+#life-graph .lg-score-notice{background:#111721;border:1px dashed #4a566d;border-radius:10px;padding:12px;color:#dbe4f0;font-size:14px;margin:10px 0 0}
+#life-graph .lg-graph-hidden-note{font-size:12px;color:#93a1b4;margin:8px 0 0}
+#life-graph .lg-future-goals{margin:14px 0 0}
+#life-graph .lg-future-goals h3{font-size:15px;color:#fff;margin:0 0 8px}
+#life-graph .lg-future-goals-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+#life-graph .lg-future-goal{display:flex;gap:8px;align-items:flex-start;text-align:left;background:#111721;border:1px dashed #3f5a44;border-radius:9px;padding:9px;color:#dbe4f0;font-size:13px}
+#life-graph .lg-future-goal:hover{border-color:#4ec06f}
+#life-graph .lg-future-goal small{display:block;color:#93a1b4;font-size:11px;margin-top:2px}
+#life-graph .lg-detail-badges{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+#life-graph .lg-badge{font-size:11px;border:1px solid #3a4557;border-radius:999px;padding:2px 8px;color:#b9c4d4}
+#life-graph .lg-badge-warn{background:#3a2117;border-color:#a15a2f;color:#ffcaa0}
+#life-graph .lg-badge-future{background:#16281c;border-color:#3f6f4a;color:#bfe8c8}
+#life-graph .lg-badge-current{background:#123a2c;border-color:#2f8a63;color:#a9ebcf}
+#life-graph .lg-badge-est{background:#2b2a1a;border-color:#7d7333;color:#eee4a8}
+#life-graph .lg-conflict{background:#2a1a17;border:1px solid #a15a2f;border-radius:9px;padding:10px;margin:0 0 10px;font-size:13px;color:#ffd9c2}
+#life-graph .lg-conflict b{display:block;margin-bottom:4px;color:#ffb98f}
+#life-graph .lg-unrecorded{color:#8e9aab;font-style:italic}
+#life-graph .lg-legacy-score{background:#2b2a1a;border:1px solid #7d7333;border-radius:9px;padding:10px;margin:0 0 10px;font-size:13px;color:#eee4a8}
+#life-graph .lg-detail-section{margin:12px 0 0}
+#life-graph .lg-detail-section h4{margin:0 0 4px;font-size:14px;color:#fff}
+#life-graph .lg-detail-section p{margin:0;font-size:14px;color:#c9d4e2}
+#life-graph .lg-truth-note{font-size:12px;color:#8e9aab;margin:6px 0 0}
+#life-graph .lg-map-note{font-size:12px;color:#8e9aab}
+@media(max-width:900px){#life-graph .lg-year-group-body{grid-template-columns:1fr}}
+@media(max-width:560px){
+  #life-graph .lg-years{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding-bottom:6px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+  #life-graph .lg-year-chip{flex:0 0 auto}
+  #life-graph .lg-yearnav{gap:6px}
+  #life-graph .lg-yearstep{font-size:12px;padding:7px 9px}
+  #life-graph .lg-year-head h3{font-size:17px}
+  #life-graph .lg-year-group-head h3{font-size:15px}
+  #life-graph .lg-legend{gap:9px}
+  #life-graph .lg-chapter-grid{grid-template-columns:1fr}
+  #life-graph .lg-stock-chart{min-width:640px}
+}
+@media(prefers-reduced-motion:reduce){#life-graph .lg-year-chip,#life-graph .lg-chapter-event,#life-graph .lg-future-goal{transition:none!important}}

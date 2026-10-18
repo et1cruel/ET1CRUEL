@@ -113,4 +113,14 @@ assert.equal(kept.userEdited, true);
 assert.equal(kept.evidenceNote, 'legacy field', 'unknown fields are preserved, not discarded');
 assert.equal(kept.legacy.originalCategory, 'Nonsense', 'the original value is recorded, not erased');
 
+// ---- persistence helpers must fail safely when there is no storage at all ----
+assert.equal(typeof C.saveState, 'function');
+assert.equal(typeof C.loadState, 'function');
+const noStore = C.saveState({ records: D.seeds, deletedSeedIds: [] });
+assert.equal(noStore.ok, false, 'no localStorage in node -> saveState reports failure instead of throwing');
+assert.ok(typeof noStore.reason === 'string' && noStore.reason.length > 0);
+const loaded = C.loadState();
+assert.equal(loaded.v2, null);
+assert.equal(loaded.v1, null);
+
 console.log('OK core');
