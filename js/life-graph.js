@@ -1,106 +1,528 @@
-﻿﻿/* ET1CRUEL LIFE GRAPH — versioned, local-only personal milestones. */
+﻿/* ET1CRUEL LIFE GRAPH — V2.
+ * ครึ่งบน = ตรรกะบริสุทธิ์ที่ทดสอบได้ใน node (window.ET1LIFE_CORE) ไม่แตะ DOM/localStorage
+ * ครึ่งล่าง = ชั้น DOM ที่ทำงานเฉพาะเมื่อมี #life-graph ในหน้าเว็บ
+ * กฎของไฟล์นี้: ห้ามลบ/ทับข้อมูลที่ผู้ใช้สร้างหรือแก้ (createdAt != null หรือ userEdited === true)
+ * ห้ามเดาปี ห้ามแต่งเหตุการณ์ และห้ามใช้คะแนนชีวิตแทนข้อมูลจริง */
 (function () {
   'use strict';
-  window.__lifeGraphLoadCount=(window.__lifeGraphLoadCount||0)+1;
-  var KEY = 'et1cruel.life-graph.v1';
-  var categories = ['Life', 'Education', 'Work', 'Music', 'Business', 'Art', 'Technology', 'AI', 'Robotics', 'Finance', 'Health & Fitness', 'Relationships', 'Travel', 'Spirituality', 'Learning', 'Personal Growth', 'Future Goals'];
-  var categoryNames = {Life:'ชีวิต',Education:'การศึกษา',Work:'งาน',Music:'ดนตรี',Business:'ธุรกิจ',Art:'ศิลปะ',Technology:'เทคโนโลยี',AI:'AI',Robotics:'หุ่นยนต์',Finance:'การเงิน','Health & Fitness':'สุขภาพ',Relationships:'ความสัมพันธ์',Travel:'การเดินทาง',Spirituality:'จิตวิญาณ',Learning:'การเรียนรู้','Personal Growth':'การเติบโตส่วนบุคคล','Future Goals':'เป้าหมายอนาคต'};
-  var chapters = [
-    {id:'childhood',title:'Childhood / จุดเริ่มต้น',description:'ช่วงต้นชีวิตมีความเกี่ยวข้องกับชลบุรีและศรีราชา และย้ายมาอยู่บางใหญ่ จังหวัดนนทบุรี ประมาณชั้นประถมศึกษาปีที่ 1',category:'Life',date:null,datePrecision:'school-stage',status:'user-reported',tags:['ชลบุรี','ศรีราชา','บางใหญ่']},
-    {id:'turning-point',title:'The Turning Point / จุดเปลี่ยน',description:'เริ่มทำเพลงหลังจากเลิกเล่นฟุตบอลตอนชั้นมัธยมศึกษาปีที่ 2 — ไม่ระบุปีปฏิทิน เนื่องจากไม่มีข้อมูลยืนยัน',category:'Music',date:null,datePrecision:'school-stage',status:'user-reported',tags:['TURNING POINT','ดนตรี']},
-    {id:'learning-struggle',title:'Learning Through Struggle / เรียนรู้ผ่านข้อจำกัด',description:'ช่วงวัยรุ่นที่ผู้ใช้เล่าว่ามีข้อจำกัดด้านเงินและความรู้ และผ่านช่วงนั้นด้วยการพยายาม ศึกษา แก้ไข และเรียนรู้ มีประสบการณ์หรือความสนใจในงาน KFC, Tops, ขายนมเปรี้ยว, ออกแบบรอยสัก และเล่นดนตรีเปิดหมวก',category:'Work',date:null,datePrecision:'unknown',status:'user-reported',tags:['การเรียนรู้','งาน']},
-    {id:'education-experiments',title:'Education & Experiments / การเรียนและทดลองเส้นทาง',description:'มัธยมปลายที่โรงเรียนราชวินิตบางเขน; เคยเริ่มเส้นทางมนุษยศาสตร์ภาษาอังกฤษและเทคโนโลยีชีวภาพที่รามคำแหง; เข้าร่วม 42 Bangkok Piscine ในเดือนกรกฎาคม 2025 และหยุด; เคยเล่าเกี่ยวกับการเรียนดนตรีที่บ้านสมเด็จฯ สถานะการเรียนปัจจุบันต้องยืนยัน',category:'Education',date:null,datePrecision:'unknown',status:'user-reported',tags:['HISTORICAL RECORD','ต้องยืนยันสถานะปัจจุบัน']},
-    {id:'music-artist',title:'Music Artist / เส้นทางศิลปิน',description:'ใช้ชื่อ et1cruel โดย et1 สื่อถึง Eternal Oneness; สนใจ Beatmaking, Music Production, Ambient Cloud Rap, Visual Production และงานศิลปะ โปรเจ็กต์ himoriyacore เคยวางแผนเป็นอัลบั้ม 10 เพลง (โปรเจ็กต์ที่วางแผนไว้ ไม่ได้ยืนยันการเผยแพร่)',category:'Music',date:null,datePrecision:'unknown',status:'user-reported',tags:['et1cruel','himoriyacore','planned']},
-    {id:'creative-technology',title:'Software & Creative Technology / ซอฟต์แวร์และเทคโนโลยีสร้างสรรค์',description:'เรียนรู้ Python และ C++; สนใจ React, Node.js, Express, Supabase, GitHub, VS Code, Vercel และเครื่องมือ AI เพื่อสร้างเว็บและระบบของตัวเอง',category:'Technology',date:null,datePrecision:'unknown',status:'user-reported',tags:['Python','C++','Web']},
-    {id:'ai-builder',title:'AI Builder / ผู้สร้างระบบ AI',description:'แนวคิดและการทดลอง ET1 Neural Core, AI Agency Dashboard, Multi-Agent, OpenCode, Muse Spark, Browser Use และ Computer Use สถานะเป็นแนวคิด/ทดลอง ไม่ได้ถือว่าเสร็จสมบูรณ์',category:'AI',date:null,datePrecision:'unknown',status:'planned',tags:['ET1 Neural Core','Multi-Agent','Exploring']},
-    {id:'robotics-future',title:'Robotics & Future Engineering / วิศวกรรมแห่งอนาคต',description:'เป้าหมายระยะยาวในการเรียนรู้วิศวกรรมหุ่นยนต์และระบบอัตโนมัติ เพื่อมุ่งสู่การสร้างหุ่นยนต์ humanoid — เป็นเป้าหมาย ไม่ใช่ทักษะที่ยืนยันแล้ว',category:'Robotics',date:null,datePrecision:'unknown',status:'planned',tags:['Future Goal','Robotics']},
-    {id:'life-os',title:'Life OS / รวมโลกต่าง ๆ เข้าด้วยกัน',description:'กรอบแนวคิดที่กำลังพัฒนาเพื่อเชื่อมดนตรี งานสร้างสรรค์ เว็บไซต์ AI การสร้างรายได้ การพัฒนาตัวเอง การเดินทาง และบันทึกชีวิต',category:'Life',date:null,datePrecision:'unknown',status:'in-progress',tags:['Life OS','Building']}
-  ];
-  var initial = [
-    {id:'seed-football',title:'วัย 11 ปี — ฟุตบอล',description:'เคยเล่นฟุตบอลก่อนเปลี่ยนผ่านไปสู่เส้นทางดนตรี ช่วงปีอิงจากอายุและยังต้องยืนยันปีจริง',category:'Life',chapterId:'childhood',date:'2015',endDate:'2016',datePrecision:'approximate',status:'user-reported',type:'milestone',importance:2,evidenceNote:'ประมาณ ค.ศ. 2015–2016 / พ.ศ. 2558–2559 จากช่วงอายุ; ไม่ระบุเดือน',tags:['ฟุตบอล','ปีโดยประมาณ']},
-    {id:'seed-music-start',title:'ม.2 — เริ่มทำเพลง',description:'เริ่มทำเพลงหลังจากเลิกเล่นฟุตบอลตอน ม.2 — turning point สำคัญของเส้นทางดนตรี',category:'Music',chapterId:'turning-point',date:'2017',endDate:'2018',datePrecision:'approximate',status:'user-reported',type:'milestone',importance:3,evidenceNote:'ประมาณปีการศึกษา 2560–2561 / ค.ศ. 2017–2018 ต้องยืนยันปีจริง',tags:['TURNING POINT','ดนตรี','ปีโดยประมาณ']},
-    {id:'seed-teenage-limits',title:'วัยรุ่น — ไม่มีเงินและความรู้เพียงพอ',description:'ผ่านช่วงที่มีข้อจำกัดด้านเงินและความรู้ ด้วยการสู้ พยายาม ศึกษา ทดลอง แก้ไข และเรียนรู้',category:'Personal Growth',chapterId:'learning-struggle',date:null,datePrecision:'unknown',status:'user-reported',type:'milestone',importance:2,evidenceNote:'ปีไม่ระบุ — ไม่สร้างปีสมมติ',tags:['วัยรุ่น','การเรียนรู้']},
-    {id:'seed-learn-fix',title:'สู้ เรียนรู้ แก้ไข',description:'พยายามเรียนรู้และแก้ปัญหาผ่านประสบการณ์และการลงมือทำ เชื่อมโยงกับช่วงบทชีวิตวัยรุ่นโดยไม่ระบุปี',category:'Personal Growth',chapterId:'learning-struggle',date:null,datePrecision:'unknown',status:'user-reported',type:'milestone',importance:2,evidenceNote:'ปีไม่ระบุ; ไม่ยืนยันว่าเกิดปีเดียวกับเหตุการณ์อื่น',tags:['ทดลอง','แก้ไข','เติบโต']},
-    {id:'seed-work-experiments',title:'ทดลองงานและเริ่มสร้างรายได้',description:'มีประสบการณ์หรือสนใจงานหลายรูปแบบ เช่น KFC, Tops, ขายนมเปรี้ยว, ออกแบบรอยสัก และเล่นดนตรีเปิดหมวก',category:'Work',chapterId:'education-experiments',date:null,datePrecision:'unknown',status:'user-reported',type:'milestone',importance:2,evidenceNote:'ปีไม่ระบุ; ประสบการณ์งานไม่ได้ยืนยันความมั่นคงทางการเงิน',tags:['KFC','Tops','ขายนมเปรี้ยว','ออกแบบรอยสัก','ดนตรีเปิดหมวก']},
-    {id:'seed-tech-start',title:'เริ่มสร้างโลกด้วยเทคโนโลยี',description:'สนใจและฝึก Programming, Web Development และ AI พร้อมพยายามสร้างโปรเจ็กต์ของตัวเอง',category:'Technology',chapterId:'creative-technology',date:null,datePrecision:'unknown',status:'user-reported',type:'milestone',importance:2,evidenceNote:'ปีเริ่มต้นไม่ยืนยัน; ไม่พบวันเริ่มที่ตรวจสอบได้ในข้อมูลที่มี',tags:['Programming','Web Development','AI']},
-    {id:'seed-42-piscine',title:'ทดลองเส้นทาง Coding — 42 Bangkok',description:'เข้าร่วม 42 Bangkok Piscine ในเดือนกรกฎาคม 2025 และหยุดเส้นทางดังกล่าวในภายหลัง โดยไม่มีวันที่หยุดที่ยืนยัน',category:'Education',chapterId:'education-experiments',date:'2025-07',datePrecision:'month',status:'user-reported',type:'milestone',importance:2,evidenceNote:'เริ่มต้น กรกฎาคม 2025 / 2568; วันสิ้นสุดไม่ระบุ',tags:['42 Bangkok','Piscine','Coding']},
-    {id:'seed-current-life-os',title:'ตอนนี้ — ET1CRUEL LIFE OS',description:'กำลังพยายามเชื่อมดนตรี งานสร้างสรรค์ Software Engineering, AI และการสร้างรายได้ โดยยังรักษาเวลาให้ดนตรีและบันทึกชีวิต',category:'Technology',chapterId:'life-os',date:'2026',datePrecision:'year',status:'in-progress',type:'milestone',importance:3,evidenceNote:'ตำแหน่งปัจจุบัน ปี 2569 / 2026',tags:['CURRENT','Life OS','Music','Software Engineering','AI']},
-    {id:'seed-future-own-life',title:'เป้าหมาย — สร้างชีวิตในแบบของตัวเอง',description:'สร้างรายได้มั่นคงจากงานสร้างสรรค์และเทคโนโลยี พัฒนาระบบ AI ของตนเอง รักษาการทำเพลง และพัฒนาทักษะวิศวกรรมหุ่นยนต์ระยะยาว',category:'Future Goals',chapterId:'robotics-future',date:null,datePrecision:'unknown',status:'planned',type:'goal',importance:3,evidenceNote:'อนาคต / ยังไม่กำหนดปี — เป้าหมาย ไม่ใช่เหตุการณ์ที่เกิดขึ้นแล้ว',tags:['Future Goal','Music','AI','Robotics','Creative Technology']}
-  ];
-  var root = document.getElementById('life-graph');
-  if (!root) return;
-  var state = {records:[],view:'timeline',category:'all',query:'',selected:null};
-  function esc(value) { return String(value == null ? '' : value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
-  function validRecord(r) { return r && typeof r.id === 'string' && typeof r.title === 'string' && r.title.trim() && categories.indexOf(r.category) >= 0; }
-  function normalizeRecord(r) { return {id:r.id,title:r.title,description:r.description||'',category:categories.indexOf(r.category)>=0?r.category:'Life',chapterId:r.chapterId||'',date:r.date||null,datePrecision:r.datePrecision||'unknown',endDate:r.endDate||null,status:r.status||'user-reported',type:r.type||'milestone',importance:Number(r.importance)||2,evidenceNote:r.evidenceNote||'',tags:Array.isArray(r.tags)?r.tags:[],createdAt:r.createdAt||null,updatedAt:r.updatedAt||null,storyLevel:r.storyLevel==null?null:Number(r.storyLevel),selfAssessmentScore:r.selfAssessmentScore==null?null:Number(r.selfAssessmentScore)}; }
-  function load() {
-    try {
-      var raw=localStorage.getItem(KEY);
-      if(raw===null){state.records=initial.map(normalizeRecord);save();return;}
-      var parsed=JSON.parse(raw);
-      if(parsed&&Array.isArray(parsed.records)) state.records=parsed.records.filter(validRecord).map(normalizeRecord);
-      else state.records=initial.map(normalizeRecord);
-    } catch(e) { state.records=initial.map(normalizeRecord); notice('อ่านข้อมูลเดิมไม่ได้ จึงแสดงข้อมูลตั้งต้นโดยไม่เขียนทับข้อมูลเดิม'); }
-  }
-  function save() { try { localStorage.setItem(KEY,JSON.stringify({version:1,records:state.records})); return true; } catch(e) { notice('บันทึกไม่สำเร็จ — ตรวจสอบพื้นที่จัดเก็บของเบราว์เซอร์'); return false; } }
-  function notice(text) { var n=document.getElementById('lg-notice'); if(n){n.textContent=text;n.hidden=false;window.setTimeout(function(){n.hidden=true;},5000);} }
-  function dateText(r) { if(!r.date)return r.type==='goal'?'อนาคต / ยังไม่กำหนดปี':r.datePrecision==='school-stage'?'ช่วงระดับชั้น (ปีไม่ระบุ)':'ปีไม่ระบุ'; var y=Number(r.date.slice(0,4)), end=r.endDate?Number(r.endDate.slice(0,4)):null, years=y+(y<2400?543:0), endYears=end&&(end+(end<2400?543:0)); if(r.datePrecision==='month')return r.date.slice(5,7)+'/'+String(years)+' ('+r.date.slice(0,4)+')'; if(r.datePrecision==='approximate')return 'ประมาณ '+years+(endYears?'–'+endYears:'')+' / '+y+(end?'–'+end:''); if(r.datePrecision==='year')return years+' ('+y+')'; return r.date; }
-  function eventOrder(a,b) { var ad=a.date?Number(a.date.slice(0,4))*100+(a.date.length>=7?Number(a.date.slice(5,7)):1):Infinity, bd=b.date?Number(b.date.slice(0,4))*100+(b.date.length>=7?Number(b.date.slice(5,7)):1):Infinity; return ad-bd; }
-  function filtered() { return state.records.filter(function(r){return (state.category==='all'||r.category===state.category)&&(!state.query||(r.title+' '+r.description+' '+r.tags.join(' ')).toLowerCase().indexOf(state.query.toLowerCase())>=0);}).sort(eventOrder); }
-  function graphMarkup(list) {
-    var dated=list.filter(function(r){return !!r.date;}).sort(eventOrder), future=dated.filter(function(r){return r.type==='goal';}), history=dated.filter(function(r){return r.type!=='goal';}), undated=list.filter(function(r){return !r.date&&r.type!=='goal';});
-    var width=Math.max(760,history.length*165+120), height=320, left=64, right=width-54, top=35, bottom=height-66, min=history.length?Math.min.apply(null,history.map(function(r){return Number(r.date.slice(0,4));})):2015, max=history.length?Math.max.apply(null,history.map(function(r){return Number((r.endDate||r.date).slice(0,4));})):2026; if(max===min)max=min+1;
-    var pointsX=[];var points=history.map(function(r,i){var year=Number(r.date.slice(0,4)), x=left+(year-min)/(max-min)*(right-left);if(history.length>1&&i>0)x=Math.max(x,pointsX[i-1]+85);x=Math.min(x,right);pointsX.push(x);var level=r.storyLevel==null?({ 'seed-football':.42,'seed-music-start':.25,'seed-42-piscine':.52,'seed-current-life':.78}[r.id]||(.35+(i%3)*.08)):Math.max(0,Math.min(1,r.storyLevel/100));return {r:r,x:x,y:bottom-level*(bottom-top)};});
-    var path=points.map(function(p,i){return (i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1);}).join(' '), grid='',ticks=5;for(var t=0;t<=ticks;t++){var gy=top+(bottom-top)*t/ticks;grid+='<line x1="'+left+'" y1="'+gy+'" x2="'+right+'" y2="'+gy+'" class="lg-gridline"/>';}for(var j=0;j<4;j++){var gx=left+(right-left)*j/3, yr=Math.round(min+(max-min)*j/3);grid+='<line x1="'+gx+'" y1="'+top+'" x2="'+gx+'" y2="'+bottom+'" class="lg-gridline lg-grid-vertical"/><text x="'+gx+'" y="'+(bottom+27)+'" class="lg-axis-label" text-anchor="middle">'+(yr+543)+' ('+yr+')</text>';}
-    var labels=points.map(function(p,i){var above=i%2===0, ly=p.y+(above?-18:31);return '<g class="lg-chart-point '+(p.r.id==='seed-current-life'?'is-current':'')+'"><circle cx="'+p.x+'" cy="'+p.y+'" r="7"/><text x="'+p.x+'" y="'+ly+'" text-anchor="middle" class="lg-point-label"><tspan>'+esc(p.r.title.length>22?p.r.title.slice(0,21)+'…':p.r.title)+'</tspan><tspan x="'+p.x+'" dy="15" class="lg-point-year">'+esc(dateText(p.r))+'</tspan></text></g><g class="lg-hit-wrap" tabindex="0" role="button" aria-label="'+esc(p.r.title+' · '+dateText(p.r))+'" data-open="'+esc(p.r.id)+'"><title>'+esc(p.r.title+' — '+dateText(p.r))+'</title><circle class="lg-hit" cx="'+p.x+'" cy="'+p.y+'" r="18"/></g>';}).join('');
-    var futureSvg=future.map(function(r){var x=right-2,y=top+12;return '<line x1="'+(points.length?points[points.length-1].x:right-90)+'" y1="'+(points.length?points[points.length-1].y:bottom-40)+'" x2="'+x+'" y2="'+y+'" class="lg-future-line"/><circle cx="'+x+'" cy="'+y+'" r="7" class="lg-future-dot"/><text x="'+(x-5)+'" y="'+(y-14)+'" text-anchor="end" class="lg-point-label">'+esc(r.title.length>20?r.title.slice(0,19)+'…':r.title)+'</text><text x="'+(x-5)+'" y="'+(y+21)+'" text-anchor="end" class="lg-point-year">Future</text><g class="lg-hit-wrap" tabindex="0" role="button" aria-label="'+esc(r.title+' · อนาคต')+'" data-open="'+esc(r.id)+'"><circle class="lg-hit" cx="'+x+'" cy="'+y+'" r="18"/></g>';}).join('');
-    return '<div class="lg-trajectory"><div class="lg-chart-scroll"><svg class="lg-stock-chart" viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Life trajectory แสดงตำแหน่งเชิงเรื่องราวที่แก้ไขได้ ไม่ใช่คะแนนที่วัดจริง"><text x="12" y="22" class="lg-axis-title">ระดับการเปลี่ยนแปลงของชีวิต</text>'+grid+'<path d="'+path+'" class="lg-history-line"/>'+labels+futureSvg+'<text x="'+right+'" y="'+(height-12)+'" class="lg-axis-title" text-anchor="end">เวลา · พ.ศ. (ค.ศ.)</text></svg></div><p class="lg-graph-note">ตำแหน่งแนวตั้งเป็นการจัดวางเชิงเรื่องราวแบบร่างที่แก้ไขได้ ไม่ใช่คะแนนชีวิตที่วัดจริง · จุดไม่มีปีจะแสดงแยกด้านล่าง</p><div class="lg-undated">'+(undated.length?'<h3>ปีไม่ระบุ · Undated Milestones</h3><div class="lg-undated-grid">'+undated.map(function(r){return '<button type="button" class="lg-undated-item" data-open="'+esc(r.id)+'"><i></i><span><b>'+esc(r.title)+'</b><small>ปีไม่ระบุ · '+esc(categoryNames[r.category]||r.category)+'</small></span></button>';}).join('')+'</div>':'')+'</div></div>';
-  }
-  function render() {
-    var list=filtered(), nowYear=new Date().getFullYear();
-    document.getElementById('lg-age').textContent=nowYear+543;
-    document.getElementById('lg-chapters').textContent=state.records.filter(function(r){return r.type==='chapter';}).length;
-    document.getElementById('lg-milestones').textContent=state.records.filter(function(r){return r.type==='milestone'||r.type==='chapter';}).length;
-    document.getElementById('lg-active').textContent=state.records.filter(function(r){return r.type==='goal'&&(r.status==='in-progress'||r.status==='planned');}).length;
-    document.getElementById('lg-stat-years').textContent=state.records.filter(function(r){return !!r.date&&r.type!=='goal';}).length?'ปีที่ระบุ '+state.records.filter(function(r){return !!r.date&&r.type!=='goal';}).length:'ยังไม่มีปีที่ยืนยัน';
-    var html='';
-    if(state.view==='map') {
-      html='<div class="lg-map"><div class="lg-map-node">Music · et1cruel</div><span>→</span><div class="lg-map-node">Creative work</div><span>→</span><div class="lg-map-node">Software</div><span>→</span><div class="lg-map-node">AI · exploring</div><span>→</span><div class="lg-map-node">Robotics · future goal</div></div><p class="lg-map-note">แผนที่แนวคิด ไม่ใช่ลำดับความสำเร็จหรือสถานะทักษะ</p>'+list.map(card).join('');
-    } else if(state.view==='graph') {
-      html=graphMarkup(list);
-    } else if(!list.length) html='<div class="lg-empty">ยังไม่มีเหตุการณ์ที่ตรงกับตัวกรอง · เพิ่มบันทึกชีวิตของคุณได้เลย</div>';
-    else html='<div class="lg-timeline">'+list.map(card).join('')+'</div>';
-    document.getElementById('lg-content').innerHTML=html;
-    document.getElementById('lg-result-count').textContent=list.length+' รายการ';
-    document.querySelectorAll('[data-lg-view]').forEach(function(b){var on=b.dataset.lgView===state.view;b.classList.toggle('is-active',on);b.setAttribute('aria-pressed',on?'true':'false');});
-    var detail=document.getElementById('lg-detail');
-    if(state.selected){var r=state.records.find(function(x){return x.id===state.selected;});if(r){detail.hidden=false;detail.innerHTML='<div class="lg-detail-head"><div><small>บันทึกชีวิต · '+esc(categoryNames[r.category]||r.category)+'</small><h3>'+esc(r.title)+'</h3></div><button type="button" class="lg-close" data-close-detail aria-label="ปิดรายละเอียด">×</button></div><dl><dt>บทชีวิต</dt><dd>'+esc((chapters.find(function(c){return c.id===r.chapterId;})||{}).title||'ยังไม่มีข้อมูล')+'</dd><dt>ช่วงเวลา</dt><dd>'+esc(dateText(r))+'</dd><dt>เรื่องราว</dt><dd>'+esc(r.description||'ยังไม่มีข้อมูล')+'</dd><dt>ความแม่นยำของวันที่</dt><dd>'+esc(r.datePrecision==='approximate'?'โดยประมาณ':r.datePrecision==='unknown'?'ปีไม่ระบุ':r.datePrecision)+'</dd><dt>ตำแหน่งกราฟ</dt><dd>'+esc(r.storyLevel==null?'การจัดวางเชิงเรื่องราวแบบร่าง':'ตำแหน่งที่ผู้ใช้กำหนด')+'</dd><dt>ทำไมสำคัญ</dt><dd>ยังไม่มีข้อมูล</dd><dt>สถานะข้อมูล</dt><dd>'+esc(r.status)+'</dd><dt>ทักษะ / โปรเจ็กต์</dt><dd>'+esc(r.tags.join(', ')||'ยังไม่มีข้อมูล')+'</dd><dt>แหล่งที่มา</dt><dd>'+esc(r.evidenceNote||'ยังไม่มีข้อมูล')+'</dd></dl><div class="lg-actions"><button type="button" data-edit="'+esc(r.id)+'">แก้ไข</button><button type="button" class="lg-danger" data-delete="'+esc(r.id)+'">ลบ</button></div>';return;}}
-    detail.hidden=true;detail.innerHTML='';
-  }
-  function card(r) { return '<article class="lg-event"><button type="button" class="lg-event-open" data-open="'+esc(r.id)+'"><span class="lg-dot" aria-hidden="true"></span><span class="lg-event-copy"><small>'+esc(categoryNames[r.category]||r.category)+' · '+esc(dateText(r))+(r.tags.indexOf('TURNING POINT')>=0?' · TURNING POINT':'')+'</small><b>'+esc(r.title)+'</b><span>'+esc(r.description)+'</span></span><span class="lg-status">'+esc(r.status)+'</span></button></article>'; }
-  function form(record) {
-    var f=document.getElementById('lg-form'); if(!record)f.reset();
-    f.elements.id.value=record?record.id:'';f.elements.title.value=record?record.title:'';f.elements.description.value=record?record.description:'';f.elements.category.value=record?record.category:'Life';f.elements.chapterId.value=record?record.chapterId||'':'';f.elements.date.value=record&&record.date||'';f.elements.endDate.value=record&&record.endDate?record.endDate.slice(0,4):'';f.elements.storyLevel.value=record&&record.storyLevel!=null?record.storyLevel:'';f.elements.selfAssessmentScore.value=record&&record.selfAssessmentScore!=null?record.selfAssessmentScore:'';f.elements.datePrecision.value=record?record.datePrecision:'unknown';f.elements.status.value=record?record.status:'user-reported';f.elements.tags.value=record?record.tags.join(', '):'';f.elements.evidenceNote.value=record?record.evidenceNote:'';f.elements.type.value=record?record.type:'milestone';
-    document.getElementById('lg-dialog-title').textContent=record?'แก้ไขบันทึกชีวิต':'เพิ่มบันทึกชีวิต';document.getElementById('lg-dialog').showModal();
-  }
-  root.addEventListener('click',function(e){var b=e.target.closest('button,[data-open]');if(!b)return;
-    if(b.dataset.lgView){state.view=b.dataset.lgView;render();}
-    else if(b.matches('[data-open]')){state.selected=b.dataset.open;render();document.getElementById('lg-detail').scrollIntoView({block:'nearest',behavior:'smooth'});}
-    else if(b.hasAttribute('data-close-detail')){state.selected=null;render();}
-    else if(b.hasAttribute('data-add'))form(null);
-    else if(b.dataset.edit){var r=state.records.find(function(x){return x.id===b.dataset.edit;});if(r)form(r);}
-    else if(b.dataset.delete){var id=b.dataset.delete;if(window.confirm('ยืนยันลบบันทึกนี้? การลบไม่สามารถย้อนกลับได้')){state.records=state.records.filter(function(r){return r.id!==id;});state.selected=null;if(save())render();}}
-    else if(b.hasAttribute('data-export')){var blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),records:state.records},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='et1cruel-life-graph-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);}
-    else if(b.hasAttribute('data-focus')){var v=prompt('แก้ไข Primary Focus (บันทึกในเบราว์เซอร์นี้)',localStorage.getItem(KEY+'.focus')||'สร้างรายได้ที่มั่นคงจากทักษะด้านเทคโนโลยี AI และงานสร้างสรรค์ โดยไม่ทอดทิ้งดนตรี');if(v!==null){try{localStorage.setItem(KEY+'.focus',v);document.getElementById('lg-focus-text').textContent=v;}catch(_){notice('บันทึก Focus ไม่สำเร็จ');}}}
-  });
-  root.addEventListener('keydown',function(e){var target=e.target.closest('.lg-hit-wrap');if(target&&(e.key==='Enter'||e.key===' ')){e.preventDefault();state.selected=target.dataset.open;render();document.getElementById('lg-detail').scrollIntoView({block:'nearest',behavior:'smooth'});}});
-  document.getElementById('lg-search').addEventListener('input',function(e){state.query=e.target.value;render();});
-  document.getElementById('lg-category').addEventListener('change',function(e){state.category=e.target.value;render();});
-  document.getElementById('lg-form').addEventListener('submit',function(e){e.preventDefault();var f=e.currentTarget,id=f.elements.id.value,old=state.records.find(function(r){return r.id===id;}),now=new Date().toISOString();var record=normalizeRecord({id:id||('milestone-'+now+'-'+Math.random().toString(36).slice(2,8)),title:f.elements.title.value.trim(),description:f.elements.description.value.trim(),category:f.elements.category.value,chapterId:f.elements.chapterId.value,date:f.elements.date.value||null,datePrecision:f.elements.datePrecision.value,endDate:f.elements.endDate.value?f.elements.endDate.value+'-01-01':null,status:f.elements.status.value,type:f.elements.type.value,importance:2,evidenceNote:f.elements.evidenceNote.value.trim(),tags:f.elements.tags.value.split(',').map(function(t){return t.trim();}).filter(Boolean),storyLevel:f.elements.storyLevel.value===''?(old?old.storyLevel:null):Number(f.elements.storyLevel.value),selfAssessmentScore:f.elements.selfAssessmentScore.value===''?(old?old.selfAssessmentScore:null):Number(f.elements.selfAssessmentScore.value),createdAt:old?old.createdAt:now,updatedAt:now});if(!record.title){notice('กรุณาระบุชื่อเหตุการณ์');return;}if(old)state.records=state.records.map(function(r){return r.id===id?record:r;});else state.records.push(record);if(save()){document.getElementById('lg-dialog').close();state.selected=record.id;render();}});
-  document.getElementById('lg-dialog').addEventListener('click',function(e){if(e.target===e.currentTarget)e.currentTarget.close();if(e.target.hasAttribute('data-cancel'))e.currentTarget.close();});
-  var formCategory=document.querySelector('#lg-form select[name="category"]');categories.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=categoryNames[c]||c;formCategory.appendChild(o);});
-  load();var focus=null;try{focus=localStorage.getItem(KEY+'.focus');}catch(_){}if(focus)document.getElementById('lg-focus-text').textContent=focus;
-  var dateEl=document.getElementById('lg-today');dateEl.textContent=new Intl.DateTimeFormat('th-TH',{dateStyle:'long',timeZone:'Asia/Bangkok'}).format(new Date());dateEl.dateTime=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-  var select=document.getElementById('lg-category');categories.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=categoryNames[c]||c;select.appendChild(o);});render();
-})();
+  if (typeof window === 'undefined') return;
+  window.__lifeGraphLoadCount = (window.__lifeGraphLoadCount || 0) + 1;
 
+  var KEY_V2 = 'et1cruel.life-graph.v2';
+  var KEY_V1 = 'et1cruel.life-graph.v1';
+  var KEY_V1_FOCUS = 'et1cruel.life-graph.v1.focus';
+
+  var FALLBACK_CATS = ['Personal', 'Football', 'Music', 'Education', 'Work', 'Finance', 'Technology', 'Coding', 'AI', 'Robotics', 'Content Creation', 'Business', 'Personal Growth', 'Future Goals'];
+  var FALLBACK_CH = ['childhood', 'football', 'music-origin', 'learning-struggle', 'education', 'work', 'music-production', 'coding-software', 'ai-automation', 'robotics', 'current-life', 'future-goals'];
+  var PREC = ['exact_date', 'exact_month', 'exact_year', 'exact_range', 'estimated_year', 'estimated_range', 'school_period', 'age_based', 'unknown'];
+  var DST = ['confirmed', 'estimated', 'needs_confirmation', 'unknown'];
+  var DSRC = ['user_reported', 'project_record', 'imported_record', 'derived_estimate'];
+  var TYPES = ['milestone', 'chapter', 'goal'];
+  var STATUSES = ['verified', 'user-reported', 'planned', 'exploring', 'in-progress', 'completed'];
+
+  var MODEL = ['id', 'title', 'description', 'category', 'chapterId', 'type', 'status', 'importance', 'startDate', 'endDate', 'startYearCE', 'endYearCE', 'startMonthCE', 'endMonthCE', 'datePrecision', 'dateStatus', 'dateSource', 'sourceReference', 'conflictNote', 'narrativeLevel', 'selfAssessmentScore', 'isCurrent', 'isFuture', 'isAnchor', 'relatedProjectIds', 'relatedSkills', 'whatChanged', 'reflection', 'tags', 'notes', 'userEdited', 'createdAt', 'updatedAt', 'legacy', 'legacyScale', 'migratedFrom', 'deletedSeedIds'];
+
+  /* Mode A: ตำแหน่งแนวตั้งเชิงการจัดวาง ไม่ใช่คะแนนชีวิต (ตรึงค่าไว้ให้ตรวจสอบได้) */
+  var CH_BASE = { childhood: 0.18, football: 0.26, 'music-origin': 0.40, 'learning-struggle': 0.34, education: 0.44, work: 0.50, 'music-production': 0.58, 'coding-software': 0.66, 'ai-automation': 0.74, robotics: 0.82, 'current-life': 0.72, 'future-goals': 0.88 };
+  var THAI_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+
+  function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+  function str(v) { return typeof v === 'string' ? v : (v == null ? '' : String(v)); }
+  function numOrNull(v) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = Number(v);
+    return isFinite(n) ? n : null;
+  }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function isoDate(v) { return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null; }
+  function data() { return (window.ET1LIFE_DATA && typeof window.ET1LIFE_DATA === 'object') ? window.ET1LIFE_DATA : {}; }
+  function cats() { var d = data(); return Array.isArray(d.categories) && d.categories.length ? d.categories : FALLBACK_CATS; }
+  function chIds() {
+    var d = data();
+    return Array.isArray(d.chapters) && d.chapters.length ? d.chapters.map(function (c) { return c.id; }) : FALLBACK_CH;
+  }
+  function yearRange() {
+    var r = data().yearRange;
+    return Array.isArray(r) && r.length === 2 ? r : [2004, 2026];
+  }
+
+  function validRecord(r) {
+    return !!r && typeof r === 'object' && typeof r.id === 'string' && r.id.trim() !== '' && typeof r.title === 'string' && r.title.trim() !== '';
+  }
+
+  /* เติมคีย์ที่ขาด + บังคับค่า enum ที่ผิดให้เป็นค่าปลอดภัย โดยเก็บค่าดั้งเดิมไว้ใน legacy เสมอ */
+  function normalizeRecord(raw) {
+    var r = (raw && typeof raw === 'object') ? raw : {};
+    var defaults = {
+      id: '', title: '', description: '', category: 'Personal', chapterId: '', type: 'milestone', status: 'user-reported',
+      importance: 2, startDate: null, endDate: null, startYearCE: null, endYearCE: null, startMonthCE: null, endMonthCE: null,
+      datePrecision: 'unknown', dateStatus: 'unknown', dateSource: 'user_reported', sourceReference: null, conflictNote: null,
+      narrativeLevel: null, selfAssessmentScore: null, isCurrent: false, isFuture: false, isAnchor: false,
+      relatedProjectIds: [], relatedSkills: [], whatChanged: '', reflection: '', tags: [], notes: '',
+      userEdited: false, createdAt: null, updatedAt: null
+    };
+    var out = {}, legacy = {}, k;
+    for (k in r) {
+      if (!has(r, k)) continue;
+      if (r[k] === undefined) continue;
+      if (MODEL.indexOf(k) >= 0) { out[k] = r[k]; continue; }
+      out[k] = r[k];        // คีย์ที่ไม่รู้จัก: เก็บไว้ที่เดิม
+      legacy[k] = r[k];     // และบันทึกสำเนาไว้ว่ามาจากไหน
+    }
+    for (k in defaults) if (!has(out, k)) out[k] = defaults[k];
+    if (out.legacy && typeof out.legacy === 'object') for (k in out.legacy) if (has(out.legacy, k) && !has(legacy, k)) legacy[k] = out.legacy[k];
+
+    out.id = str(out.id);
+    out.title = str(out.title);
+    out.description = str(out.description);
+    out.whatChanged = str(out.whatChanged);
+    out.reflection = str(out.reflection);
+    out.notes = str(out.notes);
+    out.sourceReference = out.sourceReference == null ? null : str(out.sourceReference);
+    out.conflictNote = out.conflictNote == null ? null : str(out.conflictNote);
+
+    out.category = str(out.category);
+    if (cats().indexOf(out.category) < 0) { if (out.category) legacy.originalCategory = out.category; out.category = 'Personal'; }
+
+    out.chapterId = str(out.chapterId);
+    if (out.chapterId && chIds().indexOf(out.chapterId) < 0) { legacy.originalChapterId = out.chapterId; out.chapterId = ''; }
+
+    out.type = TYPES.indexOf(out.type) >= 0 ? out.type : 'milestone';
+    out.status = STATUSES.indexOf(out.status) >= 0 ? out.status : 'user-reported';
+
+    var imp = numOrNull(out.importance);
+    if (imp === null) imp = 2;
+    if (imp < 1 || imp > 3) { legacy.originalImportance = out.importance; imp = clamp(imp, 1, 3); }
+    out.importance = Math.round(imp);
+
+    if (PREC.indexOf(out.datePrecision) < 0) { if (out.datePrecision) legacy.originalDatePrecision = out.datePrecision; out.datePrecision = 'unknown'; }
+    if (DST.indexOf(out.dateStatus) < 0) { if (out.dateStatus) legacy.originalDateStatus = out.dateStatus; out.dateStatus = 'unknown'; }
+    if (DSRC.indexOf(out.dateSource) < 0) { if (out.dateSource) legacy.originalDateSource = out.dateSource; out.dateSource = 'user_reported'; }
+
+    out.startDate = isoDate(out.startDate);
+    out.endDate = isoDate(out.endDate);
+    out.startYearCE = numOrNull(out.startYearCE);
+    out.endYearCE = numOrNull(out.endYearCE);
+    out.startMonthCE = numOrNull(out.startMonthCE);
+    out.endMonthCE = numOrNull(out.endMonthCE);
+    if (out.startYearCE === null && out.startDate) out.startYearCE = Number(out.startDate.slice(0, 4));
+    if (out.startMonthCE === null && out.startDate) out.startMonthCE = Number(out.startDate.slice(5, 7));
+    if (out.endYearCE === null && out.endDate) out.endYearCE = Number(out.endDate.slice(0, 4));
+    if (out.endMonthCE === null && out.endDate) out.endMonthCE = Number(out.endDate.slice(5, 7));
+    if (out.startYearCE !== null && (out.startYearCE < 1900 || out.startYearCE > 2200)) { legacy.rejectedStartYearCE = out.startYearCE; out.startYearCE = null; }
+    if (out.endYearCE !== null && (out.endYearCE < 1900 || out.endYearCE > 2200)) { legacy.rejectedEndYearCE = out.endYearCE; out.endYearCE = null; }
+    if (out.startMonthCE !== null && (out.startMonthCE < 1 || out.startMonthCE > 12)) { legacy.rejectedStartMonthCE = out.startMonthCE; out.startMonthCE = null; }
+    if (out.endMonthCE !== null && (out.endMonthCE < 1 || out.endMonthCE > 12)) { legacy.rejectedEndMonthCE = out.endMonthCE; out.endMonthCE = null; }
+    if (out.startYearCE !== null && out.endYearCE !== null && out.endYearCE < out.startYearCE) { legacy.rejectedEndYearCE = out.endYearCE; out.endYearCE = null; }
+
+    var nl = numOrNull(out.narrativeLevel);
+    if (nl !== null && (nl < 0 || nl > 100)) { legacy.originalNarrativeLevel = nl; nl = clamp(nl, 0, 100); }
+    out.narrativeLevel = nl;
+
+    var sc = numOrNull(out.selfAssessmentScore);
+    out.selfAssessmentScore = sc;
+    if (sc !== null && (sc < 1 || sc > 10)) out.legacyScale = true;   // ห้ามแปลงเงียบ
+    if (sc !== null && (sc < 1 || sc > 10)) legacy.offScaleScore = sc;
+
+    out.isCurrent = !!out.isCurrent;
+    out.isFuture = !!out.isFuture;
+    out.isAnchor = !!out.isAnchor;
+    out.userEdited = !!out.userEdited;
+    out.legacyScale = !!out.legacyScale;
+    out.migratedFrom = out.migratedFrom == null ? null : str(out.migratedFrom);
+    out.createdAt = out.createdAt == null ? null : str(out.createdAt);
+    out.updatedAt = out.updatedAt == null ? null : str(out.updatedAt);
+
+    out.tags = toList(out.tags);
+    out.relatedSkills = toList(out.relatedSkills);
+    out.relatedProjectIds = toList(out.relatedProjectIds);
+    if (has(out, 'deletedSeedIds')) out.deletedSeedIds = toList(out.deletedSeedIds);
+
+    var lk = Object.keys(legacy);
+    if (lk.length) { out.legacy = legacy; }
+    else if (!out.legacy || typeof out.legacy !== 'object') delete out.legacy;
+    return out;
+  }
+
+  function toList(v) {
+    if (Array.isArray(v)) return v.filter(function (x) { return x !== null && x !== undefined && x !== ''; }).map(str);
+    if (typeof v === 'string') return v.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    return [];
+  }
+
+  function v1Category(c) {
+    var d = data(), s = str(c);
+    if (!s) return 'Personal';
+    if (cats().indexOf(s) >= 0) return s;
+    var m = d.v1CategoryMap || {};
+    return m[s] || 'Personal';
+  }
+  function v1Chapter(c) {
+    var d = data(), s = str(c);
+    if (!s) return '';
+    if (chIds().indexOf(s) >= 0) return s;
+    var m = d.v1ChapterMap || {};
+    return m[s] || '';
+  }
+
+  /* V1 → V2: วันที่แบบ string ถูกตีความเป็นระดับความแม่นยำที่ตรงกับรูปของมันจริง ๆ
+   * ห้ามเลื่อนสถานะเป็น "ยืนยันแล้ว" เอง ถ้าเดิมเป็นค่าประมาณ */
+  function migrateV1Record(v1) {
+    var raw = (v1 && typeof v1 === 'object') ? v1 : {};
+    var date = str(raw.date).trim();
+    var end = str(raw.endDate).trim();
+    var approx = raw.datePrecision === 'approximate';
+    var startDate = null, startYearCE = null, startMonthCE = null, endDate = null, endYearCE = null, prec = 'unknown';
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) { startDate = date; startYearCE = Number(date.slice(0, 4)); startMonthCE = Number(date.slice(5, 7)); prec = approx ? 'estimated_year' : 'exact_date'; }
+    else if (/^\d{4}-\d{2}$/.test(date)) { startYearCE = Number(date.slice(0, 4)); startMonthCE = Number(date.slice(5, 7)); prec = approx ? 'estimated_year' : 'exact_month'; }
+    else if (/^\d{4}$/.test(date)) { startYearCE = Number(date); prec = approx ? 'estimated_year' : 'exact_year'; }
+    else if (raw.datePrecision === 'school-stage') prec = 'school_period';
+    else if (raw.datePrecision === 'age') prec = 'age_based';
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(end)) { endDate = end; endYearCE = Number(end.slice(0, 4)); }
+    else if (/^\d{4}$/.test(end)) { endYearCE = Number(end); }
+
+    if (approx && endYearCE !== null && startYearCE !== null && endYearCE !== startYearCE) prec = 'estimated_range';
+    else if (!approx && endYearCE !== null && startYearCE !== null && endYearCE !== startYearCE && prec === 'exact_year') prec = 'exact_range';
+
+    var tags = toList(raw.tags);
+    var d = data();
+    var extraTag = (d.v1CategoryTag || {})[str(raw.category)];
+    if (extraTag && tags.indexOf(extraTag) < 0) tags.push(extraTag);
+
+    var rec = {
+      id: raw.id, title: raw.title, description: raw.description || '',
+      category: v1Category(raw.category), chapterId: v1Chapter(raw.chapterId),
+      type: TYPES.indexOf(raw.type) >= 0 ? raw.type : 'milestone',
+      status: raw.status, importance: raw.importance === undefined ? 2 : raw.importance,
+      startDate: startDate, endDate: endDate, startYearCE: startYearCE, endYearCE: endYearCE, startMonthCE: startMonthCE,
+      datePrecision: prec,
+      dateStatus: startYearCE === null ? 'unknown' : (approx ? 'estimated' : 'confirmed'),
+      dateSource: 'user_reported',
+      sourceReference: raw.evidenceNote || null,
+      narrativeLevel: raw.storyLevel,
+      selfAssessmentScore: raw.selfAssessmentScore,
+      isFuture: raw.type === 'goal' && startYearCE === null,
+      tags: tags, userEdited: raw.userEdited === true,
+      createdAt: raw.createdAt || null, updatedAt: raw.updatedAt || null,
+      migratedFrom: 'v1',
+      legacy: { v1Date: raw.date || null, v1EndDate: raw.endDate || null, v1DatePrecision: raw.datePrecision || null, v1StoryLevel: raw.storyLevel == null ? null : raw.storyLevel }
+    };
+    return normalizeRecord(rec);
+  }
+
+  function tryParse(raw) {
+    if (raw == null) return null;
+    if (typeof raw === 'object') return raw;
+    if (typeof raw !== 'string' || !raw.trim()) return null;
+    try { return JSON.parse(raw); } catch (e) { return null; }
+  }
+
+  /* อ่าน v2 ก่อน → ไม่มีก็ migrate v1 → พังทั้งคู่ก็เริ่มจาก seed โดยไม่เขียนทับอะไร */
+  function readState(rawV2, rawV1, dataArg) {
+    var D = dataArg || data();
+    var seeds = Array.isArray(D.seeds) ? D.seeds : [];
+    var records = null, deletedSeedIds = [], meta = { source: 'seed' }, noticeText = null;
+
+    var p2 = tryParse(rawV2);
+    if (p2 && Array.isArray(p2.records)) {
+      var kept = [], skipped = 0, i;
+      for (i = 0; i < p2.records.length; i++) {
+        if (validRecord(p2.records[i])) kept.push(normalizeRecord(p2.records[i]));
+        else skipped++;
+      }
+      records = kept;
+      deletedSeedIds = Array.isArray(p2.deletedSeedIds) ? p2.deletedSeedIds.filter(function (x) { return typeof x === 'string' && x; }) : [];
+      meta = { source: 'v2', skipped: skipped };
+      if (skipped) noticeText = 'ข้ามข้อมูลที่รูปทรงไม่ถูกต้อง ' + skipped + ' รายการ (ไม่ได้ลบข้อมูลเดิม)';
+    } else {
+      var p1 = tryParse(rawV1);
+      if (p1 && Array.isArray(p1.records)) {
+        var users = [];
+        for (var j = 0; j < p1.records.length; j++) {
+          var r1 = p1.records[j];
+          if (validRecord(r1) && (r1.createdAt != null || r1.userEdited === true)) users.push(r1);
+        }
+        records = users.map(migrateV1Record);
+        var dropped = p1.records.length - users.length;
+        meta = { source: 'v1', migrated: records.length, supersededCodeSeeds: dropped };
+        noticeText = 'ย้ายข้อมูลจาก v1 แล้ว ' + records.length + ' รายการ' + (dropped ? ' · seed เดิม ' + dropped + ' รายการถูกแทนที่ด้วยชุดข้อมูลใหม่ (ข้อมูลที่คุณสร้างเองไม่ถูกแตะ)' : '');
+      }
+    }
+
+    if (!records) {
+      records = [];
+      meta = { source: 'seed' };
+      if (rawV2 != null || rawV1 != null) noticeText = 'อ่านข้อมูลเดิมไม่ได้ จึงเริ่มจากชุดข้อมูลตั้งต้น (ไม่มีการเขียนทับข้อมูลเดิม)';
+    }
+
+    records = mergeSeeds(records, seeds, deletedSeedIds);
+    return { records: records, deletedSeedIds: deletedSeedIds, meta: meta, notice: noticeText };
+  }
+
+  /* เพิ่ม seed ที่ยังไม่มี · ไม่แตะ record ที่มีอยู่แล้ว · ข้ามที่ถูกลบ */
+  function mergeSeeds(records, seeds, deletedSeedIds) {
+    var out = Array.isArray(records) ? records.slice() : [];
+    var have = {}, gone = {}, i;
+    for (i = 0; i < out.length; i++) if (out[i] && out[i].id) have[out[i].id] = true;
+    var del = Array.isArray(deletedSeedIds) ? deletedSeedIds : [];
+    for (i = 0; i < del.length; i++) gone[del[i]] = true;
+    var list = Array.isArray(seeds) ? seeds : [];
+    for (i = 0; i < list.length; i++) {
+      var s = list[i];
+      if (!validRecord(s) || have[s.id] || gone[s.id]) continue;
+      out.push(normalizeRecord(s));
+      have[s.id] = true;
+    }
+    return out;
+  }
+
+  function validateImport(text) {
+    if (typeof text !== 'string' || !text.trim()) return { ok: false, reason: 'ไฟล์ว่างหรืออ่านไม่ได้' };
+    var p;
+    try { p = JSON.parse(text); } catch (e) { return { ok: false, reason: 'ไม่ใช่ JSON ที่ถูกต้อง' }; }
+    if (!p || typeof p !== 'object' || Array.isArray(p)) return { ok: false, reason: 'โครงสร้างไฟล์ต้องเป็น object' };
+    if (!Array.isArray(p.records)) return { ok: false, reason: 'ต้องมีคีย์ "records" เป็น array' };
+    if (p.records.length > 5000) return { ok: false, reason: 'ข้อมูลใหญ่เกินไป (' + p.records.length + ' รายการ สูงสุด 5000)' };
+    var ids = {};
+    for (var i = 0; i < p.records.length; i++) {
+      var r = p.records[i];
+      if (!r || typeof r !== 'object' || Array.isArray(r)) return { ok: false, reason: 'รายการที่ ' + (i + 1) + ' ไม่ใช่ object' };
+      if (typeof r.id !== 'string' || !r.id.trim()) return { ok: false, reason: 'รายการที่ ' + (i + 1) + ' ไม่มี id' };
+      if (typeof r.title !== 'string' || !r.title.trim()) return { ok: false, reason: 'รายการที่ ' + (i + 1) + ' ไม่มีชื่อเหตุการณ์' };
+      if (ids[r.id]) return { ok: false, reason: 'id ซ้ำในไฟล์: ' + r.id };
+      ids[r.id] = true;
+    }
+    return { ok: true, payload: p };
+  }
+
+  function importIntoState(state, payload) {
+    var st = state || {};
+    var records = Array.isArray(st.records) ? st.records.slice() : [];
+    var index = {}, i;
+    for (i = 0; i < records.length; i++) index[records[i].id] = i;
+    var added = 0, updated = 0, list = (payload && Array.isArray(payload.records)) ? payload.records : [];
+    for (i = 0; i < list.length; i++) {
+      var rec = normalizeRecord(list[i]);
+      rec.userEdited = true;
+      if (index[rec.id] !== undefined) { records[index[rec.id]] = rec; updated++; }
+      else { index[rec.id] = records.length; records.push(rec); added++; }
+    }
+    var deleted = Array.isArray(st.deletedSeedIds) ? st.deletedSeedIds.slice() : [];
+    if (payload && Array.isArray(payload.deletedSeedIds)) {
+      payload.deletedSeedIds.forEach(function (id) { if (typeof id === 'string' && deleted.indexOf(id) < 0) deleted.push(id); });
+    }
+    var live = {};
+    for (i = 0; i < records.length; i++) live[records[i].id] = true;
+    deleted = deleted.filter(function (id) { return id && !live[id]; });
+    return { state: { records: records, deletedSeedIds: deleted }, added: added, updated: updated };
+  }
+
+  function sortChronological(records) {
+    var list = Array.isArray(records) ? records.slice() : [];
+    return list.sort(function (a, b) {
+      var ay = a.startYearCE == null ? Infinity : a.startYearCE;
+      var by = b.startYearCE == null ? Infinity : b.startYearCE;
+      if (ay !== by) return ay - by;
+      var am = a.startMonthCE == null ? 1 : a.startMonthCE;
+      var bm = b.startMonthCE == null ? 1 : b.startMonthCE;
+      if (am !== bm) return am - bm;
+      return str(a.title).localeCompare(str(b.title), 'th');
+    });
+  }
+
+  /* เหตุการณ์ในปีนั้น รวมเหตุการณ์ที่คร่อมหลายปี และไม่รวมอนาคต */
+  function recordsForYear(records, yearCE) {
+    var y = Number(yearCE);
+    return (Array.isArray(records) ? records : []).filter(function (r) {
+      if (!r || r.isFuture || r.startYearCE == null) return false;
+      var s = Number(r.startYearCE);
+      var e = r.endYearCE == null ? s : Number(r.endYearCE);
+      return s <= y && y <= e;
+    });
+  }
+  function undatedRecords(records) {
+    return (Array.isArray(records) ? records : []).filter(function (r) { return r && r.startYearCE == null && !r.isFuture; });
+  }
+  function futureRecords(records) {
+    return (Array.isArray(records) ? records : []).filter(function (r) { return r && r.isFuture; });
+  }
+
+  function formatYear(y) { var n = Number(y); return (n + 543) + ' (' + n + ')'; }
+
+  function formatDateRange(r) {
+    if (!r) return 'ปีไม่ระบุ';
+    var p = r.datePrecision, sY = r.startYearCE;
+    if (sY == null) {
+      if (p === 'school_period') return 'ช่วงระดับชั้น (ปีไม่ระบุ)';
+      if (p === 'age_based') return 'ช่วงอายุ (ปีไม่ระบุ)';
+      return 'ปีไม่ระบุ';
+    }
+    var eY = r.endYearCE == null ? sY : r.endYearCE;
+    var sM = r.startMonthCE, eM = r.endMonthCE;
+    var approx = p === 'estimated_year' || p === 'estimated_range';
+    var pre = approx ? 'ประมาณ ' : '';
+    var range = eY !== sY;
+    if (p === 'exact_date' && r.startDate) {
+      var d = Number(r.startDate.slice(8, 10)), m = Number(r.startDate.slice(5, 7));
+      var out = d + ' ' + THAI_MONTHS[m - 1] + ' ' + (sY + 543) + ' (' + sY + ')';
+      if (r.endDate) {
+        var d2 = Number(r.endDate.slice(8, 10)), m2 = Number(r.endDate.slice(5, 7));
+        if (r.endYearCE === sY && m2 === m) out += '–' + d2;
+        else if (r.endYearCE === sY) out = d + ' ' + THAI_MONTHS[m - 1] + ' – ' + d2 + ' ' + THAI_MONTHS[m2 - 1] + ' ' + (sY + 543) + ' (' + sY + ')';
+        else out += ' – ' + d2 + ' ' + THAI_MONTHS[m2 - 1] + ' ' + (r.endYearCE + 543) + ' (' + r.endYearCE + ')';
+      }
+      return out;
+    }
+    if (sM != null) {
+      var head = pre + THAI_MONTHS[sM - 1];
+      if (range && eM != null && eY === sY) return head + '–' + THAI_MONTHS[eM - 1] + ' ' + (sY + 543) + ' (' + sY + ')';
+      if (range) return head + ' ' + (sY + 543) + ' (' + sY + ')' + (eM != null ? ' – ' + THAI_MONTHS[eM - 1] + ' ' + (eY + 543) + ' (' + eY + ')' : ' – ' + (eY + 543) + ' (' + eY + ')');
+      return head + ' ' + (sY + 543) + ' (' + sY + ')';
+    }
+    if (range) return pre + (sY + 543) + '–' + (eY + 543) + ' (' + sY + '–' + eY + ')';
+    if (p === 'exact_range' && r.endDate) return pre + (sY + 543) + ' (' + sY + ')';
+    return pre + (sY + 543) + ' (' + sY + ')';
+  }
+
+  function narrativeLevel(r) {
+    if (r.narrativeLevel != null) return clamp(Number(r.narrativeLevel) / 100, 0, 1);
+    var base = has(CH_BASE, r.chapterId) ? CH_BASE[r.chapterId] : 0.5;
+    var imp = Number(r.importance);
+    if (!isFinite(imp)) imp = 2;
+    return clamp(base + (imp - 2) * 0.02, 0.05, 0.95);
+  }
+  function hasScore(r) {
+    var s = r.selfAssessmentScore;
+    return s != null && isFinite(Number(s)) && Number(s) >= 1 && Number(s) <= 10 && !r.legacyScale;
+  }
+  function scoreLevel(r) { return clamp(Number(r.selfAssessmentScore) / 10, 0, 1); }
+
+  /* กราฟ: ทุก record ต้องถูกนับครั้งเดียว — อยู่บนเส้น, อยู่ที่ Undated, หรือเป็นอนาคต
+   * โหมด self วาดเฉพาะจุดที่มีคะแนนจริง และเส้นขาดตรงช่วงที่ไม่มีคะแนน */
+  function graphLayout(records, opts) {
+    opts = opts || {};
+    var mode = opts.mode === 'self' ? 'self' : 'narrative';
+    var list = (Array.isArray(records) ? records : []).filter(validRecord);
+    var yr = yearRange();
+    var minYear = opts.minYear != null ? Number(opts.minYear) : yr[0];
+    var maxYear = opts.maxYear != null ? Number(opts.maxYear) : yr[1];
+    if (!(maxYear > minYear)) maxYear = minYear + 1;
+    var width = opts.width || 900, height = opts.height || 340;
+    var left = 64, right = width - 54, top = 38, bottom = height - 72;
+
+    function xFor(y, frac) { return left + ((Number(y) + frac) - minYear) / (maxYear - minYear) * (right - left); }
+    function cx(v) { return clamp(v, 0, width); }
+
+    var points = [], undated = [], futurePoints = [], i;
+    for (i = 0; i < list.length; i++) {
+      var r = list[i];
+      if (r.isFuture) { futurePoints.push(futurePoint(r)); continue; }
+      if (r.startYearCE == null) { undated.push({ id: r.id, record: r }); continue; }
+      if (mode === 'self') { if (!hasScore(r)) continue; }
+      points.push(makePoint(r));
+    }
+
+    function makePoint(r) {
+      var frac = 0.5;
+      if (r.startDate) frac = ((Number(r.startDate.slice(5, 7)) - 1) + (Number(r.startDate.slice(8, 10)) - 1) / 30) / 12;
+      else if (r.startMonthCE != null) frac = (Number(r.startMonthCE) - 1) / 12;
+      var x = cx(xFor(r.startYearCE, frac));
+      var lvl = mode === 'self' ? scoreLevel(r) : narrativeLevel(r);
+      return {
+        id: r.id, x: x, y: bottom - lvl * (bottom - top), level: lvl,
+        year: Number(r.startYearCE), endYear: r.endYearCE == null ? null : Number(r.endYearCE),
+        spanX: (r.endYearCE != null && Number(r.endYearCE) > Number(r.startYearCE)) ? cx(xFor(r.endYearCE, 0.5)) : null,
+        isCurrent: !!r.isCurrent, hasExactDate: !!r.startDate,
+        isRange: r.endYearCE != null && Number(r.endYearCE) > Number(r.startYearCE),
+        isEstimated: r.dateStatus === 'estimated' || r.datePrecision === 'estimated_year' || r.datePrecision === 'estimated_range' || r.datePrecision === 'needs_confirmation',
+        dateLabel: formatDateRange(r),
+        label: r.title, labelSide: 'above', record: r
+      };
+    }
+
+    function futurePoint(r) {
+      var lvl = narrativeLevel(r);
+      var yv = bottom - lvl * (bottom - top);
+      var x = r.startYearCE == null ? null : cx(xFor(r.startYearCE, 0.5));
+      return { id: r.id, x: x, projected: x == null, y: yv, level: lvl, label: r.title, labelSide: 'above', year: r.startYearCE == null ? null : Number(r.startYearCE), isGoal: r.type === 'goal', dateLabel: formatDateRange(r), record: r };
+    }
+
+    /* label anti-overlap: เรียงตาม x แล้ววางบน/ล่าง ถ้ายังทับให้ซ่อน (นับเป็น hiddenLabelCount) */
+    points.sort(function (a, b) { return a.x - b.x; });
+    var boxes = [], hidden = 0;
+    function boxFor(p, side) {
+      var w = Math.min(150, Math.max(52, String(p.label || '').length * 7));
+      var h = 26;
+      var y1 = side === 'above' ? p.y - 12 - h : p.y + 12;
+      return { x1: p.x - w / 2, x2: p.x + w / 2, y1: y1, y2: y1 + h };
+    }
+    function hits(b) {
+      for (var j = 0; j < boxes.length; j++) {
+        var o = boxes[j];
+        if (!(b.x2 < o.x1 || b.x1 > o.x2 || b.y2 < o.y1 || b.y1 > o.y2)) return true;
+      }
+      return false;
+    }
+    var force = !!opts.forceAllLabels;
+    for (i = 0; i < points.length; i++) {
+      var p = points[i];
+      if (force) { p.labelSide = 'above'; boxes.push(boxFor(p, 'above')); continue; }
+      var a = boxFor(p, 'above'), b2 = boxFor(p, 'below');
+      if (!hits(a)) { p.labelSide = 'above'; boxes.push(a); }
+      else if (!hits(b2)) { p.labelSide = 'below'; boxes.push(b2); }
+      else { p.labelSide = 'hidden'; hidden++; }
+    }
+
+    var segments = [];
+    if (mode === 'narrative') {
+      if (points.length) segments.push(points.map(function (q) { return q.id; }));
+    } else {
+      var byYear = {};
+      points.forEach(function (q) { (byYear[q.year] = byYear[q.year] || []).push(q.id); });
+      var ys = Object.keys(byYear).map(Number).sort(function (a2, b3) { return a2 - b3; });
+      var cur = null, prev = null;
+      ys.forEach(function (y) {
+        if (prev !== null && y === prev + 1) cur = cur.concat(byYear[y]);
+        else { if (cur) segments.push(cur); cur = byYear[y].slice(); }
+        prev = y;
+      });
+      if (cur) segments.push(cur);
+    }
+
+    var years = [], span = maxYear - minYear;
+    var step = span <= 6 ? 1 : (span <= 12 ? 2 : (span <= 24 ? 4 : 5));
+    for (var t = minYear; t <= maxYear; t += step) years.push({ x: cx(xFor(t, 0.5)), year: t, label: formatYear(t) });
+    if (years.length && years[years.length - 1].year !== maxYear) years.push({ x: cx(xFor(maxYear, 0.5)), year: maxYear, label: formatYear(maxYear) });
+
+    return {
+      mode: mode, points: points, segments: segments, undated: undated, futurePoints: futurePoints,
+      years: years, width: width, height: height, hiddenLabelCount: hidden,
+      hasScores: list.some(hasScore),
+      bounds: { left: left, right: right, top: top, bottom: bottom, minYear: minYear, maxYear: maxYear },
+      yAxisNote: mode === 'self'
+        ? 'คะแนนประเมินตนเอง 1–10 ที่คุณกรอกเอง — เส้นขาดตรงปีที่ยังไม่มีคะแนน'
+        : 'ตำแหน่งแนวตั้งเป็นการจัดวางเชิงภาพ ไม่ใช่คะแนนชีวิตที่วัดจริง',
+      xAxisNote: 'เวลา · พ.ศ. (ค.ศ.)'
+    };
+  }
+
+  window.ET1LIFE_CORE = {
+    KEY_V2: KEY_V2, KEY_V1: KEY_V1, KEY_V1_FOCUS: KEY_V1_FOCUS,
+    CH_BASE: CH_BASE, THAI_MONTHS: THAI_MONTHS,
+    validRecord: validRecord, normalizeRecord: normalizeRecord,
+    v1Category: v1Category, v1Chapter: v1Chapter, migrateV1Record: migrateV1Record,
+    readState: readState, mergeSeeds: mergeSeeds,
+    validateImport: validateImport, importIntoState: importIntoState,
+    sortChronological: sortChronological, recordsForYear: recordsForYear,
+    undatedRecords: undatedRecords, futureRecords: futureRecords,
+    formatYear: formatYear, formatDateRange: formatDateRange,
+    narrativeLevel: narrativeLevel, hasScore: hasScore,
+    graphLayout: graphLayout
+  };
+
+  if (typeof document === 'undefined') return;
+
+  /* ── ชั้น DOM (Task 3–5) จะถูกเพิ่มในคอมมิตถัดไป ── */
+})();
