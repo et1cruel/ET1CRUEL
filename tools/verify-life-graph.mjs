@@ -50,12 +50,12 @@ export function runStatic(rootDir) {
     const core = coreStart >= 0 ? sw.slice(coreStart, sw.indexOf('];', coreStart)) : '';
     check('sw.js defines CORE', core.length > 0);
 
-    ['css/life-graph.css?v=5', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=4'].forEach(function (p) {
+    ['css/life-graph.css?v=6', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=4'].forEach(function (p) {
       check('CORE precaches ' + p, core.indexOf("'" + p + "'") >= 0);
       check('index.html requests ' + p + ' (page and precache must agree)', html.indexOf(p) >= 0);
     });
     // เวอร์ชัน asset ที่ bump ไปต้องไม่ทิ้ง URL เก่าค้างใน precache (cache ใหม่จะไม่มีไฟล์ที่หน้าเว็บเรียก)
-    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2', 'css/life-graph.css?v=3', 'js/life-graph.js?v=3', 'css/life-graph.css?v=4'].forEach(function (p) {
+    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2', 'css/life-graph.css?v=3', 'js/life-graph.js?v=3', 'css/life-graph.css?v=4', 'css/life-graph.css?v=5'].forEach(function (p) {
       check('no stale ' + p + ' left in the precache', core.indexOf("'" + p + "'") < 0 && html.indexOf(p) < 0, p);
     });
     // neo-brutal ต้องตรงกับที่หน้าเว็บเรียกจริง ไม่งั้น offline จะไม่มี stylesheet หลัก
@@ -103,7 +103,7 @@ export async function run(page, ctx) {
     const order = await page.$$eval('.sections > section.card', els => els.map(e => e.id));
     const at = id => order.indexOf(id);
     const where = ids => ids.join(' > ');
-    ok('the board still carries all 28 cards', order.length === 28, order.length + ' cards: ' + where(order));
+    ok('the board still carries all 27 cards', order.length === 27, order.length + ' cards: ' + where(order));
     ok('quests + content now sit right after money-os',
       at('quests') === at('money-os') + 1 && at('content') === at('money-os') + 2,
       where(order.slice(0, 7)));
@@ -248,11 +248,24 @@ export async function run(page, ctx) {
     await page.click('[data-lg-view="graph"]');
     await page.waitForSelector('svg.lg-stock-chart');
 
-    // ค่าที่เบราว์เซอร์คำนวณจริง ไม่ใช่แค่ชื่อคลาส
+    // ค่าที่เบราว์เซอร์คำนวณจริง ไม่ใช่แค่ชื่อคลาส — สเปกสีเปลี่ยนตามแบบ NEON HUD (แบบ C)
+    // ที่เจ้าของเว็บเลือก: เส้นเขียวนีออน + จุดปัจจุบันเหลือง (เดิมคือน้ำเงิน/เขียวของธีมเก่า)
     const line = await page.$eval('.lg-history-line', el => getComputedStyle(el).stroke);
-    ok('history line is the spec blue', line === 'rgb(57, 143, 229)', line);
+    ok('history line is the spec neon mint', line === 'rgb(0, 229, 160)', line);
     const cur = await page.$eval('.lg-chart-point.is-current', el => getComputedStyle(el).fill);
-    ok('current point is the spec green', cur === 'rgb(20, 184, 138)', cur);
+    ok('current point is the spec yellow', cur === 'rgb(255, 201, 0)', cur);
+
+    // ตัวแผงเอง: ผิวดำเรืองแสง + กรอบดำ 3px แบบ Neo-Brutal ของเว็บ (โครง) + แถบแสงวิ่ง (ข้างใน)
+    const panel = await page.$eval('#life-graph', el => {
+      const c = getComputedStyle(el);
+      return { bg: c.backgroundColor, bw: c.borderTopWidth, bc: c.borderTopColor, sh: c.boxShadow,
+               sweep: getComputedStyle(el, '::after').content };
+    });
+    ok('the life-graph surface is the NEON HUD dark panel', panel.bg === 'rgb(7, 9, 12)', panel.bg);
+    ok('...framed by the site neo-brutal 3px ink border + hard shadow',
+      panel.bw === '3px' && panel.bc === 'rgb(19, 19, 19)' && /10px 10px 0px/.test(panel.sh),
+      panel.bw + ' ' + panel.bc + ' | ' + panel.sh);
+    ok('the sweeping scanline layer is present', panel.sweep !== 'none' && panel.sweep !== 'normal', panel.sweep);
     const fd = await page.$eval('.lg-future-dot', el => ({ fill: getComputedStyle(el).fill, dash: getComputedStyle(el).strokeDasharray }));
     ok('future dot is hollow', fd.fill === 'none', fd.fill);
     ok('future dot outline is dashed', /\d\s+\d/.test(fd.dash) || fd.dash !== 'none', fd.dash);

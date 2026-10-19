@@ -657,7 +657,7 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
 <script defer src="js/reactive-lens.js"></script>
 <script defer src="js/site-polish.js?v=3"></script>
 <link rel="stylesheet" href="css/neo-brutal.css?v=19">
-<link rel="stylesheet" href="css/life-graph.css?v=5">
+<link rel="stylesheet" href="css/life-graph.css?v=6">
 <script defer src="js/life-graph-data.js?v=2"></script>
 <script defer src="js/life-graph.js?v=4"></script>
 <style>
@@ -865,7 +865,6 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="nav-group">💰 การเงิน</div>
   <a href="#treasury">💰 คลังทอง <span class="n" id="navTreas">651K</span></a>
   <a href="#money-os">💵 Money OS <span class="n">EDIT</span></a>
-  <a href="#masterplan">🎯 แผนหลัก <span class="n">300K</span></a>
   <a href="./poker.html">🃏 โป๊กเกอร์ <span class="n">LOG ↗</span></a>
   <a href="./banks.html">🏦 บัญชีธนาคาร <span class="n">11+3 ↗</span></a>
     <div class="nav-group">📋 เควส + คอนเทนต์</div>
@@ -911,6 +910,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="nav-group">🤖 AI Agency</div>
   <a href="./agency.html">◈ Agency OS <span class="n">NEW ↗</span></a>
   <a href="./create-ai.html">🧠 CREATE AI <span class="n">NEW ↗</span></a>
+  <a href="#ai-lab">🧠 AI Lab <span class="n">NEW</span></a>
 
   <div class="nav-group">📈 หุ้น</div>
   <a href="#stocks">📈 หุ้น US+คริปโต <span class="n">LIVE</span></a>
@@ -920,52 +920,9 @@ body.site-polish section.card h5{color:#131313!important}
   <a href="#watch17">👁 Watch 17 <span class="n">AI</span></a>
   <a href="#shield">🛡️ กันตาย <span class="n">17</span></a>
   <a href="#sp500">🇺🇸 S&amp;P 75 <span class="n">2026</span></a>
-  <a href="#ai-lab">🧠 AI Lab <span class="n">NEW</span></a>
 </nav>
 
 <div class="sections">
-
-<!-- 1 MASTER PLAN -->
-<section class="card" id="masterplan">
-  <div class="shead"><div class="icon">🎯</div>
-  <div><h2>แผนหลัก — MASTER PLAN 300K</h2><p>3 กระปุก กระปุกละ 100K · เป้าปีแรก +85,000 (+28.3%)</p></div><span class="count">300K → 385K</span></div>
-  <div class="plan-grid">
-    <div class="plan-bucket" style="--bdot:#3DFF88">
-      <div class="pb-top"><span class="pb-dot"></span><b>Income</b><span class="pb-h">ยาว</span></div>
-      <div class="pb-holds">QQQI</div>
-      <div class="pb-amt num">100,000 <small>฿</small></div>
-      <div class="pb-bar"><i style="width:22%"></i></div>
-      <div class="pb-ret">เป้า <b>+10%</b> → 110,000 (+10,000)</div>
-    </div>
-    <div class="plan-bucket" style="--bdot:#FF4D5E">
-      <div class="pb-top"><span class="pb-dot"></span><b>Growth</b><span class="pb-h">1 ปี</span></div>
-      <div class="pb-holds">AMD / MU / DELL / MRVL</div>
-      <div class="pb-amt num">100,000 <small>฿</small></div>
-      <div class="pb-bar"><i style="width:100%"></i></div>
-      <div class="pb-ret">เป้า <b>+45%</b> → 145,000 (+45,000)</div>
-    </div>
-    <div class="plan-bucket" style="--bdot:#4DA6FF">
-      <div class="pb-top"><span class="pb-dot"></span><b>AI Core</b><span class="pb-h">ยาว</span></div>
-      <div class="pb-holds">NVDA / ASML / AMAT / VRT / TSM</div>
-      <div class="pb-amt num">100,000 <small>฿</small></div>
-      <div class="pb-bar"><i style="width:67%"></i></div>
-      <div class="pb-ret">เป้า <b>+30%</b> → 130,000 (+30,000)</div>
-    </div>
-  </div>
-  <div class="group-title"><span class="gnum">1Y</span> คำเตา 1 ปี — เงินเริ่ม → ปลายปี</div>
-  <table class="stock-table plan-table">
-    <thead><tr><th>แผน</th><th>เงินเริ่ม</th><th>ผลตอบแทน</th><th>ปลายปี</th><th>กำไร</th></tr></thead>
-    <tbody>
-      <tr><td><span class="plan-dot" style="background:#3DFF88"></span><b>QQQI</b></td><td class="num">100,000</td><td class="stock-up">+10%</td><td class="num">110,000</td><td class="stock-up">+10,000</td></tr>
-      <tr><td><span class="plan-dot" style="background:#FF4D5E"></span><b>AMD / MU / DELL / MRVL</b></td><td class="num">100,000</td><td class="stock-up">+45%</td><td class="num">145,000</td><td class="stock-up">+45,000</td></tr>
-      <tr><td><span class="plan-dot" style="background:#4DA6FF"></span><b>NVDA / ASML / AMAT / VRT / TSM</b></td><td class="num">100,000</td><td class="stock-up">+30%</td><td class="num">130,000</td><td class="stock-up">+30,000</td></tr>
-      <tr class="plan-total"><td><b>รวม</b></td><td class="num"><b>300,000</b></td><td class="stock-up"><b>+28.3%</b></td><td class="num"><b>385,000</b></td><td class="stock-up"><b>+85,000</b></td></tr>
-    </tbody>
-  </table>
-  <div class="group-title"><span class="gnum">$</span> ราคาสดหุ้นในแผนตอนนี้</div>
-  <div class="plan-live" id="planLive">กำลังโหลดราคา…</div>
-  <div class="note">🎯 <b>นี่คือแผนหลัก</b> — Income ถือยาวกินปันผล · Growth ลุย 1 ปี · AI Core ถือยาวกับเมกะเทรนด์ · ถามราคาตัวไหนพิมพ์ชื่อได้เลย เช่น <b>MU เท่าไหร่</b> · เป้านี้คือสมมติฐานส่วนตัว ไม่ใช่คำแนะนำการลงทุน</div>
-</section>
 
 <!-- MONEY OS -->
 <section class="card" id="money-os">
@@ -975,7 +932,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">💡 แก้ยอด vault ที่ <b>EDIT VAULTS</b> → คลังทองด้านบนอัปเดทตามทันที · แหล่งเดียว ไม่ต้องแก้ 2 ที่</div>
 </section>
 
-<!-- 2 QUESTS: เควสทั่วไป ชีวิต + งานสร้างตัว -->
+<!-- 1 QUESTS: เควสทั่วไป ชีวิต + งานสร้างตัว -->
 <section class="card" id="quests">
   <div class="shead"><div class="icon" style="background:#E0F5FA">📋</div>
   <div><h2>เควสทั่วไป — ชีวิต + งานสร้างตัว</h2><p>อะไรเสร็จแล้วให้มันจบ อะไรค้างให้เห็นชัดๆ</p></div><span class="count">เสร็จ 13 · ค้าง 4</span></div>
@@ -1000,7 +957,7 @@ body.site-polish section.card h5{color:#131313!important}
   </div>
 </section>
 
-<!-- 3 CONTENT: คลังไอเดียคอนเทนต์ -->
+<!-- 2 CONTENT: คลังไอเดียคอนเทนต์ -->
 <section class="card" id="content">
   <div class="shead"><div class="icon">🎬</div>
   <div><h2>คลังไอเดียคอนเทนต์ — ครบทุกเม็ดที่เคยส่งมา</h2><p>ไม่มีตัดทิ้ง · หยิบไปถ่ายได้เลยทีละอัน</p></div><span class="count">30+ ไอเดีย</span></div>
@@ -1025,7 +982,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">😄 <b>ความสุขง่ายๆ ของฉัน (ครบ):</b> กินของอร่อย · กินน้ำหวาน · เล่นเกม · ทำเพลง · ดูหนัง · ร้องเพลง · ฟังเพลง · แต่งเพลง · เล่นกีต้าร์ · เล่นเครื่องดนตรี · ทำ Youtube กับการทำเพลง/เล่นเกม · ดูหนัง-ทำหนัง-ทำบริษัทหนัง · ถ่ายรูป-รับจ้างถ่าย-ขายรูป · เขียนหนังสือ<br>🌳 <b>พันธกิจ 7 อย่าง:</b> เพลงให้คนพักใจ · หนังสือถ่ายทอดวิธีดูแลตัวเอง · เกมฝึกสมาธิ · ศาสตร์การแพทย์เข้าใจกายใจตามหลักฐาน · เทคโนโลยี AI/แอปให้เข้าถึงความรู้สุขภาพง่าย · วิดีโออธิบายเรื่องยากให้ง่าย · รูปภาพ/ออกแบบสื่อให้จำไปใช้ได้<br>📦 <b>SELL LIST เต็ม:</b> Serum preset · Drumkits · Vocal preset · FL template · PRESET เสียงร้องรวม PACK 200–300/ศิลปิน · Beat pack · Sample/Preset · Loop ambient/shoegaze · Visual pack/LUT — ทำครั้งเดียวขายซ้ำ = Active กลายพันธุ์เป็น Passive</div>
 </section>
 
-<!-- 4 WISHLIST: ของที่อยากได้ -->
+<!-- 3 WISHLIST: ของที่อยากได้ -->
 <section class="card" id="wishlist">
   <div class="shead"><div class="icon" style="background:#FEF3C7">🛒</div>
   <div><h2>Wishlist — ของที่อยากได้</h2><p>เรียงตามอาชีพ: สักก่อน → ดนตรี → คอนเทนต์ → รถ</p></div><span class="count">ทำแล้ว 5 / 5</span></div>
@@ -1038,7 +995,7 @@ body.site-polish section.card h5{color:#131313!important}
   </div>
 </section>
 
-<!-- 5 LUCKY: ประวัติงานวิดีโอลัคกี้ -->
+<!-- 4 LUCKY: ประวัติงานวิดีโอลัคกี้ -->
 <section class="card" id="lucky">
   <div class="shead"><div class="icon">🐭</div>
   <div><h2>ประวัติงานวิดีโอลัคกี้ — ครบทุกล็อต</h2><p>ทุกงานที่เคยส่งมา · ไม่มีตัดทิ้ง · จ่ายแล้วทั้งหมด</p></div><span class="count">25 จ๊อบ · จ่ายครบ</span></div>
@@ -1079,7 +1036,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">รวม LOT A+B = งานลัคกี้ล้วนประมาณ <b>+3,050</b> ไม่รวมงานออกแบบสัก 1,500 กับงานบีท — งานละ 100 แต่มาถี่คือกระแสเงินสดรายวัน · 💰 ยอดโอนจริงแยกตามแชททั้งหมดดูที่ <a href="./lucky-income.html" style="color:var(--gold);font-weight:700">🐭 ห้องสรุปรายได้จากลัคกี้ 5,672 บาท (30 ยอด) ↗</a></div>
 </section>
 
-<!-- 6 BEAT: งานบีท + สอนบีท -->
+<!-- 5 BEAT: งานบีท + สอนบีท -->
 <section class="card" id="beat">
   <div class="shead"><div class="icon" style="background:#EEF0FF">🎛️</div>
   <div><h2>งานบีท + สอนบีท — เงินหลักชั่วคราว</h2><p>ทำเป็นระบบ อย่ารอแค่ลูกค้า DM</p></div><span class="count">จ่ายแล้ว 5 · รอ 2</span></div>
@@ -1151,7 +1108,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">🔒 <b>เป็นส่วนตัว:</b> ไดอารี่เก็บไว้ในเบราว์เซอร์เครื่องนี้เท่านั้น ไม่ส่งออกเน็ต · อยากย้ายเครื่องกด <b>Export</b> เก็บไฟล์ไว้ · เขียนวันละนิด = <b>+30 XP</b> เข้าระบบ Life OS ด้วย<br>💾 <b>สำรองทั้งหมด</b> เก็บไดอารี่+ฉบับร่าง+ป่า+เสียง+Life OS+หนู+เหรียญ+ค่าพับจอเป็นไฟล์เดียว · นำกลับมีพรีวิว+ถามก่อนทับ+สำรอง recovery ให้อัตโนมัติ · localStorage ไม่ใช่ที่เก็บถาวร ควร Export เก็บไว้บ้าง</div>
 </section>
 
-<!-- 7 GEAR: คลังอุปกรณ์ -->
+<!-- 6 GEAR: คลังอุปกรณ์ -->
 <section class="card" id="gear">
   <div class="shead"><div class="icon">🎸</div>
   <div><h2>คลังอุปกรณ์ — ลงครบทุกชิ้นที่เคยส่งมา</h2><p>รายชื่อเต็ม · ราคาเต็ม · total 96,500 / 100,000</p></div><span class="count">96,500 ฿</span></div>
@@ -1198,7 +1155,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">ยอดอุปกรณ์รวม <b>96,500 / 100,000 ฿ (96.5%)</b> — ชิ้นที่ป้าย “ขายได้” = เคยขายทำทุนหมุนต่อ · Mooer A7 / Multi / Artesia ไม่มีราคาในโน้ตเลยไม่บวกเพิ่ม</div>
 </section>
 
-<!-- 8 CHANNELS: อาณาจักร 7 ช่อง -->
+<!-- 7 CHANNELS: อาณาจักร 7 ช่อง -->
 <section class="card" id="channels">
   <div class="shead"><div class="icon" style="background:#F0EAFD">📡</div>
   <div><h2>อาณาจักร 7 ช่อง — คนดูรวม 25K</h2><p>ลัคกี้คือหัวหอก บีทคือเครื่องทำเงิน</p></div><span class="count">18.7K ใหญ่สุด</span></div>
@@ -1213,7 +1170,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">🍀 เปิดหมวกจตุจักร/สยาม · Affiliate Shopee/TikTok · YT/IG/FB/TikTok — content layer คือตัวดึงคนเข้าระบบบีท+สัก</div>
 </section>
 
-<!-- 9 SKILLS: ตารางสกิลแบบเกม RPG -->
+<!-- 8 SKILLS: ตารางสกิลแบบเกม RPG -->
 <section class="card" id="skills">
   <div class="shead"><div class="icon" style="background:#191B1F;color:#fff">⚔️</div>
   <div><h2>ตารางสกิล — แบบเกม RPG</h2><p> S = หากินได้ · A = ใช้งานจริง · B/C = เสริม</p></div><span class="count">S++ ร้องเพลง</span></div>
@@ -1227,7 +1184,7 @@ body.site-polish section.card h5{color:#131313!important}
   </div>
 </section>
 
-<!-- 10 PASSIVE: วิธีหาเงิน 11+ ทาง -->
+<!-- 9 PASSIVE: วิธีหาเงิน 11+ ทาง -->
 <section class="card" id="passive">
   <div class="shead"><div class="icon" style="background:#E7F6EF">💰</div>
   <div><h2>วิธีหาเงิน — รายได้ 11+ ทาง</h2><p>ทำครั้งเดียว → เก็บยาว · Active ที่กลายพันธุ์เป็น Passive คือของดีสุด</p></div><span class="count">11+ ทาง</span></div>
@@ -1256,7 +1213,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">📦 <b>Sell list:</b> Serum preset · Drumkit · Vocal preset · FL template · เสียงร้องรวม pack 200–300/ศิลปิน · <b>ทำครั้งเดียวขายซ้ำ:</b> beat pack / sample / loop ambient-shoegaze / LUT</div>
 </section>
 
-<!-- 11 BASE: Base GEN.1 Studio + Lab + Soul Space -->
+<!-- 10 BASE: Base GEN.1 Studio + Lab + Soul Space -->
 <section class="card" id="base">
   <div class="shead"><div class="icon" style="background:#EEF0FF">🏠</div>
   <div><h2>Base GEN.1 — บ้าน = Studio + Lab + Soul Space</h2><p>4+1 โซน · ทุกโซนต้องทำเงินได้</p></div><span class="count">5 โซน</span></div>
@@ -1271,7 +1228,7 @@ body.site-polish section.card h5{color:#131313!important}
 
 <div class="photo-break"><picture><source type="image/webp" srcset="assets/img/soul.webp"><img src="assets/img/soul.jpg" alt="Himoriyacore — ตัวตน" loading="lazy" decoding="async" width="1080" height="1080"></picture><span class="photo-tag">🌙 HIMORIYACORE · ตัวตน</span></div>
 
-<!-- 12 PLAN: แผนเอาตัวรอด 2 ระยะ -->
+<!-- 11 PLAN: แผนเอาตัวรอด 2 ระยะ -->
 <section class="card" id="plan">
   <div class="shead"><div class="icon" style="background:#FEF3C7">🧭</div>
   <div><h2>แผนเอาตัวรอด — 2 ระยะ</h2><p>อยู่รอดก่อน แล้วค่อยปูทางกลับเข้าทำเพลง</p></div><span class="count">ตอนนี้ → 2 เดือน</span></div>
@@ -1282,7 +1239,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">มึงไม่ได้ล้มเหลว แค่หยุดพักก่อนเริ่มใหม่ — ขายของเพื่อเอาตัวรอดไม่ใช่แพ้ คือรอกลับมาโหดกว่าเดิม</div>
 </section>
 
-<!-- 12.5 VISION FULL -->
+<!-- 11.5 VISION FULL -->
 <section class="card" id="vision">
   <div class="shead"><div class="icon">📜</div>
   <div><h2>วิสัยทัศน์ฉบับเต็ม</h2></div><span class="count">FULL LORE</span></div>
@@ -1302,7 +1259,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">ข้อความต้นฉบับทั้งหมดอยู่ครบในบล็อกนี้แล้ว — ไม่มีการย่อทิ้ง</div>
 </section>
 
-<!-- 13 VERSE: et1cruelverse 5 ร่าง -->
+<!-- 12 VERSE: et1cruelverse 5 ร่าง -->
 <section class="card" id="verse">
   <div class="shead"><div class="icon" style="background:#191B1F;color:#fff">🌌</div>
   <div><h2>et1cruelverse — 5 ร่างในคนเดียว</h2><p>Art + Sound + Vision + Play + Soul = ระบบศิลปินเต็มตัว</p></div><span class="count">5 ร่าง</span></div>
@@ -1642,7 +1599,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">🧠 ห้องนี้พูดเฉพาะของที่<b>ลงมือพิสูจน์แล้ว</b>ในงานนี้เท่านั้น — ไม่มีคำโม้ ทุกใบมีหลักฐานอ้างอิง อยากปลดล็อกช่อง READY ช่องไหนบอกได้เลย</div>
 </section>
 
-<!-- 14 STOCKS -->
+<!-- 13 STOCKS -->
 <section class="card" id="stocks">
   <div class="shead"><div class="icon">📈</div>
   <div><h2>หุ้น US + คริปโต — ห้องเทรด</h2><p>ราคาสด TradingView · พอร์ตจำลอง · คุยกับออมได้</p></div><span class="count fx-badge">$1 ≈ … ฿</span></div>
@@ -2028,7 +1985,7 @@ function apply(){
 /* ===== COLLAPSE — กดหัวข้อแล้วค่อยกางเนื้อหา (progressive disclosure) ===== */
 (function(){
   var KEY='et1cruel-collapsed-v1';
-  var OPEN_BY_DEFAULT=['masterplan','diary','quotes','gacha','know-card']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
+  var OPEN_BY_DEFAULT=['diary','quotes','gacha','know-card']; // ที่เหลือพับไว้ก่อน ยอดสรุปยังเห็นที่หัวข้อ
   function load(){try{var s=JSON.parse(localStorage.getItem(KEY));return Array.isArray(s)?s:null}catch(e){return null}}
   function save(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
   var saved=load();
