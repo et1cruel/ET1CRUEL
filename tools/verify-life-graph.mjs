@@ -50,12 +50,12 @@ export function runStatic(rootDir) {
     const core = coreStart >= 0 ? sw.slice(coreStart, sw.indexOf('];', coreStart)) : '';
     check('sw.js defines CORE', core.length > 0);
 
-    ['css/life-graph.css?v=4', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=4'].forEach(function (p) {
+    ['css/life-graph.css?v=5', 'js/life-graph-data.js?v=2', 'js/life-graph.js?v=4'].forEach(function (p) {
       check('CORE precaches ' + p, core.indexOf("'" + p + "'") >= 0);
       check('index.html requests ' + p + ' (page and precache must agree)', html.indexOf(p) >= 0);
     });
     // เวอร์ชัน asset ที่ bump ไปต้องไม่ทิ้ง URL เก่าค้างใน precache (cache ใหม่จะไม่มีไฟล์ที่หน้าเว็บเรียก)
-    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2', 'css/life-graph.css?v=3', 'js/life-graph.js?v=3'].forEach(function (p) {
+    ['css/life-graph.css?v=2', 'js/life-graph.js?v=2', 'css/life-graph.css?v=3', 'js/life-graph.js?v=3', 'css/life-graph.css?v=4'].forEach(function (p) {
       check('no stale ' + p + ' left in the precache', core.indexOf("'" + p + "'") < 0 && html.indexOf(p) < 0, p);
     });
     // neo-brutal ต้องตรงกับที่หน้าเว็บเรียกจริง ไม่งั้น offline จะไม่มี stylesheet หลัก
@@ -466,6 +466,30 @@ export async function run(page, ctx) {
     await page.evaluate(() => { window.confirm = () => true; });
     await page.click('[data-all-years]');
     await page.click('[data-add]');
+    await page.waitForTimeout(150);
+
+    /* ปุ่มใน dlg เคยค้างอยู่กับธีมสว่าง: #lg-dialog button กำหนด background:#fff คู่กับ color:var(--lg-ink)
+     * ซึ่งตอนนี้ --lg-ink เป็นสีอ่อนเกือบขาว -> ตัวอักษรขาวบนพื้นขาว อ่านไม่ได้ แล้ว rules นั้นเป็น id
+     * จึงชนะ .lg-dialog-actions button[type=submit] (class) ทำให้ปุ่ม "บันทึก" หายไปมีสี accent จนแยกออกจาก "ยกเลิก" ไม่ได้ */
+    const dlgBtns = await page.evaluate(() => {
+      const parse = c => { const m = /rgba?\(([^)]+)\)/.exec(String(c)); return m ? m[1].split(',').map(Number) : null; };
+      const lin = v => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+      const lum = p => 0.2126 * lin(p[0]) + 0.7152 * lin(p[1]) + 0.0722 * lin(p[2]);
+      return [...document.querySelectorAll('#lg-dialog .lg-dialog-actions button')].map(b => {
+        const cs = getComputedStyle(b), bg = parse(cs.backgroundColor), fg = parse(cs.color);
+        const l1 = lum(bg), l2 = lum(fg);
+        return { t: b.textContent.trim(), type: b.type, bg: cs.backgroundColor,
+          contrast: Math.round(((Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)) * 100) / 100 };
+      });
+    });
+    ok('the add-record dialog has its two action buttons to test', dlgBtns.length === 2, dlgBtns.map(b => b.t).join(' / '));
+    dlgBtns.forEach(b => ok('dialog button "' + b.t + '" is readable on screen', b.contrast >= 4.5, b.contrast + ':1 (' + b.bg + ')'));
+    const saveBtn = dlgBtns.find(b => b.type === 'submit'), cancelBtn = dlgBtns.find(b => b.type !== 'submit');
+    ok('the save button keeps its accent colour instead of falling back to white',
+      !!saveBtn && !/255,\s*255,\s*255/.test(saveBtn.bg), saveBtn && saveBtn.bg);
+    ok('save and cancel buttons are visually distinct', !!saveBtn && !!cancelBtn && saveBtn.bg !== cancelBtn.bg,
+      saveBtn && cancelBtn ? saveBtn.bg + ' vs ' + cancelBtn.bg : 'buttons missing');
+
     await page.fill('#lg-form [name="title"]', 'ทดสอบเหตุการณ์ใหม่');
     await page.fill('#lg-form [name="description"]', 'สร้างจากชุดตรวจ');
     await page.fill('#lg-form [name="startYearCE"]', '2024');

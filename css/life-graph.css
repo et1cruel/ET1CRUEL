@@ -161,6 +161,13 @@
 #life-graph .lg-map-node.is-empty{background:#12151c;border-color:#232b38;color:#9ca9bd}
 #life-graph .lg-map-node small{color:#9ca9bd}
 
+/* #lg-dialog button ยังค้างอยู่กับธีมสว่าง: background:#fff คู่กับ color:var(--lg-ink) ซึ่งตอนนี้คือสีอ่อนเกือบขาว
+ * -> ตัวอักษรบนพื้นขาววัดได้แค่ 1.11:1 อ่านไม่ได้ และเนื่องจากต้นฉบับเขียนเป็น #lg-dialog (id)
+ * จึงชนะ .lg-dialog-actions button[type=submit] (class) เสมอ ปุ่ม "บันทึก" จึงไม่เคยได้สี accent
+ * จนหน้าตาเดียวกันกับ "ยกเลิก" — กฎนี้ต้องมีทั้ง id และ class เพื่อชนะต้นฉบับโดยไม่ต้องรื้อ */
+#lg-dialog .lg-dialog-actions button{background:#171c26;border:1px solid #394557;box-shadow:2px 2px 0 rgba(0,0,0,.5);color:#e9eef7}
+#lg-dialog .lg-dialog-actions button[type=submit]{background:#398fe5;border-color:#398fe5;box-shadow:2px 2px 0 rgba(0,0,0,.55);color:#0b0f15}
+
 /* ───────── ป้าย badge ห้ามตกบรรทัด ─────────
  * เดิม meta กับ badge เป็น inline ล้วน พอ meta ยาว badge ก็หล่นไปบรรทัดใหม่ (หรือโดนตัดหาย
  * ตรงขอบการ์ด) — แก้โดยให้ meta ยืดกินพื้นที่ที่เหลือ แล้วตรึง badge ไว้บรรทัดแรกทางขวา */
