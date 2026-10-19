@@ -94,6 +94,23 @@ body::after{opacity:.04 !important;}
   background:#fff !important;box-shadow:4px 4px 0 var(--br-ink) !important;
 }
 .hero-cta a:hover{box-shadow:5px 5px 0 var(--br-ink) !important}
+
+/* ---- ปุ่ม 3D "เปิดแผน Content" ----
+ * เจ้าของเว็บเลือกเอง: หน้าขาวตัวสูง เด่นกว่าปุ่มลัดเพื่อนด้วยมิติ (เงาหนา + จมลึกตอนกด) ไม่ใช่สี
+ * ต้องเขียน !important ทับ .hero-cta a ที่ตั้งค่าเป็น !important มาแล้ว */
+.hero-cta a.hero-plan-cta{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:14px 20px !important;font-size:15.5px !important;font-weight:800 !important;
+  background:#fff !important;color:var(--br-ink) !important;
+  box-shadow:0 8px 0 var(--br-ink),0 13px 18px rgba(0,0,0,.3) !important;
+  transition:transform .13s cubic-bezier(.2,.8,.3,1),box-shadow .13s cubic-bezier(.2,.8,.3,1);
+}
+.hero-cta a.hero-plan-cta:hover{transform:translateY(-3px);box-shadow:0 11px 0 var(--br-ink),0 17px 24px rgba(0,0,0,.36) !important}
+.hero-cta a.hero-plan-cta:active{transform:translateY(8px);box-shadow:0 0 0 var(--br-ink),0 2px 6px rgba(0,0,0,.3) !important}
+.hero-cta a.hero-plan-cta:focus-visible{outline:3px solid #6426d9;outline-offset:4px}
+.hero-cta a.hero-plan-cta .plan-chip{background:var(--br-yellow);border:2px solid var(--br-ink);border-radius:7px;padding:2px 7px;font-size:13.5px;line-height:1.4}
+.hero-cta a.hero-plan-cta .plan-sub{font-size:12px;font-weight:700;opacity:.72}
+@media(prefers-reduced-motion:reduce){.hero-cta a.hero-plan-cta{transition:none}}
 .kpi,.stat,.gacha-stat,.mem-stat,.vault{
   background:var(--br-card) !important;border:3px solid var(--br-ink) !important;
   border-radius:14px !important;box-shadow:4px 4px 0 var(--br-ink) !important;

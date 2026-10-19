@@ -90,7 +90,38 @@ export async function run(page, ctx) {
     ok('hero still present', await page.locator('.hero').count() === 1);
     ok('hero title unchanged', (await page.locator('.hero h1 .et').innerText()).trim() === 'ET1CRUEL');
     ok('hero lead unchanged', (await page.locator('.hero .lead').innerText()).includes('ออมสิน'));
-    ok('hero CTAs intact', await page.locator('.hero-cta a').count() === 5);
+    const ctas = await page.$$eval('.hero-cta a', els => els.map(e => e.getAttribute('href')));
+    const ctaHas = h => ctas.indexOf(h) >= 0;
+    ok('the original 5 hero CTAs are all still there',
+      ['./beat-select.html', '#know-card', './timeline.html', './poker.html', './food.html'].every(ctaHas),
+      ctas.join(' | '));
+    ok('the plan-content button leads the hero CTAs', ctas[0] === './plan-content.html', ctas.join(' | '));
+    ok('the plan-content button is styled as the 3D hero button',
+      await page.locator('.hero-cta a.hero-plan-cta').count() === 1);
+
+    /* ลำดับบอร์ด: เควส+คอนเทนต์ ถูกดันขึ้นมาเงิน/os หุ้น 6 ใบถูกย้ายไปล่างสุด (ไม่มีการ์ดไหนหาย) */
+    const order = await page.$$eval('.sections > section.card', els => els.map(e => e.id));
+    const at = id => order.indexOf(id);
+    const where = ids => ids.join(' > ');
+    ok('the board still carries all 28 cards', order.length === 28, order.length + ' cards: ' + where(order));
+    ok('quests + content now sit right after money-os',
+      at('quests') === at('money-os') + 1 && at('content') === at('money-os') + 2,
+      where(order.slice(0, 7)));
+    ok('wishlist, lucky and beat kept their order behind the moved block',
+      at('wishlist') === at('content') + 1 && at('lucky') === at('wishlist') + 1 && at('beat') === at('lucky') + 1,
+      where(order.slice(0, 9)));
+    ok('the six stock cards form the last run of the board',
+      at('stocks') > at('ai-lab') && at('sp500') === order.length - 1,
+      where(order.slice(-7)));
+
+    const navGroups = await page.$$eval('#nav .nav-group', els => els.map(e => e.textContent.trim()));
+    ok('nav groups follow the board (เควส+คอนเทนต์ หลังการเงิน, หุ้น อยู่กลุ่มท้ายสุด)',
+      navGroups.length === 8 && navGroups[1].indexOf('เควส') >= 0 && navGroups[navGroups.length - 1].indexOf('หุ้น') >= 0,
+      navGroups.join(' | '));
+    const deadAnchors = await page.$$eval('#nav a[href^="#"]', els => els
+      .map(e => e.getAttribute('href'))
+      .filter(h => h.length > 1 && !document.getElementById(h.slice(1))));
+    ok('no nav link points at a section that no longer exists', deadAnchors.length === 0, deadAnchors.join(' | '));
     ok('life-graph section present', await page.locator('#life-graph').count() === 1);
     ok('life-graph heading unchanged', (await page.locator('#lg-heading').innerText()).includes('กราฟชีวิต'));
     ok('topbar intact', await page.locator('.topbar').count() === 1);
