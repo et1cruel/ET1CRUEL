@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/banner.webp" imagesrcset="assets/img/banner-960.webp 960w, assets/img/banner.webp 1920w" imagesizes="100vw" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="css/life-os-os.css">
-<link rel="stylesheet" href="css/stock-os.css?v=4">
+<link rel="stylesheet" href="css/stock-os.css?v=5">
 <link rel="stylesheet" href="fx/fx.css">
 <script>document.documentElement.classList.add('js');</script>
 <script>
@@ -657,6 +657,7 @@ body section.card#quotes .count{background:var(--gold);color:#07110B;border:1px 
 <script defer src="js/reactive-lens.js"></script>
 <script defer src="js/site-polish.js?v=3"></script>
 <link rel="stylesheet" href="css/neo-brutal.css?v=19">
+<link rel="stylesheet" href="css/verse.css?v=4">
 <link rel="stylesheet" href="css/life-graph.css?v=6">
 <script defer src="js/life-graph-data.js?v=2"></script>
 <script defer src="js/life-graph.js?v=4"></script>
@@ -902,7 +903,7 @@ body.site-polish section.card h5{color:#131313!important}
   <a href="#base">🏠 Base GEN.1 <span class="n">5 โซน</span></a>
   <a href="#plan">🧭 แผนรอด <span class="n">2 ระยะ</span></a>
   <a href="#vision">📜 วิสัยทัศน์ <span class="n">FULL</span></a>
-  <a href="#verse">🌌 5 ร่าง <span class="n">verse</span></a>
+  <a href="#verse">🌌 7 ร่าง <span class="n">verse</span></a>
   <a href="#joy">🥁 กิจกรรมที่ชอบ <span class="n">NEW</span></a>
   <a href="#quotes">💌 สวนกำลังใจ <span class="n">BUFF</span></a>
   <a href="#gacha">🎰 กาชาเควส <span class="n">ROLL</span></a>
@@ -916,6 +917,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="nav-group">📈 หุ้น</div>
   <a href="#stocks">📈 หุ้น US+คริปโต <span class="n">LIVE</span></a>
   <a href="./stocks-daily.html">🗓️ หุ้นรายวัน <span class="n">19 ต.ค. ↗</span></a>
+  <a href="#tierlist">🏷️ Tier List <span class="n">TIER</span></a>
   <a href="#charts">📊 กราฟเทคนิค <span class="n">TV</span></a>
   <a href="#port-snap">💼 พอร์ตสแนป <span class="n">10</span></a>
   <a href="#watch17">👁 Watch 17 <span class="n">AI</span></a>
@@ -1260,18 +1262,148 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="note">ข้อความต้นฉบับทั้งหมดอยู่ครบในบล็อกนี้แล้ว — ไม่มีการย่อทิ้ง</div>
 </section>
 
-<!-- 12 VERSE: et1cruelverse 5 ร่าง -->
-<section class="card" id="verse">
-  <div class="shead"><div class="icon" style="background:#191B1F;color:#fff">🌌</div>
-  <div><h2>et1cruelverse — 5 ร่างในคนเดียว</h2><p>Art + Sound + Vision + Play + Soul = ระบบศิลปินเต็มตัว</p></div><span class="count">5 ร่าง</span></div>
-  <div class="grid2">
-    <div class="persona"><h4>🩸 et1cruel — ศิลปิน</h4><p>tattoo / art / music / drawing — ร่างดิบ ถ่ายทอดอารมณ์ลงภาพ mood/tone + branding ตัวตนชัด</p></div>
-    <div class="persona"><h4>💽 prod.et1cruel — โปรดิวเซอร์</h4><p>sound design · arrangement · mix/master · DAW — สร้าง “ซาวด์ลายเซ็น” ที่ฟังแล้วรู้ว่าเป็นมึง</p></div>
-    <div class="persona"><h4>🎬 dir.et1cruel — ผู้กำกับ</h4><p>ตัดต่อ · แสงสี · storytelling · FX — มองโลกเป็นภาพยนตร์ คุม mood ให้ coherent</p></div>
-    <div class="persona"><h4>🕹️ Cruelmanblack — เกมเมอร์</h4><p>game analysis · cinematic content · Unity/Unreal · streaming persona — ผสานศิลปะกับเกม</p></div>
+<!-- 12 VERSE: et1cruelverse — 7 identities · one universe -->
+<section class="card" id="verse" aria-labelledby="verseTitle">
+  <div class="shead verse-head">
+    <div class="icon" aria-hidden="true">🪐</div>
+    <div>
+      <p class="verse-kicker">7 IDENTITIES · ONE UNIVERSE</p>
+      <h2 id="verseTitle">et1cruelverse — 7 ร่างในจักรวาลเดียว</h2>
+      <p class="verse-sub">Art + Sound + Vision + Play + Soul + Technology + Fashion</p>
+    </div>
+    <span class="count verse-count" id="verseCount">7 Identities</span>
   </div>
-  <div class="persona" style="margin-top:10px"><h4>🌙 himoriyacore / tana pawarinpong — ตัวจริง</h4><p>vlog · aesthetic storytelling · voice over จริงใจ — เบื้องหลังทุกอย่าง ทำให้คนเชื่อมกับตัวจริงของมึง · daily mood diary · mini art · micro story · eco challenge · cinematic life vlog</p></div>
+
+  <div class="verse-intro">
+    <div class="verse-map" aria-label="แผนที่จักรวาล 7 ตัวตน">
+      <p class="vmap-label"><i aria-hidden="true"></i>THE CONSTELLATION · <span id="verseNodeCount">7</span> NODES</p>
+      <div class="vmap-stage" id="verseMapStage" role="group" aria-label="แผนที่ตัวตน — เลือกจุดเพื่อเปิดแฟ้ม"></div>
+      <p class="vmap-note">แตะจุดบนแผนที่ หรือเลือกจากแฟ้มด้านล่าง</p>
+    </div>
+    <div class="verse-manifesto">
+      <p class="vman-kicker">THE IDEA</p>
+      <h3>หนึ่งคน <em>เจ็ดตัวตน</em><br>จักรวาลเดียว</h3>
+      <p>ไม่ใช่เจ็ดคน และไม่ใช่เจ็ดแบรนด์ที่แยกจากกัน — แต่เป็นเจ็ดภาษาของคนคนเดียว ทุกภาษามีหน้าที่ของมัน และทั้งหมดต่อกันเป็นจักรวาลสร้างสรรค์เดียว</p>
+      <ul class="vdivisions" id="verseDivisions" aria-label="สี่หมวดของจักรวาล"></ul>
+      <p class="vman-foot">แต่ละตัวตนมีสี สัญลักษณ์ และพื้นที่ของตัวเอง — แต่ทำงานร่วมกันได้โดยไม่สูญเสียเอกลักษณ์</p>
+    </div>
+  </div>
+
+  <div class="verse-toolbar" id="verseFilters" role="group" aria-label="กรองตัวตนตามหมวด"></div>
+  <p class="verse-live" id="verseLive" aria-live="polite"></p>
+  <div class="verse-grid" id="verseGrid"></div>
+  <noscript>
+    <div class="verse-noscript">
+      <b>7 ตัวตนในจักรวาลเดียว</b><br>
+      01 et1cruel — ศิลปิน · 02 prod.et1cruel — โปรดิวเซอร์ · 03 dir.et1cruel — ผู้กำกับ ·
+      04 himoriyacore — ตัวจริง · 05 art.et1cruel — ศิลปินภาพ · 06 akase001e8 — วิศวกรจักรวาล ·
+      07 hizoexora — แฟชั่นอิสระ<br>
+      เปิด JavaScript เพื่อดูแผนที่จักรวาลและแฟ้มตัวตนแบบเต็ม
+    </div>
+  </noscript>
+
+  <div class="verse-collabs">
+    <div class="vc-head">
+      <span class="vc-kicker">WORKS TOGETHER</span>
+      <h3>ตัวตนที่ทำงานร่วมกัน</h3>
+      <span class="vc-note">ตัวอย่างการเชื่อมตัวตน — ไม่ใช่ผลงานที่เสร็จแล้ว</span>
+    </div>
+    <div class="vc-grid" id="verseCollabs"></div>
+  </div>
+
+  <div class="verse-quote">
+    <p>“One Human. Seven Identities. Infinite Possibilities.”</p>
+    <span>หนึ่งคน เจ็ดตัวตน ความเป็นไปได้ไม่สิ้นสุด</span>
+  </div>
+
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute;overflow:hidden">
+    <symbol id="vsig-artist" viewBox="0 0 24 24">
+      <path d="M12 20.2C9.8 18.7 3.8 14.4 3.8 9.4a4.2 4.2 0 0 1 8.2-1.2 4.2 4.2 0 0 1 8.2 1.2c0 5-6 9.3-8.2 10.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M12 7.2v5.6M9.2 10h5.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="vsig-producer" viewBox="0 0 24 24">
+      <path d="M2.5 12h2M7 7.5v9M11 4.5v15M15 8.5v7M19 6v12M21.5 10.5v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="vsig-director" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 3.8v8.2l7.2 4.1M12 12 4.8 16.1M12 12l7.2-4.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="vsig-archive" viewBox="0 0 24 24">
+      <circle cx="12" cy="8.2" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M3.5 19.5h17M6.5 19.5 10 13l3.1 4.2 2-2.6 3.1 4.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="vsig-art" viewBox="0 0 24 24">
+      <path d="m12 3 6 6-9.2 9.2H3.5v-5.3L12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <path d="m14.2 4.8 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="7.2" cy="16.8" r="1.3" fill="currentColor"/>
+    </symbol>
+    <symbol id="vsig-tech" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="2.8" fill="currentColor"/>
+      <ellipse cx="12" cy="12" rx="8.8" ry="4.6" transform="rotate(-24 12 12)" fill="none" stroke="currentColor" stroke-width="2"/>
+      <circle cx="18.6" cy="7.4" r="1.4" fill="currentColor"/>
+    </symbol>
+    <symbol id="vsig-fashion" viewBox="0 0 24 24">
+      <path d="M12 8.2V7a2.4 2.4 0 1 1 2.4 2.4c-.8 0-1.4.6-1.4 1.4v.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M12 11.6 3.5 18v2.2h17V18L12 11.6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
 </section>
+
+<dialog id="verseDialog" class="idfile" aria-labelledby="vfName">
+  <div class="idfile-shell" id="vfShell">
+    <header class="idfile-head">
+      <div class="idfile-sigil" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use id="vfSigilUse" href="#vsig-artist"></use></svg>
+      </div>
+      <div class="idfile-id">
+        <p class="idfile-serial" id="vfSerial"></p>
+        <h3 class="idfile-name" id="vfName"></h3>
+        <span class="idfile-alias" id="vfAlias" hidden></span>
+        <p class="idfile-role" id="vfRole"></p>
+        <p class="idfile-cat" id="vfCat"></p>
+      </div>
+      <div class="idfile-stamps">
+        <span class="idfile-rank" id="vfRank"></span>
+        <span class="idfile-status" id="vfStatus" hidden></span>
+      </div>
+      <button type="button" class="idfile-close" id="vfClose" aria-label="ปิดแฟ้มตัวตน">✕</button>
+    </header>
+    <div class="idfile-scroll">
+      <p class="idfile-tagline" id="vfTagline"></p>
+      <div class="idfile-body">
+        <section class="vfs vfs-core">
+          <h4>แก่นตัวตน</h4>
+          <p id="vfCore"></p>
+        </section>
+        <section class="vfs vfs-focus">
+          <h4>โฟกัสหลัก</h4>
+          <ul class="vf-focus" id="vfFocus"></ul>
+        </section>
+        <section class="vfs">
+          <h4>บุคลิก</h4>
+          <p id="vfPersona"></p>
+        </section>
+        <section class="vfs">
+          <h4>ภาษาภาพ</h4>
+          <ul class="vf-chips" id="vfVisual"></ul>
+        </section>
+        <section class="vfs vfs-role">
+          <h4>บทบาทในจักรวาล</h4>
+          <p id="vfRoleU"></p>
+        </section>
+      </div>
+      <div class="idfile-links">
+        <h4>เชื่อมโยงกับ</h4>
+        <div class="vflinks" id="vfLinks"></div>
+      </div>
+    </div>
+    <div class="idfile-foot" role="group" aria-label="นำทางแฟ้มตัวตน">
+      <button type="button" class="vf-nav" id="vfPrev">← ก่อนหน้า</button>
+      <span class="vf-counter" id="vfCounter"></span>
+      <button type="button" class="vf-nav vf-nav--next" id="vfNext">ถัดไป →</button>
+    </div>
+  </div>
+</dialog>
 
 <!-- JOY: กิจกรรมที่ชอบทำ -->
 <section class="card" id="joy">
@@ -1944,6 +2076,50 @@ body.site-polish section.card h5{color:#131313!important}
     </table>
   </div>
   <div class="note">ตัวเลขจากรูป @TheMarketHustle · 31 ธ.ค. 2025 – 7 ต.ค. 2026 · S&amp;P 500 +13.97% · ไม่ใช่คำแนะนำการลงทุน</div>
+</section>
+
+<!-- TIERLIST: ห้อง Tier List หุ้น — 5 ระดับ (คัดลอกจากรูปต้นฉบับ) -->
+<section class="card" id="tierlist">
+  <div class="shead"><div class="icon">🏷️</div>
+  <div><h2>Tier List หุ้น — 5 ระดับในภาพเดียว</h2><p>ถือยาว สบายใจ → ของเก่า/ถังขยะ · 92 หุ้น · ตามภาพต้นฉบับ</p></div><span class="count">92 STOCKS</span></div>
+  <div class="tier-list">
+    <div class="tier-row t1">
+      <div class="tier-label"><span class="t-emo" aria-hidden="true">🌱</span><b>ถือยาว สบายใจ</b><small>TIER 1 · 20 หุ้น</small></div>
+      <div class="tier-chips">
+        <span>MSFT</span><span>NVDA</span><span>TSM</span><span>ASML</span><span>META</span><span>GOOGL</span><span>AMZN</span><span>V</span><span>MA</span><span>AAPL</span>
+        <span>AVGO</span><span>LLY</span><span>COST</span><span>BRK.B</span><span>JPM</span><span>UNH</span><span>ADBE</span><span>CRM</span><span>INTU</span><span>MELI</span>
+      </div>
+    </div>
+    <div class="tier-row t2">
+      <div class="tier-label"><span class="t-emo" aria-hidden="true">🚀</span><b>ลุ้น upside มีอนาคต</b><small>TIER 2 · 20 หุ้น</small></div>
+      <div class="tier-chips">
+        <span>AMD</span><span>PLTR</span><span>ORCL</span><span>ARM</span><span>MU</span><span>UBER</span><span>SPOT</span><span>NET</span><span>DDOG</span><span>CRWD</span>
+        <span>SNOW</span><span>HIMS</span><span>ASTS</span><span>RKLB</span><span>SE</span><span>RBLX</span><span>COIN</span><span>SHOP</span><span>SOFI</span><span>NU</span>
+      </div>
+    </div>
+    <div class="tier-row t3">
+      <div class="tier-label"><span class="t-emo" aria-hidden="true">🙂</span><b>แล้วแต่ชอบ</b><small>TIER 3 · 20 หุ้น</small></div>
+      <div class="tier-chips">
+        <span>SMCI</span><span>IONQ</span><span>RGTI</span><span>QBTS</span><span>QUBT</span><span>ONDS</span><span>IBRX</span><span>SOUN</span><span>BBAI</span><span>AI</span>
+        <span>PATH</span><span>LCID</span><span>RIVN</span><span>NIO</span><span>CHPT</span><span>QS</span><span>OPEN</span><span>UPST</span><span>AFRM</span><span>HOOD</span>
+      </div>
+    </div>
+    <div class="tier-row t4">
+      <div class="tier-label"><span class="t-emo" aria-hidden="true">⚠️</span><b>ติดกับ</b><small>TIER 4 · 15 หุ้น</small></div>
+      <div class="tier-chips">
+        <span>INTC</span><span>SNAP</span><span>PYPL</span><span>PTON</span><span>BYND</span><span>WBD</span><span>PARA</span><span>BABA</span><span>BIDU</span><span>NKLA</span>
+        <span>WKHS</span><span>GPRO</span><span>BB</span><span>SPCE</span><span>WISH</span>
+      </div>
+    </div>
+    <div class="tier-row t5">
+      <div class="tier-label"><span class="t-emo" aria-hidden="true">🎁</span><b>ของเก่า/ถังขยะ</b><small>TIER 5 · 17 หุ้น</small></div>
+      <div class="tier-chips">
+        <span>CTM</span><span>KULR</span><span>AISP</span><span>NCPL</span><span>HSDT</span><span>AGRI</span><span>SNTI</span><span>BNGO</span>
+        <span>MULN</span><span>FFIE</span><span>CLOV</span><span>GSAT</span><span>SENS</span><span>ATER</span><span>CEI</span><span>ZOM</span><span>NAKD</span>
+      </div>
+    </div>
+  </div>
+  <div class="note">📋 ลิสต์นี้คัดลอกจากรูป Tier List ต้นฉบับ · 5 ระดับ · 92 หุ้น · จัดจากมุมมองส่วนตัวของเจ้าของโพย — ไม่ใช่คำแนะนำการลงทุน</div>
 </section>
 
 <footer>⚔ ET1CRUEL · QUEST LOG RPG v2 — CLEAR 60 · ACTIVE 8 · GOLD 96,500 · ม้าเหล็กได้แล้ว 🏍 NEXT BOSS: ที่ดิน 🌾</footer>
@@ -2693,6 +2869,8 @@ function apply(){
 <script defer src="js/level-up.js?v=1"></script>
 <script defer src="js/knowledge-data.js?v=3"></script>
 <script defer src="js/knowledge.js?v=2"></script>
+<script defer src="js/verse-data.js?v=5"></script>
+<script defer src="js/verse-app.js?v=5"></script>
 <script defer src="js/tv-widgets.js"></script>
 <script defer src="fx/mouse.js"></script>
 <script defer src="fx/gold-rain.js?v=3"></script>
