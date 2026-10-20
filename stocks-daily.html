@@ -134,7 +134,7 @@ body.site-polish .note b{color:#FFE08A!important}
 
 <header class="hero">
   <h1>📈 STOCK ROOM <span>— ห้องดูหุ้นรายวัน</span></h1>
-  <p>อัปโหลด<b>รูปหุ้นรายวัน</b>เก็บไว้ดูย้อนหลัง · รูปแรกกำกับไว้แล้วว่าเป็น<b>วันที่ 10 ตุลาคม 2569</b> · รูปล่าสุด <b>16 ตุลาคม 2569</b> · เก็บในเครื่อง (localStorage) + ไฟล์ในโฟลเดอร์ <b class="num">stocks/</b></p>
+  <p>อัปโหลด<b>รูปหุ้นรายวัน</b>เก็บไว้ดูย้อนหลัง · รูปแรกกำกับไว้แล้วว่าเป็น<b>วันที่ 10 ตุลาคม 2569</b> · รูปล่าสุด <b>19 ตุลาคม 2569</b> · เก็บในเครื่อง (localStorage) + ไฟล์ในโฟลเดอร์ <b class="num">stocks/</b></p>
 </header>
 
 <div class="stats">
@@ -148,12 +148,12 @@ body.site-polish .note b{color:#FFE08A!important}
   <p class="sub">เลือกวันที่ + เลือกรูป (jpg/png) + เขียนโน้ตสั้นๆ ได้ · กดบันทึกแล้วจะขึ้นในการ์ดด้านล่างทันที</p>
   <form class="add" id="addForm">
     <label>🗓️ วันที่ของรูป *
-      <input id="fDate" type="date" value="2026-10-16" min="2020-01-01" max="2030-12-31" required>
+      <input id="fDate" type="date" value="2026-10-19" min="2020-01-01" max="2030-12-31" required>
     </label>
     <label>📝 โน้ตสั้นๆ (ไม่บังคับ)
       <input id="fNote" maxlength="120" placeholder="เช่น SET ปิดบวก / NVDA ลงแรง">
     </label>
-    <div class="full dateprev" id="datePrev">จะบันทึกเป็นวันที่: <b>16 ตุลาคม 2569</b></div>
+    <div class="full dateprev" id="datePrev">จะบันทึกเป็นวันที่: <b>19 ตุลาคม 2569</b></div>
     <div class="drop" id="drop">
       <div><b>📁 กดเพื่อเลือกรูป หรือลากรูปมาวางที่นี่</b></div>
       <small>รองรับ JPG / PNG · รูปจะถูกย่อเก็บในเครื่องอัตโนมัติ</small>
@@ -165,7 +165,7 @@ body.site-polish .note b{color:#FFE08A!important}
       <button class="btn ghost" type="button" id="clearBtn">ล้างฟอร์ม</button>
     </div>
   </form>
-  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 6 ใบ: <b>8, 10, 12, 14, 15 และ 16 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
+  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 7 ใบ: <b>8, 10, 12, 14, 15, 16 และ 19 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
 </section>
 
 <section class="card" id="list">
@@ -174,7 +174,7 @@ body.site-polish .note b{color:#FFE08A!important}
   <div class="toolbar">
     <input id="q" placeholder="ค้นหา… 10 ตุลาคม / NVDA / SET">
     <button class="btn small ghost" id="exportBtn" type="button">⬇ สำรองข้อมูล</button>
-    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 ต.ค. 69)</button>
+    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 + 19 ต.ค. 69)</button>
   </div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">ยังไม่มีรูปที่ค้นหา — ลองล้างคำค้นหรืออัปโหลดรูปใหม่ด้านบน</div>
@@ -223,6 +223,14 @@ function save(arr){
 }
 function seed(){
   return [{
+    id: 'seed-2026-10-19',
+    dateISO: '2026-10-19',
+    dateLabel: '19 ตุลาคม 2569',
+    src: 'stocks/2026-10-19.png',
+    note: 'วอทช์ลิสต์หุ้นรายวัน ประจำวันที่ 19 ตุลาคม 2569 — เทคเด้งทั้งกระดาน (AMZN +4.98% / PLTR +4.36% / MRNA +4.07% / MRVL +4.06% / TSLA +3.76% / MU +2.97%) · แดงแค่ LLY -1.33% / PENG -0.98% / META -0.55%',
+    createdAt: Date.now(),
+    seed: true
+  },{
     id: 'seed-2026-10-16',
     dateISO: '2026-10-16',
     dateLabel: '16 ตุลาคม 2569',
@@ -272,7 +280,7 @@ function seed(){
     seed: true
   }];
 }
-var SEED_V = 6;
+var SEED_V = 7;
 var items = load();
 if(!items || !items.length){ items = seed(); }
 // เติมรูปตั้งต้นที่ยังขาด (เช่น เปิดครั้งแรกตอนมีแค่รูป 10 ต.ค. จะได้รูป 8 ต.ค. เพิ่มโดยไม่ทับรูปที่อัปโหลดเอง)
@@ -296,11 +304,11 @@ var fFile = document.getElementById('fFile');
 var drop = document.getElementById('drop');
 var preview = document.getElementById('preview');
 var pendingDataURL = '';
-if(!fDate.value) fDate.value = '2026-10-16';
+if(!fDate.value) fDate.value = '2026-10-19';
 // พรีวิววันที่ภาษาไทยใต้ช่องเลือกวันที่ — เห็นทันทีว่าเลือกวันไหนอยู่ (กันสับสน format 10/10/2026)
 var datePrev = document.getElementById('datePrev');
 function paintDate(){
-  var v = (fDate.value || '2026-10-16');
+  var v = (fDate.value || '2026-10-19');
   if(datePrev) datePrev.innerHTML = 'จะบันทึกเป็นวันที่: <b>' + toThaiDate(v) + '</b> <span class="num">(' + v + ')</span>';
 }
 fDate.addEventListener('input', paintDate);
@@ -346,12 +354,12 @@ function shrinkImage(dataURL, maxW, cb){
 }
 document.getElementById('clearBtn').onclick = function(){
   document.getElementById('addForm').reset();
-  fDate.value = '2026-10-16';
+  fDate.value = '2026-10-19';
   pendingDataURL = ''; preview.src=''; preview.style.display='none'; fFile.value='';
 };
 document.getElementById('addForm').addEventListener('submit', function(e){
   e.preventDefault();
-  var d = fDate.value || '2026-10-16';
+  var d = fDate.value || '2026-10-19';
   var note = (fNote.value||'').trim();
   if(!pendingDataURL){ alert('เลือกรูปก่อน 1 รูป'); return; }
   // ถ้ามีวันเดียวกันแล้ว ให้เพิ่มเป็นรูปที่ 2 ของวันนั้น (ไม่ทับ)
@@ -407,7 +415,7 @@ function render(filter){
 }
 document.getElementById('q').addEventListener('input', function(e){ render(e.target.value); });
 document.getElementById('resetBtn').onclick = function(){
-  if(!confirm('รีเซ็ตกลับเหลือแค่รูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 ตุลาคม 2569) ใช่ไหม?')) return;
+  if(!confirm('รีเซ็ตกลับเหลือแค่รูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 + 19 ตุลาคม 2569) ใช่ไหม?')) return;
   items = seed(); save(items);
   try{ localStorage.setItem(KEY + '_seedV', String(SEED_V)); }catch(e){}
   render('');
