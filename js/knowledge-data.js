@@ -6,7 +6,7 @@
 window.ET1KNOWLEDGE = [
 /* ---------- หุ้น/การเงิน (7) ---------- */
 {cat:'stocks', title:'พอร์ต DIME หุ้น 7 ตัวสาย AI', body:'NVDA AVGO CRWD PLTR PENG COST และ META น้องใหม่ 15 ต.ค. 69 ด้วยเงิน 3,000 บาท (ขาย AMD ASML MRVL LITE NTAP ออก) เน้นโครงสร้างพื้นฐาน AI ล้วน', tag:'พอร์ต DIME'},
-{cat:'stocks', title:'671,600 จากเป้า 1,000,000', body:'MainQuest PROJECT 1M ผ่าน milestone 500k แล้ว เหลืออีก 328,400 ต้นไม้การเงินขยับตามขั้น เป้าถัดไป 750k', tag:'PROJECT 1M'},
+{cat:'stocks', title:'683,200 จากเป้า 1,000,000', body:'MainQuest PROJECT 1M ผ่าน milestone 500k แล้ว เหลืออีก 316,800 ต้นไม้การเงินขยับตามขั้น เป้าถัดไป 750k', tag:'PROJECT 1M'},
 {cat:'stocks', title:'แผน 300K โตเป็น 385K ยังไง', body:'กอง Income QQQI +10% กอง Growth AMD/MU/DELL/MRVL +45% กอง AI Core NVDA/ASML/AMAT/VRT/TSM +30% รวมโต +85,000 (+28.3%)', tag:'MasterPlan 300K'},
 {cat:'stocks', title:'LITE +607% ใน 1 ปี', body:'Watchlist AI Infra 17 ตัวรอบ ต.ค.25-ต.ค.26 นำโดย LITE +607% MU +485.9% DELL +283.8% รั้งท้าย VST -16.5% กับ CEG -16.4%', tag:'Watchlist AI Infra'},
 {cat:'stocks', title:'S&P500 75 ตัว +13.97% YTD', body:'ตั้งแต่ 31 ธ.ค.25-7 ต.ค.26 ท็อปคือ Sandisk +613.09% รั้งท้าย Oracle -26.35% เขียว 54 แดง 21 ตลาดยังเป็นขาขึ้น', tag:'S&P 500'},

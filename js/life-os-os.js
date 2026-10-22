@@ -54,12 +54,12 @@ function seed() {
       BODY:    { pts: 28, xp: 1400 }, MIND: { pts: 32, xp: 1600 },
       LIFE:    { pts: 24, xp: 1200 }, CONTENT: { pts: 36, xp: 1800 }
     },
-    mainQuest: { name: 'PROJECT 1M', current: 671600, target: 1000000,
+    mainQuest: { name: 'PROJECT 1M', current: 683200, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { savings: 619000, kasikorn: 0, ktb: 18000, dime: 21000, cash: 200, stocks: 13000, btc: 400 },
+      vaults: { savings: 619000, kasikorn: 0, ktb: 36000, dime: 21600, cash: 200, stocks: 6000, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
-      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 671600 } ]
+      history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 683200 } ]
     },
     projects: [
       { id: 'p-himori', name: 'HIMORIYACORE', goal: '10 SONG ALBUM', pct: 60, next: 'Finish Track 04', xp: 500, tracks: [1,1,1,0,0,0,0,0,0,0] },
@@ -748,7 +748,7 @@ var PROJ_TASKS = {
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
 var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Savings', ktb: '🏦 KTB e-Savings', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
 var SAVE_VAULTS = ['savings'];
-var DEF_VAULTS = { savings: 619000, kasikorn: 0, ktb: 18000, dime: 21000, cash: 200, stocks: 13000, btc: 400 };
+var DEF_VAULTS = { savings: 619000, kasikorn: 0, ktb: 36000, dime: 21600, cash: 200, stocks: 6000, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
@@ -792,10 +792,17 @@ function migrate() {
     if (S.money.vaults.dime === 7000) S.money.vaults.dime = 21000;
     S.money.vaultVer = 7;
   }
+  // v8 (22 Oct 2026): อัปยอดจริง KTB=36,000 / DIME Save=21,600 / DIME US=6,000 — ตั้งครั้งเดียวตามยอดที่แจ้ง
+  if (S.money.vaultVer !== 8) {
+    S.money.vaults.ktb = 36000;
+    S.money.vaults.dime = 21600;
+    S.money.vaults.stocks = 6000;
+    S.money.vaultVer = 8;
+  }
   if (S.mainQuest) S.mainQuest.current = netWorth();
   if (Array.isArray(S.money.history) && S.money.history.length) {
     var last = S.money.history[S.money.history.length - 1];
-    if (last && (last.v === 639420 || last.v === 783020 || last.v === 583020 || last.v === 651420 || last.v === 651400 || last.v === 887340 || last.v === 687340 || last.v === 661420 || last.v === 665420) && netWorth() !== last.v) last.v = netWorth();
+    if (last && (last.v === 639420 || last.v === 783020 || last.v === 583020 || last.v === 651420 || last.v === 651400 || last.v === 887340 || last.v === 687340 || last.v === 661420 || last.v === 665420 || last.v === 671600) && netWorth() !== last.v) last.v = netWorth();
   }
   S.projects.forEach(function (p) {
     if (!p.tasks) p.tasks = (PROJ_TASKS[p.id] || ['Next action']).map(function (t) { return { t: t, done: false }; });

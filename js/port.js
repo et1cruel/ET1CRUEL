@@ -126,7 +126,7 @@
   }
 
   function syncToMoneyWallet(totalRounded) {
-    // ปิด auto-sync ตามคำขอ — ยอด DIME US Stocks คุมเองจาก section เงิน (13,000)
+    // ปิด auto-sync ตามคำขอ — ยอด DIME US Stocks คุมเองจาก section เงิน (6,000)
     // คงฟังก์ชันไว้เผื่อเปิดกลับ แค่ return เฉยๆ
     return;
   }

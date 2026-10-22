@@ -534,6 +534,9 @@
   }
   /* ดันยอดพอร์ตสด (฿) เข้ากระปุก DIME US ใน LIFE OS — ยอดเงินขยับตามตลาดเหมือนในแอป Dime */
   function syncDimeVault() {
+    // ปิด auto-sync (22 ต.ค. 69 ตามคำขอ) — ยอด DIME US ในคลังทองคุมเองจาก section เงิน (6,000)
+    // คงฟังก์ชันไว้เผื่อเปิดกลับ แค่ return เฉยๆ
+    return;
     try {
       var st = holdStats();
       var thb = Math.round(st.val * state.fx);
