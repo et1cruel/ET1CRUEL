@@ -134,13 +134,13 @@ body.site-polish .note b{color:#FFE08A!important}
 
 <header class="hero">
   <h1>📈 STOCK ROOM <span>— ห้องดูหุ้นรายวัน</span></h1>
-  <p>อัปโหลด<b>รูปหุ้นรายวัน</b>เก็บไว้ดูย้อนหลัง · รูปแรกกำกับไว้แล้วว่าเป็น<b>วันที่ 10 ตุลาคม 2569</b> · รูปล่าสุด <b>19 ตุลาคม 2569</b> · เก็บในเครื่อง (localStorage) + ไฟล์ในโฟลเดอร์ <b class="num">stocks/</b></p>
+  <p>อัปโหลด<b>รูปหุ้นรายวัน</b>เก็บไว้ดูย้อนหลัง · รูปแรกกำกับไว้แล้วว่าเป็น<b>วันที่ 10 ตุลาคม 2569</b> · รูปล่าสุด <b>22 ตุลาคม 2569</b> เวลา <b>12:26 น.</b> · เก็บในเครื่อง (localStorage) + ไฟล์ในโฟลเดอร์ <b class="num">stocks/</b></p>
 </header>
 
 <div class="stats">
   <div class="stat"><small>🗓️ TOTAL DAYS</small><strong class="num" id="stTotal">0</strong><span>วันที่มีรูป</span></div>
   <div class="stat"><small>🖼️ TOTAL IMAGES</small><strong class="num" id="stImgs">0</strong><span>รูปทั้งหมด</span></div>
-  <div class="stat"><small>⚡ LATEST</small><strong class="num" id="stLatest" style="font-size:19px">–</strong><span>วันที่ล่าสุด</span></div>
+  <div class="stat"><small>⚡ LATEST</small><strong class="num" id="stLatest" style="font-size:19px">–</strong><span>วันที่ล่าสุด · <b class="num" id="stLatestTime">–</b></span></div>
 </div>
 
 <section class="card" id="add">
@@ -148,12 +148,12 @@ body.site-polish .note b{color:#FFE08A!important}
   <p class="sub">เลือกวันที่ + เลือกรูป (jpg/png) + เขียนโน้ตสั้นๆ ได้ · กดบันทึกแล้วจะขึ้นในการ์ดด้านล่างทันที</p>
   <form class="add" id="addForm">
     <label>🗓️ วันที่ของรูป *
-      <input id="fDate" type="date" value="2026-10-19" min="2020-01-01" max="2030-12-31" required>
+      <input id="fDate" type="date" value="2026-10-22" min="2020-01-01" max="2030-12-31" required>
     </label>
     <label>📝 โน้ตสั้นๆ (ไม่บังคับ)
       <input id="fNote" maxlength="120" placeholder="เช่น SET ปิดบวก / NVDA ลงแรง">
     </label>
-    <div class="full dateprev" id="datePrev">จะบันทึกเป็นวันที่: <b>19 ตุลาคม 2569</b></div>
+    <div class="full dateprev" id="datePrev">จะบันทึกเป็นวันที่: <b>22 ตุลาคม 2569</b></div>
     <div class="drop" id="drop">
       <div><b>📁 กดเพื่อเลือกรูป หรือลากรูปมาวางที่นี่</b></div>
       <small>รองรับ JPG / PNG · รูปจะถูกย่อเก็บในเครื่องอัตโนมัติ</small>
@@ -165,7 +165,7 @@ body.site-polish .note b{color:#FFE08A!important}
       <button class="btn ghost" type="button" id="clearBtn">ล้างฟอร์ม</button>
     </div>
   </form>
-  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 7 ใบ: <b>8, 10, 12, 14, 15, 16 และ 19 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
+  <div class="note">💡 <b>วิธีใช้:</b> ทุกวันแคปจอหุ้น → เข้าห้องนี้ → เลือกวันที่ → อัปโหลด → บันทึก · รูปตั้งต้นมีให้แล้ว 8 ใบ: <b>8, 10, 12, 14, 15, 16, 19 และ 22 ตุลาคม 2569</b> (ไฟล์ใน <b class="num">stocks/</b>)</div>
 </section>
 
 <section class="card" id="list">
@@ -174,7 +174,7 @@ body.site-polish .note b{color:#FFE08A!important}
   <div class="toolbar">
     <input id="q" placeholder="ค้นหา… 10 ตุลาคม / NVDA / SET">
     <button class="btn small ghost" id="exportBtn" type="button">⬇ สำรองข้อมูล</button>
-    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 + 19 ต.ค. 69)</button>
+    <button class="btn small danger" id="resetBtn" type="button">รีเซ็ตกลับรูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 + 19 + 22 ต.ค. 69)</button>
   </div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">ยังไม่มีรูปที่ค้นหา — ลองล้างคำค้นหรืออัปโหลดรูปใหม่ด้านบน</div>
@@ -223,6 +223,15 @@ function save(arr){
 }
 function seed(){
   return [{
+    id: 'seed-2026-10-22',
+    dateISO: '2026-10-22',
+    dateLabel: '22 ตุลาคม 2569',
+    src: 'stocks/2026-10-22.png',
+    timeLabel: '12:26',
+    note: 'วอทช์ลิสต์หุ้นรายวัน ประจำวันที่ 22 ตุลาคม 2569 — เทคพุ่งยกแผง (DELL +24.32% / AMD +17.98% / MU +17.60% / TSLA +12.76% / CRWV +11.97% / PLTR +9.12% / ASML +2.81% / NVDA +2.54%) · แดงแค่ WMT -0.04% / AMZN -0.10% / UNH -0.54% / LLY -1.01%',
+    createdAt: new Date('2026-10-22T12:26:00+07:00').getTime(),
+    seed: true
+  },{
     id: 'seed-2026-10-19',
     dateISO: '2026-10-19',
     dateLabel: '19 ตุลาคม 2569',
@@ -280,7 +289,7 @@ function seed(){
     seed: true
   }];
 }
-var SEED_V = 7;
+var SEED_V = 8;
 var items = load();
 if(!items || !items.length){ items = seed(); }
 // เติมรูปตั้งต้นที่ยังขาด (เช่น เปิดครั้งแรกตอนมีแค่รูป 10 ต.ค. จะได้รูป 8 ต.ค. เพิ่มโดยไม่ทับรูปที่อัปโหลดเอง)
@@ -304,11 +313,11 @@ var fFile = document.getElementById('fFile');
 var drop = document.getElementById('drop');
 var preview = document.getElementById('preview');
 var pendingDataURL = '';
-if(!fDate.value) fDate.value = '2026-10-19';
+if(!fDate.value) fDate.value = '2026-10-22';
 // พรีวิววันที่ภาษาไทยใต้ช่องเลือกวันที่ — เห็นทันทีว่าเลือกวันไหนอยู่ (กันสับสน format 10/10/2026)
 var datePrev = document.getElementById('datePrev');
 function paintDate(){
-  var v = (fDate.value || '2026-10-19');
+  var v = (fDate.value || '2026-10-22');
   if(datePrev) datePrev.innerHTML = 'จะบันทึกเป็นวันที่: <b>' + toThaiDate(v) + '</b> <span class="num">(' + v + ')</span>';
 }
 fDate.addEventListener('input', paintDate);
@@ -354,12 +363,12 @@ function shrinkImage(dataURL, maxW, cb){
 }
 document.getElementById('clearBtn').onclick = function(){
   document.getElementById('addForm').reset();
-  fDate.value = '2026-10-19';
+  fDate.value = '2026-10-22';
   pendingDataURL = ''; preview.src=''; preview.style.display='none'; fFile.value='';
 };
 document.getElementById('addForm').addEventListener('submit', function(e){
   e.preventDefault();
-  var d = fDate.value || '2026-10-19';
+  var d = fDate.value || '2026-10-22';
   var note = (fNote.value||'').trim();
   if(!pendingDataURL){ alert('เลือกรูปก่อน 1 รูป'); return; }
   // ถ้ามีวันเดียวกันแล้ว ให้เพิ่มเป็นรูปที่ 2 ของวันนั้น (ไม่ทับ)
@@ -390,7 +399,7 @@ function render(filter){
     var card = document.createElement('div');
     card.className = 'scard';
     card.innerHTML =
-      '<div class="dhead"><div class="dico">📈</div><div><b>หุ้นรายวัน — '+esc(it.dateLabel||toThaiDate(it.dateISO))+'</b><small class="num">'+esc(it.dateISO)+'</small></div><span class="cnt">รูปที่ '+(sorted.length-idx)+'</span></div>'+
+      '<div class="dhead"><div class="dico">📈</div><div><b>หุ้นรายวัน — '+esc(it.dateLabel||toThaiDate(it.dateISO))+'</b><small class="num">'+esc(it.dateISO)+(it.timeLabel? ' · '+esc(it.timeLabel)+' น.' : '')+'</small></div><span class="cnt">รูปที่ '+(sorted.length-idx)+'</span></div>'+
       '<img class="shot" loading="lazy" alt="หุ้นรายวัน '+esc(it.dateLabel||'')+'">'+
       '<div class="notebox">'+esc(it.note||'')+'</div>'+
       '<div class="row"><button class="btn small ghost" data-act="view" type="button">🔍 ขยาย</button><a class="btn small ghost" download="หุ้น-'+esc(it.dateISO)+'.png">⬇ โหลดรูป</a><button class="btn small danger" data-act="del" type="button">ลบ</button></div>';
@@ -412,10 +421,11 @@ function render(filter){
   document.getElementById('stImgs').textContent = imgCount;
   var latest = sorted.length? (sorted[0].dateLabel||sorted[0].dateISO) : '–';
   document.getElementById('stLatest').textContent = latest;
+  document.getElementById('stLatestTime').textContent = (sorted.length && sorted[0].timeLabel)? sorted[0].timeLabel+' น.' : '–';
 }
 document.getElementById('q').addEventListener('input', function(e){ render(e.target.value); });
 document.getElementById('resetBtn').onclick = function(){
-  if(!confirm('รีเซ็ตกลับเหลือแค่รูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 + 19 ตุลาคม 2569) ใช่ไหม?')) return;
+  if(!confirm('รีเซ็ตกลับเหลือแค่รูปตั้งต้น (8 + 10 + 12 + 14 + 15 + 16 + 19 + 22 ตุลาคม 2569) ใช่ไหม?')) return;
   items = seed(); save(items);
   try{ localStorage.setItem(KEY + '_seedV', String(SEED_V)); }catch(e){}
   render('');
