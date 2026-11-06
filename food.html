@@ -254,7 +254,8 @@ var DEFAULT_MENUS=[
   {id:'food-user-010',name:'ไข่ข้นแกงเขียวหวาน',shop:'ไข่ข้น 100 หน้า',price:65,rate:3,cat:'ข้าว',emoji:'🍛',image:'assets/img/food-menu/green-curry-creamy-egg-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-9},
   {id:'food-user-011',name:'หมูกระทะบุฟเฟ่ต์',shop:'',price:279,rate:3,cat:'บุฟเฟต์',emoji:'🥓',image:'assets/img/food-menu/mookata-buffet-shrimp.webp',story:'มีกุ้งดองและกุ้งแม่น้ำเผา',map:'',fav:false,count:1,ts:Date.now()-10},
   {id:'food-user-012',name:'หมาล่า/ชาบู',shop:'',price:39,rate:3,cat:'บุฟเฟต์',emoji:'🍲',image:'assets/img/food-menu/mala-shabu-hotpot.webp',story:'ขีดละ ฿39',map:'',fav:false,count:1,ts:Date.now()-11},
-  {id:'food-user-013',name:'ไก่ทอด KFC',shop:'KFC',price:'',rate:3,cat:'ของทอด',emoji:'🍗',image:'assets/img/food-menu/kfc-fried-chicken.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-12}
+  {id:'food-user-013',name:'ไก่ทอด KFC',shop:'KFC',price:'',rate:3,cat:'ของทอด',emoji:'🍗',image:'assets/img/food-menu/kfc-fried-chicken.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-12},
+  {id:'food-user-014',name:'ข้าวผัด',shop:'',price:55,rate:3,cat:'ข้าว',emoji:'🍚',image:'assets/img/food-menu/khao-pad.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-13}
 ];
 function seed(){return {items:JSON.parse(JSON.stringify(DEFAULT_MENUS)),favOnly:false};}
 function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return seed();}
@@ -322,6 +323,14 @@ if(!localStorage.getItem(MENU_ADD_V7)){
   if(kfc&&!S.items.some(function(item){return item.id===kfc.id;}))S.items.push(JSON.parse(JSON.stringify(kfc)));
   save(S);
   try{localStorage.setItem(MENU_ADD_V7,'1');}catch(e){}
+}
+/* add fried rice to previously saved journals */
+var MENU_ADD_V8='et1cruel_food_menu_v8';
+if(!localStorage.getItem(MENU_ADD_V8)){
+  var khaoPad=DEFAULT_MENUS.find(function(item){return item.id==='food-user-014';});
+  if(khaoPad&&!S.items.some(function(item){return item.id===khaoPad.id;}))S.items.push(JSON.parse(JSON.stringify(khaoPad)));
+  save(S);
+  try{localStorage.setItem(MENU_ADD_V8,'1');}catch(e){}
 }
 var $=function(id){return document.getElementById(id);};
 var grid=$('grid'),q=$('q'),catF=$('catF'),sortF=$('sortF');
