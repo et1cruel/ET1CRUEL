@@ -731,7 +731,7 @@
 
   var state = {
     records: [], deletedSeedIds: [], meta: {},
-    view: 'timeline', mode: 'narrative', year: 'all', category: 'all', query: '', selected: null, labels: false
+    view: 'graph', mode: 'narrative', year: 'all', category: 'all', query: '', selected: null, labels: false
   };
   var noticeTimer = null;
 
