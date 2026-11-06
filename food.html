@@ -27,12 +27,12 @@ body{background:radial-gradient(ellipse at 90% 0%,#e7eddf 0,transparent 32rem),v
 .topbar a:hover{border-color:#a9bba7;background:#f7faf4}
 .topbar .t{font-size:13px;font-weight:600;color:var(--muted)}
 header.hero{position:relative;overflow:hidden;margin:28px 0 22px;padding:clamp(28px,5vw,52px);border:1px solid #dfe4d8;border-radius:24px;background:linear-gradient(125deg,rgba(255,253,248,.98),rgba(239,244,233,.96));box-shadow:var(--shadow)}
-header.hero::after{content:'🍜';position:absolute;right:5%;bottom:-28px;font-size:clamp(100px,19vw,210px);line-height:1;opacity:.08;transform:rotate(-14deg);pointer-events:none}
-header.hero .eyebrow{position:relative;z-index:1;display:flex;align-items:center;gap:9px;color:var(--green);font-size:12px;font-weight:700;letter-spacing:.08em}
+header.hero::after{content:'🍜';position:absolute;z-index:0;right:3%;bottom:-42px;font-size:clamp(88px,16vw,180px);line-height:1;opacity:.04;transform:rotate(-14deg);pointer-events:none}
+header.hero .eyebrow{position:relative;z-index:1;display:flex;flex-wrap:wrap;align-items:center;gap:9px;max-width:100%;overflow-wrap:anywhere;color:var(--green);font-size:12px;font-weight:700;letter-spacing:.08em}
 header.hero .eyebrow::before{content:'✦';color:var(--gold)}
-header.hero h1{position:relative;z-index:1;margin-top:10px;color:#193d2b;font-family:'Chakra Petch','Mitr',sans-serif;font-size:clamp(38px,6.2vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.2;text-wrap:balance;text-shadow:0 0 1px rgba(25,61,43,.5),0 0 16px rgba(67,123,84,.25)}
+header.hero h1{position:relative;z-index:1;margin-top:24px;color:#193d2b;font-family:'Chakra Petch','Mitr',sans-serif;font-size:clamp(38px,6.2vw,62px);font-weight:700;letter-spacing:-.025em;line-height:1.35;text-wrap:balance;text-shadow:0 0 1px rgba(25,61,43,.5),0 0 16px rgba(67,123,84,.25)}
 header.hero h1::after{content:'';display:block;width:76px;height:5px;margin-top:13px;border-radius:99px;background:linear-gradient(90deg,#386a4c,#b47a44);box-shadow:0 0 8px rgba(56,106,76,.42),0 0 17px rgba(180,122,68,.2)}
-header.hero h1 .chop{display:inline-block;margin-left:8px;color:var(--gold);font:600 .31em 'IBM Plex Sans Thai',sans-serif;letter-spacing:0;vertical-align:middle}
+header.hero h1 .chop{display:block;max-width:100%;margin:8px 0 0;color:var(--gold);font:600 clamp(16px,2.5vw,22px) 'IBM Plex Sans Thai',sans-serif;letter-spacing:0;line-height:1.4;vertical-align:baseline;overflow-wrap:anywhere}
 header.hero p{position:relative;z-index:1;max-width:56ch;margin-top:12px;color:var(--muted);font-size:16px;line-height:1.8}
 .hero-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
 .hero-actions a{text-decoration:none}
@@ -101,6 +101,7 @@ form.add input::placeholder,form.add textarea::placeholder,.toolbar input::place
 .fcard:hover{transform:translateY(-3px);border-color:#cbd6c6;box-shadow:0 12px 24px rgba(39,51,39,.09)}
 .fcard.fav{border-color:#e5cba9;border-left-color:var(--dish-accent);background:var(--dish-bg)}
 .fcard.fav::after{content:'★ ของโปรด';position:absolute;top:11px;right:12px;padding:3px 7px;border-radius:99px;background:#f7ebda;color:#7C4E1F;font-size:10px;font-weight:700}
+.fcard .dish-photo{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;margin:0 0 13px;background:#e9eee5}
 .fcard .top{display:flex;align-items:center;gap:11px;min-width:0;padding-bottom:12px;border-bottom:1px solid #eff0e9}
 .fcard .top>div:last-child{min-width:0}
 .fcard .emoji{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border:1px solid #edf0e7;border-radius:13px;background:#f5f7f0;font-size:23px}
@@ -181,18 +182,18 @@ footer a{color:var(--green)}
   <p class="sub">กด “+ กินอีก” ทุกครั้งที่กิน = เก็บแต้มนักชิม · กด ⭐ เพื่อปักของโปรด</p>
   <div class="toolbar">
     <input id="q" placeholder="🔍 ค้นหา… ข้าวมันไก่ / บางใหญ่ / 50">
-    <select id="catF"><option value="all">ทุกหมวด</option><option value="ข้าว">🍚 ข้าว</option><option value="เส้น">🍜 เส้น</option><option value="จานด่วน">⚡ จานด่วน</option><option value="หวาน">🍧 ของหวาน</option><option value="เครื่องดื่ม">🧋 เครื่องดื่ม</option><option value="บุฟเฟต์">🔥 บุฟเฟต์</option><option value="ทำเอง">🍳 ทำเอง</option><option value="fav">⭐ ของโปรด</option></select>
+    <select id="catF"><option value="all">ทุกหมวด</option><option value="ข้าว">🍚 ข้าว</option><option value="เส้น">🍜 เส้น</option><option value="จานด่วน">⚡ จานด่วน</option><option value="หวาน">🍧 ของหวาน</option><option value="ของทอด">🍟 ของทอด</option><option value="เครื่องดื่ม">🧋 เครื่องดื่ม</option><option value="บุฟเฟต์">🔥 บุฟเฟต์</option><option value="ทำเอง">🍳 ทำเอง</option><option value="fav">⭐ ของโปรด</option></select>
     <select id="sortF"><option value="rate">เรียง: ดาวสูงสุด</option><option value="count">เรียง: กินบ่อยสุด</option><option value="priceAsc">เรียง: ถูกสุด</option><option value="priceDesc">เรียง: แพงสุด</option><option value="new">เรียง: ใหม่สุด</option></select>
   </div>
   <div class="chips" id="quickAdd">
-    <button class="chip" type="button" data-q="ข้าวมันไก่">🍗 ข้าวมันไก่</button>
-    <button class="chip" type="button" data-q="ก๋วยเตี๋ยว">🍜 ก๋วยเตี๋ยว</button>
-    <button class="chip" type="button" data-q="กระเพรา">🌶️ กระเพรา</button>
-    <button class="chip" type="button" data-q="ชานม">🧋 ชานม</button>
+    <button class="chip" type="button" data-q="ปลากะพง">🐟 ปลากะพงทอดน้ำปลา</button>
+    <button class="chip" type="button" data-q="หมูตุ๋น">🍛 หมูตุ๋นพริกแกง</button>
+    <button class="chip" type="button" data-q="ยำวุ้นเส้น">🥗 ยำวุ้นเส้นทะเล</button>
+    <button class="chip" type="button" data-q="หวาน">🍧 ของหวาน</button>
   </div>
   <div style="height:12px"></div>
   <div class="grid" id="grid"></div>
-  <div class="note">🎬 <b>ไอเดีย Food Cinematic:</b> ถ่ายร้านข้าวมันไก่บางใหญ่ให้เหมือนฉากหนัง — ใส่เสียง ambient เล่าเรื่องเจ้าของร้านแบบเหงาๆ · สโลแกนจำง่าย <b>“FOOD IS KING — รีวิวแลกข้าว 1 จาน”</b></div>
+  <div class="note">🎬 <b>ไอเดีย Food Cinematic:</b> ถ่ายเมนูปลากะพงทอดน้ำปลาจากครัวสุขสบายให้เหมือนฉากหนัง — ใส่เสียง ambient เล่าเรื่องมื้ออาหาร · สโลแกนจำง่าย <b>“FOOD IS KING — รีวิวแลกข้าว 1 จาน”</b></div>
 </section>
 
 <section class="card" id="add">
@@ -207,6 +208,7 @@ footer a{color:var(--green)}
       <option value="เส้น">🍜 เส้น</option>
       <option value="จานด่วน">⚡ จานด่วน</option>
       <option value="หวาน">🍧 ของหวาน</option>
+      <option value="ของทอด">🍟 ของทอด</option>
       <option value="เครื่องดื่ม">🧋 เครื่องดื่ม</option>
       <option value="บุฟเฟต์">🔥 บุฟเฟต์/ปิ้งย่าง</option>
       <option value="ทำเอง">🍳 ทำเอง</option>
@@ -224,7 +226,7 @@ footer a{color:var(--green)}
     <div class="full" style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn" type="submit">+ บันทึกเข้า Dex</button>
       <button class="btn ghost small" type="button" id="expBtn">📤 Export</button>
-      <button class="btn ghost small" type="button" id="resetBtn">♻️ รีเซ็ตตัวอย่าง</button>
+      <button class="btn ghost small" type="button" id="resetBtn">♻️ รีเซ็ตเมนูตั้งต้น</button>
     </div>
   </form>
 </section>
@@ -236,18 +238,80 @@ footer a{color:var(--green)}
 (function(){
 'use strict';
 var KEY='et1cruel_food_v1';
-var BUFF={'ข้าว':'+30 HP','เส้น':'+20 MP','จานด่วน':'+15 EXP','หวาน':'+10 CHARM','เครื่องดื่ม':'+10 MP','บุฟเฟต์':'+50 HP','ทำเอง':'+25 EXP'};
-function seed(){return {items:[
- {id:'s1',name:'ข้าวมันไก่บางใหญ่',shop:'ร้านป้าหน้าปากซอย',price:50,rate:5,cat:'ข้าว',emoji:'🍗',story:'ไก่ฉ่ำนุ่มเหมือนฉากหนังตอนเย็น — น้ำจิ้มเด็ดจนต้องขอเพิ่ม',map:'',fav:true,count:12,ts:Date.now()-86400000*9},
- {id:'s2',name:'เตี๋ยวเรือเข้มข้น',shop:'ข้างตึก',price:45,rate:5,cat:'เส้น',emoji:'🍜',story:'ซดร้อนๆ ตอนตี 2 เหนื่อยมาทั้งวันหายไปครึ่งนึง',map:'',fav:true,count:9,ts:Date.now()-86400000*7},
- {id:'s3',name:'กระเพราหมูกรอบไข่ดาว',shop:'ตามสั่งน้าแดง',price:60,rate:4,cat:'จานด่วน',emoji:'🌶️',story:'เผ็ดแบบตื่น — กินเสร็จมีแรงทำบีทต่ออีก 2 ชม.',map:'',fav:false,count:6,ts:Date.now()-86400000*5},
- {id:'s4',name:'ชานมไข่มุกหวานน้อย',shop:'ร้านหน้าสตู',price:45,rate:4,cat:'เครื่องดื่ม',emoji:'🧋',story:'ฮีลใจยามบ่าย — ดูดแล้วไอเดียโฟลว์',map:'',fav:true,count:15,ts:Date.now()-86400000*3},
- {id:'s5',name:'มาม่าต้มยำทำเอง',shop:'ครัวที่บ้าน',price:25,rate:3,cat:'ทำเอง',emoji:'🍲',story:'เมนูกันตายสิ้นเดือน แต่อร่อยแบบภูมิใจ',map:'',fav:false,count:4,ts:Date.now()-86400000*2},
- {id:'s6',name:'หมูกระทะกับเพื่อน',shop:'บุฟเฟต์บางใหญ่',price:199,rate:5,cat:'บุฟเฟต์',emoji:'🥓',story:'ปาร์ตี้หลังปิดจ๊อบ — ย่างไปคุยไปคือที่สุด',map:'',fav:true,count:3,ts:Date.now()-86400000}
-],favOnly:false};}
+var BUFF={'ข้าว':'+30 HP','เส้น':'+20 MP','จานด่วน':'+15 EXP','หวาน':'+10 CHARM','ของทอด':'+15 EXP','เครื่องดื่ม':'+10 MP','บุฟเฟต์':'+50 HP','ทำเอง':'+25 EXP'};
+var DEFAULT_MENUS=[
+  {id:'food-user-001',name:'ข้าวปลากะพงทอดน้ำปลา',shop:'ครัวสุขสบาย',price:70,rate:3,cat:'ข้าว',emoji:'🐟',image:'assets/img/food-menu/sea-bass-fish-sauce.webp',story:'',map:'',fav:false,count:1,ts:Date.now()},
+  {id:'food-user-002',name:'ข้าวหมูตุ๋นพริกแกง',shop:'ข้างหอ',price:60,rate:3,cat:'ข้าว',emoji:'🍛',image:'assets/img/food-menu/braised-pork-curry-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-1},
+  {id:'food-user-003',name:'ข้าวหมูกรอบทอดน้ำปลา',shop:'',price:65,rate:3,cat:'ข้าว',emoji:'🐷',image:'assets/img/food-menu/crispy-pork-fish-sauce.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-2},
+  {id:'food-user-004',name:'ข้าวกุ้งแซลมอนดอง',shop:'ตลาด B Night',price:119,rate:3,cat:'ข้าว',emoji:'🍤',image:'assets/img/food-menu/shrimp-salmon-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-3},
+  {id:'food-user-005',name:'เต้าหู้เย็นน้ำแข็งใส',shop:'',price:109,rate:3,cat:'หวาน',emoji:'🍧',image:'assets/img/food-menu/tofu-shaved-ice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-4},
+  {id:'food-user-006',name:'เฟรนฟราย XL',shop:'ร้านพี่มุก',price:69,rate:3,cat:'ของทอด',emoji:'🍟',image:'assets/img/food-menu/xl-french-fries.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-5},
+  {id:'food-user-007',name:'ไอติม',shop:'ตลาด B Knight',price:39,rate:3,cat:'หวาน',emoji:'🍦',image:'assets/img/food-menu/market-ice-cream.webp',story:'ราคาเริ่มต้น ฿39',map:'',fav:false,count:1,ts:Date.now()-6},
+  {id:'food-user-008',name:'โยเกิร์ต',shop:'ข้างหอ',price:50,rate:3,cat:'หวาน',emoji:'🥛',image:'assets/img/food-menu/yogurt-ice-cream.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-7},
+  {id:'food-user-009',name:'ยำวุ้นเส้นทะเล',shop:'',price:50,rate:3,cat:'เส้น',emoji:'🥗',image:'assets/img/food-menu/seafood-glass-noodle-salad.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-8},
+  {id:'food-user-010',name:'ไข่ข้นแกงเขียวหวาน',shop:'ไข่ข้น 100 หน้า',price:65,rate:3,cat:'ข้าว',emoji:'🍛',image:'assets/img/food-menu/green-curry-creamy-egg-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-9},
+  {id:'food-user-011',name:'หมูกระทะบุฟเฟ่ต์',shop:'',price:279,rate:3,cat:'บุฟเฟต์',emoji:'🥓',image:'assets/img/food-menu/mookata-buffet-shrimp.webp',story:'มีกุ้งดองและกุ้งแม่น้ำเผา',map:'',fav:false,count:1,ts:Date.now()-10},
+  {id:'food-user-012',name:'หมาล่า/ชาบู',shop:'',price:39,rate:3,cat:'บุฟเฟต์',emoji:'🍲',image:'assets/img/food-menu/mala-shabu-hotpot.webp',story:'ขีดละ ฿39',map:'',fav:false,count:1,ts:Date.now()-11}
+];
+function seed(){return {items:JSON.parse(JSON.stringify(DEFAULT_MENUS)),favOnly:false};}
 function load(){try{var r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}return seed();}
 function save(s){try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){}}
 var S=load();
+/* one-time addition of the user's food menu entries; keep all existing journal data */
+var MENU_MIGRATION='et1cruel_food_menu_v2';
+if(!localStorage.getItem(MENU_MIGRATION)){
+  var newMenus=[
+    {id:'food-user-001',name:'ข้าวปลากะพงทอดน้ำปลา',shop:'ครัวสุขสบาย',price:70,rate:3,cat:'ข้าว',emoji:'🐟',image:'assets/img/food-menu/sea-bass-fish-sauce.webp',story:'',map:'',fav:false,count:1,ts:Date.now()},
+    {id:'food-user-002',name:'ข้าวหมูตุ๋นพริกแกง',shop:'ข้างหอ',price:60,rate:3,cat:'ข้าว',emoji:'🍛',image:'assets/img/food-menu/braised-pork-curry-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-1},
+    {id:'food-user-003',name:'ข้าวหมูกรอบทอดน้ำปลา',shop:'',price:65,rate:3,cat:'ข้าว',emoji:'🐷',image:'assets/img/food-menu/crispy-pork-fish-sauce.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-2},
+    {id:'food-user-004',name:'ข้าวกุ้งแซลมอนดอง',shop:'ตลาด B Night',price:119,rate:3,cat:'ข้าว',emoji:'🍤',image:'assets/img/food-menu/shrimp-salmon-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-3},
+    {id:'food-user-005',name:'เต้าหู้เย็นน้ำแข็งใส',shop:'',price:109,rate:3,cat:'หวาน',emoji:'🍧',image:'assets/img/food-menu/tofu-shaved-ice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-4},
+    {id:'food-user-006',name:'เฟรนฟราย XL',shop:'ร้านพี่มุก',price:69,rate:3,cat:'ของทอด',emoji:'🍟',image:'assets/img/food-menu/xl-french-fries.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-5},
+    {id:'food-user-007',name:'ไอติม',shop:'ตลาด B Knight',price:39,rate:3,cat:'หวาน',emoji:'🍦',image:'assets/img/food-menu/market-ice-cream.webp',story:'ราคาเริ่มต้น ฿39',map:'',fav:false,count:1,ts:Date.now()-6},
+    {id:'food-user-008',name:'โยเกิร์ต',shop:'ข้างหอ',price:50,rate:3,cat:'หวาน',emoji:'🥛',image:'assets/img/food-menu/yogurt-ice-cream.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-7},
+    {id:'food-user-009',name:'ยำวุ้นเส้นทะเล',shop:'',price:50,rate:3,cat:'เส้น',emoji:'🥗',image:'assets/img/food-menu/seafood-glass-noodle-salad.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-8},
+    {id:'food-user-010',name:'ไข่ข้นแกงเขียวหวาน',shop:'ไข่ข้น 100 หน้า',price:65,rate:3,cat:'ข้าว',emoji:'🍛',image:'assets/img/food-menu/green-curry-creamy-egg-rice.webp',story:'',map:'',fav:false,count:1,ts:Date.now()-9}
+  ];
+  S.items=Array.isArray(S.items)?S.items:[];
+  newMenus.forEach(function(item){if(!S.items.some(function(old){return old.id===item.id;}))S.items.push(item);});
+  save(S);
+  try{localStorage.setItem(MENU_MIGRATION,'1');}catch(e){}
+}
+/* remove old demo dishes, update the yogurt image, and add the latest menu */
+var MENU_CLEANUP='et1cruel_food_menu_v3';
+if(!localStorage.getItem(MENU_CLEANUP)){
+  var oldDemoIds={s1:true,s2:true,s3:true,s4:true,s5:true,s6:true};
+  S.items=(Array.isArray(S.items)?S.items:[]).filter(function(item){return !oldDemoIds[item.id];});
+  DEFAULT_MENUS.forEach(function(item){if(!S.items.some(function(old){return old.id===item.id;}))S.items.push(JSON.parse(JSON.stringify(item)));});
+  var yogurt=S.items.find(function(item){return item.id==='food-user-008';});
+  if(yogurt)yogurt.image='assets/img/food-menu/yogurt-ice-cream.webp';
+  save(S);
+  try{localStorage.setItem(MENU_CLEANUP,'1');}catch(e){}
+}
+/* add the user's green-curry creamy-egg menu to previously saved journals */
+var MENU_ADD_V4='et1cruel_food_menu_v4';
+if(!localStorage.getItem(MENU_ADD_V4)){
+  var greenCurryEgg=DEFAULT_MENUS.find(function(item){return item.id==='food-user-010';});
+  if(greenCurryEgg&&!S.items.some(function(item){return item.id===greenCurryEgg.id;}))S.items.push(JSON.parse(JSON.stringify(greenCurryEgg)));
+  save(S);
+  try{localStorage.setItem(MENU_ADD_V4,'1');}catch(e){}
+}
+/* add the mookata buffet item to previously saved journals */
+var MENU_ADD_V5='et1cruel_food_menu_v5';
+if(!localStorage.getItem(MENU_ADD_V5)){
+  var mookata=DEFAULT_MENUS.find(function(item){return item.id==='food-user-011';});
+  if(mookata&&!S.items.some(function(item){return item.id===mookata.id;}))S.items.push(JSON.parse(JSON.stringify(mookata)));
+  save(S);
+  try{localStorage.setItem(MENU_ADD_V5,'1');}catch(e){}
+}
+/* add the user's mala/shabu menu item to previously saved journals */
+var MENU_ADD_V6='et1cruel_food_menu_v6';
+if(!localStorage.getItem(MENU_ADD_V6)){
+  var malaShabu=DEFAULT_MENUS.find(function(item){return item.id==='food-user-012';});
+  if(malaShabu&&!S.items.some(function(item){return item.id===malaShabu.id;}))S.items.push(JSON.parse(JSON.stringify(malaShabu)));
+  save(S);
+  try{localStorage.setItem(MENU_ADD_V6,'1');}catch(e){}
+}
 var $=function(id){return document.getElementById(id);};
 var grid=$('grid'),q=$('q'),catF=$('catF'),sortF=$('sortF');
 
@@ -271,6 +335,7 @@ function render(){
   if(!list.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">ยังไม่มีเมนูนี้ — เพิ่มเมนูแรกด้านบนได้เลย 🍱</div>';}
   else grid.innerHTML=list.map(function(x){
     return '<div class="fcard'+(x.fav?' fav':'')+'">'
+    +(x.image?'<img class="dish-photo" src="'+esc(x.image)+'" alt="ภาพประกอบ '+esc(x.name)+'" loading="lazy">':'')
     +'<div class="top"><div class="emoji">'+esc(x.emoji||'🍱')+'</div><div><h3>'+esc(x.name)+'</h3><div class="shop">'+esc(x.shop||'ไม่ระบุร้าน')+' · '+esc(x.cat)+'</div></div></div>'
     +'<div class="stars">'+stars(x.rate)+' <span style="color:var(--muted);font-size:13px">'+x.rate+'.0</span></div>'
     +'<div class="meta"><span class="tag price">฿'+(x.price==null||x.price===''?'–':esc(x.price))+'</span>'
@@ -346,7 +411,7 @@ $('expBtn').addEventListener('click',function(){
   var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='food-tavern.json';a.click();
 });
 $('resetBtn').addEventListener('click',function(){
-  if(!confirm('รีเซ็ตกลับเป็นเมนูตัวอย่าง?'))return;
+  if(!confirm('รีเซ็ตกลับเป็นเมนูตั้งต้นทั้งหมด? รายการที่เพิ่มเองจะถูกแทนที่'))return;
   S=seed();save(S);render();
 });
 render();

@@ -284,6 +284,37 @@ if (!load('prod-seeded-v3', null)) {
   }
   save('prod-seeded-v3', 1);
 }
+/* ---- one-time: user-reported income entries (Oct–Nov 2026) ---- */
+if (!load('prod-seeded-v4', null)) {
+  var addedIncome = [
+    { id: 'income-2026-10-27-teach-1200', date: '2026-10-27', type: 'teach', desc: 'สอนทำบีท · 11:52 PM', amt: 1200 },
+    { id: 'income-2026-11-02-beat-800', date: '2026-11-02', type: 'com', desc: 'ทำบีท · 6:55 PM', amt: 800 },
+    { id: 'income-2026-11-02-setup-200', date: '2026-11-02', type: 'setup', desc: 'รับลงโปรแกรม · 9:38 PM', amt: 200 }
+  ];
+  addedIncome.forEach(function (entry) {
+    if (!incomes.some(function (r) { return r.id === entry.id; })) incomes.push(entry);
+  });
+  save('prod-income', incomes);
+  save('prod-seeded-v4', 1);
+}
+/* ---- de-duplicate migration entries when they were already entered in the page ---- */
+if (!load('prod-seeded-v5', null)) {
+  var migratedIds = {
+    'income-2026-10-27-teach-1200': true,
+    'income-2026-11-02-beat-800': true,
+    'income-2026-11-02-setup-200': true
+  };
+  var beforeDedupe = incomes.length;
+  incomes = incomes.filter(function (entry) {
+    if (!migratedIds[entry.id]) return true;
+    return !incomes.some(function (other) {
+      return other !== entry && other.date === entry.date && other.type === entry.type &&
+        other.desc === entry.desc && (+other.amt) === (+entry.amt);
+    });
+  });
+  if (incomes.length !== beforeDedupe) save('prod-income', incomes);
+  save('prod-seeded-v5', 1);
+}
 function fmt(n){ return Number(n||0).toLocaleString('en-US') + ' ฿'; }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 function monthKey(d){ return (d||'').slice(0,7); }
