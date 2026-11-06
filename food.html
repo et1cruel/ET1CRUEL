@@ -119,6 +119,8 @@ form.add input::placeholder,form.add textarea::placeholder,.toolbar input::place
 .fcard .story::after{content:' ”'}
 .fcard .row{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto;padding-top:14px}
 .fcard .row button,.fcard .row a{flex:1 1 auto}
+.fcard .row [data-eat-minus]{flex:0 0 40px;padding-left:0;padding-right:0}
+.fcard .row [data-eat-minus]:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
 .empty{text-align:center;padding:30px 20px;border:1px dashed #d6dccf;border-radius:14px;background:#fafbf7;color:var(--muted)}
 .note{margin-top:18px;padding:15px 17px;border:1px solid #e8e6dc;border-radius:13px;background:#faf9f4;color:var(--muted);font-size:13px;line-height:1.7}
 .note b{color:var(--green-dark);font-weight:600}
@@ -326,8 +328,8 @@ function render(){
   else if(cf!=='all')list=list.filter(function(x){return x.cat===cf;});
   if(term)list=list.filter(function(x){return (x.name+' '+x.shop+' '+x.price+' '+x.cat+' '+(x.story||'')).toLowerCase().indexOf(term)>-1;});
   list.sort(function(a,b){
-    if(sf==='rate')return b.rate-a.rate||b.count-a.count;
-    if(sf==='count')return b.count-a.count;
+    if(sf==='rate')return b.rate-a.rate||b.ts-a.ts||String(a.id).localeCompare(String(b.id));
+    if(sf==='count')return b.count-a.count||b.ts-a.ts||String(a.id).localeCompare(String(b.id));
     if(sf==='priceAsc')return (a.price||9999)-(b.price||9999);
     if(sf==='priceDesc')return (b.price||0)-(a.price||0);
     return b.ts-a.ts;
@@ -342,7 +344,8 @@ function render(){
     +'<span class="tag buff">'+esc(BUFF[x.cat]||'+10 HP')+'</span>'
     +'<span class="tag count">กินแล้ว '+x.count+' ครั้ง</span></div>'
     +(x.story?'<div class="story">🎬 '+esc(x.story)+'</div>':'')
-    +'<div class="row"><button class="btn small" data-eat="'+x.id+'" type="button">+ กินอีก</button>'
+    +'<div class="row"><button class="btn ghost small" data-eat-minus="'+esc(x.id)+'" type="button" aria-label="ลดจำนวนที่กิน '+esc(x.name)+'" title="ลดจำนวนที่กิน"'+((+x.count||0)<=0?' disabled':'')+'>−</button>'
+    +'<button class="btn small" data-eat="'+esc(x.id)+'" type="button">+ กินอีก</button>'
     +'<button class="btn ghost small" data-fav="'+x.id+'" type="button">'+(x.fav?'☆ เอาออก':'⭐ โปรด')+'</button>'
     +(x.map?'<a class="btn ghost small" style="text-decoration:none;text-align:center" target="_blank" rel="noopener" href="'+esc(x.map)+'">📍 แมพ</a>':'')
     +'<button class="btn danger small" data-del="'+x.id+'" type="button">ลบ</button></div></div>';
@@ -365,9 +368,11 @@ function render(){
 grid.addEventListener('click',function(e){
   var t=e.target;
   var eat=t.getAttribute&&t.getAttribute('data-eat');
+  var eatMinus=t.getAttribute&&t.getAttribute('data-eat-minus');
   var fav=t.getAttribute&&t.getAttribute('data-fav');
   var del=t.getAttribute&&t.getAttribute('data-del');
   if(eat){var a=S.items.find(function(x){return x.id===eat;});if(a){a.count++;save(S);render();}}
+  if(eatMinus){var c=S.items.find(function(x){return x.id===eatMinus;});if(c){c.count=Math.max(0,(+c.count||0)-1);save(S);render();}}
   if(fav){var b=S.items.find(function(x){return x.id===fav;});if(b){b.fav=!b.fav;save(S);render();}}
   if(del){if(confirm('ลบเมนูนี้ออกจาก Dex?')){S.items=S.items.filter(function(x){return x.id!==del;});save(S);render();}}
 });
