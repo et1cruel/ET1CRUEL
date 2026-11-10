@@ -54,10 +54,10 @@ function seed() {
       BODY:    { pts: 28, xp: 1400 }, MIND: { pts: 32, xp: 1600 },
       LIFE:    { pts: 24, xp: 1200 }, CONTENT: { pts: 36, xp: 1800 }
     },
-    mainQuest: { name: 'PROJECT 1M', current: 717994, target: 1000000,
+    mainQuest: { name: 'PROJECT 1M', current: 739305, target: 1000000,
       milestones: [500000, 750000, 1000000, 2000000, 10000000] },
     money: {
-      vaults: { savings: 619000, kasikorn: 0, ktb: 78689, dime: 15327, cash: 200, stocks: 4378, btc: 400 },
+      vaults: { savings: 619000, kasikorn: 0, ktb: 100000, dime: 15327, cash: 200, stocks: 4378, btc: 400 },
       flow: [ { d: today, type: 'income', amt: 8500, note: 'seed' }, { d: today, type: 'expense', amt: 3200, note: 'seed' } ],
       history: [ { m: 'Jun', v: 33000 }, { m: 'Jul', v: 63300 }, { m: 'Aug', v: 72000 }, { m: 'Sep', v: 651400 }, { m: 'Oct', v: 683200 } ]
     },
@@ -748,7 +748,7 @@ var PROJ_TASKS = {
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
 var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Savings', ktb: '🏦 KTB e-Savings', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
 var SAVE_VAULTS = ['savings'];
-var DEF_VAULTS = { savings: 619000, kasikorn: 0, ktb: 78689, dime: 15327, cash: 200, stocks: 4378, btc: 400 };
+var DEF_VAULTS = { savings: 619000, kasikorn: 0, ktb: 100000, dime: 15327, cash: 200, stocks: 4378, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
@@ -798,6 +798,11 @@ function migrate() {
     S.money.vaults.dime = 15327;
     S.money.vaults.stocks = 4378;
     S.money.vaultVer = 9;
+  }
+  // v10 (10 Nov 2026): อัปยอด KTB ตามผู้ใช้แจ้ง
+  if (S.money.vaultVer !== 10) {
+    S.money.vaults.ktb = 100000;
+    S.money.vaultVer = 10;
   }
   if (S.mainQuest) S.mainQuest.current = netWorth();
   if (Array.isArray(S.money.history) && S.money.history.length) {
