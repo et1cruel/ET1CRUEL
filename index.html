@@ -245,9 +245,8 @@ section.card.collapsed,.treasury.collapsed{content-visibility:visible;contain-in
 /* ===== FLAT LAYER (เอา 3D tilt ออก — เรียบง่าย) ===== */
 #bg3d{position:fixed;inset:0;z-index:0;pointer-events:none}
 .wrap{position:relative;z-index:1}
-/* PERF: ลบ will-change ออกจากการ์ดทั้งหมด — เดิมจอง GPU ทุกใบทั้งที่อยู่นอกจอ (content-visibility จัดการให้แล้ว) */
-html.js .hero,html.js .treasury,html.js section.card{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
-html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transform:translateY(0)}
+/* อย่าซ่อนการ์ดระหว่างรอ scroll-reveal observer เพราะพื้นที่ว่างยังถูกจองไว้ */
+.hero,.treasury,section.card{opacity:1;transform:none}
 .item,.persona,.zone,.vault,.kpi{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
 .item:hover,.persona:hover,.zone:hover{transform:translateY(-2px)}
 /* icon flat — ไม่ใช้ translateZ แล้ว */
