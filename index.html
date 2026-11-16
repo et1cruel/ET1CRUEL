@@ -234,6 +234,8 @@ footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:22px;fon
 @media(max-width:600px){.topbar{gap:10px;padding:10px}.topbar .search{width:100%;margin-left:0;flex-wrap:wrap}.topbar .search .filters{flex-wrap:wrap}.topbar .search input{width:auto;min-width:0;flex:1 1 160px}.money-hud{margin-left:auto}}
 /* ===== PERF: ข้ามการเรนเดอร์การ์ดนอกจอ + กัน CLS ของปก ===== */
 section.card,.treasury{content-visibility:auto;contain-intrinsic-size:auto 600px}
+/* การ์ดที่พับแล้วเหลือแค่หัวข้อ อย่าจอง placeholder 600px ให้กลายเป็นช่องว่าง */
+section.card.collapsed,.treasury.collapsed{content-visibility:visible;contain-intrinsic-size:none}
 .cover img{aspect-ratio:16/5;width:100%;height:auto;display:block;object-fit:cover;object-position:center}
 .cover picture,.busk-photo picture,.joy-photo picture,.photo-break picture{display:block;width:100%}
 .cover picture img,.busk-photo picture img,.joy-photo picture img,.photo-break picture img{width:100%}
