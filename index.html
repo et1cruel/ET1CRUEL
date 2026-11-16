@@ -259,6 +259,9 @@ html.js .hero.in,html.js .treasury.in,html.js section.card.in{opacity:1;transfor
 /* ===== MONEY HUD — ยอดเงินรวมมุมขวาบนสไตล์ GTA ===== */
 .money-hud{font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:23px;color:var(--gold);background:#0B0D14;border:1.5px solid var(--gold-dim);border-radius:12px;padding:8px 18px;white-space:nowrap;margin-left:4px}
 .money-hud b{font-weight:700}
+.gacha-quickjump{display:inline-flex;align-items:center;gap:7px;text-decoration:none;white-space:nowrap;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:16px;color:#451a03;background:linear-gradient(180deg,#FDE68A,#F59E0B);border:1.5px solid #fff;border-radius:12px;padding:8px 14px;box-shadow:0 3px 0 #92400e}
+.gacha-quickjump:hover{filter:brightness(1.08);transform:translateY(-1px)}
+#gacha{scroll-margin-top:110px}
 body .topbar{flex-wrap:wrap}
 @media(max-width:900px){.money-hud{font-size:17px;padding:6px 12px}}
 /* ===== QUEST TRACKER — แถบเควสขวาจอแบบเกม openworld ===== */
@@ -701,6 +704,7 @@ body.site-polish section.card h5{color:#131313!important}
     <input id="q" type="search" aria-label="ค้นหาเควส งาน และบันทึก" placeholder="ค้นหาเควส… บีท / สัก / ลัคกี้">
   </div>
   <div class="money-hud" id="moneyHud" title="เงินรวมทั้งหมด">฿ <b id="moneyHudAmt">…</b></div>
+  <a class="gacha-quickjump" href="#gacha" aria-label="เลื่อนไปยังตู้กาชาเควส">🎰 ไปตู้กาชา</a>
 </div>
 
 <div class="cover"><picture><source type="image/webp" srcset="assets/img/banner-960.webp 960w, assets/img/banner.webp 1920w" sizes="100vw"><img src="assets/img/banner.jpg" alt="ET1CRUEL — ปก" fetchpriority="high" decoding="async" width="1920" height="576"></picture><span class="cover-tag">ET1CRUEL · LIFE OS</span></div>
