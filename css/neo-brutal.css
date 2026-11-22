@@ -539,13 +539,22 @@ body #know-text,
 body .pb-holds,
 body .pb-ret,
 body .ai-cell p,
-body .jentry p,
 body .mem-tl .mi,
 body .dq .t small,
 body .os-task,
 body .busk-photo figcaption,
 body .joy-photo figcaption{
   color:#23211d !important;
+  font-size:15.5px !important;
+  font-weight:600 !important;
+  line-height:1.9 !important;
+  text-shadow:none !important;
+}
+/* A2. .jentry (การ์ดไดอารี่/journal) เป็นพื้นเข้ม — คงไซส์/หนาตามธีม
+   แต่ใช้หมึกอ่อน (ตามข้อยกเว้นบรรทัด 531: ไม่แตะของที่พื้นเข้มตัวขาวอยู่แล้ว)
+   ก่อนแก้: โดนบังคับ #23211d บนพื้น rgb(28,30,36) = contrast 1.04 → อ่านไม่ออก */
+body .jentry p{
+  color:#DDE3F5 !important;
   font-size:15.5px !important;
   font-weight:600 !important;
   line-height:1.9 !important;
