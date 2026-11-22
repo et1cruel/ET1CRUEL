@@ -14,11 +14,14 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Upload and deploy are split into two jobs on purpose.
+# actions/deploy-pages#451: when both run in the same job, the artifact lookup
+# can fire a fraction of a second before the uploaded artifact is visible in
+# the listing -> "No artifacts named github-pages were found" and the deploy
+# fails. Running the deploy in a later job delays the lookup by the job
+# startup time, which is the fix confirmed in that issue.
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,6 +32,13 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
