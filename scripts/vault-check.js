@@ -118,6 +118,42 @@ const EXPECT_NET = 774340;
   ok(/life-os-os\.js\?v=5/.test(sw), 'sw.js CORE has life-os-os.js?v=5');
   ok(/et1cruel-v82/.test(sw), 'sw.js CACHE = et1cruel-v82');
 
+  /* ---------- 5. existing install (stale localStorage) must migrate ---------- */
+  console.log('\n=== 5. Existing install migration (old state, no scb key) ===');
+  await page.goto(FILE, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(500);
+
+  const seeded = await page.evaluate(() => JSON.parse(localStorage.getItem('et1cruel_lifeos_v1')));
+  const stale = JSON.parse(JSON.stringify(seeded));
+  // simulate an install that stopped at v11: 7 vaults, no SCB, old balances
+  delete stale.money.vaults.scb;
+  stale.money.vaultVer = 11;
+  stale.money.vaults.kasikorn = 0;
+  stale.money.vaults.ktb = 100000;
+  stale.money.vaults.dime = 12000;
+  stale.money.vaults.cash = 200;
+  await page.evaluate(s => localStorage.setItem('et1cruel_lifeos_v1', JSON.stringify(s)), stale);
+  await page.reload({ waitUntil: 'networkidle' });
+  await page.waitForTimeout(700);
+
+  const migrated = await page.evaluate(() => JSON.parse(localStorage.getItem('et1cruel_lifeos_v1')));
+  const mv = migrated.money.vaults;
+  console.log('  after migrate: ' + JSON.stringify(mv) + '  vaultVer=' + migrated.money.vaultVer);
+  ok(migrated.money.vaultVer === 12, 'stale install bumped to vaultVer 12', migrated.money.vaultVer);
+  for (const [k, [want]] of Object.entries(EXPECT)) ok(mv[k] === want, '  ' + k + ' = ' + want, mv[k]);
+  const msum = Object.values(mv).reduce((a, b) => a + (Number(b) || 0), 0);
+  ok(msum === EXPECT_NET, 'migrated sum = ' + EXPECT_NET, msum);
+  ok(!!(migrated.mainQuest && migrated.mainQuest.current === EXPECT_NET),
+    'mainQuest.current synced to ' + EXPECT_NET, migrated.mainQuest && migrated.mainQuest.current);
+
+  const mrows = await page.evaluate(() => [...document.querySelectorAll('.vault .vrow')]
+    .map(r => ({ label: r.querySelector('span')?.textContent.trim(), amt: r.querySelector('b')?.textContent.trim() })));
+  const scbRow = mrows.find(r => r.label === '🏦 SCB E-Savings');
+  ok(!!scbRow && num(scbRow.amt) === 4100, 'SCB row rendered for existing install', scbRow ? scbRow.amt : 'MISSING');
+  ok(!!mrows.find(r => r.label === '💳 K E-savings'), 'renamed K E-savings row rendered for existing install');
+  const mTotal = mrows.find(r => r.label && r.label.includes('=') && num(r.amt) === EXPECT_NET);
+  ok(!!mTotal, 'total row on migrated install = ' + EXPECT_NET, mTotal ? mTotal.amt : 'not found');
+
   console.log('\n=== JS errors: ' + jsErrors.length + ' ===');
   jsErrors.slice(0, 8).forEach(e => console.log('  ' + e));
   ok(jsErrors.length === 0, 'no JS errors');
