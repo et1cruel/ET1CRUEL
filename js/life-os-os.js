@@ -746,9 +746,9 @@ var PROJ_TASKS = {
   'p-lifeos': ['ใช้ dashboard 7 วันติด', 'Export backup', 'ต่อ Supabase']
 };
 var PROJ_DEADLINE = { 'p-himori': '2026-12-31', 'p-beat': '2026-11-30', 'p-content': 'ongoing', 'p-tattoo': '2026-12-31', 'p-lifeos': 'ongoing' };
-var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 กสิกร e-Savings', ktb: '🏦 KTB e-Savings', dime: '💚 DIME Save', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
+var VAULT_LABEL = { savings: '🌱 Kept Grow', kasikorn: '💳 K E-savings', ktb: '🏦 KTB e-Savings', dime: '💚 DIME Save', scb: '🏦 SCB E-Savings', cash: '💵 เงินสด', stocks: '📈 DIME US', btc: '₿ BTC' };
 var SAVE_VAULTS = ['savings'];
-var DEF_VAULTS = { savings: 619000, kasikorn: 0, ktb: 100000, dime: 12000, cash: 200, stocks: 4378, btc: 400 };
+var DEF_VAULTS = { savings: 619000, kasikorn: 962, ktb: 120000, dime: 23000, scb: 4100, cash: 2500, stocks: 4378, btc: 400 };
 var OLD_VAULTS = { kasikorn: 425820, ktb: 2000, dime: 2000, stocks: 11000 }; // ค่า default เก่า — ถ้ายังไม่เคยแก้ให้อัปเป็นยอดใหม่
 var OSUI = { vaultEdit: false, histEdit: false };
 function migrate() {
@@ -808,6 +808,16 @@ function migrate() {
   if (S.money.vaultVer !== 11) {
     S.money.vaults.dime = 12000;
     S.money.vaultVer = 11;
+  }
+  // v12 (22 Nov 2026): อัปยอดตามผู้ใช้แจ้ง + เพิ่ม vault SCB ใหม่
+  //   K E-savings=962 / KTB=120,000 / DIME Save=23,000 / SCB=4,100 / เงินสด=2,500
+  if (S.money.vaultVer !== 12) {
+    S.money.vaults.kasikorn = 962;
+    S.money.vaults.ktb = 120000;
+    S.money.vaults.dime = 23000;
+    S.money.vaults.scb = 4100;
+    S.money.vaults.cash = 2500;
+    S.money.vaultVer = 12;
   }
   if (S.mainQuest) S.mainQuest.current = netWorth();
   if (Array.isArray(S.money.history) && S.money.history.length) {
