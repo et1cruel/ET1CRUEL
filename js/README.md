@@ -21,6 +21,7 @@
 | `growth.js` | growth.html | Growth Log |
 | `money-tree.js` | index.html | ต้นไม้การเงิน |
 | `life-os-os.js` | index.html | แกน LIFE OS (เงิน/เควส/vaults) |
+| `front-dashboard.js` | index.html | แสดงยอดเงินและเควสรายวันบนภาพปก; เพิ่ม/ติ๊ก/ลบเควสเฉพาะวันนี้และซิงก์เควสหลักกับ LIFE OS |
 | `level-up.js` | index.html | ระบบเลเวล/XP |
 | `hero-clock.js` | index.html | นาฬิกา hero |
 | `command-console.js` | index.html | คอนโซลคำสั่ง |

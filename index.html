@@ -21,6 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Sans+Thai:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/img/banner.webp" imagesrcset="assets/img/banner-960.webp 960w, assets/img/banner.webp 1920w" imagesizes="100vw" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="css/life-os-os.css">
+<link rel="stylesheet" href="css/front-dashboard.css?v=5">
 <link rel="stylesheet" href="css/stock-os.css?v=5">
 <link rel="stylesheet" href="fx/fx.css">
 <script>document.documentElement.classList.add('js');</script>
@@ -705,7 +706,26 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="money-hud" id="moneyHud" title="เงินรวมทั้งหมด">฿ <b id="moneyHudAmt">…</b></div>
 </div>
 
-<div class="cover"><picture><source type="image/webp" srcset="assets/img/banner-960.webp 960w, assets/img/banner.webp 1920w" sizes="100vw"><img src="assets/img/banner.jpg" alt="ET1CRUEL — ปก" fetchpriority="high" decoding="async" width="1920" height="576"></picture><span class="cover-tag">ET1CRUEL · LIFE OS</span></div>
+<div class="cover"><picture><source type="image/webp" srcset="assets/img/banner-960.webp 960w, assets/img/banner.webp 1920w" sizes="100vw"><img src="assets/img/banner.jpg" alt="ET1CRUEL — ปก" fetchpriority="high" decoding="async" width="1920" height="576"></picture><span class="cover-tag">ET1CRUEL · LIFE OS</span>
+  <section class="cover-dashboard" aria-label="สรุปชีวิตวันนี้">
+    <section class="cover-balance" aria-labelledby="coverBalanceHeading">
+      <div class="cover-panel-head"><h2 id="coverBalanceHeading">ยอดเงินรวม</h2><a href="#money-os">จัดการยอดเงิน <span aria-hidden="true">↗</span></a></div>
+      <strong class="cover-amount" id="coverBalance" aria-live="polite">กำลังโหลด…</strong>
+      <div class="cover-goal-label"><span>เป้าหมายเงินล้าน</span><b id="coverGoalProgress">—</b></div>
+      <div id="coverGoalBar" class="cover-goal-bar" role="progressbar" aria-label="ความคืบหน้าสู่เป้าหมาย 1 ล้านบาท" aria-valuemin="0" aria-valuemax="1000000" aria-valuenow="0"><span id="coverGoalFill"></span></div>
+    </section>
+    <section class="cover-quests" aria-labelledby="coverQuestHeading">
+      <div class="cover-quest-head"><div><h2 id="coverQuestHeading">ภารกิจวันนี้</h2><p id="coverQuestDate" class="cover-date"></p></div><span id="coverQuestProgress" class="cover-progress">กำลังโหลด…</span></div>
+      <div id="coverQuestList" class="cover-quest-list" aria-live="polite"></div>
+      <form id="coverQuestForm" class="cover-add-form">
+        <label class="cover-visually-hidden" for="coverQuestInput">เพิ่มภารกิจของวันนี้</label>
+        <input id="coverQuestInput" name="task" type="text" maxlength="80" placeholder="วันนี้อยากทำอะไรเพิ่ม?" autocomplete="off" required>
+        <button type="submit">＋ เพิ่มภารกิจ</button>
+      </form>
+      <a class="cover-all-quests" href="#quests">เปิดรายการเควสทั้งหมด <span aria-hidden="true">→</span></a>
+    </section>
+  </section>
+</div>
 
 <div class="hero">
   <span class="hero-ghost" aria-hidden="true">ET1CRUEL</span>
@@ -957,7 +977,7 @@ body.site-polish section.card h5{color:#131313!important}
   </div>
   <div class="group-title"><span class="gnum">○</span> ค้างอยู่ — ทำต่อตามนี้</div>
   <div class="grid2">
-    <div class="item todo" data-pin="1"><div class="dot">○</div><div class="txt">ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small><span class="badge b-todo">3 ธ.ค. 69</span></div></div>
+    <div class="item todo" data-pin="1"><div class="dot">○</div><div class="txt">ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 29 ธันวาคม 2569 เวลา 08:00 น. · อยู่ในกระบวนการ</small><span class="badge b-todo">29 ธ.ค. 69 · 08:00</span></div></div>
     <div class="item todo" data-pin="1"><div class="dot">○</div><div class="txt">อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small><span class="badge b-todo">โปรเจกต์ใหญ่</span></div></div>
   </div>
 </section>
@@ -1202,7 +1222,7 @@ body.site-polish section.card h5{color:#131313!important}
   <div class="grid3" style="margin-bottom:6px">
     <div class="persona" data-rank="S"><h4>📈 หุ้น + คริปโต</h4><p>DCA รายเดือน · 3 กระปุก Income / Growth / AI Core · กำไรถอนเข้า vault — ดูพอร์ตที่ <b>ห้องเทรด</b></p><div class="tags"><span>เสาหลัก #1</span></div></div>
     <div class="persona" data-rank="A"><h4>🃏 โป๊กเกอร์</h4><p>เล่นด้วยระบบ + วินัยแบ๊งก์โรล · ได้กำไรถอนเก็บทันที ไม่ถัวมั่ว · <a href="./poker.html" style="color:var(--gold);font-weight:700">เปิดหน้าสายโป๊กเกอร์ →</a></p><div class="tags"><span>เสาหลัก #2</span></div></div>
-    <div class="persona" data-rank="B"><h4>🛵 ขับ GRAB</h4><p>รายได้รายวันด้วยมอเตอร์ไซค์ · รอใบขับขี่ <b>3 ธ.ค. 69</b> แล้วเปิดเครื่อง</p><div class="tags"><span>เสาหลัก #3</span></div></div>
+    <div class="persona" data-rank="B"><h4>🛵 ขับ GRAB</h4><p>รายได้รายวันด้วยมอเตอร์ไซค์ · รอใบขับขี่ <b>29 ธ.ค. 69 · 08:00 น.</b> แล้วเปิดเครื่อง</p><div class="tags"><span>เสาหลัก #3</span></div></div>
   </div>
   <div class="grid2">
     <div class="item"><div class="txt">🎵 เพลง — สตรีมมิ่ง + เล่นสด + Merch<span class="badge b-money">งานหลัก · S+++</span></div></div>
@@ -2858,7 +2878,8 @@ function apply(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}else{boot();}
 })();
 </script>
-<script defer src="js/life-os-os.js?v=5"></script>
+<script defer src="js/life-os-os.js?v=6"></script>
+<script defer src="js/front-dashboard.js?v=4"></script>
 <script defer src="js/sky-breaks.js"></script>
 <script defer src="js/diary.js"></script>
 <script defer src="js/stock-talk.js?v=7"></script>
@@ -2892,7 +2913,7 @@ function apply(){
 <div id="os-toasts" role="status" aria-live="polite"></div>
 <div id="os-modal-bg"><div id="os-modal"></div></div>
 <button id="qtrackerFab" aria-label="เปิด Quest Tracker">◆ QUEST</button>
-<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button type="button" class="qmin" id="qtrackerMin" aria-label="พับ/กางรายการ" title="พับ/กางรายการ">–</button><button type="button" class="qmin" id="qtrackerHide" aria-label="ซ่อนแผง" title="ซ่อนแผง — เปิดคืนจากแถบข้างจอ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 3 ธันวาคม 2569 · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
+<nav id="qtracker" aria-label="เควสที่กำลังทำ"><h4 id="qtrackerHead">◆ QUEST TRACKER <span class="qcount" id="qtrackerCount">· 2</span><button type="button" class="qmin" id="qtrackerMin" aria-label="พับ/กางรายการ" title="พับ/กางรายการ">–</button><button type="button" class="qmin" id="qtrackerHide" aria-label="ซ่อนแผง" title="ซ่อนแผง — เปิดคืนจากแถบข้างจอ">✕</button></h4><ul id="qtrackerList"><li><a href="#quests">📌 ทำใบขับขี่ — จองวันอบรมแล้ว<small>อบรม 29 ธันวาคม 2569 เวลา 08:00 น. · อยู่ในกระบวนการ</small></a></li><li><a href="#quests">📌 อัลบั้ม Folk-Ambient — ฮีลิ่ง · ธรรมชาติ · จิตวิญญาณ<small>10 เพลงเต็ม</small></a></li></ul></nav>
 <!-- ต้นไม้การเงิน -->
 <button type="button" id="treeFab" aria-label="ต้นไม้การเงิน">🌳</button>
 <div id="treePop">

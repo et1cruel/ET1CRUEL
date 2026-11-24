@@ -554,6 +554,7 @@ function renderSysStatus() {
 function renderAll() {
   renderHeader(); renderDailies(); renderStats(); renderMoney(); renderTreasury();
   renderProjects(); renderKanban(); renderAch(); renderJournal(); renderQM(); renderSysStatus();
+  window.dispatchEvent(new CustomEvent('et1os:updated'));
 }
 
 /* ---------- events (delegated, no inline handlers to keep CSP calm) ---------- */
